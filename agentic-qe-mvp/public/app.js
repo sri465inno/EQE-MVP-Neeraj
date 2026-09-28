@@ -305,17 +305,23 @@ function phaseTile(c, p, tab) {
 async function viewCycle(id, params) {
   const c = await api(`/api/cycles/${id}`);
   setTitle(c.name);
-  const tab = params.get('tab') || (c.status === 'awaiting-review' ? 'review' : c.status === 'awaiting-merge' ? 'merge' : c.status === 'completed' ? 'report' : 'inputs');
+  const tab = params.get('tab') || (c.status === 'awaiting-review' ? 'review' : c.status === 'awaiting-merge' ? 'merge' : c.status === 'completed' ? 'overview' : 'inputs');
   const present = new Set(c.phases.map((p) => p.name));
   const rails = PHASE_GROUPS.map(([gid, title, note, names]) => {
     const tiles = names.filter((n) => present.has(n)).map((n) => phaseTile(c, c.phases.find((p) => p.name === n), tab));
     if (gid === 'run') tiles.push(tile({ href: `#/cycle/${c.id}?tab=skills`, art: 'skill', tag: 'Skills', big: (c.skills || []).length, title: 'Skills and hand-overs', lines: ['Which skills each agent read and what it handed over'], cls: tab === 'skills' ? 'sel' : '' }));
     return rail(gid, title, note, tiles);
   }).join('');
+  const ex0 = c.artifacts && c.artifacts.execution ? c.artifacts.execution.summary : null;
+  const summaryRail = rail('summary', 'Cycle summary', 'what went in, what came out, and the QE lead report', [
+    tile({ href: `#/cycle/${c.id}?tab=inputs`, art: 'input', tag: 'Inputs taken', big: c.inputs.length, title: 'Inputs taken', lines: [esc(c.inputs.map((i) => `${i.label} ${i.ref}`).join(' · '))], cls: tab === 'inputs' ? 'sel' : '' }),
+    tile({ href: `#/cycle/${c.id}?tab=artifacts`, art: 'design', tag: 'Artifacts produced', big: c.phases.filter((p) => p.status === 'done').length, title: 'Artifacts produced', lines: ['Every artifact of this cycle, with links and downloads'], cls: tab === 'artifacts' ? 'sel' : '' }),
+    tile({ href: `#/cycle/${c.id}?tab=overview`, art: 'run', tag: 'Final report', big: c.report ? '✔' : '…', title: 'QE lead report', lines: [c.report ? `${ex0 ? `${ex0.passed}/${ex0.executed} passed · ` : ''}${(c.artifacts.defects || []).length} defect(s) · go/no-go recommendation` : '<span class="muted">available when the cycle completes</span>'], cls: tab === 'overview' ? 'sel' : '' }),
+  ]);
   const done = c.phases.filter((p) => p.status === 'done').length;
   const ex = c.artifacts && c.artifacts.execution ? c.artifacts.execution.summary : null;
   const current = c.phases.find((p) => phaseArtifactTab(p.name, c) === tab);
-  const label = tab === 'skills' ? 'Skills and hand-overs' : tab === 'merge' ? 'Human approval to merge' : tab === 'review' ? 'Human review of requirement set' : current ? current.label : tab;
+  const label = tab === 'overview' ? 'QE lead report' : tab === 'artifacts' ? 'Artifacts produced' : tab === 'inputs' ? 'Inputs taken' : tab === 'skills' ? 'Skills and hand-overs' : tab === 'merge' ? 'Human approval to merge' : tab === 'review' ? 'Human review of requirement set' : current ? current.label : tab;
   let body = '';
   try { body = await renderCycleTab(c, tab); } catch (e) { body = `<div class="banner err">${esc(e.message)}</div>`; }
   $view.innerHTML = `<section class="hero small-hero"><div class="eyebrow">${c.type === 'baseline' ? 'Flow 1 · Baseline cycle' : 'Flow 2 · Incremental cycle'}</div>
@@ -325,6 +331,7 @@ async function viewCycle(id, params) {
 ${c.error ? `<div class="banner err">Failed: ${esc(c.error)} <button class="btn secondary" id="resume">Resume</button></div>` : ''}
 ${c.status === 'interrupted' ? `<div class="banner">This cycle was interrupted by a restart. <button class="btn secondary" id="resume">Resume</button></div>` : ''}
 ${c.status === 'running' ? '<div class="banner info">Agents are running... this page refreshes automatically.</div>' : ''}
+${summaryRail}
 ${rails}
 <section class="panel" id="detail-panel"><div class="panel-head"><h2>${esc(label)}</h2><span class="crumbs"><a href="#/cycles">Cycles</a> › <a href="#/cycle/${esc(c.id)}">${esc(c.id)}</a> › ${esc(label)}</span></div><div id="tab">${body}</div></section>`;
   const r = document.getElementById('resume');
@@ -334,6 +341,22 @@ ${rails}
   if (sel) sel.parentElement.scrollLeft = Math.max(0, sel.offsetLeft - sel.parentElement.offsetLeft - 40);
   if (params.get('tab') && c.status !== 'running') document.getElementById('detail-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
   if (c.status === 'running') pollTimer = setTimeout(route, 1500);
+}
+
+function artifactsView(c) {
+  const a = c.artifacts || {};
+  const dl = {
+    testcases: a.testCases ? `<a href="/api/cycles/${esc(c.id)}/export/testcases.xlsx">Excel (.xlsx)</a>` : '',
+    scripts: (a.scripts || []).length ? `${a.scripts.length} spec files` : '',
+    execution: a.execution ? `<a href="/api/cycles/${esc(c.id)}/playwright-report.json" target="_blank">Playwright JSON report</a>` : '',
+    report: c.report ? `<a href="/api/cycles/${esc(c.id)}/report.html" target="_blank">HTML</a> · <a href="/api/cycles/${esc(c.id)}/report.xlsx">Excel</a> · <a href="/api/cycles/${esc(c.id)}/lead-report.html" target="_blank">QE lead report</a>` : '',
+  };
+  const rows = c.phases.map((p) => {
+    const t = phaseArtifactTab(p.name, c);
+    const no = agentNo(p.name);
+    return [`<a href="#/cycle/${esc(c.id)}?tab=${esc(t)}">${esc(p.label)}</a>`, no ? `Agent ${no}` : PHASE_CAT[p.name] === 'gate' ? 'Human gate' : 'Intake', `<span class="status-dot ${esc(p.status)}"></span> ${esc(p.status)}`, p.summary ? esc(p.summary) : '<span class="muted">not produced yet</span>', dl[p.name] || ''];
+  });
+  return `<p class="muted">Each row is one step of the cycle and what it produced. Click a step to open its artifact.</p>${table(['Step', 'Who', 'Status', 'What it produced', 'Download'], rows)}`;
 }
 
 function inputsTable(c) {
@@ -379,7 +402,13 @@ async function renderCycleTab(c, tab) {
   const a = c.artifacts || {};
   const notYet = (what) => `<div class="banner info">${esc(what)} not produced yet (${esc(c.status)}).</div>`;
   switch (tab) {
-    case 'inputs': return `<h2>Inputs and provenance</h2>${inputsTable(c)}`;
+    case 'inputs': return `<h2>Inputs taken</h2>${inputsTable(c)}`;
+    case 'artifacts': return artifactsView(c);
+    case 'overview': {
+      if (!c.report) return notYet('The QE lead report');
+      const { html } = await api(`/api/cycles/${c.id}/lead-report`);
+      return `<div class="row"><a class="btn" href="/api/cycles/${esc(c.id)}/lead-report.html" target="_blank">Open as page</a><a class="btn secondary" href="/api/cycles/${esc(c.id)}/lead-report.html?download=1">Download HTML</a><a class="btn secondary" href="/api/cycles/${esc(c.id)}/lead-report.md">Download Markdown</a><a class="btn secondary" href="#/cycle/${esc(c.id)}?tab=report">Full cycle report</a></div>${html}`;
+    }
     case 'normalise': return `${c.review ? `<div class="banner ok">Reviewed by ${esc(c.review.reviewer)} at ${fmtTime(c.review.at)}. The reviewed set - not the raw inputs - flowed on.</div>` : ''}${normaliseView(c, false)}`;
     case 'review': {
       if (c.status !== 'awaiting-review') return `<div class="banner ok">Review complete.</div>${normaliseView(c, false)}`;

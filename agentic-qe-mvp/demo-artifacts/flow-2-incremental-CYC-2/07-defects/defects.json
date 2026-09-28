@@ -39,11 +39,11 @@
         "contentType": "text/markdown"
       }
     ],
-    "executedAt": "2026-09-28T21:39:44.775Z",
+    "executedAt": "2026-09-28T21:43:30.401Z",
     "occurrences": [
       {
         "cycleId": "CYC-1",
-        "executedAt": "2026-09-28T21:39:41.474Z",
+        "executedAt": "2026-09-28T21:43:27.231Z",
         "actual": "80",
         "evidence": [
           {
@@ -60,7 +60,7 @@
       },
       {
         "cycleId": "CYC-2",
-        "executedAt": "2026-09-28T21:39:44.775Z",
+        "executedAt": "2026-09-28T21:43:30.401Z",
         "actual": "80",
         "evidence": [
           {

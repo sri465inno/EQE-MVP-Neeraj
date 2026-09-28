@@ -8,6 +8,7 @@ const { createApp } = require('../src/server');
 const { renderReportHtml } = require('../src/report');
 const { compareCycles, renderCompareHtml } = require('../src/compare');
 const { testCasesWorkbook, reportWorkbook, compareWorkbook } = require('../src/excel');
+const { buildLeadReport, renderLeadPage, renderLeadMarkdown } = require('../src/lead-report');
 
 const OUT = path.resolve(process.argv[2] || path.join(__dirname, '..', 'demo-artifacts'));
 const REVIEWER = 'Priya Shah';
@@ -40,17 +41,13 @@ async function exportCycle(store, c, dir) {
   json(path.join(dir, '08-report', `${c.id}-cycle-report.json`), c.report);
   if (c.mergeProposal) json(path.join(dir, '09-merge-approval', 'merge-proposal.json'), { proposal: c.mergeProposal, approvals: c.approvals });
 
+  const lead = buildLeadReport(c);
+  write(path.join(dir, '08-report', `${c.id}-qe-lead-report.html`), renderLeadPage(lead));
+  write(path.join(dir, '08-report', `${c.id}-qe-lead-report.md`), renderLeadMarkdown(lead));
   const ex = a.execution.summary;
-  const md = [`# ${c.id} - ${c.name}`, '',
-    `Type: **${c.type}** · Status: **${c.status}** · Completed: ${c.completedAt}`, '',
-    '## Inputs', mdTable(['Input', 'Reference', 'Provenance'], c.inputs.map((i) => [i.label, i.ref, i.provenance?.label])), '',
-    c.delta ? `## Delta against the baseline\n${c.delta.summary}\n` : '',
-    `## Requirements (${a.requirements.length})`, mdTable(['ID', 'Requirement', 'Status'], a.requirements.map((r) => [r.id, r.text, r.status])), '',
-    `## Test cases (${a.testCases.length})`, mdTable(['Key', 'Name', 'Type', 'Automation', 'Status'], a.testCases.map((t) => [t.key, t.name, t.type, t.automation, t.status])), '',
-    `## Execution (real Playwright run)`, `${ex.executed} executed · ${ex.passed} passed · ${ex.failed} failed · ${ex.notRun} not run · pass rate ${ex.passRate}%`, '',
-    mdTable(['Key', 'Test', 'Result', 'ms'], a.execution.results.map((r) => [r.key, r.name, r.status, r.duration ?? ''])), '',
-    `## Defects (${a.defects.length})`, a.defects.length ? mdTable(['ID', 'Title', 'Severity', 'Expected', 'Actual', 'Test case'], a.defects.map((d) => [d.id, d.title, d.severity, d.expected, d.actual, d.testCaseKey])) : 'None.', '',
-    '## Approvals', mdTable(['Gate', 'Decision', 'By', 'When'], (c.approvals || []).map((x) => [x.gate, x.decision, x.by, x.at])), '',
+  const md = [renderLeadMarkdown(lead),
+    '## Appendix A: test results (real Playwright run)', mdTable(['Key', 'Test', 'Result', 'ms'], a.execution.results.map((r) => [r.key, r.name, r.status, r.duration ?? ''])), '',
+    '## Appendix B: requirements', mdTable(['ID', 'Requirement', 'Status'], a.requirements.map((r) => [r.id, r.text, r.status])), '',
   ].join('\n');
   write(path.join(dir, 'README.md'), md);
   return ex;
@@ -86,6 +83,7 @@ async function main() {
     `Generated ${new Date().toISOString()} by \`node scripts/export-demo-artifacts.js\`. Both cycles were run end to end; the Playwright results are real runs against the bundled sample service.`, '',
     'Inputs: Jira REST v3 exports (synthetic issues COM-1, COM-10/COM-11, COM-20) and the commission-engine codebase, pulled from GitHub branches `demo/jira-export`, `demo/commission-engine` and `demo/commission-engine-v2`. No live Jira call was made.', '',
     mdTable(['Cycle', 'Flow', 'Requirements', 'Test cases', 'Scripts', 'Passed', 'Pass rate', 'Defects'], [row(c1, e1), row(c2, e2)]), '',
+    'Each cycle folder\'s README is its QE lead report: inputs taken, how the cycle was run, artifacts produced, risks, a go/no-go recommendation and sign-off.', '',
     '## Folder layout (per cycle)',
     '- `01-inputs/` inputs with provenance, normalisation (agreed / single-source / conflicts) and, for Flow 2, the delta classification',
     '- `02-requirements/` reviewed requirements repository',
@@ -94,7 +92,7 @@ async function main() {
     '- `05-automation-scripts/` generated Playwright specs',
     '- `06-execution/` real Playwright JSON report, console output, mapped results and per-test evidence',
     '- `07-defects/` defects raised from real failures only',
-    '- `08-report/` cycle report (HTML, Excel, JSON)',
+    '- `08-report/` QE lead report (HTML, Markdown) and full cycle report (HTML, Excel, JSON)',
     '- `09-merge-approval/` (Flow 2) merge proposal and approvals', '',
     '`comparison/` holds the cycle 1 vs cycle 2 comparison (HTML, Excel, JSON).',
     'Open the `.html` files in a browser (download them or clone the repo; GitHub shows HTML as source).', '',

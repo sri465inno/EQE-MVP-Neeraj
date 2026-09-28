@@ -7,6 +7,7 @@ const { Pipeline } = require('./pipeline');
 const { renderReportHtml, APP_TITLE } = require('./report');
 const { compareCycles, renderCompareHtml } = require('./compare');
 const { testCasesWorkbook, reportWorkbook, compareWorkbook } = require('./excel');
+const { buildLeadReport, renderLeadHtml, renderLeadPage, renderLeadMarkdown } = require('./lead-report');
 const { jiraLiveConfig, EXPORT } = require('./connectors/jira');
 const { listFixtureBranches, loadCodebaseFixture, DEFAULT_BRANCH, SOURCE } = require('./connectors/codebase');
 const { modelConfig } = require('./llm');
@@ -110,6 +111,23 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
     const html = renderReportHtml(needReport(c));
     if (req.query.download) res.setHeader('Content-Disposition', `attachment; filename="${c.id}-cycle-report.html"`);
     res.type('html').send(html);
+  });
+  app.get('/api/cycles/:id/lead-report', (req, res) => {
+    const c = cycle(req);
+    needReport(c);
+    const lead = buildLeadReport(c);
+    res.json({ lead, html: renderLeadHtml(lead, { cycleLink: (tab) => `#/cycle/${c.id}?tab=${tab}` }) });
+  });
+  app.get('/api/cycles/:id/lead-report.html', (req, res) => {
+    const c = cycle(req);
+    needReport(c);
+    if (req.query.download) res.setHeader('Content-Disposition', `attachment; filename="${c.id}-qe-lead-report.html"`);
+    res.type('html').send(renderLeadPage(buildLeadReport(c)));
+  });
+  app.get('/api/cycles/:id/lead-report.md', (req, res) => {
+    const c = cycle(req);
+    needReport(c);
+    download(res, `${c.id}-qe-lead-report.md`, 'text/markdown', renderLeadMarkdown(buildLeadReport(c)));
   });
   app.get('/api/cycles/:id/report.xlsx', wrap(async (req, res) => {
     const c = cycle(req);

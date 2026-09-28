@@ -22,7 +22,7 @@ Running 14 tests using 2 workers
       47 | });
       48 |
       49 | test("TC-F-007 A stay of 6 nights earns no long-stay bonus", async ({ request }, testInfo) => {
-        at /tmp/aqe-demo-0Twn7F/runs/CYC-1/specs/br-007-long-stay-bonus.spec.js:46:29
+        at /tmp/aqe-demo-bWmvu1/runs/CYC-1/specs/br-007-long-stay-bonus.spec.js:46:29
 
     Error Context: test-results/br-007-long-stay-bonus-TC--13b3d-rns-the-1-5-long-stay-bonus/error-context.md
 

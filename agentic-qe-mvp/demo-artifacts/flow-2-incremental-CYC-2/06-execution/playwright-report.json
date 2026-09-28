@@ -5,10 +5,10 @@
       "/home/ubuntu/repos/uc-agentic-quality-engineering/agentic-qe-mvp/node_modules/@playwright/test/cli.js",
       "test",
       "--config",
-      "/tmp/aqe-demo-0Twn7F/runs/CYC-2/playwright.config.js"
+      "/tmp/aqe-demo-bWmvu1/runs/CYC-2/playwright.config.js"
     ],
-    "configFile": "/tmp/aqe-demo-0Twn7F/runs/CYC-2/playwright.config.js",
-    "rootDir": "/tmp/aqe-demo-0Twn7F/runs/CYC-2/specs",
+    "configFile": "/tmp/aqe-demo-bWmvu1/runs/CYC-2/playwright.config.js",
+    "rootDir": "/tmp/aqe-demo-bWmvu1/runs/CYC-2/specs",
     "failOnFlakyTests": false,
     "forbidOnly": false,
     "fullyParallel": false,
@@ -24,7 +24,7 @@
     "preserveOutput": "always",
     "projects": [
       {
-        "outputDir": "/tmp/aqe-demo-0Twn7F/runs/CYC-2/test-results",
+        "outputDir": "/tmp/aqe-demo-bWmvu1/runs/CYC-2/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -32,7 +32,7 @@
         },
         "id": "",
         "name": "",
-        "testDir": "/tmp/aqe-demo-0Twn7F/runs/CYC-2/specs",
+        "testDir": "/tmp/aqe-demo-bWmvu1/runs/CYC-2/specs",
         "testIgnore": [],
         "testMatch": [
           "**/*.spec.js"
@@ -45,7 +45,7 @@
       [
         "json",
         {
-          "outputFile": "/tmp/aqe-demo-0Twn7F/runs/CYC-2/playwright-report.json"
+          "outputFile": "/tmp/aqe-demo-bWmvu1/runs/CYC-2/playwright-report.json"
         }
       ]
     ],
@@ -84,12 +84,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 30,
+                  "duration": 32,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:39:44.215Z",
+                  "startTime": "2026-09-28T21:43:29.844Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -137,12 +137,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 224,
+                  "duration": 216,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:39:44.237Z",
+                  "startTime": "2026-09-28T21:43:29.842Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -190,18 +190,18 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 56,
+                  "duration": 53,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:39:44.275Z",
+                  "startTime": "2026-09-28T21:43:29.905Z",
                   "annotations": [],
                   "attachments": [
                     {
                       "name": "latency samples (ms)",
                       "contentType": "application/json",
-                      "body": "eyJzYW1wbGVzIjpbMSwxLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwzLDMsMyw0XSwicDk1IjozfQ=="
+                      "body": "eyJzYW1wbGVzIjpbMSwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDMsMywzXSwicDk1IjozfQ=="
                     }
                   ]
                 }
@@ -243,7 +243,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:39:44.342Z",
+                  "startTime": "2026-09-28T21:43:29.969Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -291,7 +291,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:39:44.360Z",
+                  "startTime": "2026-09-28T21:43:29.987Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -339,7 +339,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:39:44.380Z",
+                  "startTime": "2026-09-28T21:43:30.006Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -385,9 +385,9 @@
                   "duration": 8,
                   "error": {
                     "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m92\u001b[39m\nReceived: \u001b[31m80\u001b[39m",
-                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m92\u001b[39m\nReceived: \u001b[31m80\u001b[39m\n    at /tmp/aqe-demo-0Twn7F/runs/CYC-2/specs/br-007-long-stay-bonus.spec.js:46:29",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m92\u001b[39m\nReceived: \u001b[31m80\u001b[39m\n    at /tmp/aqe-demo-bWmvu1/runs/CYC-2/specs/br-007-long-stay-bonus.spec.js:46:29",
                     "location": {
-                      "file": "/tmp/aqe-demo-0Twn7F/runs/CYC-2/specs/br-007-long-stay-bonus.spec.js",
+                      "file": "/tmp/aqe-demo-bWmvu1/runs/CYC-2/specs/br-007-long-stay-bonus.spec.js",
                       "column": 29,
                       "line": 46
                     },
@@ -396,17 +396,17 @@
                   "errors": [
                     {
                       "location": {
-                        "file": "/tmp/aqe-demo-0Twn7F/runs/CYC-2/specs/br-007-long-stay-bonus.spec.js",
+                        "file": "/tmp/aqe-demo-bWmvu1/runs/CYC-2/specs/br-007-long-stay-bonus.spec.js",
                         "column": 29,
                         "line": 46
                       },
-                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m92\u001b[39m\nReceived: \u001b[31m80\u001b[39m\n\n  44 |   const r = await quote(request, testInfo, {\"reservation.status\":\"CONFIRMED\",\"channel.bookingChannel\":\"DIRECT\",\"stay.nights\":7,\"rate.planCategory\":\"BAR\",\"room.roomCount\":1,\"payment.loyaltyPointsRedemption\":false,\"revenue.totalAmount\":1000,\"revenue.taxAmount\":120,\"revenue.resortFeeAmount\":30,\"revenue.ancillaryAmount\":50});\n  45 |   expect(r.status).toBe(200);\n> 46 |   expect(r.body.commission).toBe(92);\n     |                             ^\n  47 | });\n  48 |\n  49 | test(\"TC-F-007 A stay of 6 nights earns no long-stay bonus\", async ({ request }, testInfo) => {\n    at /tmp/aqe-demo-0Twn7F/runs/CYC-2/specs/br-007-long-stay-bonus.spec.js:46:29"
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m92\u001b[39m\nReceived: \u001b[31m80\u001b[39m\n\n  44 |   const r = await quote(request, testInfo, {\"reservation.status\":\"CONFIRMED\",\"channel.bookingChannel\":\"DIRECT\",\"stay.nights\":7,\"rate.planCategory\":\"BAR\",\"room.roomCount\":1,\"payment.loyaltyPointsRedemption\":false,\"revenue.totalAmount\":1000,\"revenue.taxAmount\":120,\"revenue.resortFeeAmount\":30,\"revenue.ancillaryAmount\":50});\n  45 |   expect(r.status).toBe(200);\n> 46 |   expect(r.body.commission).toBe(92);\n     |                             ^\n  47 | });\n  48 |\n  49 | test(\"TC-F-007 A stay of 6 nights earns no long-stay bonus\", async ({ request }, testInfo) => {\n    at /tmp/aqe-demo-bWmvu1/runs/CYC-2/specs/br-007-long-stay-bonus.spec.js:46:29"
                     }
                   ],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:39:44.394Z",
+                  "startTime": "2026-09-28T21:43:30.020Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -417,11 +417,11 @@
                     {
                       "name": "error-context",
                       "contentType": "text/markdown",
-                      "path": "/tmp/aqe-demo-0Twn7F/runs/CYC-2/test-results/br-007-long-stay-bonus-TC--13b3d-rns-the-1-5-long-stay-bonus/error-context.md"
+                      "path": "/tmp/aqe-demo-bWmvu1/runs/CYC-2/test-results/br-007-long-stay-bonus-TC--13b3d-rns-the-1-5-long-stay-bonus/error-context.md"
                     }
                   ],
                   "errorLocation": {
-                    "file": "/tmp/aqe-demo-0Twn7F/runs/CYC-2/specs/br-007-long-stay-bonus.spec.js",
+                    "file": "/tmp/aqe-demo-bWmvu1/runs/CYC-2/specs/br-007-long-stay-bonus.spec.js",
                     "column": 29,
                     "line": 46
                   }
@@ -451,12 +451,12 @@
                   "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 27,
+                  "duration": 26,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:39:44.695Z",
+                  "startTime": "2026-09-28T21:43:30.319Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -499,12 +499,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 10,
+                  "duration": 11,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:39:44.530Z",
+                  "startTime": "2026-09-28T21:43:30.138Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -547,12 +547,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 9,
+                  "duration": 10,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:39:44.551Z",
+                  "startTime": "2026-09-28T21:43:30.159Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -595,12 +595,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 13,
+                  "duration": 11,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:39:44.568Z",
+                  "startTime": "2026-09-28T21:43:30.178Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -648,7 +648,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:39:44.589Z",
+                  "startTime": "2026-09-28T21:43:30.196Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -696,12 +696,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 11,
+                  "duration": 7,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:39:44.606Z",
+                  "startTime": "2026-09-28T21:43:30.218Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -749,7 +749,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:39:44.625Z",
+                  "startTime": "2026-09-28T21:43:30.232Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -797,7 +797,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:39:44.635Z",
+                  "startTime": "2026-09-28T21:43:30.242Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -832,12 +832,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 5,
+                  "duration": 6,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:39:44.649Z",
+                  "startTime": "2026-09-28T21:43:30.257Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -880,12 +880,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 9,
+                  "duration": 12,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:39:44.663Z",
+                  "startTime": "2026-09-28T21:43:30.271Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -933,7 +933,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:39:44.686Z",
+                  "startTime": "2026-09-28T21:43:30.291Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -957,8 +957,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-09-28T21:39:43.819Z",
-    "duration": 942.8480000000001,
+    "startTime": "2026-09-28T21:43:29.455Z",
+    "duration": 933.61,
     "expected": 17,
     "skipped": 0,
     "unexpected": 1,
