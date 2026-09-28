@@ -13,6 +13,8 @@ function commissionableRevenue(res) {
 }
 
 function rateLines(res) {
+  if (res['rate.planCategory'] === 'CORP') return [{ code: 'CORPORATE', label: 'Negotiated corporate rate', ratePct: R.CORPORATE_RATE_PCT }];
+  if (num(res, 'room.roomCount') >= R.GROUP_MIN_ROOMS) return [{ code: 'GROUP', label: 'Group flat rate', ratePct: R.GROUP_FLAT_RATE_PCT }];
   const lines = [{ code: 'BASE', label: 'Base commission', ratePct: R.BASE_RATE_PCT }];
   if (res['channel.bookingChannel'] === 'GDS') lines.push({ code: 'GDS_UPLIFT', label: 'GDS channel uplift', ratePct: R.GDS_UPLIFT_PCT });
   // Intentional demo defect: the rule says "7 nights or more" but this checks strictly more than 7.
@@ -22,7 +24,8 @@ function rateLines(res) {
 
 function calculateCommission(res) {
   const revenue = commissionableRevenue(res);
-  const head = { currency: 'USD', build: R.BUILD, commissionableRevenue: revenue, basis: revenue };
+  const basis = res['rate.planCategory'] === 'PKG' ? roundHalfUp((revenue * R.PACKAGE_ROOM_COMPONENT_PCT) / 100) : revenue;
+  const head = { currency: 'USD', build: R.BUILD, commissionableRevenue: revenue, basis };
   const status = res['reservation.status'];
   if (R.NON_COMMISSIONABLE_STATUSES.includes(status)) {
     return { ...head, eligible: false, reason: `Reservation status ${status} is not commissionable`, lines: [], effectiveRatePct: 0, grossCommission: 0, capped: false, capUsd: R.CAP_USD, commission: 0 };
@@ -30,9 +33,9 @@ function calculateCommission(res) {
   if (res['payment.loyaltyPointsRedemption'] === true) {
     return { ...head, eligible: false, reason: 'Paid with loyalty points - not commissionable', lines: [], effectiveRatePct: 0, grossCommission: 0, capped: false, capUsd: R.CAP_USD, commission: 0 };
   }
-  const lines = rateLines(res).map((l) => ({ ...l, amount: roundHalfUp((revenue * l.ratePct) / 100) }));
+  const lines = rateLines(res).map((l) => ({ ...l, amount: roundHalfUp((basis * l.ratePct) / 100) }));
   const effectiveRatePct = lines.reduce((s, l) => s + l.ratePct, 0);
-  const gross = (revenue * effectiveRatePct) / 100;
+  const gross = (basis * effectiveRatePct) / 100;
   const capped = gross > R.CAP_USD;
   return { ...head, eligible: true, reason: null, lines, effectiveRatePct, grossCommission: roundHalfUp(gross), capped, capUsd: R.CAP_USD, commission: roundHalfUp(Math.min(gross, R.CAP_USD)) };
 }

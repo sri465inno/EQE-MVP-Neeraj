@@ -1,6 +1,6 @@
 {
   "name": "aurora-commission-engine",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Travel-advisor commission engine for Aurora Hotels reservations (sample codebase for the Agentic QE Platform - MVP demo)",
   "private": true,
   "main": "src/server.js",
