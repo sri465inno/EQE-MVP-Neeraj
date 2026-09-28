@@ -39,3 +39,12 @@ Node 20+.
 - `src/report.js`, `src/compare.js`, `src/excel.js` - report, comparison, xlsx exports
 - `src/store.js` - JSON persistence under `data/` (survives restarts)
 - `public/` - plain HTML/CSS/JS UI; `sut/` - the system under test; `test/` - acceptance tests
+
+## Skills
+
+`skills/*.md` are markdown skill files with YAML front matter (`id`, `name`, `description`, `appliesTo`, `delivers`), loaded at startup by `src/skills.js`. Adding a file adds a skill; no code change is needed.
+
+- A skill's body is handed only to the agents listed in `appliesTo` (`normalise`, `delta`, `requirements`, `rules`, `testcases`, `scripts`, `execution`, `defects`, `report`).
+- After a phase runs, `src/handover.js` reads what it actually produced from the persisted cycle and checks it against every active skill's `delivers[phase]`. A missing or empty artefact makes the hand-over `incomplete`, and the phase card and cycle report show it. A comparison on a baseline cycle is reported as `n/a`, not as delivered.
+- Skills are selected per run on the Run page, and all are on by default. The selected skills (text and hash) are stored on the cycle.
+- The test case Excel column order comes from the report-targeted skill that declares one (`test-case-authoring.md`).

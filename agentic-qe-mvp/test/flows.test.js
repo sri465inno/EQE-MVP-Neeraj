@@ -74,7 +74,7 @@ test('Excel export has the Zephyr Scale columns, one row per test case, and mark
   await wb.xlsx.load(await testCasesWorkbook(F.c2));
   const ws = wb.getWorksheet('Test Cases');
   const headers = ws.getRow(1).values.slice(1);
-  assert.deepEqual(headers.slice(0, 13), ['Key', 'Name', 'Objective', 'Precondition', 'Test Step', 'Test Data', 'Expected Result', 'Priority', 'Type', 'Labels', 'Requirement/Issue link', 'Automation status', 'Cycle']);
+  assert.deepEqual(headers.slice(0, 13), ['Key', 'Name', 'Objective', 'Precondition', 'Test Step', 'Test Data', 'Expected Result', 'Priority', 'Type', 'Labels', 'Requirement link', 'Automation status', 'Cycle']);
   assert.equal(headers.length, TEST_CASE_COLUMNS.length);
   assert.equal(ws.rowCount - 1, F.c2.artifacts.testCases.length);
   const rows = [];
@@ -85,12 +85,11 @@ test('Excel export has the Zephyr Scale columns, one row per test case, and mark
   assert.ok(rows.some((r) => r.Change === 'New'));
   assert.ok(rows.some((r) => r.Change === 'Carried over'));
   assert.ok(rows.every((r) => ['Functional', 'Non-functional'].includes(r.Type)));
-  const reqs = new Map(F.c2.artifacts.requirements.map((q) => [q.id, q]));
   for (const t of F.c2.artifacts.testCases) {
     const row = rows.find((r) => r.Key === t.key);
-    assert.equal(row['Requirement/Issue link'], [...reqs.get(t.requirementId).jiraKeys, t.requirementId].join(', '));
+    assert.equal(row['Requirement link'], [...t.sourceRefs, t.requirementId, t.ruleId].join(', '));
   }
-  assert.ok(rows.some((r) => /SWB-\d+/.test(r['Requirement/Issue link'])));
+  assert.ok(rows.some((r) => /SWB-\d+/.test(r['Requirement link'])));
   assert.ok(rows.every((r) => r.Labels.split(', ').every((l) => ['functional', 'regression', 'automation', 'non-functional'].includes(l))));
   for (const buf of [await reportWorkbook(F.c2.report, F.c2), await compareWorkbook(compareCycles(F.c1, F.c2))]) {
     const w = new ExcelJS.Workbook();
@@ -146,6 +145,9 @@ test('incremental cycle: enhanced value executed for real; defects from real fai
   assert.equal(c2.artifacts.defects[0].id, F.c1.artifacts.defects[0].id);
   const statuses = new Set(c2.artifacts.testCases.map((t) => t.status));
   assert.ok(statuses.has('carried over') && statuses.has('re-designed') && statuses.has('new'));
+  for (const p of c2.phases.filter((x) => x.handover)) assert.equal(p.handover.status, 'complete', `${p.name} hand-over: missing ${p.handover.missing}`);
+  assert.equal(c2.phases.find((p) => p.name === 'report').handover.items.find((i) => i.key === 'comparison').status, 'delivered');
+  assert.equal(c2.previousCycleId, F.c1.id);
 });
 
 test('cycle report contains provenance, counts by type and phase tag, execution, defects, coverage and approvals', () => {
@@ -219,4 +221,21 @@ test('restart persistence: cycles, baselines, artifacts, approvals and reports s
   fresh.store.saveCycle(running);
   const again = createApp({ dataDir: F.dataDir, env: {} });
   assert.equal(again.store.getCycle('CYC-99').status, 'interrupted', 'a cycle cut off by a restart is labelled, not reported as finished');
+});
+
+test('merge gate: rejecting one row keeps the baseline value for it and merges the rest with stable ids', async () => {
+  const { pipeline, store } = createApp({ dataDir: tmpDir('rowreject'), env: {} });
+  const c1 = await baselineCycle(pipeline, store);
+  const d = await incrementalDesign(pipeline, store, c1.baselineId);
+  const sla = d.artifacts.requirements.find((r) => r.status === 'enhanced');
+  const added = d.artifacts.requirements.filter((r) => r.status === 'new').map((r) => r.id);
+  assert.throws(() => pipeline.decideMerge(d.id, { decision: 'approve', approver: 'Sam', rejectedRows: ['REQ-999'] }), /Not a row/);
+  await pipeline.decideMerge(d.id, { decision: 'approve', approver: 'Sam Lee', rejectedRows: [sla.id] }).done;
+  const c2 = store.getCycle(d.id);
+  const kept = c2.artifacts.requirements.find((r) => r.id === sla.id);
+  assert.equal(kept.text, c1.artifacts.requirements.find((r) => r.id === sla.id).text, 'rejected enhancement keeps the baseline value');
+  assert.match(c2.artifacts.scripts.find((s) => s.requirementId === sla.id).code, /expect\(days\)\.toBe\(3\);/);
+  assert.deepEqual(c2.artifacts.requirements.filter((r) => r.status === 'new').map((r) => r.id), added, 'ids unchanged');
+  assert.equal(store.getBaseline(c1.baselineId).version, 2);
+  assert.match(c2.approvals.find((a) => a.gate === 'Merge into baseline').detail, new RegExp(`rows rejected at the gate: ${sla.id}`));
 });
