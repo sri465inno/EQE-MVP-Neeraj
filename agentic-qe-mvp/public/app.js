@@ -22,7 +22,8 @@ function table(headers, rows, rowClass) {
   if (!rows.length) return '<p class="muted">None.</p>';
   return `<table><thead><tr>${headers.map((h) => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map((r, i) => `<tr class="${rowClass ? esc(rowClass(i)) : ''}">${r.map((c) => `<td>${c ?? ''}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
 }
-const provPill = (p) => pill(p.kind === 'live' ? 'live call' : p.kind === 'fixture' ? 'recorded fixture' : 'pasted', p.kind);
+const PROV_TEXT = { live: 'live Jira call', github: 'pulled live from GitHub', fixture: 'recorded fixture', pasted: 'pasted' };
+const provPill = (p) => pill(PROV_TEXT[p.kind] || p.kind, p.kind);
 const artPill = (s) => pill(s, s === 'carried over' ? 'carried' : s);
 
 function setTitle(sub) { document.title = sub ? `${sub} - ${TITLE}` : TITLE; }
@@ -34,7 +35,7 @@ async function loadMeta() {
   META = await api('/api/meta');
   document.getElementById('modes').innerHTML = [
     META.jira.mode === 'live' ? pill(`Jira: live (${META.jira.baseUrl})`, 'live') : `<span title="${esc(META.jira.note)}">${pill('Jira: recorded fixtures', 'fixture')}</span>`,
-    pill('Codebase: recorded GitHub fixtures', 'fixture'),
+    pill(`Source: GitHub ${META.codebase.repo}`, 'github'),
     META.model.mode === 'model' ? pill(`Prose: ${META.model.model}`, 'live') : `<span title="${esc(META.model.note)}">${pill('Prose: deterministic demo mode', 'demo')}</span>`,
   ].join('');
 }
@@ -65,10 +66,24 @@ function skillsView(c) {
 ${skills.map((s) => `<details><summary><b>${esc(s.name)}</b> <span class="small muted">skill text</span></summary><pre class="skillbody">${esc(s.body)}</pre></details>`).join('')}`;
 }
 
+function platformCards() {
+  const P = META.platform;
+  return `<div class="card"><h2>The platform: seven agents</h2>
+<p class="small muted">The Agentic QE Platform chains seven agents. Each hands a visible artefact to the next. Intake (${esc(P.intakeStages.join(', '))}) and the two human gates sit around them and are deterministic code.</p>
+<div class="agents">${P.agents.map((g) => `<div class="agent"><b>${g.no}. ${esc(g.name)}</b>${esc(g.produces)}</div>`).join('')}</div></div>
+<div class="grid2"><div class="card"><h2>Inputs: platform vs this MVP</h2>
+<p class="small muted">The platform is built to take many input types. This MVP implements exactly three: a Jira initiative, a Jira epic and a codebase.</p>
+${table(['Input type', 'In this MVP', 'Note'], P.inputTypes.map((t) => [esc(t.name), t.mvp === 'implemented' ? pill('implemented', 'new') : t.mvp === 'platform only' ? pill('platform only', 'pending') : pill(t.mvp, 'designed'), esc(t.note || '')]), (i) => (P.inputTypes[i].mvp === 'platform only' ? 'platform-only' : ''))}</div>
+<div class="card"><h2>Demo capability</h2><p><b>${esc(P.demo.capability)}</b><br><span class="muted">${esc(P.demo.system)}: every reservation carries ${esc(P.demo.reservationAttributes)} attributes; a handful of them drive commission.</span></p>
+<p><b>Flow 1 example:</b> ${esc(P.demo.flow1)}</p><p><b>Flow 2 example:</b> ${esc(P.demo.flow2)}</p>
+<p class="small muted">Sources in <a href="${esc(META.codebase.url)}" target="_blank" rel="noopener">${esc(META.codebase.repo)}</a>: Jira REST v3 export on branch <code>${esc(META.jiraExport.branch)}</code>; codebase on <code>${esc(META.codebase.branches.join('</code>, <code>'))}</code>.</p></div></div>`;
+}
+
 function viewHome() {
   setTitle();
   $view.innerHTML = `<h1>${TITLE}</h1>
 <p>Turns Jira scope and a codebase into reviewed requirements, test cases, runnable Playwright scripts, real execution results, defects and a cycle report. Every consequential decision (normalisation, delta classification, coverage, pass/fail, defect raising) is computed in tested code; a language model, if configured, only drafts report prose.</p>
+${platformCards()}
 <div class="grid2">
 <div class="card"><h2>Flow 1 - Baseline cycle</h2><ol>
 <li><b>Inputs:</b> a Jira initiative, a Jira epic and a codebase (README + source notes).</li>
@@ -84,10 +99,10 @@ function viewHome() {
 <li>Re-execute for real, raise defects, Cycle 2 report and a cycle comparison.</li></ol>
 <a class="btn" href="#/run?type=incremental">Add to a baseline</a></div></div>
 <div class="card"><h2>Honest labelling</h2><ul>
-<li>${pill('recorded fixture', 'fixture')} input read from a recorded Jira REST v3 / GitHub API response in the repo - no live call was made. ${pill('live call', 'live')} appears only when <code>JIRA_BASE_URL</code>, <code>JIRA_EMAIL</code> and <code>JIRA_API_TOKEN</code> are set. ${pill('pasted', 'pasted')} typed or pasted by you.</li>
+<li>${pill('pulled live from GitHub', 'github')} fetched from the repository during this run (git clone of the codebase branch; Jira REST v3 export files from <code>${esc(META.jiraExport.branch)}</code>). The Jira issues there are synthetic test issues, so this is still not a Jira call. ${pill('recorded fixture', 'fixture')} the same content, read offline from a snapshot in this app - no call was made. ${pill('live Jira call', 'live')} appears only when <code>JIRA_BASE_URL</code>, <code>JIRA_EMAIL</code> and <code>JIRA_API_TOKEN</code> are set. ${pill('pasted', 'pasted')} typed or pasted by you.</li>
 <li>${pill('designed', 'designed')} an artifact exists; ${pill('executed', 'executed')} it was actually run by the Playwright CLI - results are parsed from its JSON report.</li>
 <li>${pill('carried over', 'carried')} unchanged from the baseline; ${pill('re-designed', 're-designed')} regenerated because its requirement changed; ${pill('new', 'new')} first designed in this cycle.</li></ul>
-<p class="muted small">Current modes: Jira ${esc(META.jira.mode)}, codebase fixture, prose ${esc(META.model.mode)}; Playwright ${esc(META.playwright)}.</p></div>`;
+<p class="muted small">Current modes: Jira ${esc(META.jira.mode)}, prose ${esc(META.model.mode)}; Playwright ${esc(META.playwright)}.</p></div>`;
 }
 
 /* ---------------- Run ---------------- */
@@ -102,21 +117,22 @@ async function viewRun(params) {
     : [['epic', 'New Jira epic', s.incrementalEpic], ['codebase', 'Updated codebase', s.incrementalBranch]];
   for (const [slot, , def] of slots) {
     const cur = runState.inputs[slot];
-    if (!cur || cur.forType !== runState.type) runState.inputs[slot] = slot === 'codebase' ? { forType: runState.type, mode: 'sample', branch: def, text: '' } : { forType: runState.type, mode: 'jira', key: def, text: '' };
+    if (!cur || cur.forType !== runState.type) runState.inputs[slot] = slot === 'codebase' ? { forType: runState.type, mode: 'github', branch: def, text: '' } : { forType: runState.type, mode: META.jira.mode === 'live' ? 'jira' : 'github', key: def, text: '' };
   }
   const slotCard = ([slot, label]) => {
     const st = runState.inputs[slot];
     const isCode = slot === 'codebase';
-    const modes = isCode ? [['sample', 'Sample repository branch (recorded GitHub fixture)'], ['paste', 'Paste README / source notes']]
-      : [['jira', META.jira.mode === 'live' ? 'Jira issue key (live Jira call)' : 'Jira issue key (recorded fixture)'], ['paste', 'Paste issue JSON or one statement per line']];
+    const modes = isCode ? [['github', `Pull branch from GitHub (${META.codebase.repo})`], ['sample', 'Recorded snapshot of the branch (offline)'], ['paste', 'Paste README / source notes']]
+      : [['github', `Pull the Jira REST v3 export from GitHub (${META.jiraExport.branch})`], ['jira', META.jira.mode === 'live' ? 'Jira issue key (live Jira call)' : 'Jira issue key (recorded fixture, offline)'], ['paste', 'Paste issue JSON or one statement per line']];
     return `<div class="card"><h3>${esc(label)}</h3>
 <div class="row">${modes.map(([m, t]) => `<label><input type="radio" name="mode-${slot}" value="${m}" ${st.mode === m ? 'checked' : ''} data-slot="${slot}" class="mode"> ${esc(t)}</label>`).join('<br>')}</div>
 <div style="margin-top:8px">${st.mode === 'paste'
     ? `<textarea data-slot="${slot}" class="paste" placeholder="Paste here">${esc(st.text)}</textarea><button class="btn secondary sample" data-slot="${slot}">Fill with sample content</button> ${pill('pasted', 'pasted')}`
-    : isCode ? `<select data-slot="${slot}" class="branch">${META.codebase.branches.map((b) => `<option ${b === st.branch ? 'selected' : ''}>${esc(b)}</option>`).join('')}</select> <span class="muted small">staywell/booking-service</span> ${pill('recorded fixture', 'fixture')}`
-      : `<input type="text" data-slot="${slot}" class="key" value="${esc(st.key)}"> ${META.jira.mode === 'live' ? pill('live call', 'live') : pill('recorded fixture', 'fixture')}`}</div></div>`;
+    : isCode ? `<select data-slot="${slot}" class="branch">${META.codebase.branches.map((b) => `<option ${b === st.branch ? 'selected' : ''}>${esc(b)}</option>`).join('')}</select> <span class="muted small">${esc(META.codebase.repo)}</span> ${st.mode === 'github' ? pill('pulled live from GitHub', 'github') : pill('recorded fixture', 'fixture')}`
+      : `<input type="text" data-slot="${slot}" class="key" value="${esc(st.key)}"> ${st.mode === 'github' ? pill('pulled live from GitHub', 'github') : META.jira.mode === 'live' ? pill('live Jira call', 'live') : pill('recorded fixture', 'fixture')}`}</div></div>`;
   };
   $view.innerHTML = `<h1>Run a cycle</h1>
+<div class="banner info">This MVP takes three inputs (Jira initiative, Jira epic, codebase) and runs the seven platform agents over them. Demo capability: ${esc(META.platform.demo.capability)} (${esc(META.platform.demo.reservationAttributes)}-attribute reservation model). <a href="#/">What the platform does beyond the MVP</a></div>
 <div class="card"><h3>1. What do you want to do?</h3><div class="row">
 <div class="choice ${runState.type === 'baseline' ? 'selected' : ''}" data-type="baseline"><b>New baseline</b><br><span class="muted">Jira initiative + Jira epic + codebase</span></div>
 <div class="choice ${runState.type === 'incremental' ? 'selected' : ''}" data-type="incremental"><b>Add to a baseline</b><br><span class="muted">One new Jira epic + updated codebase, against an approved baseline</span></div></div></div>
@@ -203,7 +219,7 @@ ${phases}<div class="tabs">${tabs.map(([t, l]) => `<a href="#/cycle/${esc(c.id)}
 
 function inputsTable(c) {
   return table(['Input', 'Reference', 'Statements', 'Provenance', 'Files / detail'], c.inputs.map((i) => [esc(i.label), `${esc(i.ref)}${i.summary ? `<br><span class="muted">${esc(i.summary)}</span>` : ''}${i.children && i.children.length ? `<br><span class="muted small">child issues: ${esc(i.children.join(', '))}</span>` : ''}`,
-    i.statementCount, `${provPill(i.provenance)}<br><span class="small">${esc(i.provenance.label)}</span>`, `<span class="small">${esc((i.provenance.files || []).join(', '))}</span>${i.compare ? `<br><span class="small">GitHub compare vs main (${esc(i.compare.status)}, ahead by ${esc(i.compare.aheadBy)}): ${esc(i.compare.files.map((f) => `${f.filename} (${f.status})`).join(', '))}</span>` : ''}`]));
+    `${i.statementCount}${i.dataModel ? `<br><span class="small muted">data model: ${esc(i.dataModel.attributeCount)} attributes, ${esc(i.dataModel.drivers.length)} commission drivers</span>` : ''}`, `${provPill(i.provenance)}<br><span class="small">${esc(i.provenance.label)}</span>`, `<span class="small">${esc((i.provenance.files || []).join(', '))}</span>${i.compare ? `<br><span class="small">compare vs ${esc(i.compare.baseBranch || (i.compare.base ? i.compare.base.slice(0, 7) : 'base'))} (${esc(i.compare.status)}): ${esc(i.compare.files.map((f) => `${f.filename} (${f.status})`).join(', '))}</span>` : ''}`]));
 }
 
 const originCell = (origins) => origins.map((o) => `<div class="quote">"${esc(o.quote)}"</div><div class="small muted">${pill(o.source, o.source === 'jira' ? 'jira-only' : 'code-only')} <a href="${esc(o.url || '#')}" target="_blank" rel="noopener">${esc(o.ref)}${o.line ? `:${o.line}` : ''}</a></div>`).join('');

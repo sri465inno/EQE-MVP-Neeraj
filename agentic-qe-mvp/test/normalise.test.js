@@ -19,9 +19,10 @@ test('three inputs are ingested from recorded fixtures and labelled honestly', a
     assert.match(i.provenance.label, /no live (Jira|GitHub) call was made/);
     assert.ok(i.statements.length > 0);
   }
-  assert.equal(inputs[0].ref, 'SWB-1');
-  assert.equal(inputs[1].ref, 'SWB-10');
-  assert.match(inputs[2].ref, /staywell\/booking-service@main/);
+  assert.equal(inputs[0].ref, 'COM-1');
+  assert.equal(inputs[1].ref, 'COM-10');
+  assert.match(inputs[2].ref, /sri465inno\/uc-agentic-quality-engineering@demo\/commission-engine \(df5203e\)/);
+  assert.equal(inputs[2].dataModel.attributeCount, 1000);
 });
 
 test('Jira is only called live when all three credentials are set', async () => {
@@ -29,18 +30,18 @@ test('Jira is only called live when all three credentials are set', async () => 
   assert.equal(jiraLiveConfig({ JIRA_BASE_URL: 'https://x.atlassian.net', JIRA_EMAIL: 'a@b.c' }), null);
   const cfg = jiraLiveConfig({ JIRA_BASE_URL: 'https://x.atlassian.net/', JIRA_EMAIL: 'a@b.c', JIRA_API_TOKEN: 't' });
   assert.equal(cfg.baseUrl, 'https://x.atlassian.net');
-  const fixtureIssue = require('../fixtures/jira/SWB-1.json');
+  const fixtureIssue = require('../fixtures/jira/COM-1.json');
   const calls = [];
   const fetchImpl = async (url, opts) => { calls.push({ url, auth: opts.headers.Authorization }); return { ok: true, status: 200, json: async () => fixtureIssue }; };
-  const live = await loadJiraIssue('SWB-1', { env: { JIRA_BASE_URL: 'https://x.atlassian.net', JIRA_EMAIL: 'a@b.c', JIRA_API_TOKEN: 't' }, fetchImpl });
+  const live = await loadJiraIssue('COM-1', { env: { JIRA_BASE_URL: 'https://x.atlassian.net', JIRA_EMAIL: 'a@b.c', JIRA_API_TOKEN: 't' }, fetchImpl });
   assert.equal(live.provenance.kind, 'live');
-  assert.match(calls[0].url, /^https:\/\/x\.atlassian\.net\/rest\/api\/3\/issue\/SWB-1/);
+  assert.match(calls[0].url, /^https:\/\/x\.atlassian\.net\/rest\/api\/3\/issue\/COM-1/);
   assert.match(calls[0].auth, /^Basic /);
-  const rec = await loadJiraIssue('SWB-1', { env: {}, fetchImpl: () => { throw new Error('must not call'); } });
+  const rec = await loadJiraIssue('COM-1', { env: {}, fetchImpl: () => { throw new Error('must not call'); } });
   assert.equal(rec.provenance.kind, 'fixture');
 });
 
-test('normalisation shows Jira-only, code-only and an unresolved 15% vs 20% conflict', async () => {
+test('normalisation shows Jira-only, code-only and an unresolved 2% vs 1.5% GDS uplift conflict', async () => {
   const { statements } = await baselineStatements();
   const n = normalise(statements);
   assert.equal(n.counts.statements, statements.length);
@@ -48,14 +49,20 @@ test('normalisation shows Jira-only, code-only and an unresolved 15% vs 20% conf
   assert.ok(n.counts['code-only'] >= 1, 'has code-only statements');
   assert.equal(n.counts.conflict, 1);
   const conflict = n.groups.find((g) => g.bucket === 'conflict');
-  assert.deepEqual(conflict.options.map((o) => o.signature).sort(), ['15 %', '20 %']);
-  assert.deepEqual(conflict.options.find((o) => o.signature === '15 %').sources, ['jira']);
-  assert.deepEqual(conflict.options.find((o) => o.signature === '20 %').sources, ['code']);
+  assert.deepEqual(conflict.options.map((o) => o.signature).sort(), ['1.5 %', '2 %']);
+  assert.deepEqual(conflict.options.find((o) => o.signature === '2 %').sources, ['jira']);
+  assert.deepEqual(conflict.options.find((o) => o.signature === '1.5 %').sources, ['code']);
+  assert.ok(conflict.options.every((o) => /GDS/.test(o.text)));
   assert.equal(conflict.resolution ?? null, null, 'conflict is left unresolved');
   const jiraOnly = n.groups.filter((g) => g.bucket === 'jira-only').map((g) => g.text).join(' | ');
   const codeOnly = n.groups.filter((g) => g.bucket === 'code-only').map((g) => g.text).join(' | ');
-  assert.match(jiraOnly, /800 ms/);
-  assert.match(codeOnly, /409/);
+  assert.match(jiraOnly, /300 ms/);
+  assert.match(jiraOnly, /Cancelled and no-show/);
+  assert.match(codeOnly, /IATA number returns HTTP 422/);
+  const agreed = n.groups.filter((g) => g.bucket === 'agreed').map((g) => g.text).join(' | ');
+  assert.match(agreed, /1000 attributes/);
+  assert.match(agreed, /capped at USD 500/);
+  assert.match(agreed, /7 nights or more/);
   assert.equal(normalise(statements).groups.map((g) => g.bucket).join(), n.groups.map((g) => g.bucket).join(), 'deterministic');
 });
 
@@ -64,10 +71,10 @@ test('the reviewed set requires every conflict to be settled and honours exclusi
   const n = normalise(statements);
   const conflict = n.groups.find((g) => g.bucket === 'conflict');
   assert.throws(() => applyReview(n, {}), /conflict/i);
-  const jira15 = conflict.options.find((o) => o.signature === '15 %');
-  const reviewed = applyReview(n, { resolutions: { [conflict.id]: jira15.optionId } });
-  const fee = reviewed.find((r) => r.groupId === conflict.id);
-  assert.match(fee.text, /15%/);
+  const jira2 = conflict.options.find((o) => o.signature === '2 %');
+  const reviewed = applyReview(n, { resolutions: { [conflict.id]: jira2.optionId } });
+  const gds = reviewed.find((r) => r.groupId === conflict.id);
+  assert.match(gds.text, /additional 2% channel uplift/);
   const agreed = n.groups.find((g) => g.bucket === 'agreed');
   const withExclusion = applyReview(n, { excluded: [conflict.id, agreed.id] });
   assert.equal(withExclusion.length, n.groups.length - 2);

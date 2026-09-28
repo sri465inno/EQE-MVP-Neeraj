@@ -1,6 +1,24 @@
 'use strict';
 
-function computeCoverage(requirements, testCases, results = []) {
+/** Which commission-driving attributes of the reservation model are varied by at least one test case, and with what result. */
+function computeAttributeCoverage(dataModel, testCases, results = []) {
+  if (!dataModel) return null;
+  const resByKey = new Map(results.map((r) => [r.key, r]));
+  const rows = dataModel.drivers.map((d) => {
+    const cases = testCases.filter((t) => (t.varies || []).includes(d.name));
+    const statuses = cases.map((t) => resByKey.get(t.key)?.status).filter((s) => s === 'passed' || s === 'failed');
+    const status = !cases.length ? 'not exercised' : !statuses.length ? 'designed, not executed' : statuses.includes('failed') ? 'exercised - failing' : 'exercised - passing';
+    return { attribute: d.name, description: d.description, cases: cases.map((t) => t.key), status };
+  });
+  const exercised = rows.filter((r) => r.cases.length).length;
+  return {
+    model: dataModel.name, file: dataModel.file, attributeCount: dataModel.attributeCount, driverCount: rows.length, exercised,
+    percent: rows.length ? Math.round((exercised / rows.length) * 1000) / 10 : 0,
+    rows,
+  };
+}
+
+function computeCoverage(requirements, testCases, results = [], dataModel = null) {
   const resByKey = new Map(results.map((r) => [r.key, r]));
   const rows = requirements.map((req) => {
     const cases = testCases.filter((t) => t.requirementId === req.id);
@@ -16,6 +34,7 @@ function computeCoverage(requirements, testCases, results = []) {
   const pct = (n) => (requirements.length ? Math.round((n / requirements.length) * 1000) / 10 : 0);
   return {
     rows,
+    attributes: computeAttributeCoverage(dataModel, testCases, results),
     totals: {
       requirements: requirements.length,
       designed: rows.filter((r) => r.cases > 0).length,
@@ -32,4 +51,4 @@ function computeCoverage(requirements, testCases, results = []) {
   };
 }
 
-module.exports = { computeCoverage };
+module.exports = { computeCoverage, computeAttributeCoverage };

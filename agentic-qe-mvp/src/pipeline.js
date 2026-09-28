@@ -8,6 +8,7 @@ const design = require('./agents/design');
 const { executeSuite } = require('./execution');
 const { raiseDefects } = require('./defects');
 const { computeCoverage } = require('./coverage');
+const { DEFAULT_BUILD } = require('../sut/server');
 const fs = require('fs');
 const { buildCycleReport, collectHandovers } = require('./report');
 const { compareCycles } = require('./compare');
@@ -99,7 +100,7 @@ class Pipeline {
       createdBy: reviewer || null,
       baselineId: baseline ? baseline.id : null,
       baselineVersionAtStart: baseline ? baseline.version : null,
-      sutBuild: sutBuild || codebase?.branch || 'main',
+      sutBuild: sutBuild || codebase?.branch || DEFAULT_BUILD,
       inputs: loaded.map(({ statements: s, ...rest }) => ({ ...rest, statementCount: s.length })),
       normalisation,
       skills: activeSkills,
@@ -355,7 +356,7 @@ class Pipeline {
     cycle.artifacts.resolvedDefects = resolved;
     this.handover(cycle, 'defects');
     setPhase(cycle, 'defects', 'done', `${defects.length} defect(s) from real failures${resolved.length ? ` · ${resolved.length} resolved` : ''}`);
-    cycle.artifacts.coverage = computeCoverage(cycle.artifacts.requirements, cycle.artifacts.testCases, execution.results);
+    cycle.artifacts.coverage = computeCoverage(cycle.artifacts.requirements, cycle.artifacts.testCases, execution.results, cycle.inputs.find((i) => i.slot === 'codebase')?.dataModel);
     this.store.saveCycle(cycle);
   }
 

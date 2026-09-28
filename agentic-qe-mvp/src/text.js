@@ -9,12 +9,15 @@ const VALUE_PATTERNS = [
   { re: /(\d+(?:\.\d+)?)\s*(?:business\s+)?days?\b/gi, unit: 'days' },
   { re: /(\d+(?:\.\d+)?)\s*(?:hours?|hrs?)\b/gi, unit: 'hours' },
   { re: /(\d+(?:\.\d+)?)\s*decimal\s+places?\b/gi, unit: 'decimal places' },
+  { re: /\bUSD\s*(\d+(?:\.\d+)?)/gi, unit: 'USD' },
+  { re: /(\d+)\s*nights?\b/gi, unit: 'nights' },
+  { re: /(\d+)\s+(?:or more\s+)?rooms?\b/gi, unit: 'rooms' },
   { re: /(\d+(?:\.\d+)?)/g, unit: '' },
 ];
 
 const STOPWORDS = new Set(('a an the is are be been being of to in into for and or at within must should shall will can may '
   + 'every each all with by on per from its it their this that as than when which who any has have had do does '
-  + 'http percent ms millisecond milliseconds percentile day days business hour hours hr hrs decimal place places').split(' '));
+  + 'http percent ms millisecond milliseconds percentile day days business hour hours hr hrs decimal place places more').split(' '));
 
 function extractValues(text) {
   let rest = String(text);

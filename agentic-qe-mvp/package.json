@@ -9,7 +9,8 @@
     "sut": "node sut/server.js",
     "test": "node --test --test-concurrency=1 test/*.test.js",
     "lint": "node scripts/lint.js",
-    "fixtures": "node scripts/make-fixtures.js"
+    "jira-export": "node scripts/make-jira-export.js",
+    "record-github": "node scripts/record-github-fixtures.js"
   },
   "engines": {
     "node": ">=20"

@@ -35,10 +35,10 @@ test('baseline execution is real: Playwright JSON results map back to test cases
   }
   const failed = ex.results.filter((r) => r.status === 'failed');
   assert.equal(failed.length, 1, 'exactly the seeded defect fails');
-  assert.match(failed[0].name, /rounded/i);
-  assert.equal(failed[0].error.expected, '98.78');
-  assert.equal(failed[0].error.actual, '98.77');
-  assert.match(failed[0].error.assertion, /expect\(r\.body\.refund\)\.toBe\(98\.78\)/);
+  assert.match(failed[0].name, /exactly 7 nights earns the 1\.5% long-stay bonus/);
+  assert.equal(failed[0].error.expected, '92');
+  assert.equal(failed[0].error.actual, '80');
+  assert.match(failed[0].error.assertion, /expect\(r\.body\.commission\)\.toBe\(92\)/);
   assert.ok(failed[0].evidence.length > 0);
   assert.equal(ex.summary.passed + ex.summary.failed, ex.summary.executed);
 });
@@ -58,12 +58,12 @@ test('defects are raised only from real failures, with expected/actual/assertion
   const d = c.artifacts.defects[0];
   const failed = c.artifacts.execution.results.find((r) => r.status === 'failed');
   assert.equal(d.testCaseKey, failed.key);
-  assert.equal(d.expected, '98.78');
-  assert.equal(d.actual, '98.77');
-  assert.match(d.assertion, /toBe\(98\.78\)/);
+  assert.equal(d.expected, '92');
+  assert.equal(d.actual, '80');
+  assert.match(d.assertion, /toBe\(92\)/);
   assert.ok(c.artifacts.requirements.some((r) => r.id === d.requirementId));
   assert.ok(c.artifacts.testCases.some((t) => t.key === d.testCaseKey));
-  assert.deepEqual(d.jiraKeys, ['SWB-10']);
+  assert.deepEqual(d.jiraKeys, ['COM-10']);
   assert.throws(() => raiseDefects({ execution: { executed: false, results: [] }, testCases: [], requirements: [], cycle: c }), /real execution/);
   const allPass = { executed: true, results: c.artifacts.execution.results.map((r) => ({ ...r, status: r.status === 'failed' ? 'passed' : r.status })) };
   assert.equal(raiseDefects({ execution: allPass, testCases: c.artifacts.testCases, requirements: c.artifacts.requirements, cycle: c }).defects.length, 0);
@@ -79,9 +79,9 @@ test('Excel export has the Zephyr Scale columns, one row per test case, and mark
   assert.equal(ws.rowCount - 1, F.c2.artifacts.testCases.length);
   const rows = [];
   ws.eachRow((r, i) => { if (i > 1) rows.push(Object.fromEntries(headers.map((h, j) => [h, r.getCell(j + 1).value]))); });
-  const sla = rows.find((r) => /Refund is due within/.test(r.Name));
-  assert.equal(sla.Change, 'Changed');
-  assert.match(sla['Expected Result'], /2 days/);
+  const cap = rows.find((r) => /Commission is capped at/.test(r.Name));
+  assert.equal(cap.Change, 'Changed');
+  assert.match(cap['Expected Result'], /USD 750\.00/);
   assert.ok(rows.some((r) => r.Change === 'New'));
   assert.ok(rows.some((r) => r.Change === 'Carried over'));
   assert.ok(rows.every((r) => ['Functional', 'Non-functional'].includes(r.Type)));
@@ -89,7 +89,7 @@ test('Excel export has the Zephyr Scale columns, one row per test case, and mark
     const row = rows.find((r) => r.Key === t.key);
     assert.equal(row['Requirement link'], [...t.sourceRefs, t.requirementId, t.ruleId].join(', '));
   }
-  assert.ok(rows.some((r) => /SWB-\d+/.test(r['Requirement link'])));
+  assert.ok(rows.some((r) => /COM-20/.test(r['Requirement link'])));
   assert.ok(rows.every((r) => r.Labels.split(', ').every((l) => ['functional', 'regression', 'automation', 'non-functional'].includes(l))));
   for (const buf of [await reportWorkbook(F.c2.report, F.c2), await compareWorkbook(compareCycles(F.c1, F.c2))]) {
     const w = new ExcelJS.Workbook();
@@ -108,7 +108,7 @@ test('merge approval is required before the baseline changes; approval bumps the
   const after = F.store.getBaseline(F.c1.baselineId);
   assert.equal(after.version, 2);
   assert.equal(after.requirements.length, F.c2.artifacts.requirements.length);
-  assert.ok(after.requirements.find((r) => /within 2 days/.test(r.text)));
+  assert.ok(after.requirements.find((r) => /capped at USD 750/.test(r.text)));
   assert.equal(F.store.getBaseline(F.c1.baselineId, 1).version, 1, 'v1 snapshot kept');
   assert.ok(F.c2.approvals.some((a) => a.gate === 'Merge into baseline' && a.decision === 'approved' && a.by === 'Sam Lee'));
 });
@@ -134,11 +134,17 @@ test('incremental cycle: enhanced value executed for real; defects from real fai
   assert.equal(c2.status, 'completed');
   assert.equal(c2.delta.summary, `${c2.delta.counts.unchanged} unchanged · ${c2.delta.counts.enhanced} enhanced · ${c2.delta.counts.new} new`);
   assert.ok(c2.delta.counts.unchanged && c2.delta.counts.enhanced && c2.delta.counts.new);
-  const sla = c2.artifacts.scripts.find((s) => s.file.includes('refund-sla'));
-  assert.match(sla.code, /expect\(days\)\.toBe\(2\);/);
-  const slaCase = c2.artifacts.testCases.find((t) => t.scriptFile === sla.file);
-  assert.equal(c2.artifacts.execution.results.find((r) => r.key === slaCase.key).status, 'passed', 'the 2-day SLA passes on the updated build');
-  assert.equal(c2.artifacts.execution.sut.build, 'feature/booking-date-changes');
+  assert.equal(c2.delta.summary, '10 unchanged · 1 enhanced · 3 new');
+  const cap = c2.artifacts.scripts.find((s) => s.file.includes('commission-cap'));
+  assert.match(cap.code, /expect\(r\.body\.commission\)\.toBe\(750\);/);
+  const capCase = c2.artifacts.testCases.find((t) => t.scriptFile === cap.file);
+  assert.equal(c2.artifacts.execution.results.find((r) => r.key === capCase.key).status, 'passed', 'the USD 750 cap passes on the v2 build');
+  for (const file of ['group-flat-rate', 'package-room-component', 'corporate-flat-rate']) {
+    const s = c2.artifacts.scripts.find((x) => x.file.includes(file));
+    assert.equal(s.status, 'new', file);
+    for (const k of s.covers) assert.equal(c2.artifacts.execution.results.find((r) => r.key === k).status, 'passed', `${k} passes on v2`);
+  }
+  assert.equal(c2.artifacts.execution.sut.build, 'demo/commission-engine-v2');
   const failed = c2.artifacts.execution.results.filter((r) => r.status === 'failed').map((r) => r.key).sort();
   assert.deepEqual(c2.artifacts.defects.map((d) => d.testCaseKey).sort(), failed);
   assert.equal(c2.artifacts.defects[0].movement, 'still open');
@@ -169,7 +175,15 @@ test('cycle report contains provenance, counts by type and phase tag, execution,
   const html = renderReportHtml(r);
   assert.match(html, /Agentic QE Platform - MVP/);
   assert.match(html, /recorded|fixture/i);
-  assert.match(html, /98\.77/);
+  assert.match(html, /toBe\(92\)/);
+  assert.match(html, /Seven platform agents/);
+  assert.match(html, /1000<\/b> attributes/);
+  assert.equal(r.coverage.attributes.attributeCount, 1000);
+  assert.ok(r.coverage.attributes.exercised >= 8, 'most commission drivers are varied by some case');
+  assert.equal(r.coverage.attributes.rows.find((x) => x.attribute === 'stay.nights').status, 'exercised - failing', 'the seeded 7-night defect shows on its driver');
+  assert.equal(r.platform.agents.length, 7);
+  assert.deepEqual(r.platform.agents.map((g) => g.status), [...Array(6).fill('done'), 'producing this report']);
+  assert.deepEqual(r.platform.inputsImplemented.slice(0, 3), ['Jira initiative (implemented)', 'Jira epic (+ child stories) (implemented)', 'Codebase (GitHub branch) (implemented)']);
   const r2 = F.c2.report;
   assert.match(r2.delta.summary, /unchanged · \d+ enhanced · \d+ new/);
   assert.equal(r2.approvals.length, 2);
@@ -182,7 +196,7 @@ test('cycle comparison: requirements, test cases and scripts added/changed/uncha
   const d = F.c2.delta.counts;
   assert.equal(c.requirements.added.length, d.new);
   assert.equal(c.requirements.changed.length, d.enhanced);
-  assert.equal(c.requirements.changedDetail[0].before.includes('3 days') && c.requirements.changedDetail[0].after.includes('2 days'), true);
+  assert.equal(c.requirements.changedDetail[0].before.includes('USD 500') && c.requirements.changedDetail[0].after.includes('USD 750'), true);
   assert.equal(c.requirements.unchanged.length, F.c1.artifacts.requirements.length - d.enhanced);
   assert.equal(c.testCases.changed.length, F.c2.artifacts.testCases.filter((t) => t.status === 're-designed').length);
   assert.equal(c.testCases.added.length, F.c2.artifacts.testCases.filter((t) => t.status === 'new').length);
@@ -228,13 +242,14 @@ test('merge gate: rejecting one row keeps the baseline value for it and merges t
   const c1 = await baselineCycle(pipeline, store);
   const d = await incrementalDesign(pipeline, store, c1.baselineId);
   const sla = d.artifacts.requirements.find((r) => r.status === 'enhanced');
+  assert.match(sla.text, /USD 750/);
   const added = d.artifacts.requirements.filter((r) => r.status === 'new').map((r) => r.id);
   assert.throws(() => pipeline.decideMerge(d.id, { decision: 'approve', approver: 'Sam', rejectedRows: ['REQ-999'] }), /Not a row/);
   await pipeline.decideMerge(d.id, { decision: 'approve', approver: 'Sam Lee', rejectedRows: [sla.id] }).done;
   const c2 = store.getCycle(d.id);
   const kept = c2.artifacts.requirements.find((r) => r.id === sla.id);
   assert.equal(kept.text, c1.artifacts.requirements.find((r) => r.id === sla.id).text, 'rejected enhancement keeps the baseline value');
-  assert.match(c2.artifacts.scripts.find((s) => s.requirementId === sla.id).code, /expect\(days\)\.toBe\(3\);/);
+  assert.match(c2.artifacts.scripts.find((s) => s.requirementId === sla.id).code, /expect\(r\.body\.commission\)\.toBe\(500\);/);
   assert.deepEqual(c2.artifacts.requirements.filter((r) => r.status === 'new').map((r) => r.id), added, 'ids unchanged');
   assert.equal(store.getBaseline(c1.baselineId).version, 2);
   assert.match(c2.approvals.find((a) => a.gate === 'Merge into baseline').detail, new RegExp(`rows rejected at the gate: ${sla.id}`));

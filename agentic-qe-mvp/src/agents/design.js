@@ -2,7 +2,7 @@
 // Design agents, run in a fixed order:
 //   requirements repository -> business rules -> test cases -> automation scripts
 // All structure and decisions are deterministic; the optional model only drafts prose elsewhere.
-const { classify, CATALOGUE, MONEY_KINDS } = require('./catalogue');
+const { classify, CATALOGUE, MONEY_KINDS, SPEC_PRELUDE } = require('./catalogue');
 
 const pad = (n, w = 3) => String(n).padStart(w, '0');
 const clone = (x) => JSON.parse(JSON.stringify(x));
@@ -196,7 +196,7 @@ function designAgents(requirements, { cycle, counters, previous = null, skills =
         status: prev ? 're-designed' : 'new', version: prev ? prev.version + 1 : 1,
         previous: prev ? { name: prev.name, expected: prev.expected, testData: prev.testData, version: prev.version } : null,
         revisionNote: prev ? `v${prev.version + 1} (${cycle.id}): ${revision(prev, s)}` : null,
-        ui: Boolean(c?.entry.ui),
+        ui: Boolean(c?.entry.ui), varies: s.varies || [],
         code: automated ? s.code() : null,
       };
       return tc;
@@ -240,25 +240,7 @@ ${tc.code}
 // Self-contained: needs only @playwright/test and a baseURL pointing at the system under test.
 const { test, expect } = require('@playwright/test');
 
-const HOUR = 3600 * 1000;
-const inHours = (h) => new Date(Date.now() + h * HOUR).toISOString();
-
-async function call(request, testInfo, method, url, data) {
-  const res = await request.fetch(url, { method, data });
-  let body = null;
-  try { body = await res.json(); } catch { body = null; }
-  await testInfo.attach(\`\${method} \${url}\`, {
-    body: JSON.stringify({ request: { method, url, data: data ?? null }, response: { status: res.status(), body } }, null, 2),
-    contentType: 'application/json',
-  });
-  return { status: res.status(), body };
-}
-
-async function book(request, testInfo, total, checkInHours) {
-  const r = await call(request, testInfo, 'POST', '/api/bookings', { guest: 'QE Agent', total, checkIn: inHours(checkInHours) });
-  expect(r.status).toBe(201);
-  return r.body;
-}
+${SPEC_PRELUDE}
 
 ${tests}
 `;

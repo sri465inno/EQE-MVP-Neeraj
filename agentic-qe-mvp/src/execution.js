@@ -4,7 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
-const { startSut } = require('../sut/server');
+const { startSut, BUILDS, DEFAULT_BUILD } = require('../sut/server');
 
 const ROOT = path.join(__dirname, '..');
 const PW_CLI = require.resolve('@playwright/test/cli');
@@ -128,7 +128,7 @@ function summarise(results) {
 }
 
 /** Starts the SUT, writes specs + config, runs Playwright headless, parses and maps the JSON report. */
-async function executeSuite({ scripts, testCases, runDir, sutBuild = 'main' }) {
+async function executeSuite({ scripts, testCases, runDir, sutBuild = DEFAULT_BUILD }) {
   fs.mkdirSync(runDir, { recursive: true });
   const sut = await startSut({ version: sutBuild });
   const startedAt = new Date().toISOString();
@@ -154,7 +154,7 @@ async function executeSuite({ scripts, testCases, runDir, sutBuild = 'main' }) {
     tool: `Playwright ${PW_VERSION} (headless Chromium, JSON reporter)`,
     command: run.command,
     exitCode: run.exitCode,
-    sut: { build: sutBuild, url: sut.url, name: 'StayWell booking-service (bundled sample SUT)' },
+    sut: { build: sutBuild, url: sut.url, name: `Aurora commission engine, bundled copy of branch ${sutBuild} (samples/commission-engine/${BUILDS[sutBuild]})` },
     startedAt, finishedAt,
     reportFile: 'playwright-report.json',
     playwrightStats: report.stats || null,

@@ -10,7 +10,10 @@ a{color:#1557b0}
 .modes{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
 .pill{display:inline-block;border-radius:12px;padding:2px 9px;font-size:12px;background:#e8eef8;color:#1d2433;white-space:nowrap}
 .pill.fixture{background:#fff1cc;color:#6b4d00}.pill.live{background:#d8f3e2;color:#0b5a2d}.pill.pasted{background:#e9e2fb;color:#46307f}
-.pill.demo{background:#e8eef8}.pill.new{background:#d8f3e2;color:#0b5a2d}.pill.enhanced,.pill.re-designed{background:#fff1cc;color:#6b4d00}
+.pill.github{background:#dcefff;color:#0b3f73}.pill.demo{background:#e8eef8}
+.agents{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}.agent{background:#f4f7fb;border:1px solid #dde5f0;border-radius:8px;padding:8px;font-size:13px}.agent b{display:block;color:#123a73}
+@media(max-width:1100px){.agents{grid-template-columns:repeat(2,minmax(0,1fr))}}
+tr.platform-only td{color:#6b7385}.pill.new{background:#d8f3e2;color:#0b5a2d}.pill.enhanced,.pill.re-designed{background:#fff1cc;color:#6b4d00}
 .pill.unchanged,.pill.carried{background:#eceff3;color:#4a5261}.pill.passed{background:#d8f3e2;color:#0b5a2d}.pill.failed{background:#fde2e0;color:#8c1d15}
 .pill.not-run,.pill.skipped,.pill.pending{background:#eceff3;color:#4a5261}.pill.conflict{background:#fde2e0;color:#8c1d15}
 .pill.jira-only{background:#dfeafe;color:#16407f}.pill.code-only{background:#e9e2fb;color:#46307f}.pill.agreed{background:#d8f3e2;color:#0b5a2d}

@@ -5,7 +5,7 @@ const { MONEY_KINDS, JOURNEY_KINDS, ADVISORY_KINDS } = require('./agents/catalog
 /** Severity comes from the business impact of the rule at risk, not from how the test failed. */
 function severityOf(kind) {
   if (MONEY_KINDS.has(kind)) return { severity: 'Critical', impact: 'money moved wrongly' };
-  if (JOURNEY_KINDS.has(kind)) return { severity: 'High', impact: 'a core guest journey is blocked' };
+  if (JOURNEY_KINDS.has(kind)) return { severity: 'High', impact: 'a core advisor journey is blocked' };
   if (ADVISORY_KINDS.has(kind)) return { severity: 'Low', impact: 'advisory (non-functional target missed)' };
   return { severity: 'Medium', impact: 'wrong value or status with a workaround' };
 }

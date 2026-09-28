@@ -4,12 +4,12 @@ const os = require('os');
 const path = require('path');
 const { createApp } = require('../src/server');
 
-const BASELINE_INPUTS = { initiative: { mode: 'jira', key: 'SWB-1' }, epic: { mode: 'jira', key: 'SWB-10' }, codebase: { mode: 'sample', branch: 'main' } };
-const INCREMENT_INPUTS = { epic: { mode: 'jira', key: 'SWB-20' }, codebase: { mode: 'sample', branch: 'feature/booking-date-changes' } };
+const BASELINE_INPUTS = { initiative: { mode: 'jira', key: 'COM-1' }, epic: { mode: 'jira', key: 'COM-10' }, codebase: { mode: 'sample', branch: 'demo/commission-engine' } };
+const INCREMENT_INPUTS = { epic: { mode: 'jira', key: 'COM-20' }, codebase: { mode: 'sample', branch: 'demo/commission-engine-v2' } };
 
 const tmpDir = (label) => fs.mkdtempSync(path.join(os.tmpdir(), `aqe-${label}-`));
 
-async function baselineCycle(pipeline, store, { reviewer = 'Priya Shah', pick = '20 %' } = {}) {
+async function baselineCycle(pipeline, store, { reviewer = 'Priya Shah', pick = '1.5 %' } = {}) {
   let c = await pipeline.startCycle({ type: 'baseline', inputs: BASELINE_INPUTS, reviewer });
   const conflict = c.normalisation.groups.find((g) => g.bucket === 'conflict');
   const opt = conflict.options.find((o) => o.signature === pick);

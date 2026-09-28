@@ -1,0 +1,12 @@
+{
+  "type": "file",
+  "encoding": "base64",
+  "size": 830,
+  "name": "rules.js",
+  "path": "src/rules.js",
+  "sha": "e3125b6a0830790c4973c3f7859962d7aac2030c",
+  "url": "https://api.github.com/repos/sri465inno/uc-agentic-quality-engineering/contents/src/rules.js?ref=demo%2Fcommission-engine",
+  "html_url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/src/rules.js",
+  "download_url": "https://raw.githubusercontent.com/sri465inno/uc-agentic-quality-engineering/df5203e8ab429df868960d985a658967fc8408b8/src/rules.js",
+  "content": "J3VzZSBzdHJpY3QnOwovLyBDb21taXNzaW9uIHBhcmFtZXRlcnMgZm9yIHJlbGVhc2UgMS4wLgoK\nY29uc3QgQlVJTEQgPSAnZGVtby9jb21taXNzaW9uLWVuZ2luZSc7CgovKiogQHJ1bGUgQmFzZSBj\nb21taXNzaW9uIGlzIDEwJSBvZiBjb21taXNzaW9uYWJsZSByb29tIHJldmVudWUuICovCmNvbnN0\nIEJBU0VfUkFURV9QQ1QgPSAxMDsKCi8qKiBAcnVsZSBSZXNlcnZhdGlvbnMgYm9va2VkIHRocm91\nZ2ggdGhlIEdEUyBjaGFubmVsIGVhcm4gYW4gYWRkaXRpb25hbCAxLjUlIGNoYW5uZWwgdXBsaWZ0\nLiAqLwpjb25zdCBHRFNfVVBMSUZUX1BDVCA9IDEuNTsKCi8qKiBAcnVsZSBTdGF5cyBvZiA3IG5p\nZ2h0cyBvciBtb3JlIGVhcm4gYSBsb25nLXN0YXkgYm9udXMgb2YgMS41JS4gKi8KY29uc3QgTE9O\nR19TVEFZX05JR0hUUyA9IDc7CmNvbnN0IExPTkdfU1RBWV9CT05VU19QQ1QgPSAxLjU7CgovKiog\nQHJ1bGUgQ29tbWlzc2lvbiBwZXIgcmVzZXJ2YXRpb24gaXMgY2FwcGVkIGF0IFVTRCA1MDAuICov\nCmNvbnN0IENBUF9VU0QgPSA1MDA7CgovKiogQHJ1bGUgQ29tbWlzc2lvbiBpcyByb3VuZGVkIGhh\nbGYtdXAgdG8gMiBkZWNpbWFsIHBsYWNlcy4gKi8KY29uc3QgREVDSU1BTFMgPSAyOwoKY29uc3Qg\nTk9OX0NPTU1JU1NJT05BQkxFX1NUQVRVU0VTID0gWydDQU5DRUxMRUQnLCAnTk9fU0hPVyddOwoK\nbW9kdWxlLmV4cG9ydHMgPSB7IEJVSUxELCBCQVNFX1JBVEVfUENULCBHRFNfVVBMSUZUX1BDVCwg\nTE9OR19TVEFZX05JR0hUUywgTE9OR19TVEFZX0JPTlVTX1BDVCwgQ0FQX1VTRCwgREVDSU1BTFMs\nIE5PTl9DT01NSVNTSU9OQUJMRV9TVEFUVVNFUyB9Owo=\n"
+}

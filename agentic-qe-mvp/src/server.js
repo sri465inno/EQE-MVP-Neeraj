@@ -7,11 +7,12 @@ const { Pipeline } = require('./pipeline');
 const { renderReportHtml, APP_TITLE } = require('./report');
 const { compareCycles, renderCompareHtml } = require('./compare');
 const { testCasesWorkbook, reportWorkbook, compareWorkbook } = require('./excel');
-const { jiraLiveConfig } = require('./connectors/jira');
-const { listFixtureBranches, loadCodebaseFixture } = require('./connectors/codebase');
+const { jiraLiveConfig, EXPORT } = require('./connectors/jira');
+const { listFixtureBranches, loadCodebaseFixture, DEFAULT_BRANCH, SOURCE } = require('./connectors/codebase');
 const { modelConfig } = require('./llm');
 const { PW_VERSION } = require('./execution');
 const { loadSkills } = require('./skills');
+const { SEVEN_AGENTS, INTAKE_STAGES, INPUT_TYPES, DEMO } = require('./platform');
 
 const XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 
@@ -42,11 +43,13 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
       title: APP_TITLE,
       jira: jira ? { mode: 'live', baseUrl: jira.baseUrl } : { mode: 'fixture', note: 'JIRA_BASE_URL / JIRA_EMAIL / JIRA_API_TOKEN not set: recorded fixtures are used; no live Jira call is made' },
       model: model ? { mode: 'model', model: model.model } : { mode: 'demo', note: 'No model API key: deterministic demo mode (template prose)' },
-      codebase: { mode: 'fixture', branches: listFixtureBranches() },
+      codebase: { repo: SOURCE.fullName, url: SOURCE.htmlUrl, branches: listFixtureBranches() },
+      jiraExport: { repo: EXPORT.repo, branch: EXPORT.branch },
       playwright: PW_VERSION,
       skills: skillLib.skills.map(({ body, ...s }) => s),
       skillWarnings: skillLib.warnings,
-      samples: { initiative: 'SWB-1', epic: 'SWB-10', incrementalEpic: 'SWB-20', baselineBranch: 'main', incrementalBranch: 'feature/booking-date-changes' },
+      platform: { agents: SEVEN_AGENTS, intakeStages: INTAKE_STAGES, inputTypes: INPUT_TYPES, demo: DEMO },
+      samples: { initiative: 'COM-1', epic: 'COM-10', incrementalEpic: 'COM-20', baselineBranch: 'demo/commission-engine', incrementalBranch: 'demo/commission-engine-v2' },
     });
   });
 
@@ -54,7 +57,7 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
 
   app.get('/api/sample-text', (req, res) => {
     if (req.query.slot === 'codebase') {
-      const cb = loadCodebaseFixture(req.query.branch || 'main');
+      const cb = loadCodebaseFixture(req.query.branch || DEFAULT_BRANCH);
       return res.type('text/plain').send(cb.files.map((f) => `# ${f.path}\n${f.text}`).join('\n\n'));
     }
     if (!/^[A-Z][A-Z0-9]+-\d+$/.test(req.query.key || '')) return res.status(400).json({ error: 'key required' });
