@@ -1,0 +1,159 @@
+'use strict';
+const path = require('path');
+const fs = require('fs');
+const express = require('express');
+const { Store } = require('./store');
+const { Pipeline } = require('./pipeline');
+const { renderReportHtml, APP_TITLE } = require('./report');
+const { compareCycles, renderCompareHtml } = require('./compare');
+const { testCasesWorkbook, reportWorkbook, compareWorkbook } = require('./excel');
+const { jiraLiveConfig, EXPORT } = require('./connectors/jira');
+const { listFixtureBranches, loadCodebaseFixture, DEFAULT_BRANCH, SOURCE } = require('./connectors/codebase');
+const { modelConfig } = require('./llm');
+const { PW_VERSION } = require('./execution');
+const { loadSkills } = require('./skills');
+const { SEVEN_AGENTS, INTAKE_STAGES, INPUT_TYPES, DEMO } = require('./platform');
+
+const XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+
+function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process.env, skillsDir = path.join(__dirname, '..', 'skills') } = {}) {
+  const store = new Store(dataDir);
+  const skillLib = loadSkills(skillsDir);
+  for (const w of skillLib.warnings) console.warn(`[skills] ${w}`);
+  const pipeline = new Pipeline(store, { env, skills: skillLib.skills });
+  pipeline.recover();
+  const app = express();
+  app.use(express.json({ limit: '2mb' }));
+  app.use('/fonts/inter', express.static(path.join(__dirname, '..', 'node_modules', '@fontsource', 'inter'), { maxAge: '7d' }));
+  app.use(express.static(path.join(__dirname, '..', 'public'), { setHeaders: (res) => res.setHeader('Cache-Control', 'no-cache') }));
+
+  const wrap = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
+  const cycle = (req) => pipeline.mustGet(req.params.id);
+  const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const download = (res, name, type, body) => {
+    res.setHeader('Content-Type', type);
+    res.setHeader('Content-Disposition', `attachment; filename="${name}"`);
+    res.send(body);
+  };
+  const needReport = (c) => { if (!c.report) { const e = new Error('Report not available until the cycle has completed'); e.status = 409; throw e; } return c.report; };
+
+  app.get('/api/meta', (req, res) => {
+    const jira = jiraLiveConfig(env);
+    const model = modelConfig(env);
+    res.json({
+      title: APP_TITLE,
+      jira: jira ? { mode: 'live', baseUrl: jira.baseUrl } : { mode: 'fixture', note: 'JIRA_BASE_URL / JIRA_EMAIL / JIRA_API_TOKEN not set: recorded fixtures are used; no live Jira call is made' },
+      model: model ? { mode: 'model', model: model.model } : { mode: 'demo', note: 'No model API key: deterministic demo mode (template prose)' },
+      codebase: { repo: SOURCE.fullName, url: SOURCE.htmlUrl, branches: listFixtureBranches() },
+      jiraExport: { repo: EXPORT.repo, branch: EXPORT.branch },
+      playwright: PW_VERSION,
+      skills: skillLib.skills.map(({ body, ...s }) => s),
+      skillWarnings: skillLib.warnings,
+      platform: { agents: SEVEN_AGENTS, intakeStages: INTAKE_STAGES, inputTypes: INPUT_TYPES, demo: DEMO },
+      samples: { initiative: 'COM-1', epic: 'COM-10', incrementalEpic: 'COM-20', baselineBranch: 'demo/commission-engine', incrementalBranch: 'demo/commission-engine-v2' },
+    });
+  });
+
+  app.get('/api/skills', (req, res) => res.json({ dir: 'skills/', skills: skillLib.skills, warnings: skillLib.warnings }));
+
+  app.get('/api/sample-text', (req, res) => {
+    if (req.query.slot === 'codebase') {
+      const cb = loadCodebaseFixture(req.query.branch || DEFAULT_BRANCH);
+      return res.type('text/plain').send(cb.files.map((f) => `# ${f.path}\n${f.text}`).join('\n\n'));
+    }
+    if (!/^[A-Z][A-Z0-9]+-\d+$/.test(req.query.key || '')) return res.status(400).json({ error: 'key required' });
+    const f = path.join(__dirname, '..', 'fixtures', 'jira', `${req.query.key}.json`);
+    if (!fs.existsSync(f)) return res.status(404).json({ error: 'No fixture for that key' });
+    res.type('text/plain').send(fs.readFileSync(f, 'utf8'));
+  });
+
+  app.get('/api/cycles', (req, res) => res.json(store.listCycles().map((c) => ({
+    id: c.id, name: c.name, type: c.type, status: c.status, createdAt: c.createdAt, baselineId: c.baselineId,
+    summary: c.artifacts?.execution?.summary || null, delta: c.delta?.summary || c.deltaPreview?.summary || null,
+  }))));
+  app.get('/api/cycles/:id', (req, res) => res.json(cycle(req)));
+  app.post('/api/cycles', wrap(async (req, res) => res.status(201).json(await pipeline.startCycle(req.body || {}))));
+  app.post('/api/cycles/:id/delta-preview', (req, res) => {
+    const c = cycle(req);
+    if (c.type !== 'incremental') return res.status(400).json({ error: 'Only incremental cycles have a delta' });
+    res.json(pipeline.previewDelta(c, req.body || {}));
+  });
+  app.post('/api/cycles/:id/review', (req, res) => res.status(202).json(pipeline.review(req.params.id, req.body || {}).cycle));
+  app.post('/api/cycles/:id/merge', (req, res) => res.status(202).json(pipeline.decideMerge(req.params.id, req.body || {}).cycle));
+  app.post('/api/cycles/:id/resume', (req, res) => res.status(202).json(pipeline.resume(req.params.id).cycle));
+
+  app.get('/api/cycles/:id/export/testcases.xlsx', wrap(async (req, res) => {
+    const c = cycle(req);
+    if (!c.artifacts?.testCases) return res.status(409).json({ error: 'No test cases designed yet' });
+    download(res, `${c.id}-${slug(c.name)}-test-cases.xlsx`, XLSX, await testCasesWorkbook(c));
+  }));
+  app.get('/api/cycles/:id/scripts/:file', (req, res) => {
+    const s = (cycle(req).artifacts?.scripts || []).find((x) => x.file === req.params.file);
+    if (!s) return res.status(404).json({ error: 'Script not found' });
+    if (req.query.download) res.setHeader('Content-Disposition', `attachment; filename="${s.file}"`);
+    res.type('text/javascript').send(s.code);
+  });
+  app.get('/api/cycles/:id/evidence/:file', (req, res) => {
+    if (!/^[A-Z]+-(?:[A-Z]-)?[A-Z]?\d+-\d+\.(json|png|txt)$/.test(req.params.file)) return res.status(400).json({ error: 'bad name' });
+    const f = path.join(store.runDir(cycle(req).id), 'evidence', req.params.file);
+    if (!fs.existsSync(f)) return res.status(404).json({ error: 'not found' });
+    res.sendFile(f);
+  });
+  app.get('/api/cycles/:id/playwright-report.json', (req, res) => {
+    const f = path.join(store.runDir(cycle(req).id), 'playwright-report.json');
+    if (!fs.existsSync(f)) return res.status(404).json({ error: 'Not executed' });
+    res.sendFile(f);
+  });
+  app.get('/api/cycles/:id/report', (req, res) => res.json(needReport(cycle(req))));
+  app.get('/api/cycles/:id/report.html', (req, res) => {
+    const c = cycle(req);
+    const html = renderReportHtml(needReport(c));
+    if (req.query.download) res.setHeader('Content-Disposition', `attachment; filename="${c.id}-cycle-report.html"`);
+    res.type('html').send(html);
+  });
+  app.get('/api/cycles/:id/report.xlsx', wrap(async (req, res) => {
+    const c = cycle(req);
+    download(res, `${c.id}-cycle-report.xlsx`, XLSX, await reportWorkbook(needReport(c), c));
+  }));
+
+  const loadCompare = (req) => {
+    const a = store.getCycle(req.query.a);
+    const b = store.getCycle(req.query.b);
+    if (!a || !b) { const e = new Error('Pick two cycles (?a=CYC-1&b=CYC-2)'); e.status = 400; throw e; }
+    if (a.status !== 'completed' || b.status !== 'completed') { const e = new Error('Both cycles must be completed'); e.status = 409; throw e; }
+    return compareCycles(a, b);
+  };
+  app.get('/api/compare', (req, res) => res.json(loadCompare(req)));
+  app.get('/api/compare.html', (req, res) => {
+    const c = loadCompare(req);
+    if (req.query.download) res.setHeader('Content-Disposition', `attachment; filename="compare-${c.a.id}-vs-${c.b.id}.html"`);
+    res.type('html').send(renderCompareHtml(c));
+  });
+  app.get('/api/compare.xlsx', wrap(async (req, res) => {
+    const c = loadCompare(req);
+    download(res, `compare-${c.a.id}-vs-${c.b.id}.xlsx`, XLSX, await compareWorkbook(c));
+  }));
+
+  app.get('/api/baselines', (req, res) => res.json(store.listBaselines().map((b) => ({
+    id: b.id, name: b.name, version: b.version, updatedAt: b.updatedAt, cycles: b.cycles, history: b.history,
+    counts: { requirements: b.requirements.length, testCases: b.testCases.length, scripts: b.scripts.length },
+  }))));
+  app.get('/api/baselines/:id', (req, res) => {
+    const b = store.getBaseline(req.params.id, req.query.version);
+    if (!b) return res.status(404).json({ error: 'Baseline not found' });
+    res.json(b);
+  });
+
+  app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
+    res.status(err.status || 500).json({ error: err.message });
+  });
+  return { app, store, pipeline, skills: skillLib };
+}
+
+if (require.main === module) {
+  const port = Number(process.env.PORT || 3000);
+  const { app } = createApp({ dataDir: process.env.DATA_DIR || path.join(__dirname, '..', 'data') });
+  app.listen(port, () => console.log(`${APP_TITLE} listening on http://localhost:${port}`));
+}
+
+module.exports = { createApp };

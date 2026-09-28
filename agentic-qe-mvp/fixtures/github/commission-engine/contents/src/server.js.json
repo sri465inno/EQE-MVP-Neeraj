@@ -1,0 +1,12 @@
+{
+  "type": "file",
+  "encoding": "base64",
+  "size": 246,
+  "name": "server.js",
+  "path": "src/server.js",
+  "sha": "b1a67dcc4ef545c27067c4f7db02a19436532da0",
+  "url": "https://api.github.com/repos/sri465inno/uc-agentic-quality-engineering/contents/src/server.js?ref=demo%2Fcommission-engine",
+  "html_url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/src/server.js",
+  "download_url": "https://raw.githubusercontent.com/sri465inno/uc-agentic-quality-engineering/df5203e8ab429df868960d985a658967fc8408b8/src/server.js",
+  "content": "J3VzZSBzdHJpY3QnOwpjb25zdCB7IGNyZWF0ZUFwcCB9ID0gcmVxdWlyZSgnLi9hcHAnKTsKY29u\nc3QgUiA9IHJlcXVpcmUoJy4vcnVsZXMnKTsKCmNvbnN0IHBvcnQgPSBOdW1iZXIocHJvY2Vzcy5l\nbnYuUE9SVCB8fCA0MjAwKTsKY3JlYXRlQXBwKCkubGlzdGVuKHBvcnQsICgpID0+IGNvbnNvbGUu\nbG9nKGBBdXJvcmEgY29tbWlzc2lvbiBlbmdpbmUgKCR7Ui5CVUlMRH0pIG9uIGh0dHA6Ly9sb2Nh\nbGhvc3Q6JHtwb3J0fWApKTsK\n"
+}
