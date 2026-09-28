@@ -1,0 +1,396 @@
+{
+  "executed": true,
+  "tool": "Playwright 1.63.0 (headless Chromium, JSON reporter)",
+  "command": "npx playwright test --config ../../../../../tmp/aqe-demo-0Twn7F/runs/CYC-1/playwright.config.js",
+  "exitCode": 1,
+  "sut": {
+    "build": "demo/commission-engine",
+    "url": "http://127.0.0.1:46279",
+    "name": "Aurora commission engine, bundled copy of branch demo/commission-engine (samples/commission-engine/baseline)"
+  },
+  "startedAt": "2026-09-28T21:39:40.138Z",
+  "finishedAt": "2026-09-28T21:39:41.474Z",
+  "reportFile": "playwright-report.json",
+  "playwrightStats": {
+    "startTime": "2026-09-28T21:39:40.500Z",
+    "duration": 959.3779999999999,
+    "expected": 13,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  },
+  "specFiles": [
+    "br-001-reservation-data-dictionary.spec.js",
+    "br-002-commission-statement-ui.spec.js",
+    "br-003-quote-latency.spec.js",
+    "br-004-base-commission-rate.spec.js",
+    "br-005-commissionable-revenue.spec.js",
+    "br-006-gds-channel-uplift.spec.js",
+    "br-007-long-stay-bonus.spec.js",
+    "br-008-commission-cap.spec.js",
+    "br-009-commission-rounding.spec.js",
+    "br-010-loyalty-points-exclusion.spec.js",
+    "br-011-status-exclusion.spec.js",
+    "br-013-missing-iata-status.spec.js",
+    "br-014-unknown-reservation-status.spec.js"
+  ],
+  "results": [
+    {
+      "key": "TC-F-001",
+      "requirementId": "REQ-001",
+      "ruleId": "BR-001",
+      "name": "The reservation model has 1000 attributes and a full reservation is accepted",
+      "type": "functional",
+      "scriptFile": "br-001-reservation-data-dictionary.spec.js",
+      "status": "passed",
+      "playwrightStatus": "passed",
+      "duration": 36,
+      "startTime": "2026-09-28T21:39:40.867Z",
+      "file": "br-001-reservation-data-dictionary.spec.js",
+      "title": "TC-F-001 The reservation model has 1000 attributes and a full reservation is accepted",
+      "error": null,
+      "evidence": [
+        {
+          "name": "GET /api/data-dictionary",
+          "file": "TC-F-001-1.json",
+          "contentType": "application/json"
+        },
+        {
+          "name": "POST /api/commission/quote",
+          "file": "TC-F-001-2.json",
+          "contentType": "application/json"
+        }
+      ]
+    },
+    {
+      "key": "TC-F-002",
+      "requirementId": "REQ-002",
+      "ruleId": "BR-002",
+      "name": "Advisor views the commission breakdown on the commission statement page",
+      "type": "functional",
+      "scriptFile": "br-002-commission-statement-ui.spec.js",
+      "status": "passed",
+      "playwrightStatus": "passed",
+      "duration": 244,
+      "startTime": "2026-09-28T21:39:40.870Z",
+      "file": "br-002-commission-statement-ui.spec.js",
+      "title": "TC-F-002 Advisor views the commission breakdown on the commission statement page",
+      "error": null,
+      "evidence": [
+        {
+          "name": "POST /api/reservations",
+          "file": "TC-F-002-1.json",
+          "contentType": "application/json"
+        },
+        {
+          "name": "screenshot",
+          "file": "TC-F-002-2.png",
+          "contentType": "image/png"
+        }
+      ]
+    },
+    {
+      "key": "TC-N-001",
+      "requirementId": "REQ-003",
+      "ruleId": "BR-003",
+      "name": "Commission quote p95 response time is within 300 ms",
+      "type": "non-functional",
+      "scriptFile": "br-003-quote-latency.spec.js",
+      "status": "passed",
+      "playwrightStatus": "passed",
+      "duration": 60,
+      "startTime": "2026-09-28T21:39:40.933Z",
+      "file": "br-003-quote-latency.spec.js",
+      "title": "TC-N-001 Commission quote p95 response time is within 300 ms",
+      "error": null,
+      "evidence": [
+        {
+          "name": "latency samples (ms)",
+          "file": "TC-N-001-1.json",
+          "contentType": "application/json"
+        }
+      ]
+    },
+    {
+      "key": "TC-F-003",
+      "requirementId": "REQ-004",
+      "ruleId": "BR-004",
+      "name": "Base commission is 10% of commissionable room revenue",
+      "type": "functional",
+      "scriptFile": "br-004-base-commission-rate.spec.js",
+      "status": "passed",
+      "playwrightStatus": "passed",
+      "duration": 12,
+      "startTime": "2026-09-28T21:39:41.005Z",
+      "file": "br-004-base-commission-rate.spec.js",
+      "title": "TC-F-003 Base commission is 10% of commissionable room revenue",
+      "error": null,
+      "evidence": [
+        {
+          "name": "POST /api/commission/quote",
+          "file": "TC-F-003-1.json",
+          "contentType": "application/json"
+        }
+      ]
+    },
+    {
+      "key": "TC-F-004",
+      "requirementId": "REQ-005",
+      "ruleId": "BR-005",
+      "name": "Taxes, resort fees and ancillaries are excluded from commissionable revenue",
+      "type": "functional",
+      "scriptFile": "br-005-commissionable-revenue.spec.js",
+      "status": "passed",
+      "playwrightStatus": "passed",
+      "duration": 9,
+      "startTime": "2026-09-28T21:39:41.025Z",
+      "file": "br-005-commissionable-revenue.spec.js",
+      "title": "TC-F-004 Taxes, resort fees and ancillaries are excluded from commissionable revenue",
+      "error": null,
+      "evidence": [
+        {
+          "name": "POST /api/commission/quote",
+          "file": "TC-F-004-1.json",
+          "contentType": "application/json"
+        }
+      ]
+    },
+    {
+      "key": "TC-F-005",
+      "requirementId": "REQ-006",
+      "ruleId": "BR-006",
+      "name": "GDS reservations earn an additional 1.5% channel uplift",
+      "type": "functional",
+      "scriptFile": "br-006-gds-channel-uplift.spec.js",
+      "status": "passed",
+      "playwrightStatus": "passed",
+      "duration": 8,
+      "startTime": "2026-09-28T21:39:41.047Z",
+      "file": "br-006-gds-channel-uplift.spec.js",
+      "title": "TC-F-005 GDS reservations earn an additional 1.5% channel uplift",
+      "error": null,
+      "evidence": [
+        {
+          "name": "POST /api/commission/quote",
+          "file": "TC-F-005-1.json",
+          "contentType": "application/json"
+        }
+      ]
+    },
+    {
+      "key": "TC-F-006",
+      "requirementId": "REQ-007",
+      "ruleId": "BR-007",
+      "name": "A stay of exactly 7 nights earns the 1.5% long-stay bonus",
+      "type": "functional",
+      "scriptFile": "br-007-long-stay-bonus.spec.js",
+      "status": "failed",
+      "playwrightStatus": "failed",
+      "duration": 9,
+      "startTime": "2026-09-28T21:39:41.063Z",
+      "file": "br-007-long-stay-bonus.spec.js",
+      "title": "TC-F-006 A stay of exactly 7 nights earns the 1.5% long-stay bonus",
+      "error": {
+        "message": "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: 92\nReceived: 80",
+        "expected": "92",
+        "actual": "80",
+        "assertion": "expect(r.body.commission).toBe(92);",
+        "location": "br-007-long-stay-bonus.spec.js:46:29"
+      },
+      "evidence": [
+        {
+          "name": "POST /api/commission/quote",
+          "file": "TC-F-006-1.json",
+          "contentType": "application/json"
+        },
+        {
+          "name": "error-context",
+          "file": "TC-F-006-2.txt",
+          "contentType": "text/markdown"
+        }
+      ]
+    },
+    {
+      "key": "TC-F-007",
+      "requirementId": "REQ-007",
+      "ruleId": "BR-007",
+      "name": "A stay of 6 nights earns no long-stay bonus",
+      "type": "functional",
+      "scriptFile": "br-007-long-stay-bonus.spec.js",
+      "status": "passed",
+      "playwrightStatus": "passed",
+      "duration": 28,
+      "startTime": "2026-09-28T21:39:41.389Z",
+      "file": "br-007-long-stay-bonus.spec.js",
+      "title": "TC-F-007 A stay of 6 nights earns no long-stay bonus",
+      "error": null,
+      "evidence": [
+        {
+          "name": "POST /api/commission/quote",
+          "file": "TC-F-007-1.json",
+          "contentType": "application/json"
+        }
+      ]
+    },
+    {
+      "key": "TC-F-008",
+      "requirementId": "REQ-008",
+      "ruleId": "BR-008",
+      "name": "Commission is capped at USD 500 per reservation",
+      "type": "functional",
+      "scriptFile": "br-008-commission-cap.spec.js",
+      "status": "passed",
+      "playwrightStatus": "passed",
+      "duration": 10,
+      "startTime": "2026-09-28T21:39:41.185Z",
+      "file": "br-008-commission-cap.spec.js",
+      "title": "TC-F-008 Commission is capped at USD 500 per reservation",
+      "error": null,
+      "evidence": [
+        {
+          "name": "POST /api/commission/quote",
+          "file": "TC-F-008-1.json",
+          "contentType": "application/json"
+        }
+      ]
+    },
+    {
+      "key": "TC-F-009",
+      "requirementId": "REQ-009",
+      "ruleId": "BR-009",
+      "name": "Commission is rounded half-up to 2 decimal places",
+      "type": "functional",
+      "scriptFile": "br-009-commission-rounding.spec.js",
+      "status": "passed",
+      "playwrightStatus": "passed",
+      "duration": 11,
+      "startTime": "2026-09-28T21:39:41.208Z",
+      "file": "br-009-commission-rounding.spec.js",
+      "title": "TC-F-009 Commission is rounded half-up to 2 decimal places",
+      "error": null,
+      "evidence": [
+        {
+          "name": "POST /api/commission/quote",
+          "file": "TC-F-009-1.json",
+          "contentType": "application/json"
+        }
+      ]
+    },
+    {
+      "key": "TC-F-010",
+      "requirementId": "REQ-010",
+      "ruleId": "BR-010",
+      "name": "A stay paid with loyalty points earns no commission",
+      "type": "functional",
+      "scriptFile": "br-010-loyalty-points-exclusion.spec.js",
+      "status": "passed",
+      "playwrightStatus": "passed",
+      "duration": 14,
+      "startTime": "2026-09-28T21:39:41.227Z",
+      "file": "br-010-loyalty-points-exclusion.spec.js",
+      "title": "TC-F-010 A stay paid with loyalty points earns no commission",
+      "error": null,
+      "evidence": [
+        {
+          "name": "POST /api/commission/quote",
+          "file": "TC-F-010-1.json",
+          "contentType": "application/json"
+        }
+      ]
+    },
+    {
+      "key": "TC-F-011",
+      "requirementId": "REQ-011",
+      "ruleId": "BR-011",
+      "name": "Cancelled and no-show reservations earn no commission",
+      "type": "functional",
+      "scriptFile": "br-011-status-exclusion.spec.js",
+      "status": "passed",
+      "playwrightStatus": "passed",
+      "duration": 11,
+      "startTime": "2026-09-28T21:39:41.251Z",
+      "file": "br-011-status-exclusion.spec.js",
+      "title": "TC-F-011 Cancelled and no-show reservations earn no commission",
+      "error": null,
+      "evidence": [
+        {
+          "name": "POST /api/commission/quote",
+          "file": "TC-F-011-1.json",
+          "contentType": "application/json"
+        },
+        {
+          "name": "POST /api/commission/quote",
+          "file": "TC-F-011-2.json",
+          "contentType": "application/json"
+        }
+      ]
+    },
+    {
+      "key": "TC-F-012",
+      "requirementId": "REQ-012",
+      "ruleId": "BR-012",
+      "name": "Verify: Every commission calculation is written to the commission audit ledger",
+      "type": "functional",
+      "scriptFile": null,
+      "status": "not-run",
+      "reason": "Manual test case - not automated, not executed",
+      "duration": 0,
+      "error": null,
+      "evidence": []
+    },
+    {
+      "key": "TC-F-013",
+      "requirementId": "REQ-013",
+      "ruleId": "BR-013",
+      "name": "A reservation without an advisor IATA number returns HTTP 422",
+      "type": "functional",
+      "scriptFile": "br-013-missing-iata-status.spec.js",
+      "status": "passed",
+      "playwrightStatus": "passed",
+      "duration": 13,
+      "startTime": "2026-09-28T21:39:41.269Z",
+      "file": "br-013-missing-iata-status.spec.js",
+      "title": "TC-F-013 A reservation without an advisor IATA number returns HTTP 422",
+      "error": null,
+      "evidence": [
+        {
+          "name": "POST /api/commission/quote",
+          "file": "TC-F-013-1.json",
+          "contentType": "application/json"
+        }
+      ]
+    },
+    {
+      "key": "TC-F-014",
+      "requirementId": "REQ-014",
+      "ruleId": "BR-014",
+      "name": "Commission for an unknown reservation ID returns HTTP 404",
+      "type": "functional",
+      "scriptFile": "br-014-unknown-reservation-status.spec.js",
+      "status": "passed",
+      "playwrightStatus": "passed",
+      "duration": 4,
+      "startTime": "2026-09-28T21:39:41.290Z",
+      "file": "br-014-unknown-reservation-status.spec.js",
+      "title": "TC-F-014 Commission for an unknown reservation ID returns HTTP 404",
+      "error": null,
+      "evidence": [
+        {
+          "name": "GET /api/reservations/RES-UNKNOWN-0000/commission",
+          "file": "TC-F-014-1.json",
+          "contentType": "application/json"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total": 15,
+    "executed": 14,
+    "passed": 13,
+    "failed": 1,
+    "skipped": 0,
+    "notRun": 1,
+    "durationMs": 469,
+    "passRate": 92.9
+  }
+}

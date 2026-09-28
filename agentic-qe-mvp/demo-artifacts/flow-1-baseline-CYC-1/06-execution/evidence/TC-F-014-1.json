@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/api/reservations/RES-UNKNOWN-0000/commission",
+    "data": null
+  },
+  "response": {
+    "status": 404,
+    "body": {
+      "error": "Reservation not found"
+    }
+  }
+}

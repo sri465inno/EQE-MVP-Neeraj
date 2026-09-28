@@ -1,0 +1,39 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/api/data-dictionary",
+    "data": null
+  },
+  "response": {
+    "status": 200,
+    "body": {
+      "name": "Reservation",
+      "version": "2026.3",
+      "description": "Aurora Hotels reservation model used by the commission engine",
+      "count": 1000,
+      "groups": [
+        "reservation",
+        "stay",
+        "room",
+        "rate",
+        "revenue",
+        "channel",
+        "advisor",
+        "guest",
+        "loyalty",
+        "property",
+        "payment",
+        "package",
+        "group",
+        "corporate",
+        "cancellation",
+        "ancillary",
+        "marketing",
+        "compliance",
+        "distribution",
+        "audit"
+      ],
+      "attributes": "<1000 attributes>"
+    }
+  }
+}

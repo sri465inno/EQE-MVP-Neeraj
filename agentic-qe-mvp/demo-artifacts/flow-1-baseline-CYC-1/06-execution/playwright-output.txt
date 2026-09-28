@@ -1,0 +1,39 @@
+
+Running 14 tests using 2 workers
+
+[1/14] specs/br-001-reservation-data-dictionary.spec.js:43:1 › TC-F-001 The reservation model has 1000 attributes and a full reservation is accepted
+[2/14] specs/br-002-commission-statement-ui.spec.js:43:1 › TC-F-002 Advisor views the commission breakdown on the commission statement page
+[3/14] specs/br-003-quote-latency.spec.js:43:1 › TC-N-001 Commission quote p95 response time is within 300 ms
+[4/14] specs/br-004-base-commission-rate.spec.js:43:1 › TC-F-003 Base commission is 10% of commissionable room revenue
+[5/14] specs/br-005-commissionable-revenue.spec.js:43:1 › TC-F-004 Taxes, resort fees and ancillaries are excluded from commissionable revenue
+[6/14] specs/br-006-gds-channel-uplift.spec.js:43:1 › TC-F-005 GDS reservations earn an additional 1.5% channel uplift
+[7/14] specs/br-007-long-stay-bonus.spec.js:43:1 › TC-F-006 A stay of exactly 7 nights earns the 1.5% long-stay bonus
+  1) specs/br-007-long-stay-bonus.spec.js:43:1 › TC-F-006 A stay of exactly 7 nights earns the 1.5% long-stay bonus 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 92
+    Received: 80
+
+      44 |   const r = await quote(request, testInfo, {"reservation.status":"CONFIRMED","channel.bookingChannel":"DIRECT","stay.nights":7,"rate.planCategory":"BAR","room.roomCount":1,"payment.loyaltyPointsRedemption":false,"revenue.totalAmount":1000,"revenue.taxAmount":120,"revenue.resortFeeAmount":30,"revenue.ancillaryAmount":50});
+      45 |   expect(r.status).toBe(200);
+    > 46 |   expect(r.body.commission).toBe(92);
+         |                             ^
+      47 | });
+      48 |
+      49 | test("TC-F-007 A stay of 6 nights earns no long-stay bonus", async ({ request }, testInfo) => {
+        at /tmp/aqe-demo-0Twn7F/runs/CYC-1/specs/br-007-long-stay-bonus.spec.js:46:29
+
+    Error Context: test-results/br-007-long-stay-bonus-TC--13b3d-rns-the-1-5-long-stay-bonus/error-context.md
+
+
+[8/14] specs/br-008-commission-cap.spec.js:43:1 › TC-F-008 Commission is capped at USD 500 per reservation
+[9/14] specs/br-009-commission-rounding.spec.js:43:1 › TC-F-009 Commission is rounded half-up to 2 decimal places
+[10/14] specs/br-010-loyalty-points-exclusion.spec.js:43:1 › TC-F-010 A stay paid with loyalty points earns no commission
+[11/14] specs/br-011-status-exclusion.spec.js:43:1 › TC-F-011 Cancelled and no-show reservations earn no commission
+[12/14] specs/br-013-missing-iata-status.spec.js:43:1 › TC-F-013 A reservation without an advisor IATA number returns HTTP 422
+[13/14] specs/br-014-unknown-reservation-status.spec.js:43:1 › TC-F-014 Commission for an unknown reservation ID returns HTTP 404
+[14/14] specs/br-007-long-stay-bonus.spec.js:49:1 › TC-F-007 A stay of 6 nights earns no long-stay bonus
+  1 failed
+    specs/br-007-long-stay-bonus.spec.js:43:1 › TC-F-006 A stay of exactly 7 nights earns the 1.5% long-stay bonus 
+  13 passed (959ms)

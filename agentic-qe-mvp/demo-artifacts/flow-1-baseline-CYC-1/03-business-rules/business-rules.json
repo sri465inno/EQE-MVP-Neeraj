@@ -1,0 +1,504 @@
+[
+  {
+    "id": "BR-001",
+    "requirementId": "REQ-001",
+    "kind": "reservation-data-dictionary",
+    "title": "Reservation data dictionary",
+    "statement": "Every reservation is described by a data dictionary of 1000 attributes.",
+    "parameters": {
+      "count": 1000
+    },
+    "executable": true,
+    "quotes": [
+      {
+        "source": "jira",
+        "ref": "COM-1",
+        "line": null,
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-1",
+        "text": "Every reservation is described by a data dictionary of 1000 attributes.",
+        "provenance": "github"
+      },
+      {
+        "source": "code",
+        "ref": "README.md",
+        "line": 18,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "text": "- Every reservation is described by a data dictionary of 1000 attributes.",
+        "provenance": "github"
+      }
+    ],
+    "designedWith": [
+      "incremental-merge",
+      "input-normalisation",
+      "traceability-handover"
+    ],
+    "status": "new",
+    "version": 1,
+    "previous": null
+  },
+  {
+    "id": "BR-002",
+    "requirementId": "REQ-002",
+    "kind": "commission-statement-ui",
+    "title": "Advisor commission statement (UI)",
+    "statement": "Travel advisors can view the commission breakdown for a reservation online.",
+    "parameters": {},
+    "executable": true,
+    "quotes": [
+      {
+        "source": "jira",
+        "ref": "COM-1",
+        "line": null,
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-1",
+        "text": "Travel advisors can view the commission breakdown for a reservation online.",
+        "provenance": "github"
+      }
+    ],
+    "designedWith": [
+      "incremental-merge",
+      "input-normalisation",
+      "traceability-handover"
+    ],
+    "status": "new",
+    "version": 1,
+    "previous": null
+  },
+  {
+    "id": "BR-003",
+    "requirementId": "REQ-003",
+    "kind": "quote-latency",
+    "title": "Commission quote response time",
+    "statement": "Commission quotes return within 300 ms at the 95th percentile.",
+    "parameters": {
+      "ms": 300,
+      "percentile": 95
+    },
+    "executable": true,
+    "quotes": [
+      {
+        "source": "jira",
+        "ref": "COM-1",
+        "line": null,
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-1",
+        "text": "Commission quotes return within 300 ms at the 95th percentile.",
+        "provenance": "github"
+      }
+    ],
+    "designedWith": [
+      "incremental-merge",
+      "input-normalisation",
+      "traceability-handover"
+    ],
+    "status": "new",
+    "version": 1,
+    "previous": null
+  },
+  {
+    "id": "BR-004",
+    "requirementId": "REQ-004",
+    "kind": "base-commission-rate",
+    "title": "Base commission rate",
+    "statement": "Base commission is 10% of commissionable room revenue.",
+    "parameters": {
+      "pct": 10
+    },
+    "executable": true,
+    "quotes": [
+      {
+        "source": "jira",
+        "ref": "COM-10",
+        "line": null,
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-10",
+        "text": "Base commission is 10% of commissionable room revenue.",
+        "provenance": "github"
+      },
+      {
+        "source": "code",
+        "ref": "README.md",
+        "line": 11,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "text": "- Base commission is 10% of commissionable room revenue.",
+        "provenance": "github"
+      },
+      {
+        "source": "code",
+        "ref": "src/rules.js",
+        "line": 6,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/src/rules.js",
+        "text": "/** @rule Base commission is 10% of commissionable room revenue. */",
+        "provenance": "github"
+      }
+    ],
+    "designedWith": [
+      "incremental-merge",
+      "input-normalisation",
+      "traceability-handover"
+    ],
+    "status": "new",
+    "version": 1,
+    "previous": null
+  },
+  {
+    "id": "BR-005",
+    "requirementId": "REQ-005",
+    "kind": "commissionable-revenue",
+    "title": "Commissionable room revenue",
+    "statement": "Commissionable room revenue excludes taxes, resort fees and ancillary charges.",
+    "parameters": {},
+    "executable": true,
+    "quotes": [
+      {
+        "source": "jira",
+        "ref": "COM-10",
+        "line": null,
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-10",
+        "text": "Commissionable room revenue excludes taxes, resort fees and ancillary charges.",
+        "provenance": "github"
+      },
+      {
+        "source": "code",
+        "ref": "README.md",
+        "line": 12,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "text": "- Commissionable room revenue excludes taxes, resort fees and ancillary charges.",
+        "provenance": "github"
+      }
+    ],
+    "designedWith": [
+      "incremental-merge",
+      "input-normalisation",
+      "traceability-handover"
+    ],
+    "status": "new",
+    "version": 1,
+    "previous": null
+  },
+  {
+    "id": "BR-006",
+    "requirementId": "REQ-006",
+    "kind": "gds-channel-uplift",
+    "title": "GDS channel uplift",
+    "statement": "Reservations booked through the GDS channel earn an additional 1.5% channel uplift.",
+    "parameters": {
+      "pct": 1.5
+    },
+    "executable": true,
+    "quotes": [
+      {
+        "source": "jira",
+        "ref": "COM-10",
+        "line": null,
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-10",
+        "text": "Reservations booked through the GDS channel earn an additional 2% channel uplift.",
+        "provenance": "github"
+      },
+      {
+        "source": "code",
+        "ref": "README.md",
+        "line": 13,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "text": "- Reservations booked through the GDS channel earn an additional 1.5% channel uplift.",
+        "provenance": "github"
+      },
+      {
+        "source": "code",
+        "ref": "src/rules.js",
+        "line": 9,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/src/rules.js",
+        "text": "/** @rule Reservations booked through the GDS channel earn an additional 1.5% channel uplift. */",
+        "provenance": "github"
+      }
+    ],
+    "designedWith": [
+      "incremental-merge",
+      "input-normalisation",
+      "traceability-handover"
+    ],
+    "status": "new",
+    "version": 1,
+    "previous": null
+  },
+  {
+    "id": "BR-007",
+    "requirementId": "REQ-007",
+    "kind": "long-stay-bonus",
+    "title": "Long-stay bonus",
+    "statement": "Stays of 7 nights or more earn a long-stay bonus of 1.5%.",
+    "parameters": {
+      "nights": 7,
+      "pct": 1.5
+    },
+    "executable": true,
+    "quotes": [
+      {
+        "source": "jira",
+        "ref": "COM-10",
+        "line": null,
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-10",
+        "text": "Stays of 7 nights or more earn a long-stay bonus of 1.5%.",
+        "provenance": "github"
+      },
+      {
+        "source": "code",
+        "ref": "README.md",
+        "line": 14,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "text": "- Stays of 7 nights or more earn a long-stay bonus of 1.5%.",
+        "provenance": "github"
+      },
+      {
+        "source": "code",
+        "ref": "src/rules.js",
+        "line": 12,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/src/rules.js",
+        "text": "/** @rule Stays of 7 nights or more earn a long-stay bonus of 1.5%. */",
+        "provenance": "github"
+      }
+    ],
+    "designedWith": [
+      "incremental-merge",
+      "input-normalisation",
+      "traceability-handover"
+    ],
+    "status": "new",
+    "version": 1,
+    "previous": null
+  },
+  {
+    "id": "BR-008",
+    "requirementId": "REQ-008",
+    "kind": "commission-cap",
+    "title": "Commission cap per reservation",
+    "statement": "Commission per reservation is capped at USD 500.",
+    "parameters": {
+      "cap": 500
+    },
+    "executable": true,
+    "quotes": [
+      {
+        "source": "jira",
+        "ref": "COM-10",
+        "line": null,
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-10",
+        "text": "Commission per reservation is capped at USD 500.",
+        "provenance": "github"
+      },
+      {
+        "source": "code",
+        "ref": "README.md",
+        "line": 15,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "text": "- Commission per reservation is capped at USD 500.",
+        "provenance": "github"
+      },
+      {
+        "source": "code",
+        "ref": "src/rules.js",
+        "line": 16,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/src/rules.js",
+        "text": "/** @rule Commission per reservation is capped at USD 500. */",
+        "provenance": "github"
+      }
+    ],
+    "designedWith": [
+      "incremental-merge",
+      "input-normalisation",
+      "traceability-handover"
+    ],
+    "status": "new",
+    "version": 1,
+    "previous": null
+  },
+  {
+    "id": "BR-009",
+    "requirementId": "REQ-009",
+    "kind": "commission-rounding",
+    "title": "Commission rounding",
+    "statement": "Commission is rounded half-up to 2 decimal places.",
+    "parameters": {
+      "dp": 2
+    },
+    "executable": true,
+    "quotes": [
+      {
+        "source": "jira",
+        "ref": "COM-10",
+        "line": null,
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-10",
+        "text": "Commission is rounded half-up to 2 decimal places.",
+        "provenance": "github"
+      },
+      {
+        "source": "code",
+        "ref": "README.md",
+        "line": 16,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "text": "- Commission is rounded half-up to 2 decimal places.",
+        "provenance": "github"
+      },
+      {
+        "source": "code",
+        "ref": "src/rules.js",
+        "line": 19,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/src/rules.js",
+        "text": "/** @rule Commission is rounded half-up to 2 decimal places. */",
+        "provenance": "github"
+      }
+    ],
+    "designedWith": [
+      "incremental-merge",
+      "input-normalisation",
+      "traceability-handover"
+    ],
+    "status": "new",
+    "version": 1,
+    "previous": null
+  },
+  {
+    "id": "BR-010",
+    "requirementId": "REQ-010",
+    "kind": "loyalty-points-exclusion",
+    "title": "Loyalty-points stays excluded",
+    "statement": "Reservations paid with loyalty points are not commissionable.",
+    "parameters": {},
+    "executable": true,
+    "quotes": [
+      {
+        "source": "jira",
+        "ref": "COM-11",
+        "line": null,
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-11",
+        "text": "Reservations paid with loyalty points are not commissionable.",
+        "provenance": "github"
+      },
+      {
+        "source": "code",
+        "ref": "README.md",
+        "line": 17,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "text": "- Reservations paid with loyalty points are not commissionable.",
+        "provenance": "github"
+      }
+    ],
+    "designedWith": [
+      "incremental-merge",
+      "input-normalisation",
+      "traceability-handover"
+    ],
+    "status": "new",
+    "version": 1,
+    "previous": null
+  },
+  {
+    "id": "BR-011",
+    "requirementId": "REQ-011",
+    "kind": "status-exclusion",
+    "title": "Cancelled and no-show reservations excluded",
+    "statement": "Cancelled and no-show reservations earn no commission.",
+    "parameters": {},
+    "executable": true,
+    "quotes": [
+      {
+        "source": "jira",
+        "ref": "COM-11",
+        "line": null,
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-11",
+        "text": "Cancelled and no-show reservations earn no commission.",
+        "provenance": "github"
+      }
+    ],
+    "designedWith": [
+      "incremental-merge",
+      "input-normalisation",
+      "traceability-handover"
+    ],
+    "status": "new",
+    "version": 1,
+    "previous": null
+  },
+  {
+    "id": "BR-012",
+    "requirementId": "REQ-012",
+    "kind": "unclassified",
+    "title": "Every commission calculation is written to the",
+    "statement": "Every commission calculation is written to the commission audit ledger.",
+    "parameters": {},
+    "executable": false,
+    "quotes": [
+      {
+        "source": "code",
+        "ref": "README.md",
+        "line": 19,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "text": "- Every commission calculation is written to the commission audit ledger.",
+        "provenance": "github"
+      }
+    ],
+    "designedWith": [
+      "incremental-merge",
+      "input-normalisation",
+      "traceability-handover"
+    ],
+    "status": "new",
+    "version": 1,
+    "previous": null
+  },
+  {
+    "id": "BR-013",
+    "requirementId": "REQ-013",
+    "kind": "missing-iata-status",
+    "title": "Advisor IATA number required",
+    "statement": "A reservation without an advisor IATA number returns HTTP 422.",
+    "parameters": {
+      "status": 422
+    },
+    "executable": true,
+    "quotes": [
+      {
+        "source": "code",
+        "ref": "README.md",
+        "line": 23,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "text": "- A reservation without an advisor IATA number returns HTTP 422.",
+        "provenance": "github"
+      }
+    ],
+    "designedWith": [
+      "incremental-merge",
+      "input-normalisation",
+      "traceability-handover"
+    ],
+    "status": "new",
+    "version": 1,
+    "previous": null
+  },
+  {
+    "id": "BR-014",
+    "requirementId": "REQ-014",
+    "kind": "unknown-reservation-status",
+    "title": "Unknown reservation",
+    "statement": "Unknown reservation IDs return HTTP 404.",
+    "parameters": {
+      "status": 404
+    },
+    "executable": true,
+    "quotes": [
+      {
+        "source": "code",
+        "ref": "README.md",
+        "line": 24,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "text": "- Unknown reservation IDs return HTTP 404.",
+        "provenance": "github"
+      }
+    ],
+    "designedWith": [
+      "incremental-merge",
+      "input-normalisation",
+      "traceability-handover"
+    ],
+    "status": "new",
+    "version": 1,
+    "previous": null
+  }
+]

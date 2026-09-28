@@ -1,0 +1,17 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/api/reservations",
+    "data": {
+      "reservation": "<1000 attributes>",
+      "overrides": null
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "id": "RES-5001",
+      "attributesReceived": 1000
+    }
+  }
+}

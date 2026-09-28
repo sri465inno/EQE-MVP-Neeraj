@@ -1,0 +1,48 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/api/commission/quote",
+    "data": {
+      "reservation": "<1000 attributes>",
+      "overrides": {
+        "reservation.status": "CONFIRMED",
+        "channel.bookingChannel": "DIRECT",
+        "stay.nights": 3,
+        "rate.planCategory": "BAR",
+        "room.roomCount": 1,
+        "payment.loyaltyPointsRedemption": false,
+        "revenue.totalAmount": 123.45,
+        "revenue.taxAmount": 0,
+        "revenue.resortFeeAmount": 0,
+        "revenue.ancillaryAmount": 0
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": {
+      "reservationId": "X0001",
+      "attributesReceived": 1000,
+      "attributesInModel": 1000,
+      "currency": "USD",
+      "build": "demo/commission-engine",
+      "commissionableRevenue": 123.45,
+      "basis": 123.45,
+      "eligible": true,
+      "reason": null,
+      "lines": [
+        {
+          "code": "BASE",
+          "label": "Base commission",
+          "ratePct": 10,
+          "amount": 12.35
+        }
+      ],
+      "effectiveRatePct": 10,
+      "grossCommission": 12.35,
+      "capped": false,
+      "capUsd": 500,
+      "commission": 12.35
+    }
+  }
+}

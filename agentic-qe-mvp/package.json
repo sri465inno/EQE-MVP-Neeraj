@@ -10,7 +10,8 @@
     "test": "node --test --test-concurrency=1 test/*.test.js",
     "lint": "node scripts/lint.js",
     "jira-export": "node scripts/make-jira-export.js",
-    "record-github": "node scripts/record-github-fixtures.js"
+    "record-github": "node scripts/record-github-fixtures.js",
+    "demo:artifacts": "node scripts/export-demo-artifacts.js"
   },
   "engines": {
     "node": ">=20"

@@ -1,0 +1,41 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/api/commission/quote",
+    "data": {
+      "reservation": "<1000 attributes>",
+      "overrides": {
+        "reservation.status": "CANCELLED",
+        "channel.bookingChannel": "DIRECT",
+        "stay.nights": 3,
+        "rate.planCategory": "BAR",
+        "room.roomCount": 1,
+        "payment.loyaltyPointsRedemption": false,
+        "revenue.totalAmount": 1000,
+        "revenue.taxAmount": 120,
+        "revenue.resortFeeAmount": 30,
+        "revenue.ancillaryAmount": 50
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": {
+      "reservationId": "X0001",
+      "attributesReceived": 1000,
+      "attributesInModel": 1000,
+      "currency": "USD",
+      "build": "demo/commission-engine-v2",
+      "commissionableRevenue": 800,
+      "basis": 800,
+      "eligible": false,
+      "reason": "Reservation status CANCELLED is not commissionable",
+      "lines": [],
+      "effectiveRatePct": 0,
+      "grossCommission": 0,
+      "capped": false,
+      "capUsd": 750,
+      "commission": 0
+    }
+  }
+}
