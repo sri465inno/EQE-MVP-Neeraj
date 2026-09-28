@@ -1,0 +1,135 @@
+{
+  "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "id": "10111",
+  "self": "https://staywell.atlassian.net/rest/api/3/issue/10111",
+  "key": "SWB-11",
+  "fields": {
+    "summary": "Show cancellation confirmation",
+    "issuetype": {
+      "self": "https://staywell.atlassian.net/rest/api/3/issuetype/10001",
+      "id": "10001",
+      "description": "Functionality or a feature expressed as a user goal.",
+      "iconUrl": "https://staywell.atlassian.net/images/icons/issuetypes/story.svg",
+      "name": "Story",
+      "subtask": false,
+      "hierarchyLevel": 0
+    },
+    "project": {
+      "self": "https://staywell.atlassian.net/rest/api/3/project/10000",
+      "id": "10000",
+      "key": "SWB",
+      "name": "StayWell Bookings",
+      "projectTypeKey": "software",
+      "simplified": false
+    },
+    "status": {
+      "self": "https://staywell.atlassian.net/rest/api/3/status/3",
+      "name": "To Do",
+      "id": "3",
+      "statusCategory": {
+        "self": "https://staywell.atlassian.net/rest/api/3/statuscategory/4",
+        "id": 4,
+        "key": "indeterminate",
+        "colorName": "yellow",
+        "name": "In Progress"
+      }
+    },
+    "priority": {
+      "self": "https://staywell.atlassian.net/rest/api/3/priority/2",
+      "iconUrl": "https://staywell.atlassian.net/images/icons/priorities/high.svg",
+      "name": "Medium",
+      "id": "2"
+    },
+    "labels": [
+      "cancellation"
+    ],
+    "reporter": {
+      "self": "https://staywell.atlassian.net/rest/api/3/user?accountId=5b10ac8d82e05b22cc7d4ef5",
+      "accountId": "5b10ac8d82e05b22cc7d4ef5",
+      "displayName": "Priya Raman",
+      "active": true,
+      "timeZone": "Europe/London",
+      "accountType": "atlassian"
+    },
+    "assignee": {
+      "self": "https://staywell.atlassian.net/rest/api/3/user?accountId=5b10ac8d82e05b22cc7d4ef5",
+      "accountId": "5b10ac8d82e05b22cc7d4ef5",
+      "displayName": "Priya Raman",
+      "active": true,
+      "timeZone": "Europe/London",
+      "accountType": "atlassian"
+    },
+    "creator": {
+      "self": "https://staywell.atlassian.net/rest/api/3/user?accountId=5b10ac8d82e05b22cc7d4ef5",
+      "accountId": "5b10ac8d82e05b22cc7d4ef5",
+      "displayName": "Priya Raman",
+      "active": true,
+      "timeZone": "Europe/London",
+      "accountType": "atlassian"
+    },
+    "created": "2026-07-14T11:02:19.000+0000",
+    "updated": "2026-09-01T16:22:05.000+0000",
+    "parent": {
+      "id": "10110",
+      "key": "SWB-10",
+      "self": "https://staywell.atlassian.net/rest/api/3/issue/10110",
+      "fields": {
+        "summary": "Booking cancellation and refunds",
+        "status": {
+          "name": "In Progress"
+        },
+        "issuetype": {
+          "id": "10000",
+          "name": "Epic",
+          "hierarchyLevel": 1
+        }
+      }
+    },
+    "description": {
+      "type": "doc",
+      "version": 1,
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "type": "text",
+              "text": "As a guest I want proof that my booking was cancelled."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "attrs": {
+            "level": 3
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Acceptance criteria"
+            }
+          ]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "A cancellation confirmation reference is returned for every successful cancellation."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

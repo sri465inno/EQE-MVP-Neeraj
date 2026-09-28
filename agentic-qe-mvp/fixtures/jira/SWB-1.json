@@ -1,0 +1,134 @@
+{
+  "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "id": "10100",
+  "self": "https://staywell.atlassian.net/rest/api/3/issue/10100",
+  "key": "SWB-1",
+  "fields": {
+    "summary": "Guest self-service booking management",
+    "issuetype": {
+      "self": "https://staywell.atlassian.net/rest/api/3/issuetype/10527",
+      "id": "10527",
+      "description": "A large body of work spanning several epics.",
+      "iconUrl": "https://staywell.atlassian.net/images/icons/issuetypes/initiative.svg",
+      "name": "Initiative",
+      "subtask": false,
+      "hierarchyLevel": 2
+    },
+    "project": {
+      "self": "https://staywell.atlassian.net/rest/api/3/project/10000",
+      "id": "10000",
+      "key": "SWB",
+      "name": "StayWell Bookings",
+      "projectTypeKey": "software",
+      "simplified": false
+    },
+    "status": {
+      "self": "https://staywell.atlassian.net/rest/api/3/status/3",
+      "name": "In Progress",
+      "id": "3",
+      "statusCategory": {
+        "self": "https://staywell.atlassian.net/rest/api/3/statuscategory/4",
+        "id": 4,
+        "key": "indeterminate",
+        "colorName": "yellow",
+        "name": "In Progress"
+      }
+    },
+    "priority": {
+      "self": "https://staywell.atlassian.net/rest/api/3/priority/2",
+      "iconUrl": "https://staywell.atlassian.net/images/icons/priorities/high.svg",
+      "name": "High",
+      "id": "2"
+    },
+    "labels": [
+      "self-service",
+      "fy27"
+    ],
+    "reporter": {
+      "self": "https://staywell.atlassian.net/rest/api/3/user?accountId=5b10ac8d82e05b22cc7d4ef5",
+      "accountId": "5b10ac8d82e05b22cc7d4ef5",
+      "displayName": "Priya Raman",
+      "active": true,
+      "timeZone": "Europe/London",
+      "accountType": "atlassian"
+    },
+    "assignee": {
+      "self": "https://staywell.atlassian.net/rest/api/3/user?accountId=5b10ac8d82e05b22cc7d4ef5",
+      "accountId": "5b10ac8d82e05b22cc7d4ef5",
+      "displayName": "Priya Raman",
+      "active": true,
+      "timeZone": "Europe/London",
+      "accountType": "atlassian"
+    },
+    "creator": {
+      "self": "https://staywell.atlassian.net/rest/api/3/user?accountId=5b10ac8d82e05b22cc7d4ef5",
+      "accountId": "5b10ac8d82e05b22cc7d4ef5",
+      "displayName": "Priya Raman",
+      "active": true,
+      "timeZone": "Europe/London",
+      "accountType": "atlassian"
+    },
+    "created": "2026-07-06T09:12:44.000+0000",
+    "updated": "2026-09-02T14:03:11.000+0000",
+    "description": {
+      "type": "doc",
+      "version": 1,
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "type": "text",
+              "text": "Let guests manage their own bookings without contacting the hotel, reducing call-centre volume by 30%."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "attrs": {
+            "level": 3
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Outcomes"
+            }
+          ]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Guests can cancel a booking online without calling the hotel."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Booking API responses return within 800 ms at the 95th percentile."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

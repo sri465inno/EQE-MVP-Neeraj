@@ -1,0 +1,18 @@
+{
+  "type": "file",
+  "encoding": "base64",
+  "size": 190,
+  "name": "bookings.js",
+  "path": "src/bookings.js",
+  "content": "J3VzZSBzdHJpY3QnOwovKioKICogQm9va2luZyBsb29rdXAuCiAqIEBydWxl\nIFVua25vd24gYm9va2luZyBJRHMgcmV0dXJuIEhUVFAgNDA0LgogKi8KZnVu\nY3Rpb24gZmluZEJvb2tpbmcoc3RvcmUsIGlkKSB7CiAgcmV0dXJuIHN0b3Jl\nLmdldChpZCkgfHwgbnVsbDsKfQoKbW9kdWxlLmV4cG9ydHMgPSB7IGZpbmRC\nb29raW5nIH07Cg==\n",
+  "sha": "c3d2e5a4b6f80000000000000000000000000000",
+  "url": "https://api.github.com/repos/staywell/booking-service/contents/src/bookings.js?ref=main",
+  "git_url": "https://api.github.com/repos/staywell/booking-service/git/blobs/c3d2e5a4b6f80000000000000000000000000000",
+  "html_url": "https://github.com/staywell/booking-service/blob/main/src/bookings.js",
+  "download_url": "https://raw.githubusercontent.com/staywell/booking-service/main/src/bookings.js",
+  "_links": {
+    "self": "https://api.github.com/repos/staywell/booking-service/contents/src/bookings.js?ref=main",
+    "git": "https://api.github.com/repos/staywell/booking-service/git/blobs/c3d2e5a4b6f80000000000000000000000000000",
+    "html": "https://github.com/staywell/booking-service/blob/main/src/bookings.js"
+  }
+}

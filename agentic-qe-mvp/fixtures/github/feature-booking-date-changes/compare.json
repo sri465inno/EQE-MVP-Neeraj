@@ -1,0 +1,62 @@
+{
+  "url": "https://api.github.com/repos/staywell/booking-service/compare/main...feature/booking-date-changes",
+  "html_url": "https://github.com/staywell/booking-service/compare/main...feature/booking-date-changes",
+  "base_commit": {
+    "sha": "3f9c2a1d8e7b6c5a4f3e2d1c0b9a8f7e6d5c4b3a"
+  },
+  "merge_base_commit": {
+    "sha": "3f9c2a1d8e7b6c5a4f3e2d1c0b9a8f7e6d5c4b3a"
+  },
+  "status": "ahead",
+  "ahead_by": 2,
+  "behind_by": 0,
+  "total_commits": 2,
+  "commits": [
+    {
+      "sha": "71c0de5a9b8e7f6d5c4b3a291807f6e5d4c3b2a1",
+      "commit": {
+        "message": "Refund SLA: 3 days -> 2 days",
+        "author": {
+          "name": "Dev Patel",
+          "date": "2026-09-18T10:02:00Z"
+        }
+      }
+    },
+    {
+      "sha": "9a1b2c3d4e5f60718293a4b5c6d7e8f901234567",
+      "commit": {
+        "message": "Date changes + faster refunds (2-day SLA)",
+        "author": {
+          "name": "Dev Patel",
+          "date": "2026-09-22T08:29:41Z"
+        }
+      }
+    }
+  ],
+  "files": [
+    {
+      "sha": "d4c3b6a5e7f90000000000000000000000000000",
+      "filename": "README.md",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 2,
+      "changes": 4
+    },
+    {
+      "sha": "e5b4a7f6d8c00000000000000000000000000000",
+      "filename": "src/cancellation.js",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2
+    },
+    {
+      "sha": "f6a5c8b7e9d10000000000000000000000000000",
+      "filename": "src/bookings.js",
+      "status": "modified",
+      "additions": 12,
+      "deletions": 1,
+      "changes": 13
+    }
+  ]
+}

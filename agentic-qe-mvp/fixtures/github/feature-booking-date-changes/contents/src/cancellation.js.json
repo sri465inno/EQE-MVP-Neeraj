@@ -1,0 +1,18 @@
+{
+  "type": "file",
+  "encoding": "base64",
+  "size": 331,
+  "name": "cancellation.js",
+  "path": "src/cancellation.js",
+  "content": "J3VzZSBzdHJpY3QnOwovLyBDYW5jZWxsYXRpb24gcHJpY2luZy4KLy8gQHJ1\nbGUgTGF0ZSBjYW5jZWxsYXRpb24gZmVlOiAyMCUgb2YgdGhlIGJvb2tpbmcg\ndG90YWwuCmNvbnN0IExBVEVfRkVFX1BDVCA9IDIwOwpjb25zdCBGUkVFX0NB\nTkNFTF9IT1VSUyA9IDQ4Owpjb25zdCBSRUZVTkRfU0xBX0RBWVMgPSAyOwoK\nZnVuY3Rpb24gdG9Nb25leShhbW91bnQpIHsKICByZXR1cm4gTWF0aC5mbG9v\ncihhbW91bnQgKiAxMDApIC8gMTAwOwp9Cgptb2R1bGUuZXhwb3J0cyA9IHsg\nTEFURV9GRUVfUENULCBGUkVFX0NBTkNFTF9IT1VSUywgUkVGVU5EX1NMQV9E\nQVlTLCB0b01vbmV5IH07Cg==\n",
+  "sha": "e5b4a7f6d8c00000000000000000000000000000",
+  "url": "https://api.github.com/repos/staywell/booking-service/contents/src/cancellation.js?ref=feature%2Fbooking-date-changes",
+  "git_url": "https://api.github.com/repos/staywell/booking-service/git/blobs/e5b4a7f6d8c00000000000000000000000000000",
+  "html_url": "https://github.com/staywell/booking-service/blob/feature/booking-date-changes/src/cancellation.js",
+  "download_url": "https://raw.githubusercontent.com/staywell/booking-service/feature/booking-date-changes/src/cancellation.js",
+  "_links": {
+    "self": "https://api.github.com/repos/staywell/booking-service/contents/src/cancellation.js?ref=feature/booking-date-changes",
+    "git": "https://api.github.com/repos/staywell/booking-service/git/blobs/e5b4a7f6d8c00000000000000000000000000000",
+    "html": "https://github.com/staywell/booking-service/blob/feature/booking-date-changes/src/cancellation.js"
+  }
+}

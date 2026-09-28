@@ -1,0 +1,18 @@
+{
+  "type": "file",
+  "encoding": "base64",
+  "size": 546,
+  "name": "README.md",
+  "path": "README.md",
+  "content": "IyBTdGF5V2VsbCBib29raW5nLXNlcnZpY2UKCkV4cHJlc3MgQVBJIGJlaGlu\nZCB0aGUgU3RheVdlbGwgIk1hbmFnZSBib29raW5nIiBwYWdlOiBjcmVhdGUs\nIGxvb2sgdXAgYW5kIGNhbmNlbCBib29raW5ncy4KCiMjIEJ1c2luZXNzIHJ1\nbGVzCgotIENhbmNlbGxhdGlvbnMgbWFkZSBhdCBsZWFzdCA0OCBob3VycyBi\nZWZvcmUgY2hlY2staW4gYXJlIGZyZWUgb2YgY2hhcmdlLgotIExhdGUgY2Fu\nY2VsbGF0aW9uIGZlZTogMjAlIG9mIHRoZSBib29raW5nIHRvdGFsLgotIFJl\nZnVuZHMgYXJlIGlzc3VlZCB3aXRoaW4gMyBkYXlzIG9mIGNhbmNlbGxhdGlv\nbi4KLSBSZWZ1bmQgYW1vdW50cyBhcmUgcm91bmRlZCB0byAyIGRlY2ltYWwg\ncGxhY2VzLgotIENhbmNlbGxpbmcgYW4gYWxyZWFkeSBjYW5jZWxsZWQgYm9v\na2luZyByZXR1cm5zIEhUVFAgNDA5LgotIENhbmNlbGxhdGlvbiBldmVudHMg\nYXJlIHdyaXR0ZW4gdG8gdGhlIGF1ZGl0IGxvZy4KCiMjIFJ1bm5pbmcgbG9j\nYWxseQoKYG5wbSBzdGFydGAgdGhlbiBvcGVuIGh0dHA6Ly9sb2NhbGhvc3Q6\nNDEwMC4K\n",
+  "sha": "a1f0c3e2b4d60000000000000000000000000000",
+  "url": "https://api.github.com/repos/staywell/booking-service/contents/README.md?ref=main",
+  "git_url": "https://api.github.com/repos/staywell/booking-service/git/blobs/a1f0c3e2b4d60000000000000000000000000000",
+  "html_url": "https://github.com/staywell/booking-service/blob/main/README.md",
+  "download_url": "https://raw.githubusercontent.com/staywell/booking-service/main/README.md",
+  "_links": {
+    "self": "https://api.github.com/repos/staywell/booking-service/contents/README.md?ref=main",
+    "git": "https://api.github.com/repos/staywell/booking-service/git/blobs/a1f0c3e2b4d60000000000000000000000000000",
+    "html": "https://github.com/staywell/booking-service/blob/main/README.md"
+  }
+}

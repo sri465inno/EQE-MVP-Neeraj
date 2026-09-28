@@ -1,0 +1,27 @@
+{
+  "name": "main",
+  "protected": true,
+  "commit": {
+    "sha": "3f9c2a1d8e7b6c5a4f3e2d1c0b9a8f7e6d5c4b3a",
+    "node_id": "C_kwDOLpBxeNoAKD3f9c2a1d8e",
+    "url": "https://api.github.com/repos/staywell/booking-service/commits/3f9c2a1d8e7b6c5a4f3e2d1c0b9a8f7e6d5c4b3a",
+    "html_url": "https://github.com/staywell/booking-service/commit/3f9c2a1d8e7b6c5a4f3e2d1c0b9a8f7e6d5c4b3a",
+    "commit": {
+      "author": {
+        "name": "Dev Patel",
+        "email": "dev.patel@staywell.example",
+        "date": "2026-09-05T15:20:10Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-09-05T15:20:10Z"
+      },
+      "message": "Release 1.4.0: cancellations and refunds"
+    }
+  },
+  "_links": {
+    "self": "https://api.github.com/repos/staywell/booking-service/branches/main",
+    "html": "https://github.com/staywell/booking-service/tree/main"
+  }
+}

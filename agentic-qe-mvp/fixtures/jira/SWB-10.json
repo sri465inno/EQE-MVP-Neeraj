@@ -1,0 +1,178 @@
+{
+  "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "id": "10110",
+  "self": "https://staywell.atlassian.net/rest/api/3/issue/10110",
+  "key": "SWB-10",
+  "fields": {
+    "summary": "Booking cancellation and refunds",
+    "issuetype": {
+      "self": "https://staywell.atlassian.net/rest/api/3/issuetype/10000",
+      "id": "10000",
+      "description": "A collection of related bugs, stories, and tasks.",
+      "iconUrl": "https://staywell.atlassian.net/images/icons/issuetypes/epic.svg",
+      "name": "Epic",
+      "subtask": false,
+      "hierarchyLevel": 1
+    },
+    "project": {
+      "self": "https://staywell.atlassian.net/rest/api/3/project/10000",
+      "id": "10000",
+      "key": "SWB",
+      "name": "StayWell Bookings",
+      "projectTypeKey": "software",
+      "simplified": false
+    },
+    "status": {
+      "self": "https://staywell.atlassian.net/rest/api/3/status/3",
+      "name": "In Progress",
+      "id": "3",
+      "statusCategory": {
+        "self": "https://staywell.atlassian.net/rest/api/3/statuscategory/4",
+        "id": 4,
+        "key": "indeterminate",
+        "colorName": "yellow",
+        "name": "In Progress"
+      }
+    },
+    "priority": {
+      "self": "https://staywell.atlassian.net/rest/api/3/priority/2",
+      "iconUrl": "https://staywell.atlassian.net/images/icons/priorities/high.svg",
+      "name": "High",
+      "id": "2"
+    },
+    "labels": [
+      "cancellation",
+      "payments"
+    ],
+    "reporter": {
+      "self": "https://staywell.atlassian.net/rest/api/3/user?accountId=5b10ac8d82e05b22cc7d4ef5",
+      "accountId": "5b10ac8d82e05b22cc7d4ef5",
+      "displayName": "Priya Raman",
+      "active": true,
+      "timeZone": "Europe/London",
+      "accountType": "atlassian"
+    },
+    "assignee": {
+      "self": "https://staywell.atlassian.net/rest/api/3/user?accountId=5b10ac8d82e05b22cc7d4ef5",
+      "accountId": "5b10ac8d82e05b22cc7d4ef5",
+      "displayName": "Priya Raman",
+      "active": true,
+      "timeZone": "Europe/London",
+      "accountType": "atlassian"
+    },
+    "creator": {
+      "self": "https://staywell.atlassian.net/rest/api/3/user?accountId=5b10ac8d82e05b22cc7d4ef5",
+      "accountId": "5b10ac8d82e05b22cc7d4ef5",
+      "displayName": "Priya Raman",
+      "active": true,
+      "timeZone": "Europe/London",
+      "accountType": "atlassian"
+    },
+    "created": "2026-07-13T10:20:00.000+0000",
+    "updated": "2026-09-08T08:45:31.000+0000",
+    "parent": {
+      "id": "10100",
+      "key": "SWB-1",
+      "self": "https://staywell.atlassian.net/rest/api/3/issue/10100",
+      "fields": {
+        "summary": "Guest self-service booking management",
+        "status": {
+          "name": "In Progress"
+        },
+        "issuetype": {
+          "id": "10527",
+          "name": "Initiative",
+          "hierarchyLevel": 2
+        }
+      }
+    },
+    "description": {
+      "type": "doc",
+      "version": 1,
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "type": "text",
+              "text": "Guests cancel from My Trips and receive their refund automatically."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "attrs": {
+            "level": 3
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Acceptance criteria"
+            }
+          ]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Cancellations made at least 48 hours before check-in are free of charge."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Late cancellation fee is 15% of the booking total."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Refunds are issued within 3 days of cancellation."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Refund amounts are rounded to 2 decimal places."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
