@@ -4,7 +4,7 @@ const TITLE = 'Agentic QE Platform - MVP';
 const $view = document.getElementById('view');
 let META = null;
 let pollTimer = null;
-const runState = { type: 'baseline', baselineId: '', inputs: {} };
+const runState = { type: 'baseline', baselineId: '', inputs: {}, skills: null };
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const pill = (text, cls) => `<span class="pill ${esc(cls || String(text).replace(/\s+/g, '-'))}">${esc(text)}</span>`;
@@ -40,6 +40,31 @@ async function loadMeta() {
 }
 
 /* ---------------- Home ---------------- */
+const selectedSkills = () => runState.skills || META.skills.map((s) => s.id);
+const ownes = (s) => Object.entries(s.delivers).map(([a, keys]) => `${a}: ${keys.join(', ')}`).join(' · ');
+
+function skillsCard() {
+  const on = new Set(selectedSkills());
+  return `<div class="card"><p class="muted small">Markdown skill files loaded from <code>skills/</code> at startup. A skill's text is given only to the agents it names; after each phase, what the phase produced is checked against what the skill says it owes. All are on by default. <span id="skill-count">${on.size} of ${META.skills.length} selected</span></p>
+${META.skillWarnings && META.skillWarnings.length ? `<div class="banner">${META.skillWarnings.map(esc).join('<br>')}</div>` : ''}
+<div class="skills">${META.skills.map((s) => `<label class="skill"><input type="checkbox" class="skill-on" value="${esc(s.id)}" ${on.has(s.id) ? 'checked' : ''}> <b>${esc(s.name)}</b> <code class="small">${esc(s.id)}</code><br><span class="small">${esc(s.description)}</span><br><span class="small muted">seen by: ${esc(s.appliesTo.join(', '))} · owes: ${esc(ownes(s))}</span></label>`).join('')}</div></div>`;
+}
+
+function handoverBadge(p) {
+  const h = p.handover;
+  if (!h || h.status === 'no contract') return p.skills && p.skills.length ? `<br><span class="small muted">skills: ${esc(p.skills.join(', '))}</span>` : '';
+  return `<br><span class="hand ${h.status === 'complete' ? 'ok' : 'bad'}" title="${esc(h.items.map((i) => `${i.key}: ${i.status}`).join('\n'))}">hand-over ${esc(h.status)}${h.status === 'complete' ? ` (${h.items.filter((i) => i.status === 'delivered').length}/${h.items.length})` : `: missing ${esc(h.missing.join(', '))}`}</span>`;
+}
+
+function skillsView(c) {
+  const skills = c.skills || [];
+  const phases = c.phases.filter((p) => p.handover || (p.skills && p.skills.length));
+  return `<h2>Active skills (${skills.length})</h2>${skills.length ? table(['Skill', 'Description', 'Seen by agents', 'Owes', 'File'], skills.map((s) => [`<b>${esc(s.name)}</b><br><code class="small">${esc(s.id)}</code>`, esc(s.description), esc(s.appliesTo.join(', ')), esc(ownes(s)), `<span class="small">${esc(s.file)} · ${esc(s.sha256)}</span>`])) : '<p class="muted">No skills were selected for this run.</p>'}
+<h2>Hand-overs per phase</h2>${table(['Phase', 'Skills seen', 'Hand-over', 'Artefacts owed'], phases.map((p) => [esc(p.label), esc((p.skills || []).join(', ') || '-'), p.handover ? `<span class="hand ${p.handover.status === 'complete' ? 'ok' : p.handover.status === 'incomplete' ? 'bad' : ''}">${esc(p.handover.status)}</span>` : '-',
+    p.handover ? p.handover.items.map((i) => `${esc(i.key)}: <b>${esc(i.status)}</b>${i.count != null ? ` (${i.count})` : ''} <span class="small muted">${esc(i.skills.join(', '))}${i.note ? ` - ${esc(i.note)}` : ''}</span>`).join('<br>') : '-']))}
+${skills.map((s) => `<details><summary><b>${esc(s.name)}</b> <span class="small muted">skill text</span></summary><pre class="skillbody">${esc(s.body)}</pre></details>`).join('')}`;
+}
+
 function viewHome() {
   setTitle();
   $view.innerHTML = `<h1>${TITLE}</h1>
@@ -99,6 +124,7 @@ ${runState.type === 'incremental' ? `<div class="card"><h3>2. Pick the baseline<
     ? `<select id="baseline">${baselines.map((b) => `<option value="${esc(b.id)}" ${b.id === runState.baselineId ? 'selected' : ''}>${esc(b.id)} v${b.version} - ${esc(b.name)} (${b.counts.requirements} requirements, ${b.counts.testCases} test cases)</option>`).join('')}</select> <span class="muted small">The baseline is selected, not re-uploaded.</span>`
     : '<div class="banner">No approved baseline yet. Run a new baseline first.</div>'}</div>` : ''}
 <h2>${runState.type === 'incremental' ? '3' : '2'}. Inputs</h2><div class="grid${slots.length}">${slots.map(slotCard).join('')}</div>
+<h2>${runState.type === 'incremental' ? '4' : '3'}. Skills for this run</h2>${skillsCard()}
 <div class="card"><div class="row"><label>Your name (recorded on approvals) <input type="text" id="who" value="${esc(localStorage.getItem('aqe-user') || '')}" placeholder="e.g. Priya Shah"></label>
 <button class="btn" id="go" ${runState.type === 'incremental' && !baselines.length ? 'disabled' : ''}>Run: ingest &amp; normalise</button></div>
 <p class="muted small">The run ingests the inputs and normalises them, then pauses on the human review screen. Nothing is designed until you approve.</p><div id="run-msg"></div></div>`;
@@ -115,6 +141,10 @@ ${runState.type === 'incremental' ? `<div class="card"><h3>2. Pick the baseline<
     runState.inputs[slot].text = await api(`/api/sample-text?${q}`);
     viewRun(new URLSearchParams());
   });
+  $view.querySelectorAll('.skill-on').forEach((el) => el.onchange = () => {
+    runState.skills = [...$view.querySelectorAll('.skill-on')].filter((x) => x.checked).map((x) => x.value);
+    document.getElementById('skill-count').textContent = `${runState.skills.length} of ${META.skills.length} selected`;
+  });
   const sel = document.getElementById('baseline');
   if (sel) sel.onchange = () => { runState.baselineId = sel.value; };
   document.getElementById('go').onclick = async (ev) => {
@@ -125,7 +155,7 @@ ${runState.type === 'incremental' ? `<div class="card"><h3>2. Pick the baseline<
     ev.target.disabled = true;
     document.getElementById('run-msg').innerHTML = '<div class="banner info">Ingesting and normalising...</div>';
     try {
-      const c = await api('/api/cycles', { method: 'POST', body: { type: runState.type, baselineId: runState.baselineId, inputs, reviewer: who } });
+      const c = await api('/api/cycles', { method: 'POST', body: { type: runState.type, baselineId: runState.baselineId, inputs, reviewer: who, skills: selectedSkills() } });
       location.hash = `#/cycle/${c.id}`;
     } catch (e) {
       document.getElementById('run-msg').innerHTML = `<div class="banner err">${esc(e.message)}</div>`;
@@ -153,10 +183,10 @@ async function viewCycle(id, params) {
   const c = await api(`/api/cycles/${id}`);
   setTitle(c.name);
   const tab = params.get('tab') || (c.status === 'awaiting-review' ? 'review' : c.status === 'awaiting-merge' ? 'merge' : c.status === 'completed' ? 'report' : 'inputs');
-  const phases = `<div class="steps">${c.phases.map((p) => `<a class="phase ${esc(p.status)} ${phaseArtifactTab(p.name) === tab ? 'sel' : ''}" href="#/cycle/${esc(c.id)}?tab=${phaseArtifactTab(p.name)}" style="text-decoration:none;color:inherit"><b>${esc(p.label)}</b>${esc(p.status)}${p.summary ? `<br><span class="muted">${esc(p.summary)}</span>` : ''}</a>`).join('')}</div>`;
+  const phases = `<div class="steps">${c.phases.map((p) => `<a class="phase ${esc(p.status)} ${phaseArtifactTab(p.name) === tab ? 'sel' : ''}" href="#/cycle/${esc(c.id)}?tab=${phaseArtifactTab(p.name)}" style="text-decoration:none;color:inherit"><b>${esc(p.label)}</b>${esc(p.status)}${p.summary ? `<br><span class="muted">${esc(p.summary)}</span>` : ''}${handoverBadge(p)}</a>`).join('')}</div>`;
   const tabs = [['inputs', 'Inputs'], ['normalise', 'Normalisation'], ...(c.status === 'awaiting-review' ? [['review', 'Review']] : []), ...(c.type === 'incremental' ? [['delta', 'Delta']] : []),
     ['requirements', 'Requirements'], ['rules', 'Business rules'], ['testcases', 'Test cases'], ['scripts', 'Scripts'], ...(c.type === 'incremental' ? [['merge', 'Merge approval']] : []),
-    ['execution', 'Execution'], ['defects', 'Defects'], ['report', 'Report']];
+    ['execution', 'Execution'], ['defects', 'Defects'], ['report', 'Report'], ['skills', 'Skills']];
   let body = '';
   try { body = await renderCycleTab(c, tab); } catch (e) { body = `<div class="banner err">${esc(e.message)}</div>`; }
   $view.innerHTML = `<h1>${esc(c.name)} <span class="muted small">${esc(c.id)} · ${esc(c.type)}</span> ${statusPill(c.status)}</h1>
@@ -207,7 +237,7 @@ function deltaView(d, { title = 'Delta against the baseline' } = {}) {
 ${d.pendingConflicts && d.pendingConflicts.length ? `<div class="banner">${d.pendingConflicts.length} conflict(s) still unresolved are not counted yet.</div>` : ''}
 <p class="muted small">Computed in code against the baseline requirements: same subject &amp; same values = unchanged; same subject, different value = enhanced (new value wins, old kept); no matching subject = new.</p>
 ${table(['Class', 'Incoming statement', 'Baseline requirement', 'Superseded / matched value', 'Similarity'], d.items.map((it) => [artPill(it.classification), esc(it.incoming.text), esc(it.baselineRequirementId || '-'),
-    it.classification === 'enhanced' ? `<span class="old">${esc(it.previous.text)}</span>` : it.previous ? `<span class="muted">${esc(it.previous.text)}</span>` : '', it.similarity]), (i) => `row-${d.items[i].classification}`)}`;
+    it.classification === 'enhanced' ? `<span class="old">${esc(it.previous.text)}</span>` : it.matched ? `<span class="muted">${esc(it.matched.text)}</span>` : it.previous ? `<span class="muted">${esc(it.previous.text)}</span>` : '<span class="muted small">no baseline match</span>', it.similarity]), (i) => `row-${d.items[i].classification}`)}`;
 }
 
 async function renderCycleTab(c, tab) {
@@ -234,6 +264,7 @@ ${normaliseView(c, true)}
     case 'execution': return a.execution ? executionView(c) : `${notYet('Execution')}<p class="muted">Scripts are <b>designed</b> but have not been executed.</p>`;
     case 'defects': return a.defects ? defectsView(c) : notYet('Defects');
     case 'report': return c.report ? reportView(c) : notYet('Cycle report');
+    case 'skills': return skillsView(c);
     default: return '';
   }
 }
@@ -333,7 +364,8 @@ function mergeView(c) {
   const counts = (arr) => `${arr.filter((x) => x.status === 'new').length} new · ${arr.filter((x) => x.status !== 'new').length} re-designed`;
   return `${decided ? `<div class="banner ${decided.decision === 'approved' ? 'ok' : 'err'}">Merge ${esc(decided.decision)} by ${esc(decided.by)} at ${fmtTime(decided.at)}. ${esc(decided.detail)}</div>`
     : `<div class="banner info">Nothing joins baseline ${esc(mp.baselineId)} v${mp.baselineVersion} until you approve. Rejecting leaves it untouched. ${a.requirements.length - reqs.length} unchanged requirements and their artifacts are carried over and not listed.</div>`}
-<h2>Requirements to merge (${counts(reqs)})</h2>${table(['ID', 'Status', 'Superseded value', 'New value'], reqs.map((r) => [esc(r.id), artPill(r.status), r.previous ? `<span class="old">${esc(r.previous.text)}</span>` : '-', `<span class="newv">${esc(r.text)}</span>`]), (i) => `row-${reqs[i].status}`)}
+${c.rejectedRows && c.rejectedRows.length ? `<div class="banner">Rows rejected at the gate (kept at baseline value / not added): ${esc(c.rejectedRows.join(', '))}</div>` : ''}
+<h2>Requirements to merge (${counts(reqs)})</h2>${table([...(c.status === 'awaiting-merge' ? ['Reject row'] : []), 'ID', 'Status', 'Superseded value', 'New value'], reqs.map((r) => [...(c.status === 'awaiting-merge' ? [`<input type="checkbox" class="reject-row" value="${esc(r.id)}" title="Reject this row only">`] : []), esc(r.id), artPill(r.status), r.previous ? `<span class="old">${esc(r.previous.text)}</span>` : '-', `<span class="newv">${esc(r.text)}</span>`]), (i) => `row-${reqs[i].status}`)}
 <h2>Test cases to merge (${counts(tcs)})</h2>${table(['Key', 'Req', 'Status', 'Superseded', 'New'], tcs.map((t) => [esc(t.key), esc(t.requirementId), artPill(t.status),
     t.previous ? `<span class="old">${esc(t.previous.name)}<br>${esc(t.previous.expected)}</span>` : '-', `<span class="newv">${esc(t.name)}</span><br>${esc(t.expected)}`]), (i) => `row-${tcs[i].status}`)}
 <h2>Scripts to merge (${counts(scripts)})</h2>${table(['File', 'Covers', 'Status', 'Superseded assertion(s)', 'New assertion(s)'], scripts.map((s) => {
@@ -362,8 +394,8 @@ function defectsView(c) {
   const res = c.artifacts.resolvedDefects || [];
   return `<h2>Defects (${d.length})</h2><p class="muted small">Raised only from test cases that actually failed in the real Playwright run of this cycle.</p>
 ${d.length ? d.map((x) => `<div class="card"><h3>${esc(x.id)} - ${esc(x.title)} ${pill(x.severity, 'failed')} ${pill(x.movement, x.movement === 'new' ? 'failed' : 'enhanced')}</h3>
-<div class="grid2"><div><b>Expected:</b> <span class="newv">${esc(x.expected)}</span><br><b>Actual:</b> <span class="old" style="text-decoration:none">${esc(x.actual)}</span><br><b>Failing assertion:</b> <code>${esc(x.assertion)}</code> <span class="small muted">(${esc(x.location)})</span></div>
-<div><b>Test case:</b> <a href="#/cycle/${esc(c.id)}?tab=testcases">${esc(x.testCaseKey)}</a> · <b>Script:</b> <a href="#/scripts?cycle=${esc(c.id)}&file=${esc(x.scriptFile)}">${esc(x.scriptFile)}</a><br><b>Requirement:</b> <a href="#/cycle/${esc(c.id)}?tab=requirements">${esc(x.requirementId)}</a> ${esc(x.requirementText)}<br><b>Jira:</b> ${esc(x.jiraKeys.join(', '))} · first seen ${esc(x.firstSeenCycle)}</div></div>
+<div class="grid2"><div><b>Expected:</b> <span class="newv">${esc(x.expected)}</span><br><b>Actual:</b> <span class="old" style="text-decoration:none">${esc(x.actual)}</span><br><b>Severity:</b> ${esc(x.severity)}${x.impact ? ` (${esc(x.impact)})` : ''}<br><b>Release:</b> ${esc(x.releaseDecision || 'not assessed')}<br><b>Suspected code area:</b> <code>${esc(x.suspectedCodeArea || '-')}</code><br><b>Failing assertion:</b> <code>${esc(x.assertion)}</code> <span class="small muted">(${esc(x.location)})</span></div>
+<div><b>Test case:</b> <a href="#/cycle/${esc(c.id)}?tab=testcases">${esc(x.testCaseKey)}</a> · <b>Script:</b> <a href="#/scripts?cycle=${esc(c.id)}&file=${esc(x.scriptFile)}">${esc(x.scriptFile)}</a><br><b>Requirement:</b> <a href="#/cycle/${esc(c.id)}?tab=requirements">${esc(x.requirementId)}</a> ${esc(x.requirementText)}<br><b>Rule:</b> ${esc(x.ruleId || '-')} · <b>Source:</b> ${esc((x.sourceRefs || x.jiraKeys).join(', '))} · first seen ${esc(x.firstSeenCycle)}</div></div>
 <details><summary class="small">Error output and evidence</summary><pre class="code">${esc(x.errorMessage)}</pre>${x.evidence.map((e) => `<a class="small" target="_blank" href="/api/cycles/${esc(c.id)}/evidence/${esc(e.file)}">${esc(e.name)}</a>`).join(' · ')}</details></div>`).join('') : '<div class="banner ok">No test case failed, so no defects were raised.</div>'}
 ${res.length ? `<h3>Resolved since previous cycle</h3>${table(['ID', 'Title', 'Case'], res.map((x) => [esc(x.id), esc(x.title), esc(x.testCaseKey)]))}` : ''}`;
 }
@@ -373,6 +405,8 @@ function reportView(c) {
   return `<div class="row"><h2 style="margin:0">Cycle report</h2><a class="btn" href="/api/cycles/${esc(c.id)}/report.html" target="_blank">Open HTML</a><a class="btn secondary" href="/api/cycles/${esc(c.id)}/report.html?download=1">Download HTML</a><a class="btn secondary" href="/api/cycles/${esc(c.id)}/report.xlsx">Download Excel</a></div>
 <div class="kpis" style="margin-top:10px"><div class="kpi">Requirements<b>${r.requirements.total}</b></div><div class="kpi">Test cases<b>${r.testCases.total}</b></div><div class="kpi">Scripts<b>${r.scripts.total}</b></div><div class="kpi">Executed<b>${r.execution.executed ? r.execution.summary.executed : 0}</b></div><div class="kpi">Pass rate<b>${r.execution.executed ? `${r.execution.summary.passRate}%` : 'n/a'}</b></div><div class="kpi">Defects<b>${r.defects.open.length}</b></div><div class="kpi">Coverage (passing)<b>${r.coverage ? r.coverage.percent.passing : 0}%</b></div></div>
 <div class="card"><b>Summary</b><p>${esc(r.narrative.text)}</p><p class="muted small">${esc(r.narrative.draftedBy)}</p></div>
+<div class="card" id="report-skills"><b>Active skills (${(r.skills || []).length})</b> · hand-over <span class="hand ${r.handoverStatus === 'complete' ? 'ok' : 'bad'}">${esc(r.handoverStatus || 'not checked')}</span>
+<p class="small">${(r.skills || []).map((s) => `${pill(s.id, 'designed')} ${esc(s.name)}`).join('<br>') || 'No skills were active for this cycle.'}</p><a class="small" href="#/cycle/${esc(c.id)}?tab=skills">Hand-over detail per phase</a></div>
 <iframe src="/api/cycles/${esc(c.id)}/report.html" style="width:100%;height:900px;border:1px solid #dde4ee;border-radius:8px;background:#fff" title="Cycle report"></iframe>`;
 }
 
@@ -387,7 +421,8 @@ document.addEventListener('click', async (ev) => {
   localStorage.setItem('aqe-user', approver);
   ev.target.disabled = true;
   try {
-    await api(`/api/cycles/${cycleId}/merge`, { method: 'POST', body: { decision: id === 'merge-approve' ? 'approve' : 'reject', approver, comment: document.getElementById('mcomment').value } });
+    await api(`/api/cycles/${cycleId}/merge`, { method: 'POST', body: { decision: id === 'merge-approve' ? 'approve' : 'reject', approver, comment: document.getElementById('mcomment').value,
+      rejectedRows: [...document.querySelectorAll('.reject-row')].filter((x) => x.checked).map((x) => x.value) } });
     location.hash = `#/cycle/${cycleId}?tab=${id === 'merge-approve' ? 'execution' : 'merge'}`;
     route();
   } catch (e) { msg.textContent = e.message; ev.target.disabled = false; }
