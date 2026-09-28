@@ -128,21 +128,27 @@ const EXEC_INPUT = {
 const EXEC_AGENT = {
   requirements: ['Combines every input into one agreed list of requirements.', 'Everyone tests against the same approved scope.'],
   rules: ['Pulls out the business rules and the exact values behind them.', 'Every rule can be traced back to where it was stated.'],
-  testcases: ['Writes the test cases, ready for the test management tool.', 'Consistent, reviewable coverage in hours rather than weeks.'],
+  testcases: ['Writes the test cases, ready for the test management tool.', 'Every requirement gets a consistent, reviewable test case.'],
   scripts: ['Turns the test cases into automated tests.', 'The same tests can be re-run on every release.'],
   execution: ['Runs the automated tests for real.', 'Results are actual, not estimated.'],
   defects: ['Logs a defect only when a test really fails.', 'No noise: every defect comes with evidence.'],
   report: ['Produces the quality report and compares cycles.', 'One clear view of quality for decision makers.'],
 };
+const EXEC_VALUE = [
+  ['»', 'Faster release sign-off', 'Requirements, tests, results and a report in one cycle.', ['One platform takes a capability from its inputs to a signed-off quality report.', 'Fewer hand-offs between business, development and QA teams.']],
+  ['≡', 'Traceable for audit', 'Every test and defect links back to its requirement.', ['Each requirement shows where it came from: Jira, code or a document.', 'Each test case, result and defect links back to that requirement.']],
+  ['✔', 'Real results, no surprises', 'Tests actually run; defects come only from real failures.', ['Results come from running the tests, not from estimates.', 'Every defect carries the expected and actual result as evidence.']],
+  ['↻', 'Reuse across releases', 'Later releases only redo what changed.', ['Each approved cycle is kept as the baseline.', 'Unchanged tests are reused; only new and changed items are redesigned.']],
+];
 const FLOW_BRIEF = {
-  baseline: ['Baseline', 'The first full quality check of a capability.', [
+  baseline: ['Baseline: first full quality check', 'Run once for a new capability. Its approved result becomes the reference for every later release.', [
     'Bring the project\'s inputs.',
     'The platform combines them into one list of requirements and highlights any disagreements.',
     'A person resolves the disagreements and approves the list.',
     'The agents design the tests, automate them, run them and log real defects.',
     'A report shows what was tested, what passed and what failed.',
     'The approved result is saved as the baseline for future releases.'], '#/run?type=baseline', 'Start a baseline'],
-  incremental: ['Incremental', 'A quick update when something changes, without starting again.', [
+  incremental: ['Incremental: update when something changes', 'Run when something changes, such as a new epic or a code release. Only the change is redone.', [
     'Pick the approved baseline and bring only what changed.',
     'The platform shows what is unchanged, what changed and what is new.',
     'Only the changes are redesigned; everything else is reused.',
@@ -154,6 +160,10 @@ async function viewHome() {
   setTitle();
   const P = META.platform;
   HOME_DETAIL = {};
+  const valueTiles = EXEC_VALUE.map(([icon, name, line, points], i) => {
+    HOME_DETAIL[`value-${i}`] = `<h2>${esc(name)}</h2><ul class="brief">${points.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`;
+    return tile({ detail: `value-${i}`, art: 'run', tag: 'Outcome', big: icon, title: name, lines: [esc(line)] });
+  });
   const inName = (t) => (EXEC_INPUT[t.id] || [t.name])[0];
   const inputTiles = P.inputTypes.map((t) => {
     const [name, what, use] = EXEC_INPUT[t.id] || [t.name, t.about, t.reads];
@@ -169,11 +179,12 @@ async function viewHome() {
   });
   const flowTiles = Object.entries(FLOW_BRIEF).map(([id, [name, intro, points, href, cta]], i) => {
     HOME_DETAIL[`flow-${id}`] = `<h2>${esc(name)}</h2><p>${esc(intro)}</p><ul class="brief">${points.map((x) => `<li>${esc(x)}</li>`).join('')}</ul><a class="btn" href="${href}">${esc(cta)}</a>`;
-    return tile({ detail: `flow-${id}`, art: i ? 'flow2' : 'flow1', tag: 'Flow', big: i + 1, title: name, lines: [esc(intro)] });
+    return tile({ detail: `flow-${id}`, art: i ? 'flow2' : 'flow1', tag: `Flow ${i + 1}`, big: i + 1, title: name, lines: [esc(intro)] });
   });
-  $view.innerHTML = `<section class="hero"><div class="eyebrow">Agentic QE Platform</div><h1>Quality engineering run by seven AI agents, with people in control.</h1>
+  $view.innerHTML = `<section class="hero"><div class="eyebrow">Agentic QE Platform</div><h1>Quality engineering by seven specialised agents, with people in control.</h1>
 <p>Bring what your project already has: Jira, code and documents. The platform turns it into tested, reported quality, and keeps every approved result as a baseline for the next release.</p>
-<div class="facts"><div><b>${P.inputTypes.length}</b>kinds of input</div><div><b>${P.agents.length}</b>AI agents</div><div><b>2</b>ways to run</div><div><b>100%</b>of changes approved by a person</div></div></section>
+<div class="facts"><div><b>${P.inputTypes.length}</b>kinds of input</div><div><b>${P.agents.length}</b>AI agents</div><div><b>2</b>ways to run</div><div><b>Human</b>approval on every baseline change</div></div></section>
+${rail('value', 'Why it matters', 'click an outcome for details', valueTiles)}
 ${rail('inputs', 'What goes in', 'click an input for details', inputTiles)}
 ${rail('agents', 'Who does the work', 'click an agent for details', agentTiles)}
 ${rail('flows', 'How it runs', 'click a flow for a short brief', flowTiles)}`;
