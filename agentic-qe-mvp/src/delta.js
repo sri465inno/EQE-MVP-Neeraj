@@ -27,6 +27,7 @@ function classifyDelta(baselineRequirements, incoming) {
       baselineRequirementId: best.r.id,
       similarity: Number(bestScore.toFixed(2)),
       previous: same ? null : { text: best.r.text, values: best.r.values, version: best.r.version },
+      matched: same ? { text: best.r.text, version: best.r.version } : null,
     };
   });
   const counts = { unchanged: 0, enhanced: 0, new: 0 };

@@ -70,12 +70,12 @@ function parseError(err) {
   };
 }
 
-/** Maps a Playwright JSON report to per-test-case results. Titles carry the case key: "[AQE-T3] ...". */
+/** Maps a Playwright JSON report to per-test-case results. Titles start with the case key: "TC-F-003 ...". */
 function mapReport(report, testCases, { evidenceDir = null } = {}) {
   const found = new Map();
   for (const suite of report.suites || []) {
     for (const { file, spec } of collectSpecs(suite, suite.file, [])) {
-      const m = spec.title.match(/^\[([A-Z]+-T\d+)\]/);
+      const m = spec.title.match(/^\[?(TC-[FN]-\d+|[A-Z]+-T\d+)\]?(?:\s|$)/);
       if (!m) continue;
       const t = spec.tests[0];
       const r = t.results[t.results.length - 1] || {};
@@ -105,7 +105,7 @@ function mapReport(report, testCases, { evidenceDir = null } = {}) {
     }
   }
   return testCases.map((tc) => {
-    const base = { key: tc.key, requirementId: tc.requirementId, name: tc.name, type: tc.type, scriptFile: tc.scriptFile };
+    const base = { key: tc.key, requirementId: tc.requirementId, ruleId: tc.ruleId || null, name: tc.name, type: tc.type, scriptFile: tc.scriptFile };
     if (tc.automation !== 'Automated') return { ...base, status: 'not-run', reason: 'Manual test case - not automated, not executed', duration: 0, error: null, evidence: [] };
     const hit = found.get(tc.key);
     if (!hit) return { ...base, status: 'not-run', reason: 'Automated case not present in the Playwright report', duration: 0, error: null, evidence: [] };

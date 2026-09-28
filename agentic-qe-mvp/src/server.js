@@ -11,12 +11,15 @@ const { jiraLiveConfig } = require('./connectors/jira');
 const { listFixtureBranches, loadCodebaseFixture } = require('./connectors/codebase');
 const { modelConfig } = require('./llm');
 const { PW_VERSION } = require('./execution');
+const { loadSkills } = require('./skills');
 
 const XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 
-function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process.env } = {}) {
+function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process.env, skillsDir = path.join(__dirname, '..', 'skills') } = {}) {
   const store = new Store(dataDir);
-  const pipeline = new Pipeline(store, { env });
+  const skillLib = loadSkills(skillsDir);
+  for (const w of skillLib.warnings) console.warn(`[skills] ${w}`);
+  const pipeline = new Pipeline(store, { env, skills: skillLib.skills });
   pipeline.recover();
   const app = express();
   app.use(express.json({ limit: '2mb' }));
@@ -41,9 +44,13 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
       model: model ? { mode: 'model', model: model.model } : { mode: 'demo', note: 'No model API key: deterministic demo mode (template prose)' },
       codebase: { mode: 'fixture', branches: listFixtureBranches() },
       playwright: PW_VERSION,
+      skills: skillLib.skills.map(({ body, ...s }) => s),
+      skillWarnings: skillLib.warnings,
       samples: { initiative: 'SWB-1', epic: 'SWB-10', incrementalEpic: 'SWB-20', baselineBranch: 'main', incrementalBranch: 'feature/booking-date-changes' },
     });
   });
+
+  app.get('/api/skills', (req, res) => res.json({ dir: 'skills/', skills: skillLib.skills, warnings: skillLib.warnings }));
 
   app.get('/api/sample-text', (req, res) => {
     if (req.query.slot === 'codebase') {
@@ -83,7 +90,7 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
     res.type('text/javascript').send(s.code);
   });
   app.get('/api/cycles/:id/evidence/:file', (req, res) => {
-    if (!/^[A-Z]+-T\d+-\d+\.(json|png|txt)$/.test(req.params.file)) return res.status(400).json({ error: 'bad name' });
+    if (!/^[A-Z]+-(?:[A-Z]-)?[A-Z]?\d+-\d+\.(json|png|txt)$/.test(req.params.file)) return res.status(400).json({ error: 'bad name' });
     const f = path.join(store.runDir(cycle(req).id), 'evidence', req.params.file);
     if (!fs.existsSync(f)) return res.status(404).json({ error: 'not found' });
     res.sendFile(f);
@@ -136,7 +143,7 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
   app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
     res.status(err.status || 500).json({ error: err.message });
   });
-  return { app, store, pipeline };
+  return { app, store, pipeline, skills: skillLib };
 }
 
 if (require.main === module) {

@@ -18,7 +18,8 @@ function templateNarrative(f) {
   return parts.join(' ');
 }
 
-async function draftNarrative(facts, { env = process.env, fetchImpl = globalThis.fetch } = {}) {
+/** `guidance` is the concatenated body of the skills that target the report agent (and only those). */
+async function draftNarrative(facts, { env = process.env, fetchImpl = globalThis.fetch, guidance = '' } = {}) {
   const fallback = { text: templateNarrative(facts), draftedBy: 'Deterministic template (demo mode - no model API key set)' };
   const cfg = modelConfig(env);
   if (!cfg) return fallback;
@@ -29,6 +30,7 @@ async function draftNarrative(facts, { env = process.env, fetchImpl = globalThis
       body: JSON.stringify({
         model: cfg.model,
         max_tokens: 400,
+        ...(guidance ? { system: `House rules for this report (skill files):\n${guidance}` } : {}),
         messages: [{ role: 'user', content: `Write a 4-sentence business summary of this QA cycle for a non-technical reader. Use only these facts; do not invent numbers.\n${JSON.stringify(facts)}` }],
       }),
       signal: AbortSignal.timeout(20000),

@@ -2,7 +2,7 @@
 // Design agents, run in a fixed order:
 //   requirements repository -> business rules -> test cases -> automation scripts
 // All structure and decisions are deterministic; the optional model only drafts prose elsewhere.
-const { classify, CATALOGUE } = require('./catalogue');
+const { classify, CATALOGUE, MONEY_KINDS } = require('./catalogue');
 
 const pad = (n, w = 3) => String(n).padStart(w, '0');
 const clone = (x) => JSON.parse(JSON.stringify(x));
@@ -54,6 +54,7 @@ function requirementsAgentIncremental(baselineReqs, delta, { cycle, counters }) 
   for (const d of delta.items) {
     if (d.classification === 'unchanged') {
       byId.get(d.baselineRequirementId).status = 'unchanged';
+      d.requirementId = d.baselineRequirementId;
     } else if (d.classification === 'enhanced') {
       const old = byId.get(d.baselineRequirementId);
       byId.set(old.id, {
@@ -71,9 +72,11 @@ function requirementsAgentIncremental(baselineReqs, delta, { cycle, counters }) 
         previous: { text: old.text, values: old.values, version: old.version, origins: old.origins },
         changedInCycle: cycle.id,
       });
+      d.requirementId = old.id;
     } else {
       counters.req += 1;
-      added.push(newRequirement(d.incoming, `REQ-${pad(counters.req)}`, cycle));
+      d.requirementId = `REQ-${pad(counters.req)}`;
+      added.push(newRequirement(d.incoming, d.requirementId, cycle));
     }
   }
   return [...byId.values(), ...added];
@@ -94,7 +97,18 @@ function affectedRequirementIds(requirements) {
   return out;
 }
 
-function buildRule(req, id) {
+function provenanceOf(cycle, slot) {
+  const input = (cycle.inputs || []).find((i) => i.slot === slot);
+  return input ? input.provenance.kind : null;
+}
+
+/** Source references behind a requirement: Jira issue keys, else repository paths. */
+function sourceRefs(req) {
+  if (req.jiraKeys.length) return req.jiraKeys;
+  return [...new Set(req.origins.filter((o) => o.ref).map((o) => o.ref))];
+}
+
+function buildRule(req, id, cycle) {
   const c = classify(req.text);
   return {
     id,
@@ -104,7 +118,7 @@ function buildRule(req, id) {
     statement: req.text,
     parameters: c ? c.params : Object.fromEntries(req.values.map((v, i) => [`value${i + 1}`, `${v.num}${v.unit ? ' ' + v.unit : ''}`])),
     executable: Boolean(c),
-    quotes: req.origins.map((o) => ({ source: o.source, ref: o.ref, line: o.line || null, url: o.url || null, text: o.quote })),
+    quotes: req.origins.map((o) => ({ source: o.source, ref: o.ref, line: o.line || null, url: o.url || null, text: o.quote, provenance: provenanceOf(cycle, o.input) })),
   };
 }
 
@@ -124,7 +138,10 @@ function manualCase(req) {
  * With `previous` (incremental), unaffected artifacts are carried over untouched and
  * affected ones are re-designed, keeping their keys and the superseded version.
  */
-function designAgents(requirements, { cycle, counters, previous = null }) {
+function designAgents(requirements, { cycle, counters, previous = null, skills = {} }) {
+  const used = (agent) => (skills[agent]?.skills || []).map((x) => x.id);
+  counters.caseF = counters.caseF || 0;
+  counters.caseN = counters.caseN || 0;
   const affected = previous ? affectedRequirementIds(requirements) : new Set(requirements.map((r) => r.id));
   const paramsByKind = new Map();
   for (const r of requirements) {
@@ -153,27 +170,32 @@ function designAgents(requirements, { cycle, counters, previous = null }) {
     const prevRule = prevRules.get(req.id);
     let ruleId = prevRule?.id;
     if (!ruleId) { counters.rule += 1; ruleId = `BR-${pad(counters.rule)}`; }
-    const rule = { ...buildRule(req, ruleId), status: redesign ? 're-designed' : 'new', version: redesign ? prevRule.version + 1 : 1,
+    const rule = { ...buildRule(req, ruleId, cycle), designedWith: used('rules'), status: redesign ? 're-designed' : 'new', version: redesign ? prevRule.version + 1 : 1,
       previous: redesign ? { statement: prevRule.statement, parameters: prevRule.parameters, version: prevRule.version } : null };
     rules.push(rule);
 
     const c = classify(req.text);
     const specs = (c && c.entry.cases(c.params, ctx)) || [manualCase(req)];
-    const scriptFile = c && !specs[0].manual ? `${req.id}.${c.entry.kind}.spec.js` : null;
+    const scriptFile = c && !specs[0].manual ? `${ruleId.toLowerCase()}-${c.entry.kind}.spec.js` : null;
     const reqCases = specs.map((s) => {
       const prev = prevCases.get(`${req.id}|${s.slot}`);
       let key = prev?.key;
-      if (!key) { counters.case += 1; key = `AQE-T${counters.case}`; }
+      if (!key) {
+        const nf = req.type === 'non-functional';
+        counters[nf ? 'caseN' : 'caseF'] += 1;
+        key = `TC-${nf ? 'N' : 'F'}-${pad(counters[nf ? 'caseN' : 'caseF'])}`;
+      }
       const automated = !s.manual && Boolean(scriptFile);
       const labels = [req.type === 'functional' ? 'functional' : 'non-functional', ...(automated ? ['automation'] : [])];
       const tc = {
         key, requirementId: req.id, ruleId, slot: s.slot, kind: c ? c.entry.kind : 'unclassified',
         name: s.name, objective: s.objective, precondition: s.precondition, steps: s.steps, testData: s.testData,
-        expected: s.expected, priority: s.priority, type: req.type, labels,
+        expected: s.expected, priority: s.manual ? 'Low' : (c && MONEY_KINDS.has(c.entry.kind) ? 'High' : 'Medium'), type: req.type, labels,
         automation: automated ? 'Automated' : 'Not automated', scriptFile: automated ? scriptFile : null,
-        issueLinks: req.jiraKeys, cycle: cycle.name,
+        issueLinks: req.jiraKeys, sourceRefs: sourceRefs(req), cycle: cycle.name, designedWith: used('testcases'),
         status: prev ? 're-designed' : 'new', version: prev ? prev.version + 1 : 1,
         previous: prev ? { name: prev.name, expected: prev.expected, testData: prev.testData, version: prev.version } : null,
+        revisionNote: prev ? `v${prev.version + 1} (${cycle.id}): ${revision(prev, s)}` : null,
         ui: Boolean(c?.entry.ui),
         code: automated ? s.code() : null,
       };
@@ -182,10 +204,10 @@ function designAgents(requirements, { cycle, counters, previous = null }) {
     testCases.push(...reqCases.map(({ code, ...rest }) => rest));
     if (scriptFile) {
       const prevScript = prevScripts.get(req.id);
-      const code = renderSpec(req, reqCases);
+      const code = renderSpec(req, reqCases, { rule, skills: used('scripts') });
       const changed = !prevScript || prevScript.code !== code;
       scripts.push({
-        file: scriptFile, requirementId: req.id, covers: reqCases.map((t) => t.key), code,
+        file: scriptFile, requirementId: req.id, ruleId, designedWith: used('scripts'), covers: reqCases.map((t) => t.key), code,
         status: !prevScript ? 'new' : (changed ? 're-designed' : 'carried over'),
         version: !prevScript ? 1 : prevScript.version + (changed ? 1 : 0),
         previous: prevScript && changed ? { code: prevScript.code, version: prevScript.version } : null,
@@ -195,13 +217,26 @@ function designAgents(requirements, { cycle, counters, previous = null }) {
   return { rules, testCases, scripts, affected: [...affected] };
 }
 
-function renderSpec(req, cases) {
-  const tests = cases.map((tc) => `test(${JSON.stringify(`[${tc.key}] ${tc.name}`)}, async ({ ${tc.ui ? 'page, request' : 'request'} }, testInfo) => {
+function revision(prev, s) {
+  const changed = ['name', 'expected', 'testData'].filter((f) => prev[f] !== s[f]);
+  if (!changed.length) return 're-designed because a rule it depends on changed; case text unchanged';
+  return changed.map((f) => `${f} was "${prev[f]}"`).join('; ');
+}
+
+function renderSpec(req, cases, { rule, skills = [] } = {}) {
+  const tests = cases.map((tc) => `test(${JSON.stringify(`${tc.key} ${tc.name}`)}, async ({ ${tc.ui ? 'page, request' : 'request'} }, testInfo) => {
 ${tc.code}
 });`).join('\n\n');
-  return `// Generated by Agentic QE Platform - MVP (automation script agent).
-// Requirement: ${req.id} v${req.version} - ${req.text}
-// Covers test cases: ${cases.map((t) => t.key).join(', ')}
+  const block = [
+    'Generated by Agentic QE Platform - MVP (automation script agent).',
+    `Business rule: ${rule.id} - ${rule.title}`,
+    `Statement: ${rule.statement}`,
+    `Requirement: ${req.id} v${req.version}; sources: ${sourceRefs(req).join(', ')}`,
+    `Covers test cases: ${cases.map((t) => `${t.key} (${t.name})`).join('; ')}`,
+    ...(req.previous ? [`Superseded (v${req.previous.version}): ${req.previous.text}`] : []),
+    ...(skills.length ? [`Skills applied: ${skills.join(', ')}`] : []),
+  ];
+  return `${block.map((l) => `// ${l}`).join('\n')}
 // Self-contained: needs only @playwright/test and a baseURL pointing at the system under test.
 const { test, expect } = require('@playwright/test');
 

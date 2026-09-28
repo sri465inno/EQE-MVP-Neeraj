@@ -8,7 +8,12 @@ const design = require('./agents/design');
 const { executeSuite } = require('./execution');
 const { raiseDefects } = require('./defects');
 const { computeCoverage } = require('./coverage');
-const { buildCycleReport } = require('./report');
+const fs = require('fs');
+const { buildCycleReport, collectHandovers } = require('./report');
+const { compareCycles } = require('./compare');
+const { testCasesExport } = require('./excel');
+const { agentContext, checkHandover, selectSkills } = require('./skills');
+const { producedBy } = require('./handover');
 
 const clone = (x) => JSON.parse(JSON.stringify(x));
 const now = () => new Date().toISOString();
@@ -33,9 +38,11 @@ function setPhase(cycle, name, status, summary) {
 }
 
 class Pipeline {
-  constructor(store, { env = process.env } = {}) {
+  constructor(store, { env = process.env, skills = [], fetchImpl = globalThis.fetch } = {}) {
     this.store = store;
     this.env = env;
+    this.skills = skills;
+    this.fetchImpl = fetchImpl;
     this.running = new Map();
   }
 
@@ -50,8 +57,26 @@ class Pipeline {
     }
   }
 
-  async startCycle({ type = 'baseline', name, baselineId, inputs = {}, sutBuild, reviewer }) {
+  /** Hands an agent the bodies of the skills that target it, and records which ones it saw. */
+  skillContext(cycle, agentId) {
+    const ctx = agentContext(cycle.skills, agentId);
+    const p = cycle.phases.find((x) => x.name === agentId);
+    if (p) p.skills = ctx.skills.map((x) => x.id);
+    return ctx;
+  }
+
+  /** Checks what the phase actually produced against the artefacts its skills say it owes. */
+  handover(cycle, agentId) {
+    const p = cycle.phases.find((x) => x.name === agentId);
+    const h = checkHandover(agentId, producedBy(agentId, cycle), cycle.skills);
+    if (p) p.handover = h;
+    return h;
+  }
+
+  async startCycle({ type = 'baseline', name, baselineId, inputs = {}, sutBuild, reviewer, skills }) {
     if (!['baseline', 'incremental'].includes(type)) throw httpError(400, 'type must be "baseline" or "incremental"');
+    let activeSkills;
+    try { activeSkills = selectSkills(this.skills, skills); } catch (e) { throw httpError(400, e.message); }
     let baseline = null;
     if (type === 'incremental') {
       baseline = this.store.getBaseline(baselineId);
@@ -77,11 +102,14 @@ class Pipeline {
       sutBuild: sutBuild || codebase?.branch || 'main',
       inputs: loaded.map(({ statements: s, ...rest }) => ({ ...rest, statementCount: s.length })),
       normalisation,
+      skills: activeSkills,
       phases: PHASES[type].map((p) => ({ name: p, label: PHASE_LABEL[p], status: 'pending' })),
       approvals: [],
       artifacts: {},
     };
     setPhase(cycle, 'ingest', 'done', `${loaded.length} input(s), ${statements.length} statements`);
+    this.skillContext(cycle, 'normalise');
+    this.handover(cycle, 'normalise');
     setPhase(cycle, 'normalise', 'done', `${normalisation.counts.agreed} agreed · ${normalisation.counts['jira-only']} Jira only · ${normalisation.counts['code-only']} code only · ${normalisation.counts.conflict} conflicts`);
     setPhase(cycle, 'review', 'waiting');
     if (baseline) cycle.deltaPreview = this.previewDelta(cycle, {}, baseline);
@@ -132,19 +160,22 @@ class Pipeline {
 
   runDesignPhases(cycle, requirements, previous) {
     const counters = cycle.counters;
+    this.skillContext(cycle, 'requirements');
     setPhase(cycle, 'requirements', 'done', `${requirements.length} requirements`);
-    const out = design.designAgents(requirements, { cycle, counters, previous });
+    const skills = Object.fromEntries(['rules', 'testcases', 'scripts'].map((a) => [a, this.skillContext(cycle, a)]));
+    const out = design.designAgents(requirements, { cycle, counters, previous, skills });
     const count = (arr, st) => arr.filter((x) => x.status === st).length;
     const split = (arr) => (previous ? ` (${count(arr, 'new')} new · ${count(arr, 're-designed')} re-designed · ${count(arr, 'carried over')} carried over)` : '');
     setPhase(cycle, 'rules', 'done', `${out.rules.length} business rules${split(out.rules)}`);
     setPhase(cycle, 'testcases', 'done', `${out.testCases.length} test cases${split(out.testCases)}`);
     setPhase(cycle, 'scripts', 'done', `${out.scripts.length} Playwright specs${split(out.scripts)}`);
     cycle.artifacts = { ...cycle.artifacts, requirements, rules: out.rules, testCases: out.testCases, scripts: out.scripts, affected: out.affected };
+    for (const a of ['requirements', 'rules', 'testcases', 'scripts']) this.handover(cycle, a);
   }
 
   async runBaseline(cycleId) {
     const cycle = this.mustGet(cycleId);
-    cycle.counters = { req: 0, rule: 0, case: 0 };
+    cycle.counters = { req: 0, rule: 0, caseF: 0, caseN: 0 };
     setPhase(cycle, 'requirements', 'running');
     const requirements = design.requirementsAgentBaseline(cycle.reviewed, { cycle, counters: cycle.counters });
     this.runDesignPhases(cycle, requirements, null);
@@ -164,20 +195,54 @@ class Pipeline {
     done.baselineVersionAfter = 1;
     done.status = 'completed';
     done.completedAt = now();
-    done.report = await buildCycleReport(done, { store: this.store, env: this.env });
     this.store.saveCycle(done);
+    await this.runReportPhase(done.id);
+  }
+
+  /** Report agent: test case export, comparison with the previous cycle (incremental), cycle report. */
+  async runReportPhase(cycleId) {
+    const cycle = this.mustGet(cycleId);
+    setPhase(cycle, 'report', 'running');
+    const ctx = this.skillContext(cycle, 'report');
+    const dir = path.join(this.store.runDir(cycle.id), 'exports');
+    fs.mkdirSync(dir, { recursive: true });
+    const exp = await testCasesExport(cycle);
+    const file = `${cycle.id}-test-cases.xlsx`;
+    fs.writeFileSync(path.join(dir, file), exp.buffer);
+    cycle.artifacts.exports = { ...(cycle.artifacts.exports || {}), testCases: { file: `exports/${file}`, columns: exp.columns, columnSource: exp.columnSource, rows: exp.rows, gaps: exp.gaps } };
+    const prev = cycle.previousCycleId ? this.store.getCycle(cycle.previousCycleId) : null;
+    if (cycle.type === 'incremental' && prev) {
+      const cmp = compareCycles(prev, cycle);
+      cycle.comparison = { a: cmp.a.id, b: cmp.b.id, generatedAt: cmp.generatedAt, requirements: cmp.requirements, testCases: cmp.testCases, scripts: cmp.scripts, execution: cmp.execution, defects: cmp.defects };
+    }
+    cycle.report = await buildCycleReport(cycle, { env: this.env, fetchImpl: this.fetchImpl, guidance: ctx.guidance });
+    setPhase(cycle, 'report', 'done', 'Report generated');
+    const h = this.handover(cycle, 'report');
+    cycle.report.handovers = collectHandovers(cycle);
+    cycle.report.handoverStatus = cycle.report.handovers.some((x) => x.status === 'incomplete') ? 'incomplete' : 'complete';
+    if (h.status === 'incomplete') cycle.phases.find((x) => x.name === 'report').summary += ` · hand-over incomplete (${h.missing.join(', ')})`;
+    this.store.saveCycle(cycle);
   }
 
   async runIncrementalDesign(cycleId) {
     const cycle = this.mustGet(cycleId);
     const baseline = this.store.getBaseline(cycle.baselineId);
     setPhase(cycle, 'delta', 'running');
+    this.skillContext(cycle, 'delta');
     const delta = classifyDelta(baseline.requirements, cycle.reviewed);
     cycle.delta = delta;
+    this.handover(cycle, 'delta');
     setPhase(cycle, 'delta', 'done', delta.summary);
     cycle.counters = clone(baseline.counters);
     const requirements = design.requirementsAgentIncremental(baseline.requirements, delta, { cycle, counters: cycle.counters });
     this.runDesignPhases(cycle, requirements, baseline);
+    this.proposeMerge(cycle, baseline);
+    setPhase(cycle, 'merge-approval', 'waiting');
+    cycle.status = 'awaiting-merge';
+    this.store.saveCycle(cycle);
+  }
+
+  proposeMerge(cycle, baseline) {
     const a = cycle.artifacts;
     cycle.mergeProposal = {
       baselineId: baseline.id,
@@ -187,12 +252,29 @@ class Pipeline {
       testCases: a.testCases.filter((t) => t.status !== 'carried over').map((t) => t.key),
       scripts: a.scripts.filter((s) => s.status !== 'carried over').map((s) => s.file),
     };
-    setPhase(cycle, 'merge-approval', 'waiting');
-    cycle.status = 'awaiting-merge';
-    this.store.saveCycle(cycle);
   }
 
-  decideMerge(cycleId, { decision, approver, comment = '' }) {
+  /**
+   * Re-designs the addition without the rows the approver rejected: a rejected enhancement keeps the
+   * baseline value, a rejected new requirement is dropped. Ids are unchanged (the id sequence is replayed).
+   */
+  withoutRejectedRows(cycle, baseline, rejected) {
+    const items = cycle.delta.items
+      .map((d) => (d.classification === 'enhanced' && rejected.includes(d.requirementId) ? { ...d, classification: 'unchanged', rejectedAtMerge: true } : d));
+    cycle.counters = clone(baseline.counters);
+    const requirements = design.requirementsAgentIncremental(baseline.requirements, { ...cycle.delta, items }, { cycle, counters: cycle.counters });
+    this.runDesignPhases(cycle, requirements, baseline);
+    const drop = new Set(rejected.filter((id) => !baseline.requirements.some((r) => r.id === id)));
+    const a = cycle.artifacts;
+    a.requirements = a.requirements.filter((r) => !drop.has(r.id));
+    a.rules = a.rules.filter((r) => !drop.has(r.requirementId));
+    a.testCases = a.testCases.filter((t) => !drop.has(t.requirementId));
+    a.scripts = a.scripts.filter((x) => !drop.has(x.requirementId));
+    for (const x of ['requirements', 'rules', 'testcases', 'scripts']) this.handover(cycle, x);
+    this.proposeMerge(cycle, baseline);
+  }
+
+  decideMerge(cycleId, { decision, approver, comment = '', rejectedRows = [] }) {
     const cycle = this.mustGet(cycleId);
     if (cycle.status !== 'awaiting-merge') throw httpError(409, `Cycle is ${cycle.status}, not awaiting merge approval`);
     if (!approver || !String(approver).trim()) throw httpError(400, 'Approver name is required');
@@ -208,6 +290,14 @@ class Pipeline {
       return { cycle, done: Promise.resolve() };
     }
     if (baseline.version !== cycle.mergeProposal.baselineVersion) throw httpError(409, 'Baseline changed since this delta was designed; start a new incremental cycle');
+    const rejected = [].concat(rejectedRows || []);
+    const unknown = rejected.filter((id) => !cycle.mergeProposal.requirements.includes(id));
+    if (unknown.length) throw httpError(400, `Not a row of this merge: ${unknown.join(', ')}`);
+    if (rejected.length && rejected.length === cycle.mergeProposal.requirements.length) throw httpError(400, 'Every row is rejected - reject the whole merge instead');
+    if (rejected.length) {
+      cycle.rejectedRows = rejected;
+      this.withoutRejectedRows(cycle, baseline, rejected);
+    }
     const a = cycle.artifacts;
     const previousVersion = baseline.version;
     const merged = {
@@ -222,24 +312,28 @@ class Pipeline {
     merged.lastCycleId = cycle.id;
     this.store.saveBaseline(merged);
     cycle.approvals.push({ gate: 'Merge into baseline', by: approver, at, decision: 'approved', comment,
-      detail: `${cycle.mergeProposal.requirements.length} requirements, ${cycle.mergeProposal.testCases.length} test cases, ${cycle.mergeProposal.scripts.length} scripts merged: ${baseline.id} v${previousVersion} -> v${merged.version}` });
+      detail: `${cycle.mergeProposal.requirements.length} requirements, ${cycle.mergeProposal.testCases.length} test cases, ${cycle.mergeProposal.scripts.length} scripts merged: ${baseline.id} v${previousVersion} -> v${merged.version}${rejected.length ? `; rows rejected at the gate: ${rejected.join(', ')}` : ''}` });
+    cycle.previousCycleId = baseline.lastCycleId;
     cycle.baselineVersionAfter = merged.version;
     setPhase(cycle, 'merge-approval', 'done', `Approved by ${approver}; ${baseline.id} is now v${merged.version}`);
     cycle.status = 'running';
     this.store.saveCycle(cycle);
-    return this.track(cycle.id, (async () => {
-      await this.runExecutionPhases(cycle.id, { previousDefects });
-      const c = this.mustGet(cycle.id);
-      c.status = 'completed';
-      c.completedAt = now();
-      c.report = await buildCycleReport(c, { store: this.store, env: this.env });
-      this.store.saveCycle(c);
-    })());
+    return this.track(cycle.id, this.finishIncremental(cycle.id, previousDefects));
+  }
+
+  async finishIncremental(cycleId, previousDefects) {
+    await this.runExecutionPhases(cycleId, { previousDefects });
+    const c = this.mustGet(cycleId);
+    c.status = 'completed';
+    c.completedAt = now();
+    this.store.saveCycle(c);
+    await this.runReportPhase(cycleId);
   }
 
   async runExecutionPhases(cycleId, { previousDefects }) {
     let cycle = this.mustGet(cycleId);
     setPhase(cycle, 'execution', 'running');
+    this.skillContext(cycle, 'execution');
     this.store.saveCycle(cycle);
     const execution = await executeSuite({
       scripts: cycle.artifacts.scripts, testCases: cycle.artifacts.testCases,
@@ -247,9 +341,11 @@ class Pipeline {
     });
     cycle = this.mustGet(cycleId);
     cycle.artifacts.execution = execution;
+    this.handover(cycle, 'execution');
     const s = execution.summary;
     setPhase(cycle, 'execution', 'done', `${s.executed} executed · ${s.passed} passed · ${s.failed} failed · ${s.notRun} not run (manual)`);
     setPhase(cycle, 'defects', 'running');
+    this.skillContext(cycle, 'defects');
     const { defects, resolved, nextNo } = raiseDefects({
       execution, testCases: cycle.artifacts.testCases, requirements: cycle.artifacts.requirements, cycle,
       previousDefects, startNo: this.store.meta().nextDefect,
@@ -257,9 +353,9 @@ class Pipeline {
     this.store.bumpDefectCounter(nextNo);
     cycle.artifacts.defects = defects;
     cycle.artifacts.resolvedDefects = resolved;
+    this.handover(cycle, 'defects');
     setPhase(cycle, 'defects', 'done', `${defects.length} defect(s) from real failures${resolved.length ? ` · ${resolved.length} resolved` : ''}`);
     cycle.artifacts.coverage = computeCoverage(cycle.artifacts.requirements, cycle.artifacts.testCases, execution.results);
-    setPhase(cycle, 'report', 'done', 'Report generated');
     this.store.saveCycle(cycle);
   }
 
@@ -273,16 +369,9 @@ class Pipeline {
     if (cycle.type === 'baseline') return this.track(cycle.id, this.runBaseline(cycle.id));
     const merged = cycle.approvals.some((a) => a.gate === 'Merge into baseline' && a.decision === 'approved');
     if (!merged) return this.track(cycle.id, this.runIncrementalDesign(cycle.id));
-    return this.track(cycle.id, (async () => {
-      const baseline = this.store.getBaseline(cycle.baselineId);
-      const prevCycleId = baseline.cycles[baseline.cycles.length - 2];
-      await this.runExecutionPhases(cycle.id, { previousDefects: this.store.getCycle(prevCycleId)?.artifacts?.defects || [] });
-      const c = this.mustGet(cycle.id);
-      c.status = 'completed';
-      c.completedAt = now();
-      c.report = await buildCycleReport(c, { store: this.store, env: this.env });
-      this.store.saveCycle(c);
-    })());
+    const baseline = this.store.getBaseline(cycle.baselineId);
+    const prevCycleId = cycle.previousCycleId || baseline.cycles[baseline.cycles.length - 2];
+    return this.track(cycle.id, this.finishIncremental(cycle.id, this.store.getCycle(prevCycleId)?.artifacts?.defects || []));
   }
 
   mustGet(id) {

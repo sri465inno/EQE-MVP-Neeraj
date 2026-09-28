@@ -286,4 +286,11 @@ function classify(text) {
   return null;
 }
 
-module.exports = { CATALOGUE, classify, round, trunc };
+// Rules whose failure moves money wrongly: High priority cases, Critical defects.
+const MONEY_KINDS = new Set(['free-cancellation-window', 'late-cancellation-fee', 'refund-sla', 'money-rounding', 'date-change-free-window']);
+// Rules whose failure blocks a core guest journey.
+const JOURNEY_KINDS = new Set(['online-cancellation-ui', 'online-date-change-ui']);
+// Advisory (non-functional) rules.
+const ADVISORY_KINDS = new Set(['api-latency']);
+
+module.exports = { CATALOGUE, classify, round, trunc, MONEY_KINDS, JOURNEY_KINDS, ADVISORY_KINDS };
