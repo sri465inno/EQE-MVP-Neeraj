@@ -132,43 +132,35 @@ async function viewHome() {
   HOME_DETAIL = {};
   const agentTiles = P.agents.map((g) => { HOME_DETAIL[`agent-${g.id}`] = agentDetail(g, latest); return tile({ detail: `agent-${g.id}`, art: g.no <= 4 ? 'design' : 'run', tag: g.no <= 4 ? 'Design' : 'Run & results', big: g.no, title: g.name, lines: [esc(g.produces)] }); });
   const gateTiles = [
-    ['ingest', 'Ingest', 'Reads the three inputs and labels where each came from (GitHub pull, recorded fixture, live Jira, pasted).'],
-    ['normalise', 'Normalise', 'Three-way compare in code: agreed, Jira only, code only, and conflicting values.'],
+    ['ingest', 'Ingest', 'Reads every source and labels where each statement came from.'],
+    ['normalise', 'Normalise', 'Compares all sources in code: agreed, single-source and conflicting statements.'],
     ['review', 'Human review', 'A person settles every conflict and approves the requirement set. Only the reviewed set flows on.'],
-    ['delta', 'Delta (Flow 2)', 'Each incoming statement is classified as unchanged, enhanced or new against the baseline.'],
-    ['merge-approval', 'Merge approval (Flow 2)', 'Nothing joins the baseline until a person approves; reject leaves it untouched.'],
+    ['delta', 'Delta (incremental)', 'Each incoming statement is classified as unchanged, enhanced or new against the baseline.'],
+    ['merge-approval', 'Merge approval (incremental)', 'Nothing joins the baseline until a person approves; reject leaves it untouched.'],
   ].map(([id, name, text]) => { HOME_DETAIL[`stage-${id}`] = `<h2>${esc(name)}</h2><p>${esc(text)}</p><p class="muted small">Deterministic code, not an agent.</p>`; return tile({ detail: `stage-${id}`, art: PHASE_CAT[id], tag: PHASE_CAT[id] === 'gate' ? 'Human gate' : 'Intake', big: PHASE_ICON[id] || '⇢', title: name, lines: [esc(text)] }); });
-  const inputTiles = P.inputTypes.map((t) => {
-    const art = t.mvp === 'implemented' ? 'input' : t.mvp === 'via codebase' ? 'via' : 'off';
-    HOME_DETAIL[`input-${t.id}`] = `<h2>${esc(t.name)}</h2><p>${t.mvp === 'implemented' ? pill('implemented in this MVP', 'new') : t.mvp === 'platform only' ? pill('platform only', 'pending') : pill(t.mvp, 'designed')}</p><p>${esc(t.note || 'Part of the wider platform roadmap; this MVP does not read it.')}</p>`;
-    return tile({ detail: `input-${t.id}`, art, tag: t.mvp, big: t.mvp === 'implemented' ? '●' : t.mvp === 'via codebase' ? '◐' : '○', title: t.name, lines: [esc(t.note || 'Platform roadmap')], cls: t.mvp === 'platform only' ? 'off' : '' });
-  });
-  HOME_DETAIL.flow1 = `<h2>Flow 1 · Baseline cycle</h2><p>${esc(P.demo.flow1)}</p><ol><li>Ingest COM-1, COM-10 and the codebase branch <code>${esc(META.samples.baselineBranch)}</code>.</li><li>Normalise and settle the conflict at the human review.</li><li>Agents 1 to 7 run: requirements, rules, test cases (Excel), Playwright scripts, real execution, defects, report.</li></ol><a class="btn" href="#/run?type=baseline">Start Flow 1</a>`;
-  HOME_DETAIL.flow2 = `<h2>Flow 2 · Incremental cycle</h2><p>${esc(P.demo.flow2)}</p><ol><li>Pick the approved baseline, add COM-20 and <code>${esc(META.samples.incrementalBranch)}</code>.</li><li>See the split: unchanged · enhanced · new, before anything is designed.</li><li>Only enhanced and new items are redesigned; approve the merge; re-run for real; compare the two cycles.</li></ol><a class="btn" href="#/run?type=incremental">Start Flow 2</a>`;
-  HOME_DETAIL.demo = `<h2>${esc(P.demo.capability)}</h2><p>${esc(P.demo.system)}. Every reservation carries <b>${esc(P.demo.reservationAttributes)}</b> attributes (20 groups of 50); 11 of them drive the commission, such as status, nights, room revenue, taxes and fees, booking channel, advisor IATA, loyalty redemption, rate plan and room count.</p>
-<p class="small muted">Sources in <a href="${esc(META.codebase.url)}" target="_blank" rel="noopener">${esc(META.codebase.repo)}</a>: Jira REST v3 export on <code>${esc(META.jiraExport.branch)}</code> (synthetic test issues); codebase on ${META.codebase.branches.map((b) => `<code>${esc(b)}</code>`).join(', ')}.</p>`;
+  HOME_DETAIL.flow1 = `<h2>Baseline cycle</h2><p>Builds the first approved quality baseline for a capability.</p><ol><li>Ingest the sources and normalise them into one requirement set.</li><li>A person settles every conflict and approves the set at the human review.</li><li>Agents 1 to 7 run: requirements, business rules, test cases, automation scripts, real execution, defects, cycle report.</li><li>The approved result becomes the baseline.</li></ol><a class="btn" href="#/run?type=baseline">Start a baseline cycle</a>`;
+  HOME_DETAIL.flow2 = `<h2>Incremental cycle</h2><p>Adds only what changed on top of an approved baseline.</p><ol><li>Pick the baseline and supply only what is new.</li><li>Every statement is classified as unchanged, enhanced or new before anything is designed.</li><li>Only enhanced and new items are redesigned; unchanged artifacts are carried over.</li><li>A person approves the merge; the suite is executed again and the two cycles are compared.</li></ol><a class="btn" href="#/run?type=incremental">Start an incremental cycle</a>`;
+  HOME_DETAIL.skills = `<h2>Skills</h2><p>Markdown skill files define the shape every agent must deliver, so each cycle produces artifacts in the same form. A skill reaches only the agents it names, and each hand-over is checked against what the skill says it owes.</p><p>${META.skills.map((s) => pill(s.name, 'designed')).join(' ')}</p>`;
   HOME_DETAIL.labels = `<h2>Honest labelling</h2><ul>
-<li>${pill('pulled live from GitHub', 'github')} fetched from the repository during the run (git clone of the codebase branch; Jira REST v3 export files from <code>${esc(META.jiraExport.branch)}</code>). The Jira issues there are synthetic, so this is still not a Jira call.</li>
-<li>${pill('recorded fixture', 'fixture')} the same content read offline from a snapshot; ${pill('live Jira call', 'live')} only when <code>JIRA_BASE_URL</code>, <code>JIRA_EMAIL</code> and <code>JIRA_API_TOKEN</code> are set; ${pill('pasted', 'pasted')} typed by you.</li>
-<li>${pill('designed', 'designed')} an artifact exists; ${pill('executed', 'executed')} it was actually run by the Playwright CLI.</li>
-<li>${pill('carried over', 'carried')} unchanged from the baseline; ${pill('re-designed', 're-designed')} regenerated because its requirement changed; ${pill('new', 'new')} first designed in this cycle.</li></ul>
-<p class="modes">${modesHtml()}</p><p class="muted small">Playwright ${esc(META.playwright)}.</p>`;
+<li>Every source is labelled with where it came from and how it was read.</li>
+<li>${pill('designed', 'designed')} an artifact exists; ${pill('executed', 'executed')} it was actually run.</li>
+<li>${pill('carried over', 'carried')} unchanged from the baseline; ${pill('re-designed', 're-designed')} regenerated because its requirement changed; ${pill('new', 'new')} first designed in this cycle.</li>
+<li>Consequential decisions are computed in tested code; a model, if configured, only drafts prose.</li></ul>`;
   const flowTiles = [
-    tile({ detail: 'flow1', art: 'flow1', tag: 'Flow 1', big: '1', title: 'Baseline cycle', lines: ['COM-1 + COM-10 + commission engine 1.0', '<span class="muted">GDS conflict · real 7-night defect</span>'] }),
-    tile({ detail: 'flow2', art: 'flow2', tag: 'Flow 2', big: '2', title: 'Incremental cycle', lines: ['COM-20 + commission engine 2.0', '<span class="muted">cap 500 → 750 · 3 new rules</span>'] }),
-    tile({ detail: 'demo', art: 'demo', tag: 'Capability', big: P.demo.reservationAttributes, title: 'Reservation attributes', lines: [esc(P.demo.capability)] }),
-    tile({ detail: 'labels', art: 'skill', tag: 'Trust', big: '✓', title: 'Honest labelling', lines: ['What was pulled, recorded, designed or executed'] }),
+    tile({ detail: 'flow1', art: 'flow1', tag: 'Flow 1', big: '1', title: 'Baseline cycle', lines: ['First approved quality baseline', '<span class="muted">normalise · review · design · execute · report</span>'] }),
+    tile({ detail: 'flow2', art: 'flow2', tag: 'Flow 2', big: '2', title: 'Incremental cycle', lines: ['Only what changed, on top of a baseline', '<span class="muted">unchanged · enhanced · new · merge approval</span>'] }),
+    tile({ detail: 'skills', art: 'demo', tag: 'Consistency', big: META.skills.length, title: 'Skills', lines: ['Same artifact shape in every cycle'] }),
+    tile({ detail: 'labels', art: 'skill', tag: 'Trust', big: '✓', title: 'Honest labelling', lines: ['What was designed, executed, carried over or re-designed'] }),
   ];
   const cycleTiles = cycles.slice().reverse().map(cycleTile);
-  $view.innerHTML = `<section class="hero"><div class="eyebrow">Agentic QE Platform</div><h1>Seven agents. Any input. One reviewed, tested, reported quality cycle.</h1>
-<p>The platform turns business scope and code into reviewed requirements, test cases, runnable Playwright scripts, real execution results, defects and a cycle report. This MVP proves it on <b>${esc(P.demo.capability.toLowerCase())}</b> with exactly three inputs: a Jira initiative, a Jira epic and a codebase.</p>
-<div class="facts"><div><b>7</b>agents</div><div><b>3</b>inputs in this MVP</div><div><b>${esc(P.demo.reservationAttributes)}</b>reservation attributes</div><div><b>2</b>flows: baseline and incremental</div></div>
-<div class="row"><a class="btn" href="#/run?type=baseline">&#9654; Start Flow 1 · Baseline</a><a class="btn secondary" href="#/run?type=incremental">Flow 2 · Add to a baseline</a></div></section>
+  $view.innerHTML = `<section class="hero"><div class="eyebrow">Agentic QE Platform</div><h1>Seven agents. One reviewed, tested, reported quality cycle.</h1>
+<p>The platform turns business scope and code into reviewed requirements, business rules, test cases, runnable automation scripts, real execution results, defects and a cycle report, with a person approving every step that changes the baseline.</p>
+<div class="facts"><div><b>7</b>agents</div><div><b>2</b>human gates</div><div><b>2</b>flows: baseline and incremental</div><div><b>${META.skills.length}</b>skills</div></div>
+<div class="row"><a class="btn" href="#/run?type=baseline">&#9654; Start a baseline cycle</a><a class="btn secondary" href="#/run?type=incremental">Add to a baseline</a></div></section>
 ${cycleTiles.length ? rail('cycles', 'Continue with your cycles', 'open a cycle to see every phase', cycleTiles) : ''}
-${rail('flows', 'The demo', 'click a card for details', flowTiles)}
+${rail('flows', 'How it works', 'click a card for details', flowTiles)}
 ${rail('agents', 'The platform · seven agents', 'click an agent for what it produces, the skills it reads and the hand-over it owes', agentTiles)}
-${rail('stages', 'Intake and human gates', 'deterministic code around the agents', gateTiles)}
-${rail('inputs', 'Inputs · platform vs this MVP', 'three implemented; the rest are the wider platform', inputTiles)}`;
+${rail('stages', 'Intake and human gates', 'deterministic code around the agents', gateTiles)}`;
 }
 
 function cycleTile(c) {
@@ -204,7 +196,7 @@ async function viewRun(params) {
       : `<input type="text" data-slot="${slot}" class="key" value="${esc(st.key)}"> ${st.mode === 'github' ? pill('pulled live from GitHub', 'github') : META.jira.mode === 'live' ? pill('live Jira call', 'live') : pill('recorded fixture', 'fixture')}`}</div></div>`;
   };
   $view.innerHTML = `<h1>Run a cycle</h1>
-<div class="banner info">This MVP takes three inputs (Jira initiative, Jira epic, codebase) and runs the seven platform agents over them. Demo capability: ${esc(META.platform.demo.capability)} (${esc(META.platform.demo.reservationAttributes)}-attribute reservation model). <a href="#/">What the platform does beyond the MVP</a></div>
+
 <div class="card"><h3>1. What do you want to do?</h3><div class="row">
 <div class="choice ${runState.type === 'baseline' ? 'selected' : ''}" data-type="baseline"><b>New baseline</b><br><span class="muted">Jira initiative + Jira epic + codebase</span></div>
 <div class="choice ${runState.type === 'incremental' ? 'selected' : ''}" data-type="incremental"><b>Add to a baseline</b><br><span class="muted">One new Jira epic + updated codebase, against an approved baseline</span></div></div></div>
