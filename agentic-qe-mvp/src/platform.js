@@ -15,16 +15,16 @@ const SEVEN_AGENTS = [
 const INTAKE_STAGES = ['ingest', 'normalise', 'review', 'delta', 'merge-approval'];
 
 const INPUT_TYPES = [
-  { id: 'jira-initiative', name: 'Jira initiative', mvp: 'implemented', note: 'Business capability scope (COM-1)' },
-  { id: 'jira-epic', name: 'Jira epic (+ child stories)', mvp: 'implemented', note: 'Acceptance criteria per epic (COM-10, COM-20)' },
-  { id: 'codebase', name: 'Codebase (GitHub branch)', mvp: 'implemented', note: 'README, @rule source notes and the reservation data dictionary' },
-  { id: 'data-model', name: 'Data model / data dictionary', mvp: 'via codebase', note: 'Read from data-dictionary/ in the codebase input; not a separate input' },
-  { id: 'confluence', name: 'Confluence / BRD / FRD documents', mvp: 'platform only' },
-  { id: 'api-contract', name: 'API contracts (OpenAPI)', mvp: 'platform only' },
-  { id: 'existing-tests', name: 'Existing test suites (Zephyr / Xray)', mvp: 'platform only' },
-  { id: 'defect-history', name: 'Defect and incident history', mvp: 'platform only' },
-  { id: 'ui-design', name: 'UI designs (Figma)', mvp: 'platform only' },
-  { id: 'regulatory', name: 'Policy and contract documents (e.g. commission agreements)', mvp: 'platform only' },
+  { id: 'jira-initiative', name: 'Jira initiative', mvp: 'implemented', note: 'Business capability scope (COM-1)', about: 'The business capability and its goals, as written in Jira.', reads: 'Scope, objectives and the business rules stated at initiative level.', usedBy: ['requirements', 'rules'] },
+  { id: 'jira-epic', name: 'Jira epic (+ child stories)', mvp: 'implemented', note: 'Acceptance criteria per epic (COM-10, COM-20)', about: 'A slice of that capability with its stories and acceptance criteria.', reads: 'Acceptance criteria and expected values for each story.', usedBy: ['requirements', 'rules', 'testcases'] },
+  { id: 'codebase', name: 'Codebase (GitHub branch)', mvp: 'implemented', note: 'README, @rule source notes and the reservation data dictionary', about: 'The application source for the capability.', reads: 'The rules as actually implemented, source comments and README notes.', usedBy: ['requirements', 'rules', 'scripts'] },
+  { id: 'data-model', name: 'Data model / data dictionary', mvp: 'via codebase', note: 'Read from data-dictionary/ in the codebase input; not a separate input', about: 'The fields a record carries, with types and allowed values.', reads: 'Attributes, allowed values and example data for test data.', usedBy: ['testcases', 'scripts'] },
+  { id: 'confluence', name: 'Confluence / BRD / FRD documents', mvp: 'platform only', about: 'Business and functional requirement documents.', reads: 'Narrative rules, definitions and worked examples.', usedBy: ['requirements', 'rules'] },
+  { id: 'api-contract', name: 'API contracts (OpenAPI)', mvp: 'platform only', about: 'OpenAPI definitions of the services.', reads: 'Endpoints, request and response shapes, status codes.', usedBy: ['testcases', 'scripts'] },
+  { id: 'existing-tests', name: 'Existing test suites (Zephyr / Xray)', mvp: 'platform only', about: 'Test cases the project already owns.', reads: 'Existing cases to reuse, avoid duplicating and measure coverage against.', usedBy: ['testcases', 'report'] },
+  { id: 'defect-history', name: 'Defect and incident history', mvp: 'platform only', about: 'Past defects and production incidents.', reads: 'Failure patterns that raise test priority and help match repeat defects.', usedBy: ['testcases', 'defects'] },
+  { id: 'ui-design', name: 'UI designs (Figma)', mvp: 'platform only', about: 'Screen designs for the user journeys.', reads: 'Screens, fields and journeys for UI test cases and scripts.', usedBy: ['testcases', 'scripts'] },
+  { id: 'regulatory', name: 'Policy and contract documents (e.g. commission agreements)', mvp: 'platform only', about: 'Policies, contracts and regulations the capability must follow.', reads: 'Mandatory rules and limits that must be tested and reported.', usedBy: ['rules', 'testcases', 'report'] },
 ];
 
 const DEMO = {

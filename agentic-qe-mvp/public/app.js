@@ -119,10 +119,28 @@ function agentDetail(g, latest) {
   const where = g.no <= 4 ? 'After human review in both flows. In Flow 2 it only redesigns enhanced and new items; unchanged ones are carried over.' : g.id === 'execution' ? 'After the scripts; in Flow 2 only after the human merge approval.' : g.id === 'defects' ? 'After execution; reads the real Playwright results only.' : 'Last in both flows; also produces the cycle comparison in Flow 2.';
   const tab = g.id === 'report' ? 'report' : g.id;
   return `<h2>Agent ${g.no} · ${esc(g.name)}</h2><div class="grid2"><div><p><b>Produces:</b> ${esc(g.produces)}</p><p><b>When it runs:</b> ${esc(where)}</p>
-<p><b>Decisions:</b> computed in tested code; a model, if configured, only drafts report prose.</p></div>
+<p><b>Decisions:</b> computed in tested code; a model, if configured, only drafts report prose.</p>
+<p><b>Inputs it works from:</b> ${(() => { const ins = META.platform.inputTypes.filter((t) => (t.usedBy || []).includes(g.id)); return ins.length ? ins.map((t) => pill(t.name, 'designed')).join(' ') : '<span class="muted">the artifacts of the agent before it</span>'; })()}</p></div>
 <div><p><b>Skills it reads:</b> ${sk.length ? sk.map((s) => pill(s.name, 'designed')).join(' ') : '<span class="muted">none</span>'}</p><p><b>Hand-over it owes:</b> ${owed.length ? owed.map((k) => `<code>${esc(k)}</code>`).join(', ') : '<span class="muted">no contract</span>'}</p>
 ${latest ? `<a class="btn" href="#/cycle/${esc(latest.id)}?tab=${esc(tab)}">Open in ${esc(latest.id)}</a>` : '<a class="btn" href="#/run?type=baseline">Run Flow 1 to see it</a>'}</div></div>`;
 }
+
+const FLOW_BRIEF = {
+  baseline: ['Baseline cycle', 'The first full quality pass for a capability. Its approved result becomes the reference point for every later cycle.', [
+    'You bring the project\'s inputs, for example the Jira initiative and epic, the codebase and any supporting documents.',
+    'The platform reads every input and lines them up into one list of requirements. It flags what only one source says and where sources disagree.',
+    'A person reviews that list and settles each disagreement. Nothing is designed before this approval.',
+    'The seven agents then work in order: requirements, business rules, test cases, automation scripts, a real test run, defects for anything that failed, and a cycle report.',
+    'The approved requirements, test cases and scripts are saved as the baseline.',
+    'You get an Excel test-case export, readable scripts, real pass/fail results, defects and a downloadable report.'], '#/run?type=baseline', 'Start a baseline cycle'],
+  incremental: ['Incremental cycle', 'A follow-up cycle when something changes, such as a new epic or a code release, without redoing everything.', [
+    'You pick an existing baseline and bring only what is new.',
+    'Every incoming statement is sorted into unchanged, enhanced (same rule, new detail; the old value is shown beside the new one) or new.',
+    'Only enhanced and new items are redesigned. Unchanged test cases and scripts are carried over as they are.',
+    'A person approves the merge. Until then the baseline stays exactly as it was, and rejecting leaves it untouched.',
+    'The full suite is run again for real, and defects are raised only from actual failures.',
+    'You get an updated baseline, a cycle report and a side-by-side comparison with the previous cycle.'], '#/run?type=incremental', 'Start an incremental cycle'],
+};
 
 async function viewHome() {
   setTitle();
@@ -130,37 +148,32 @@ async function viewHome() {
   const cycles = await api('/api/cycles');
   const latest = cycles.slice().reverse().find((c) => c.status === 'completed');
   HOME_DETAIL = {};
+  const agentById = Object.fromEntries(P.agents.map((g) => [g.id, g]));
+  const inputTiles = P.inputTypes.map((t) => {
+    HOME_DETAIL[`input-${t.id}`] = `<h2>${esc(t.name)}</h2><div class="grid2"><div><p><b>What it is:</b> ${esc(t.about)}</p><p><b>What the platform takes from it:</b> ${esc(t.reads)}</p></div>
+<div><p><b>Handled by:</b> ${(t.usedBy || []).map((id) => pill(`Agent ${agentById[id].no} · ${agentById[id].name}`, 'designed')).join(' ')}</p><p class="muted small">Like every input, it is first read and lined up with the other sources, then reviewed by a person before any agent designs from it.</p></div></div>`;
+    return tile({ detail: `input-${t.id}`, art: 'input', tag: 'Input', big: '⇢', title: t.name, lines: [esc(t.about)] });
+  });
   const agentTiles = P.agents.map((g) => { HOME_DETAIL[`agent-${g.id}`] = agentDetail(g, latest); return tile({ detail: `agent-${g.id}`, art: g.no <= 4 ? 'design' : 'run', tag: g.no <= 4 ? 'Design' : 'Run & results', big: g.no, title: g.name, lines: [esc(g.produces)] }); });
+  const flowTiles = Object.entries(FLOW_BRIEF).map(([id, [name, intro, points, href, cta]], i) => {
+    HOME_DETAIL[`flow-${id}`] = `<h2>${esc(name)}</h2><p>${esc(intro)}</p><ul class="brief">${points.map((x) => `<li>${esc(x)}</li>`).join('')}</ul><a class="btn" href="${href}">${esc(cta)}</a>`;
+    return tile({ detail: `flow-${id}`, art: i ? 'flow2' : 'flow1', tag: `Flow ${i + 1}`, big: i + 1, title: name, lines: [esc(intro)] });
+  });
   const gateTiles = [
-    ['ingest', 'Ingest', 'Reads every source and labels where each statement came from.'],
-    ['normalise', 'Normalise', 'Compares all sources in code: agreed, single-source and conflicting statements.'],
-    ['review', 'Human review', 'A person settles every conflict and approves the requirement set. Only the reviewed set flows on.'],
-    ['delta', 'Delta (incremental)', 'Each incoming statement is classified as unchanged, enhanced or new against the baseline.'],
+    ['ingest', 'Ingest', 'Reads every input and labels where each statement came from.'],
+    ['normalise', 'Normalise', 'Lines all inputs up in code: agreed, single-source and conflicting statements.'],
+    ['review', 'Human review', 'A person settles every conflict and approves the requirement set.'],
+    ['delta', 'Delta (incremental)', 'Sorts each incoming statement into unchanged, enhanced or new against the baseline.'],
     ['merge-approval', 'Merge approval (incremental)', 'Nothing joins the baseline until a person approves; reject leaves it untouched.'],
-  ].map(([id, name, text]) => { HOME_DETAIL[`stage-${id}`] = `<h2>${esc(name)}</h2><p>${esc(text)}</p><p class="muted small">Deterministic code, not an agent.</p>`; return tile({ detail: `stage-${id}`, art: PHASE_CAT[id], tag: PHASE_CAT[id] === 'gate' ? 'Human gate' : 'Intake', big: PHASE_ICON[id] || '⇢', title: name, lines: [esc(text)] }); });
-  HOME_DETAIL.flow1 = `<h2>Baseline cycle</h2><p>Builds the first approved quality baseline for a capability.</p><ol><li>Ingest the sources and normalise them into one requirement set.</li><li>A person settles every conflict and approves the set at the human review.</li><li>Agents 1 to 7 run: requirements, business rules, test cases, automation scripts, real execution, defects, cycle report.</li><li>The approved result becomes the baseline.</li></ol><a class="btn" href="#/run?type=baseline">Start a baseline cycle</a>`;
-  HOME_DETAIL.flow2 = `<h2>Incremental cycle</h2><p>Adds only what changed on top of an approved baseline.</p><ol><li>Pick the baseline and supply only what is new.</li><li>Every statement is classified as unchanged, enhanced or new before anything is designed.</li><li>Only enhanced and new items are redesigned; unchanged artifacts are carried over.</li><li>A person approves the merge; the suite is executed again and the two cycles are compared.</li></ol><a class="btn" href="#/run?type=incremental">Start an incremental cycle</a>`;
-  HOME_DETAIL.skills = `<h2>Skills</h2><p>Markdown skill files define the shape every agent must deliver, so each cycle produces artifacts in the same form. A skill reaches only the agents it names, and each hand-over is checked against what the skill says it owes.</p><p>${META.skills.map((s) => pill(s.name, 'designed')).join(' ')}</p>`;
-  HOME_DETAIL.labels = `<h2>Honest labelling</h2><ul>
-<li>Every source is labelled with where it came from and how it was read.</li>
-<li>${pill('designed', 'designed')} an artifact exists; ${pill('executed', 'executed')} it was actually run.</li>
-<li>${pill('carried over', 'carried')} unchanged from the baseline; ${pill('re-designed', 're-designed')} regenerated because its requirement changed; ${pill('new', 'new')} first designed in this cycle.</li>
-<li>Consequential decisions are computed in tested code; a model, if configured, only drafts prose.</li></ul>`;
-  const flowTiles = [
-    tile({ detail: 'flow1', art: 'flow1', tag: 'Flow 1', big: '1', title: 'Baseline cycle', lines: ['First approved quality baseline', '<span class="muted">normalise · review · design · execute · report</span>'] }),
-    tile({ detail: 'flow2', art: 'flow2', tag: 'Flow 2', big: '2', title: 'Incremental cycle', lines: ['Only what changed, on top of a baseline', '<span class="muted">unchanged · enhanced · new · merge approval</span>'] }),
-    tile({ detail: 'skills', art: 'demo', tag: 'Consistency', big: META.skills.length, title: 'Skills', lines: ['Same artifact shape in every cycle'] }),
-    tile({ detail: 'labels', art: 'skill', tag: 'Trust', big: '✓', title: 'Honest labelling', lines: ['What was designed, executed, carried over or re-designed'] }),
-  ];
-  const cycleTiles = cycles.slice().reverse().map(cycleTile);
+  ].map(([id, name, text]) => { HOME_DETAIL[`stage-${id}`] = `<h2>${esc(name)}</h2><p>${esc(text)}</p><p class="muted small">Deterministic code or a person, not an agent.</p>`; return tile({ detail: `stage-${id}`, art: PHASE_CAT[id], tag: PHASE_CAT[id] === 'gate' ? 'Human gate' : 'Intake', big: PHASE_ICON[id] || '⇢', title: name, lines: [esc(text)] }); });
   $view.innerHTML = `<section class="hero"><div class="eyebrow">Agentic QE Platform</div><h1>Seven agents. One reviewed, tested, reported quality cycle.</h1>
-<p>The platform turns business scope and code into reviewed requirements, business rules, test cases, runnable automation scripts, real execution results, defects and a cycle report, with a person approving every step that changes the baseline.</p>
-<div class="facts"><div><b>7</b>agents</div><div><b>2</b>human gates</div><div><b>2</b>flows: baseline and incremental</div><div><b>${META.skills.length}</b>skills</div></div>
+<p>The platform takes the inputs a project already has, turns them into reviewed requirements, business rules, test cases and automation scripts, runs the tests for real, raises defects from actual failures and reports the cycle. A person approves every step that changes the baseline.</p>
+<div class="facts"><div><b>${P.inputTypes.length}</b>input types</div><div><b>${P.agents.length}</b>agents</div><div><b>2</b>flows: baseline and incremental</div><div><b>2</b>human gates</div></div>
 <div class="row"><a class="btn" href="#/run?type=baseline">&#9654; Start a baseline cycle</a><a class="btn secondary" href="#/run?type=incremental">Add to a baseline</a></div></section>
-${cycleTiles.length ? rail('cycles', 'Continue with your cycles', 'open a cycle to see every phase', cycleTiles) : ''}
-${rail('flows', 'How it works', 'click a card for details', flowTiles)}
-${rail('agents', 'The platform · seven agents', 'click an agent for what it produces, the skills it reads and the hand-over it owes', agentTiles)}
-${rail('stages', 'Intake and human gates', 'deterministic code around the agents', gateTiles)}`;
+${rail('inputs', 'Inputs a project can bring', 'click an input for what the platform takes from it and which agents handle it', inputTiles)}
+${rail('agents', 'Seven agents that handle them', 'click an agent for what it produces, the inputs and skills it uses and the hand-over it owes', agentTiles)}
+${rail('flows', 'Flows', 'click a flow for a short step-by-step brief', flowTiles)}
+${rail('stages', 'Intake and human gates', 'deterministic code and people around the agents', gateTiles)}`;
 }
 
 function cycleTile(c) {
