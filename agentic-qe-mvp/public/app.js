@@ -34,7 +34,7 @@ function activeNav(route) {
 async function loadMeta() {
   META = await api('/api/meta');
   document.getElementById('modes').innerHTML = [
-    META.jira.mode === 'live' ? pill(`Jira: live (${META.jira.baseUrl})`, 'live') : `<span title="${esc(META.jira.note)}">${pill('Jira: recorded fixtures', 'fixture')}</span>`,
+    META.jira.mode === 'live' ? pill(`Jira: live (${META.jira.baseUrl})`, 'live') : `<span title="${esc(META.jira.note)}">${pill(`Jira: synthetic export on GitHub (${META.jiraExport.branch}) or recorded fixture; live Jira not configured`, 'github')}</span>`,
     pill(`Source: GitHub ${META.codebase.repo}`, 'github'),
     META.model.mode === 'model' ? pill(`Prose: ${META.model.model}`, 'live') : `<span title="${esc(META.model.note)}">${pill('Prose: deterministic demo mode', 'demo')}</span>`,
   ].join('');
@@ -76,7 +76,7 @@ function platformCards() {
 ${table(['Input type', 'In this MVP', 'Note'], P.inputTypes.map((t) => [esc(t.name), t.mvp === 'implemented' ? pill('implemented', 'new') : t.mvp === 'platform only' ? pill('platform only', 'pending') : pill(t.mvp, 'designed'), esc(t.note || '')]), (i) => (P.inputTypes[i].mvp === 'platform only' ? 'platform-only' : ''))}</div>
 <div class="card"><h2>Demo capability</h2><p><b>${esc(P.demo.capability)}</b><br><span class="muted">${esc(P.demo.system)}: every reservation carries ${esc(P.demo.reservationAttributes)} attributes; a handful of them drive commission.</span></p>
 <p><b>Flow 1 example:</b> ${esc(P.demo.flow1)}</p><p><b>Flow 2 example:</b> ${esc(P.demo.flow2)}</p>
-<p class="small muted">Sources in <a href="${esc(META.codebase.url)}" target="_blank" rel="noopener">${esc(META.codebase.repo)}</a>: Jira REST v3 export on branch <code>${esc(META.jiraExport.branch)}</code>; codebase on <code>${esc(META.codebase.branches.join('</code>, <code>'))}</code>.</p></div></div>`;
+<p class="small muted">Sources in <a href="${esc(META.codebase.url)}" target="_blank" rel="noopener">${esc(META.codebase.repo)}</a>: Jira REST v3 export on branch <code>${esc(META.jiraExport.branch)}</code>; codebase on ${META.codebase.branches.map((b) => `<code>${esc(b)}</code>`).join(', ')}.</p></div></div>`;
 }
 
 function viewHome() {
