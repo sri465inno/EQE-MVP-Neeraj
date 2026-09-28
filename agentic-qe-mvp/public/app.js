@@ -183,7 +183,7 @@ async function viewHome() {
   });
   $view.innerHTML = `<section class="hero"><div class="eyebrow">Agentic QE Platform</div><h1>Quality engineering by seven specialised agents, with people in control.</h1>
 <p>Bring what your project already has: Jira, code and documents. The platform turns it into tested, reported quality, and keeps every approved result as a baseline for the next release.</p>
-<div class="facts"><div><b>${P.inputTypes.length}</b>kinds of input</div><div><b>${P.agents.length}</b>AI agents</div><div><b>2</b>ways to run</div><div><b>Human</b>approval on every baseline change</div></div></section>
+<div class="facts"><div><b>${P.inputTypes.length}</b>kinds of input</div><div><b>${P.agents.length}</b>specialised agents</div><div><b>2</b>ways to run</div><div><b>Human</b>approval on every baseline change</div></div></section>
 ${rail('value', 'Why it matters', 'click an outcome for details', valueTiles)}
 ${rail('inputs', 'What goes in', 'click an input for details', inputTiles)}
 ${rail('agents', 'Who does the work', 'click an agent for details', agentTiles)}
