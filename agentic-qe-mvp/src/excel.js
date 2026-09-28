@@ -3,27 +3,46 @@
 const ExcelJS = require('exceljs');
 const { APP_TITLE } = require('./report');
 
-const TEST_CASE_COLUMNS = [
-  { header: 'Key', key: 'key', width: 11 },
-  { header: 'Name', key: 'name', width: 44 },
-  { header: 'Objective', key: 'objective', width: 50 },
-  { header: 'Precondition', key: 'precondition', width: 36 },
-  { header: 'Test Step', key: 'steps', width: 52 },
-  { header: 'Test Data', key: 'testData', width: 30 },
-  { header: 'Expected Result', key: 'expected', width: 40 },
-  { header: 'Priority', key: 'priority', width: 9 },
-  { header: 'Type', key: 'type', width: 15 },
-  { header: 'Labels', key: 'labels', width: 30 },
-  { header: 'Requirement/Issue link', key: 'links', width: 22 },
-  { header: 'Automation status', key: 'automation', width: 16 },
-  { header: 'Cycle', key: 'cycle', width: 24 },
-  { header: 'Change', key: 'change', width: 14 },
-  { header: 'Version', key: 'version', width: 8 },
-];
+// Default column order; replaced by the order a report-targeted skill declares ("in this order ...: A, B, C.").
+const DEFAULT_COLUMNS = ['Key', 'Name', 'Objective', 'Precondition', 'Test Step', 'Test Data', 'Expected Result', 'Priority', 'Type', 'Labels', 'Requirement/Issue link', 'Automation status', 'Cycle'];
+const TRAILING_COLUMNS = ['Change', 'Revision note'];
+
+const FIELD_BY_HEADER = {
+  key: 'key', name: 'name', objective: 'objective', precondition: 'precondition', 'test step': 'steps', 'test steps': 'steps',
+  'test data': 'testData', 'expected result': 'expected', priority: 'priority', type: 'type', labels: 'labels',
+  'requirement link': 'links', 'requirement/issue link': 'links', 'issue link': 'links', 'automation status': 'automation',
+  cycle: 'cycle', change: 'change', 'revision note': 'revision', version: 'version',
+};
+const WIDTH = { key: 11, name: 44, objective: 50, precondition: 36, steps: 52, testData: 30, expected: 40, priority: 9, type: 15, labels: 30, links: 26, automation: 16, cycle: 24, change: 14, revision: 50, version: 8 };
+
+/** Reads an ordered column list out of a skill body: "... in this order ...: Key, Name, ..., Cycle." */
+function columnsFromSkillBody(body) {
+  const m = String(body || '').match(/in this order[^:]*:\s*([\s\S]*?)\.(?:\s|$)/i);
+  if (!m) return null;
+  const cols = m[1].split(',').map((x) => x.replace(/\s+/g, ' ').trim()).filter(Boolean);
+  return cols.length >= 3 && cols.every((c) => FIELD_BY_HEADER[c.toLowerCase()]) ? cols : null;
+}
+
+function exportColumns(skills = []) {
+  for (const sk of skills.filter((x) => x.appliesTo.includes('report'))) {
+    const cols = columnsFromSkillBody(sk.body);
+    if (cols) return { headers: cols, source: `skill ${sk.id} (${sk.file})` };
+  }
+  return { headers: DEFAULT_COLUMNS, source: 'built-in default (no active skill declares a column order)' };
+}
+
+function columnSpec(skills) {
+  const { headers, source } = exportColumns(skills);
+  const all = [...headers, ...TRAILING_COLUMNS];
+  return { source, headers, columns: all.map((h) => { const key = FIELD_BY_HEADER[h.toLowerCase()]; return { header: h, key, width: WIDTH[key] || 18 }; }) };
+}
+
+const TEST_CASE_COLUMNS = columnSpec([]).columns;
 
 const FILL = {
   new: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFDFF3E4' } },
   're-designed': { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFF1CC' } },
+  'carried over': { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF1F3F6' } },
 };
 
 function styleHeader(ws) {
@@ -45,9 +64,17 @@ function changeLabel(status, cycleType) {
   return status === 'new' ? 'New' : status === 're-designed' ? 'Changed' : 'Carried over';
 }
 
+/** A case with no expected value, no rule, or no observable outcome is not exported; it is a gap. */
+function exportGap(t) {
+  if (!t.expected || !String(t.expected).trim()) return 'no expected value';
+  if (!t.ruleId) return 'no business rule';
+  if (!t.steps || !t.steps.length) return 'no observable outcome (no steps)';
+  return null;
+}
+
 function testCaseRows(cycle) {
   const reqs = new Map(cycle.artifacts.requirements.map((r) => [r.id, r]));
-  return cycle.artifacts.testCases.map((t) => ({
+  return cycle.artifacts.testCases.filter((t) => !exportGap(t)).map((t) => ({
     key: t.key,
     name: t.name,
     objective: t.objective,
@@ -58,10 +85,11 @@ function testCaseRows(cycle) {
     priority: t.priority,
     type: t.type === 'functional' ? 'Functional' : 'Non-functional',
     labels: t.labels.join(', '),
-    links: [...(reqs.get(t.requirementId)?.jiraKeys || []), t.requirementId].join(', '),
+    links: [...(t.sourceRefs || reqs.get(t.requirementId)?.jiraKeys || []), t.requirementId, t.ruleId].filter(Boolean).join(', '),
     automation: t.automation,
     cycle: cycle.name,
     change: changeLabel(t.status, cycle.type),
+    revision: t.revisionNote || '',
     version: t.version,
     _status: t.status,
     _prev: t.previous,
@@ -70,7 +98,8 @@ function testCaseRows(cycle) {
 
 function addTestCaseSheet(wb, cycle) {
   const ws = wb.addWorksheet('Test Cases');
-  ws.columns = TEST_CASE_COLUMNS;
+  const spec = columnSpec(cycle.skills || []);
+  ws.columns = spec.columns;
   for (const r of testCaseRows(cycle)) {
     const { _status, _prev, ...values } = r;
     const row = ws.addRow(values);
@@ -79,13 +108,14 @@ function addTestCaseSheet(wb, cycle) {
     if (_prev) row.getCell('expected').note = `Superseded (v${_prev.version}): ${_prev.expected}`;
   }
   styleHeader(ws);
-  ws.autoFilter = { from: 'A1', to: { row: 1, column: TEST_CASE_COLUMNS.length } };
-  return ws;
+  ws.autoFilter = { from: 'A1', to: { row: 1, column: spec.columns.length } };
+  return { ws, spec };
 }
 
-async function testCasesWorkbook(cycle) {
+async function testCasesExport(cycle) {
   const wb = newBook();
-  addTestCaseSheet(wb, cycle);
+  const { spec } = addTestCaseSheet(wb, cycle);
+  const gaps = cycle.artifacts.testCases.map((t) => ({ key: t.key, gap: exportGap(t) })).filter((g) => g.gap);
   const info = wb.addWorksheet('About');
   info.columns = [{ header: 'Field', key: 'k', width: 26 }, { header: 'Value', key: 'v', width: 90 }];
   info.addRows([
@@ -93,11 +123,18 @@ async function testCasesWorkbook(cycle) {
     { k: 'Cycle', v: `${cycle.name} (${cycle.id})` },
     { k: 'Baseline', v: cycle.baselineId ? `${cycle.baselineId} v${cycle.baselineVersionAfter ?? cycle.baselineVersionAtStart ?? ''}` : 'n/a' },
     { k: 'Exported at', v: new Date().toISOString() },
-    { k: 'Change column', v: cycle.type === 'incremental' ? 'New (green) / Changed (amber, superseded expected result in cell note) / Carried over' : 'Baseline cycle: all rows designed in this cycle' },
+    { k: 'Column order', v: `${spec.headers.join(', ')} - from ${spec.source}; then ${TRAILING_COLUMNS.join(', ')}` },
+    { k: 'Change column', v: cycle.type === 'incremental' ? 'New (green) / Changed (amber, superseded expected result in cell note, revision note column) / Carried over (grey)' : 'Baseline cycle: all rows designed in this cycle' },
+    { k: 'Export gaps', v: gaps.length ? gaps.map((g) => `${g.key}: ${g.gap}`).join('; ') : 'none - every case has an expected value, a rule and steps' },
     { k: 'Designed vs executed', v: 'This sheet lists designed test cases. Execution results are in the cycle report.' },
   ]);
   styleHeader(info);
-  return Buffer.from(await wb.xlsx.writeBuffer());
+  const buffer = Buffer.from(await wb.xlsx.writeBuffer());
+  return { buffer, columns: spec.columns.map((c) => c.header), columnSource: spec.source, rows: cycle.artifacts.testCases.length - gaps.length, gaps };
+}
+
+async function testCasesWorkbook(cycle) {
+  return (await testCasesExport(cycle)).buffer;
 }
 
 function sheetFromRows(wb, name, columns, rows) {
@@ -131,6 +168,10 @@ async function reportWorkbook(report, cycle) {
   sheetFromRows(wb, 'Defects', [['ID', 'id', 9], ['Title', 'title', 50], ['Severity', 'severity', 9], ['Case', 'testCaseKey', 10], ['Requirement', 'requirementId', 12], ['Expected', 'expected', 14], ['Actual', 'actual', 14], ['Failing assertion', 'assertion', 50], ['Movement', 'movement', 12]], report.defects.open);
   sheetFromRows(wb, 'Coverage', [['Requirement', 'requirementId', 12], ['Text', 'text', 70], ['Cases', 'cases', 8], ['Automated', 'automated', 10], ['Executed', 'executed', 10], ['Failed', 'failed', 8], ['Status', 'status', 24]], report.coverage ? report.coverage.rows : []);
   sheetFromRows(wb, 'Approvals', [['Gate', 'gate', 26], ['Decision', 'decision', 10], ['By', 'by', 18], ['When', 'at', 26], ['Detail', 'detail', 80]], report.approvals);
+  sheetFromRows(wb, 'Skills', [['Skill id', 'id', 28], ['Name', 'name', 40], ['Description', 'description', 70], ['Seen by agents', 'agents', 40], ['File', 'file', 30]],
+    (report.skills || []).map((k) => ({ ...k, agents: k.appliesTo.join(', ') })));
+  sheetFromRows(wb, 'Hand-overs', [['Phase', 'label', 32], ['Skills seen', 'skills', 50], ['Hand-over', 'status', 12], ['Missing', 'missing', 30], ['Artefacts owed', 'items', 70]],
+    (report.handovers || []).map((h) => ({ label: h.label, skills: h.skills.join(', '), status: h.status, missing: h.missing.join(', '), items: h.items.map((i) => `${i.key}: ${i.status}`).join('; ') })));
   return Buffer.from(await wb.xlsx.writeBuffer());
 }
 
@@ -147,4 +188,4 @@ async function compareWorkbook(c) {
   return Buffer.from(await wb.xlsx.writeBuffer());
 }
 
-module.exports = { testCasesWorkbook, reportWorkbook, compareWorkbook, TEST_CASE_COLUMNS, testCaseRows };
+module.exports = { testCasesWorkbook, testCasesExport, reportWorkbook, compareWorkbook, TEST_CASE_COLUMNS, testCaseRows, columnsFromSkillBody, exportColumns, TRAILING_COLUMNS, DEFAULT_COLUMNS };

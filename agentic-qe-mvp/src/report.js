@@ -10,7 +10,15 @@ const countBy = (arr, fn) => arr.reduce((acc, x) => {
   return acc;
 }, {});
 
-async function buildCycleReport(cycle, { env = process.env } = {}) {
+/** Per-phase hand-over results, in phase order. */
+function collectHandovers(cycle) {
+  return cycle.phases.filter((p) => p.handover).map((p) => ({
+    phase: p.name, label: p.label, status: p.handover.status, skills: p.skills || [], missing: p.handover.missing,
+    items: p.handover.items.map((i) => ({ key: i.key, status: i.status, count: i.count, skills: i.skills, note: i.note })),
+  }));
+}
+
+async function buildCycleReport(cycle, { env = process.env, fetchImpl, guidance = '' } = {}) {
   const a = cycle.artifacts;
   const exec = a.execution || null;
   const defects = a.defects || [];
@@ -30,15 +38,21 @@ async function buildCycleReport(cycle, { env = process.env } = {}) {
     defects: defects.length,
     defectTitles: defects.map((d) => `${d.id} ${d.title}`).join('; '),
   };
-  const narrative = await draftNarrative(facts, { env });
+  const narrative = await draftNarrative(facts, { env, fetchImpl, guidance });
+  const carried = a.testCases.filter((t) => t.status === 'carried over').length;
+  const manual = a.testCases.filter((t) => t.automation !== 'Automated');
+  const handovers = collectHandovers(cycle);
   return {
     title: `${APP_TITLE} - Cycle report`,
     generatedAt: new Date().toISOString(),
     cycle: {
       id: cycle.id, name: cycle.name, type: cycle.type, status: cycle.status, createdAt: cycle.createdAt, completedAt: cycle.completedAt || null,
       baselineId: cycle.baselineId, baselineVersionAtStart: cycle.baselineVersionAtStart, baselineVersionAfter: cycle.baselineVersionAfter ?? null,
-      sutBuild: cycle.sutBuild,
+      sutBuild: cycle.sutBuild, ranBy: cycle.createdBy || null,
     },
+    skills: (cycle.skills || []).map((k) => ({ id: k.id, name: k.name, description: k.description, file: k.file, sha256: k.sha256, appliesTo: k.appliesTo, delivers: k.delivers })),
+    handovers,
+    handoverStatus: handovers.some((h) => h.status === 'incomplete') ? 'incomplete' : 'complete',
     inputs: cycle.inputs.map((i) => ({ slot: i.slot, label: i.label, ref: i.ref, summary: i.summary || i.description || null, statements: i.statementCount,
       provenance: i.provenance.kind, provenanceLabel: i.provenance.label, files: i.provenance.files || [] })),
     normalisation: cycle.normalisation.counts,
@@ -58,13 +72,26 @@ async function buildCycleReport(cycle, { env = process.env } = {}) {
       byStatus: countBy(a.testCases, (t) => t.status),
       byAutomation: countBy(a.testCases, (t) => t.automation),
     },
+    automation: {
+      specs: a.scripts.length,
+      specsChanged: a.scripts.filter((x) => x.status === 're-designed').length,
+      specsNew: a.scripts.filter((x) => x.status === 'new').length,
+      casesCovered: a.testCases.length - manual.length,
+      notAutomated: manual.map((t) => ({ key: t.key, name: t.name, why: t.automationNote || 'Manual: no deterministic, observable check against the SUT API' })),
+    },
+    reuse: {
+      carriedOver: cycle.type === 'incremental' ? carried : 0,
+      total: a.testCases.length,
+      percent: cycle.type === 'incremental' && a.testCases.length ? Math.round((carried / a.testCases.length) * 1000) / 10 : 0,
+      note: 'Reuse means these artefacts were not re-designed, not that they were not executed.',
+    },
     scripts: { total: a.scripts.length, byStatus: countBy(a.scripts, (s) => s.status), files: a.scripts.map((s) => ({ file: s.file, covers: s.covers, status: s.status, version: s.version })) },
     execution: exec ? {
-      executed: true, tool: exec.tool, command: exec.command, sut: exec.sut, startedAt: exec.startedAt, finishedAt: exec.finishedAt, summary: exec.summary,
+      executed: true, quarantined: 'not measured', durationMs: Date.parse(exec.finishedAt) - Date.parse(exec.startedAt), tool: exec.tool, command: exec.command, sut: exec.sut, startedAt: exec.startedAt, finishedAt: exec.finishedAt, summary: exec.summary,
       results: exec.results.map((r) => ({ key: r.key, requirementId: r.requirementId, name: r.name, status: r.status, duration: r.duration, reason: r.reason || null })),
     } : { executed: false },
     defects: {
-      open: defects.map((d) => ({ id: d.id, title: d.title, severity: d.severity, movement: d.movement, testCaseKey: d.testCaseKey, requirementId: d.requirementId, expected: d.expected, actual: d.actual, assertion: d.assertion })),
+      open: defects.map((d) => ({ id: d.id, title: d.title, severity: d.severity, blocksRelease: d.blocksRelease ?? null, ruleId: d.ruleId || null, movement: d.movement, testCaseKey: d.testCaseKey, requirementId: d.requirementId, expected: d.expected, actual: d.actual, assertion: d.assertion })),
       resolved: (a.resolvedDefects || []).map((d) => ({ id: d.id, title: d.title, testCaseKey: d.testCaseKey })),
       movement: countBy(defects, (d) => d.movement),
     },
@@ -96,7 +123,8 @@ function renderReportHtml(r) {
   const ex = r.execution;
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${esc(r.title)} - ${esc(r.cycle.name)}</title><style>${CSS}</style></head><body>
 <h1>${esc(r.title)}</h1>
-<p><b>${esc(r.cycle.name)}</b> (${esc(r.cycle.id)}, ${esc(r.cycle.type)}) &middot; status ${esc(r.cycle.status)} &middot; baseline ${esc(r.cycle.baselineId || '-')} ${r.cycle.baselineVersionAfter ? `v${esc(r.cycle.baselineVersionAfter)}` : ''} &middot; SUT build <code>${esc(r.cycle.sutBuild)}</code> &middot; generated ${esc(r.generatedAt)}</p>
+<p><b>${esc(r.cycle.name)}</b> (${esc(r.cycle.id)}, ${esc(r.cycle.type)}) &middot; status ${esc(r.cycle.status)} &middot; baseline ${esc(r.cycle.baselineId || '-')} ${r.cycle.baselineVersionAfter ? `v${esc(r.cycle.baselineVersionAfter)}` : ''} &middot; SUT build <code>${esc(r.cycle.sutBuild)}</code> &middot; run by ${esc(r.cycle.ranBy || 'not recorded')} &middot; ${esc(r.cycle.createdAt)} to ${esc(r.cycle.completedAt || '-')} &middot; generated ${esc(r.generatedAt)}</p>
+<h2>Active skills</h2>${(r.skills || []).length ? table(['Skill', 'Description', 'Seen by agents', 'Owes', 'File'], r.skills.map((k) => [`<b>${esc(k.name)}</b><br><code>${esc(k.id)}</code>`, esc(k.description), esc(k.appliesTo.join(', ')), esc(Object.entries(k.delivers).map(([ag, keys]) => `${ag}: ${keys.join(', ')}`).join('; ')), `${esc(k.file)} <span class="muted">${esc(k.sha256)}</span>`])) : '<p>No skills were active for this cycle.</p>'}
 <div class="kpis">
 <div class="kpi">Requirements<b>${r.requirements.total}</b></div><div class="kpi">Test cases<b>${r.testCases.total}</b></div><div class="kpi">Scripts<b>${r.scripts.total}</b></div>
 <div class="kpi">Executed<b>${ex.executed ? ex.summary.executed : 0}</b></div><div class="kpi">Pass rate<b>${ex.executed ? ex.summary.passRate + '%' : 'n/a'}</b></div><div class="kpi">Defects<b>${r.defects.open.length}</b></div>
@@ -107,17 +135,23 @@ function renderReportHtml(r) {
 <p>By type: ${kv(r.requirements.byType)}<br>By status: ${kv(r.requirements.byStatus)}<br>By source: ${kv(r.requirements.bySource)}</p>
 ${table(['ID', 'Requirement', 'Type', 'Status', 'Superseded value'], r.requirements.list.map((q) => [esc(q.id), esc(q.text), esc(q.type), esc(q.status), esc(q.previous || '')]))}
 <h2>Test cases</h2><p>Total ${r.testCases.total} &middot; by type: ${kv(r.testCases.byType)}<br>By phase tag (label): ${kv(r.testCases.byLabel)}<br>By status: ${kv(r.testCases.byStatus)} &middot; ${kv(r.testCases.byAutomation)}</p>
+<h2>Automation</h2><p>${kv({ specs: r.automation.specs, 'specs new': r.automation.specsNew, 'specs changed': r.automation.specsChanged, 'cases covered': r.automation.casesCovered, 'cases not automated': r.automation.notAutomated.length })}</p>
+${r.automation.notAutomated.length ? table(['Case', 'Name', 'Why not automated'], r.automation.notAutomated.map((t) => [esc(t.key), esc(t.name), esc(t.why)])) : ''}
 <h2>Scripts</h2>${table(['File', 'Covers', 'Status', 'Version'], r.scripts.files.map((s) => [esc(s.file), esc(s.covers.join(', ')), esc(s.status), s.version]))}
 <h2>Execution</h2>${ex.executed ? `<p>Really executed by ${esc(ex.tool)} against ${esc(ex.sut.name)} (build <code>${esc(ex.sut.build)}</code>) from ${esc(ex.startedAt)} to ${esc(ex.finishedAt)}.<br>Command: <code>${esc(ex.command)}</code></p>
-<p>${kv({ executed: ex.summary.executed, passed: ex.summary.passed, failed: ex.summary.failed, 'not run (manual)': ex.summary.notRun, 'pass rate %': ex.summary.passRate })}</p>
+<p>${kv({ executed: ex.summary.executed, passed: ex.summary.passed, failed: ex.summary.failed, quarantined: ex.quarantined, 'not run (manual)': ex.summary.notRun, 'pass rate %': ex.summary.passRate, 'duration ms': ex.durationMs })}</p><p class="muted">These numbers come from an actual Playwright run.</p>
 ${table(['Case', 'Requirement', 'Name', 'Result', 'Duration ms', 'Note'], ex.results.map((x) => [esc(x.key), esc(x.requirementId), esc(x.name), statusCell(x.status), x.duration, esc(x.reason || '')]))}` : '<p>Not executed.</p>'}
 <h2>Defects</h2><p>Movement: ${kv(r.defects.movement)}${r.defects.resolved.length ? ` &middot; resolved: ${r.defects.resolved.map((d) => esc(d.id)).join(', ')}` : ''}</p>
-${table(['ID', 'Title', 'Severity', 'Case', 'Requirement', 'Expected', 'Actual', 'Failing assertion', 'Movement'], r.defects.open.map((d) => [esc(d.id), esc(d.title), esc(d.severity), esc(d.testCaseKey), esc(d.requirementId), esc(d.expected), esc(d.actual), `<code>${esc(d.assertion)}</code>`, esc(d.movement)]))}
+${table(['ID', 'Title', 'Severity', 'Blocks release', 'Case', 'Rule', 'Requirement', 'Expected', 'Actual', 'Failing assertion', 'Movement'], r.defects.open.map((d) => [esc(d.id), esc(d.title), esc(d.severity), d.blocksRelease === null ? 'not assessed' : d.blocksRelease ? '<b class="fail">yes</b>' : 'no', esc(d.testCaseKey), esc(d.ruleId || '-'), esc(d.requirementId), esc(d.expected), esc(d.actual), `<code>${esc(d.assertion)}</code>`, esc(d.movement)]))}
 <h2>Coverage</h2>${r.coverage ? `<p>${kv({ 'designed %': r.coverage.percent.designed, 'automated %': r.coverage.percent.automated, 'executed %': r.coverage.percent.executed, 'passing %': r.coverage.percent.passing })}</p>
 ${table(['Requirement', 'Cases', 'Automated', 'Executed', 'Failed', 'Status'], r.coverage.rows.map((c) => [esc(c.requirementId), c.cases, c.automated, c.executed, c.failed, esc(c.status)]))}` : '-'}
 <h2>Approvals</h2>${table(['Gate', 'Decision', 'By', 'When', 'Detail'], r.approvals.map((p) => [esc(p.gate), esc(p.decision), esc(p.by), esc(p.at), esc(p.detail)]))}
+<h2>What this cycle reused</h2><p>${r.cycle.type === 'incremental' ? `${r.reuse.carriedOver} of ${r.reuse.total} test cases carried over (${r.reuse.percent}%).` : 'Baseline cycle: nothing reused, every artefact designed in this cycle.'} ${esc(r.reuse.note)}</p>
+<h2>Skill hand-overs</h2><p>Overall: <b class="${r.handoverStatus === 'complete' ? 'pass' : 'fail'}">${esc(r.handoverStatus)}</b></p>
+${table(['Phase', 'Skills seen', 'Hand-over', 'Artefacts owed'], (r.handovers || []).map((h) => [esc(h.label), esc(h.skills.join(', ') || '-'), `<span class="${h.status === 'complete' ? 'pass' : h.status === 'incomplete' ? 'fail' : 'muted'}">${esc(h.status)}</span>${h.missing.length ? `<br>missing: ${esc(h.missing.join(', '))}` : ''}`,
+    h.items.map((i) => `${esc(i.key)}: ${esc(i.status)}${i.count !== null && i.count !== undefined ? ` (${i.count})` : ''}${i.note ? ` <span class="muted">${esc(i.note)}</span>` : ''}`).join('<br>')]))}
 <h2>Honest labelling</h2><ul>${r.honesty.map((h) => `<li>${esc(h)}</li>`).join('')}</ul>
 </body></html>`;
 }
 
-module.exports = { buildCycleReport, renderReportHtml, APP_TITLE, esc, table, kv, CSS };
+module.exports = { buildCycleReport, collectHandovers, renderReportHtml, APP_TITLE, esc, table, kv, CSS };
