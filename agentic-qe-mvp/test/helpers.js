@@ -1,0 +1,41 @@
+'use strict';
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const { createApp } = require('../src/server');
+
+const BASELINE_INPUTS = { initiative: { mode: 'jira', key: 'SWB-1' }, epic: { mode: 'jira', key: 'SWB-10' }, codebase: { mode: 'sample', branch: 'main' } };
+const INCREMENT_INPUTS = { epic: { mode: 'jira', key: 'SWB-20' }, codebase: { mode: 'sample', branch: 'feature/booking-date-changes' } };
+
+const tmpDir = (label) => fs.mkdtempSync(path.join(os.tmpdir(), `aqe-${label}-`));
+
+async function baselineCycle(pipeline, store, { reviewer = 'Priya Shah', pick = '20 %' } = {}) {
+  let c = await pipeline.startCycle({ type: 'baseline', inputs: BASELINE_INPUTS, reviewer });
+  const conflict = c.normalisation.groups.find((g) => g.bucket === 'conflict');
+  const opt = conflict.options.find((o) => o.signature === pick);
+  const { done } = pipeline.review(c.id, { reviewer, resolutions: { [conflict.id]: opt.optionId } });
+  await done;
+  c = store.getCycle(c.id);
+  return c;
+}
+
+async function incrementalDesign(pipeline, store, baselineId, reviewer = 'Priya Shah') {
+  const c = await pipeline.startCycle({ type: 'incremental', baselineId, inputs: INCREMENT_INPUTS, reviewer });
+  const { done } = pipeline.review(c.id, { reviewer });
+  await done;
+  return store.getCycle(c.id);
+}
+
+/** Runs both flows end to end (real Playwright execution twice). */
+async function bothFlows(dataDir = tmpDir('flows')) {
+  const ctx = createApp({ dataDir, env: {} });
+  const c1 = await baselineCycle(ctx.pipeline, ctx.store);
+  const designed = await incrementalDesign(ctx.pipeline, ctx.store, c1.baselineId);
+  const baselineBeforeMerge = ctx.store.getBaseline(c1.baselineId);
+  const { done } = ctx.pipeline.decideMerge(designed.id, { decision: 'approve', approver: 'Sam Lee' });
+  await done;
+  const c2 = ctx.store.getCycle(designed.id);
+  return { ...ctx, dataDir, c1, designed, c2, baselineBeforeMerge };
+}
+
+module.exports = { BASELINE_INPUTS, INCREMENT_INPUTS, tmpDir, baselineCycle, incrementalDesign, bothFlows };
