@@ -69,43 +69,112 @@ function skillsView(c) {
 ${skills.map((s) => `<details><summary><b>${esc(s.name)}</b> <span class="small muted">skill text</span></summary><pre class="skillbody">${esc(s.body)}</pre></details>`).join('')}`;
 }
 
-function platformCards() {
-  const P = META.platform;
-  return `<div class="card"><h2>The platform: seven agents</h2>
-<p class="small muted">The Agentic QE Platform chains seven agents. Each hands a visible artefact to the next. Intake (${esc(P.intakeStages.join(', '))}) and the two human gates sit around them and are deterministic code.</p>
-<div class="agents">${P.agents.map((g) => `<div class="agent"><b>${g.no}. ${esc(g.name)}</b>${esc(g.produces)}</div>`).join('')}</div></div>
-<div class="grid2"><div class="card"><h2>Inputs: platform vs this MVP</h2>
-<p class="small muted">The platform is built to take many input types. This MVP implements exactly three: a Jira initiative, a Jira epic and a codebase.</p>
-${table(['Input type', 'In this MVP', 'Note'], P.inputTypes.map((t) => [esc(t.name), t.mvp === 'implemented' ? pill('implemented', 'new') : t.mvp === 'platform only' ? pill('platform only', 'pending') : pill(t.mvp, 'designed'), esc(t.note || '')]), (i) => (P.inputTypes[i].mvp === 'platform only' ? 'platform-only' : ''))}</div>
-<div class="card"><h2>Demo capability</h2><p><b>${esc(P.demo.capability)}</b><br><span class="muted">${esc(P.demo.system)}: every reservation carries ${esc(P.demo.reservationAttributes)} attributes; a handful of them drive commission.</span></p>
-<p><b>Flow 1 example:</b> ${esc(P.demo.flow1)}</p><p><b>Flow 2 example:</b> ${esc(P.demo.flow2)}</p>
-<p class="small muted">Sources in <a href="${esc(META.codebase.url)}" target="_blank" rel="noopener">${esc(META.codebase.repo)}</a>: Jira REST v3 export on branch <code>${esc(META.jiraExport.branch)}</code>; codebase on ${META.codebase.branches.map((b) => `<code>${esc(b)}</code>`).join(', ')}.</p></div></div>`;
+/* ---------------- rails and tiles ---------------- */
+function tile({ href = '', detail = '', art = '', tag = '', big = '', corner = '', title, lines = [], extra = '', cls = '', progress = null }) {
+  const attrs = href ? `href="${esc(href)}"` : `href="#" data-detail="${esc(detail)}"`;
+  return `<a class="tile ${esc(cls)}" ${attrs}><div class="art ${esc(art)}">${tag ? `<span class="tag">${esc(tag)}</span>` : ''}<span class="big">${esc(big)}</span>${corner ? `<span class="corner">${corner}</span>` : ''}</div>
+${progress != null ? `<div class="bar"><i style="width:${Math.max(0, Math.min(100, progress))}%"></i></div>` : ''}<div class="body"><b class="t">${esc(title)}</b>${lines.join('<br>')}${extra}</div></a>`;
+}
+function rail(id, title, note, tiles) {
+  return `<section class="rail" id="rail-${esc(id)}"><div class="rail-head"><h2>${esc(title)}</h2>${note ? `<span class="muted small">${note}</span>` : ''}</div>
+<div class="rail-wrap"><button class="rail-btn prev" aria-label="Scroll left">&#8249;</button><div class="rail-track">${tiles.join('')}</div><button class="rail-btn next" aria-label="Scroll right">&#8250;</button></div><div class="rail-detail"></div></section>`;
+}
+function updateRails() {
+  document.querySelectorAll('.rail-track').forEach((t) => {
+    const w = t.parentElement;
+    w.classList.toggle('can-prev', t.scrollLeft > 4);
+    w.classList.toggle('can-next', t.scrollLeft + t.clientWidth < t.scrollWidth - 4);
+    t.onscroll = () => { w.classList.toggle('can-prev', t.scrollLeft > 4); w.classList.toggle('can-next', t.scrollLeft + t.clientWidth < t.scrollWidth - 4); };
+  });
+}
+new MutationObserver(updateRails).observe($view, { childList: true });
+window.addEventListener('resize', updateRails);
+document.addEventListener('click', (ev) => {
+  const b = ev.target.closest('.rail-btn');
+  if (b) { const t = b.parentElement.querySelector('.rail-track'); t.scrollBy({ left: (b.classList.contains('next') ? 1 : -1) * t.clientWidth * 0.8 }); return; }
+  const x = ev.target.closest('.detail .close');
+  if (x) { x.closest('.detail').remove(); document.querySelectorAll('.tile.sel[data-detail]').forEach((t) => t.classList.remove('sel')); return; }
+  const d = ev.target.closest('.tile[data-detail]');
+  if (!d || !HOME_DETAIL[d.dataset.detail]) return;
+  ev.preventDefault();
+  document.querySelectorAll('.rail-detail').forEach((el) => { el.innerHTML = ''; });
+  const was = d.classList.contains('sel');
+  document.querySelectorAll('.tile.sel[data-detail]').forEach((t) => t.classList.remove('sel'));
+  if (was) return;
+  d.classList.add('sel');
+  const box = d.closest('.rail').querySelector('.rail-detail');
+  box.innerHTML = `<div class="detail"><button class="close" aria-label="Close">&times;</button>${HOME_DETAIL[d.dataset.detail]}</div>`;
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+
+/* ---------------- Home ---------------- */
+let HOME_DETAIL = {};
+const PHASE_ICON = { ingest: '⇢', normalise: '≡', review: '✎', delta: 'Δ', 'merge-approval': '⊕' };
+const PHASE_CAT = { ingest: 'intake', normalise: 'intake', review: 'gate', delta: 'intake', 'merge-approval': 'gate', requirements: 'design', rules: 'design', testcases: 'design', scripts: 'design', execution: 'run', defects: 'run', report: 'run' };
+const agentNo = (id) => (META.platform.agents.find((g) => g.id === id) || {}).no;
+
+function agentDetail(g, latest) {
+  const sk = META.skills.filter((s) => s.appliesTo.includes(g.id));
+  const owed = [...new Set(sk.flatMap((s) => s.delivers[g.id] || []))];
+  const where = g.no <= 4 ? 'After human review in both flows. In Flow 2 it only redesigns enhanced and new items; unchanged ones are carried over.' : g.id === 'execution' ? 'After the scripts; in Flow 2 only after the human merge approval.' : g.id === 'defects' ? 'After execution; reads the real Playwright results only.' : 'Last in both flows; also produces the cycle comparison in Flow 2.';
+  const tab = g.id === 'report' ? 'report' : g.id;
+  return `<h2>Agent ${g.no} · ${esc(g.name)}</h2><div class="grid2"><div><p><b>Produces:</b> ${esc(g.produces)}</p><p><b>When it runs:</b> ${esc(where)}</p>
+<p><b>Decisions:</b> computed in tested code; a model, if configured, only drafts report prose.</p></div>
+<div><p><b>Skills it reads:</b> ${sk.length ? sk.map((s) => pill(s.name, 'designed')).join(' ') : '<span class="muted">none</span>'}</p><p><b>Hand-over it owes:</b> ${owed.length ? owed.map((k) => `<code>${esc(k)}</code>`).join(', ') : '<span class="muted">no contract</span>'}</p>
+${latest ? `<a class="btn" href="#/cycle/${esc(latest.id)}?tab=${esc(tab)}">Open in ${esc(latest.id)}</a>` : '<a class="btn" href="#/run?type=baseline">Run Flow 1 to see it</a>'}</div></div>`;
 }
 
-function viewHome() {
+async function viewHome() {
   setTitle();
-  $view.innerHTML = `<h1>${TITLE}</h1>
-<p>Turns Jira scope and a codebase into reviewed requirements, test cases, runnable Playwright scripts, real execution results, defects and a cycle report. Every consequential decision (normalisation, delta classification, coverage, pass/fail, defect raising) is computed in tested code; a language model, if configured, only drafts report prose.</p>
-${platformCards()}
-<div class="grid2">
-<div class="card"><h2>Flow 1 - Baseline cycle</h2><ol>
-<li><b>Inputs:</b> a Jira initiative, a Jira epic and a codebase (README + source notes).</li>
-<li><b>Normalise:</b> the three inputs are compared in code. You see what only Jira says, what only the code says, and conflicting values - which stay unresolved until you settle them.</li>
-<li><b>Human review:</b> you approve the requirement set; only the reviewed set flows on.</li>
-<li><b>Agents in fixed order:</b> requirements &rarr; business rules (with source quotes) &rarr; test cases (Excel export) &rarr; Playwright scripts &rarr; real execution against the bundled sample service &rarr; defects from real failures &rarr; cycle report.</li></ol>
-<a class="btn" href="#/run?type=baseline">Start a new baseline</a></div>
-<div class="card"><h2>Flow 2 - Incremental cycle</h2><ol>
-<li><b>Pick a baseline</b> (not re-uploaded) and supply only what is new: one new Jira epic plus the updated codebase branch.</li>
-<li><b>Delta:</b> every incoming statement is classified as <b>unchanged</b>, <b>enhanced</b> (same subject, new value wins, old value shown) or <b>new</b> - before anything is designed.</li>
-<li><b>Only enhanced + new are designed;</b> unchanged artifacts are carried over untouched. Changed values flow into test case text and script assertions.</li>
-<li><b>Merge approval:</b> nothing joins the baseline until you approve; reject leaves it untouched.</li>
-<li>Re-execute for real, raise defects, Cycle 2 report and a cycle comparison.</li></ol>
-<a class="btn" href="#/run?type=incremental">Add to a baseline</a></div></div>
-<div class="card"><h2>Honest labelling</h2><ul>
-<li>${pill('pulled live from GitHub', 'github')} fetched from the repository during this run (git clone of the codebase branch; Jira REST v3 export files from <code>${esc(META.jiraExport.branch)}</code>). The Jira issues there are synthetic test issues, so this is still not a Jira call. ${pill('recorded fixture', 'fixture')} the same content, read offline from a snapshot in this app - no call was made. ${pill('live Jira call', 'live')} appears only when <code>JIRA_BASE_URL</code>, <code>JIRA_EMAIL</code> and <code>JIRA_API_TOKEN</code> are set. ${pill('pasted', 'pasted')} typed or pasted by you.</li>
-<li>${pill('designed', 'designed')} an artifact exists; ${pill('executed', 'executed')} it was actually run by the Playwright CLI - results are parsed from its JSON report.</li>
+  const P = META.platform;
+  const cycles = await api('/api/cycles');
+  const latest = cycles.slice().reverse().find((c) => c.status === 'completed');
+  HOME_DETAIL = {};
+  const agentTiles = P.agents.map((g) => { HOME_DETAIL[`agent-${g.id}`] = agentDetail(g, latest); return tile({ detail: `agent-${g.id}`, art: g.no <= 4 ? 'design' : 'run', tag: g.no <= 4 ? 'Design' : 'Run & results', big: g.no, title: g.name, lines: [esc(g.produces)] }); });
+  const gateTiles = [
+    ['ingest', 'Ingest', 'Reads the three inputs and labels where each came from (GitHub pull, recorded fixture, live Jira, pasted).'],
+    ['normalise', 'Normalise', 'Three-way compare in code: agreed, Jira only, code only, and conflicting values.'],
+    ['review', 'Human review', 'A person settles every conflict and approves the requirement set. Only the reviewed set flows on.'],
+    ['delta', 'Delta (Flow 2)', 'Each incoming statement is classified as unchanged, enhanced or new against the baseline.'],
+    ['merge-approval', 'Merge approval (Flow 2)', 'Nothing joins the baseline until a person approves; reject leaves it untouched.'],
+  ].map(([id, name, text]) => { HOME_DETAIL[`stage-${id}`] = `<h2>${esc(name)}</h2><p>${esc(text)}</p><p class="muted small">Deterministic code, not an agent.</p>`; return tile({ detail: `stage-${id}`, art: PHASE_CAT[id], tag: PHASE_CAT[id] === 'gate' ? 'Human gate' : 'Intake', big: PHASE_ICON[id] || '⇢', title: name, lines: [esc(text)] }); });
+  const inputTiles = P.inputTypes.map((t) => {
+    const art = t.mvp === 'implemented' ? 'input' : t.mvp === 'via codebase' ? 'via' : 'off';
+    HOME_DETAIL[`input-${t.id}`] = `<h2>${esc(t.name)}</h2><p>${t.mvp === 'implemented' ? pill('implemented in this MVP', 'new') : t.mvp === 'platform only' ? pill('platform only', 'pending') : pill(t.mvp, 'designed')}</p><p>${esc(t.note || 'Part of the wider platform roadmap; this MVP does not read it.')}</p>`;
+    return tile({ detail: `input-${t.id}`, art, tag: t.mvp, big: t.mvp === 'implemented' ? '●' : t.mvp === 'via codebase' ? '◐' : '○', title: t.name, lines: [esc(t.note || 'Platform roadmap')], cls: t.mvp === 'platform only' ? 'off' : '' });
+  });
+  HOME_DETAIL.flow1 = `<h2>Flow 1 · Baseline cycle</h2><p>${esc(P.demo.flow1)}</p><ol><li>Ingest COM-1, COM-10 and the codebase branch <code>${esc(META.samples.baselineBranch)}</code>.</li><li>Normalise and settle the conflict at the human review.</li><li>Agents 1 to 7 run: requirements, rules, test cases (Excel), Playwright scripts, real execution, defects, report.</li></ol><a class="btn" href="#/run?type=baseline">Start Flow 1</a>`;
+  HOME_DETAIL.flow2 = `<h2>Flow 2 · Incremental cycle</h2><p>${esc(P.demo.flow2)}</p><ol><li>Pick the approved baseline, add COM-20 and <code>${esc(META.samples.incrementalBranch)}</code>.</li><li>See the split: unchanged · enhanced · new, before anything is designed.</li><li>Only enhanced and new items are redesigned; approve the merge; re-run for real; compare the two cycles.</li></ol><a class="btn" href="#/run?type=incremental">Start Flow 2</a>`;
+  HOME_DETAIL.demo = `<h2>${esc(P.demo.capability)}</h2><p>${esc(P.demo.system)}. Every reservation carries <b>${esc(P.demo.reservationAttributes)}</b> attributes (20 groups of 50); 11 of them drive the commission, such as status, nights, room revenue, taxes and fees, booking channel, advisor IATA, loyalty redemption, rate plan and room count.</p>
+<p class="small muted">Sources in <a href="${esc(META.codebase.url)}" target="_blank" rel="noopener">${esc(META.codebase.repo)}</a>: Jira REST v3 export on <code>${esc(META.jiraExport.branch)}</code> (synthetic test issues); codebase on ${META.codebase.branches.map((b) => `<code>${esc(b)}</code>`).join(', ')}.</p>`;
+  HOME_DETAIL.labels = `<h2>Honest labelling</h2><ul>
+<li>${pill('pulled live from GitHub', 'github')} fetched from the repository during the run (git clone of the codebase branch; Jira REST v3 export files from <code>${esc(META.jiraExport.branch)}</code>). The Jira issues there are synthetic, so this is still not a Jira call.</li>
+<li>${pill('recorded fixture', 'fixture')} the same content read offline from a snapshot; ${pill('live Jira call', 'live')} only when <code>JIRA_BASE_URL</code>, <code>JIRA_EMAIL</code> and <code>JIRA_API_TOKEN</code> are set; ${pill('pasted', 'pasted')} typed by you.</li>
+<li>${pill('designed', 'designed')} an artifact exists; ${pill('executed', 'executed')} it was actually run by the Playwright CLI.</li>
 <li>${pill('carried over', 'carried')} unchanged from the baseline; ${pill('re-designed', 're-designed')} regenerated because its requirement changed; ${pill('new', 'new')} first designed in this cycle.</li></ul>
-<p class="modes">${modesHtml()}</p><p class="muted small">Playwright ${esc(META.playwright)}.</p></div>`;
+<p class="modes">${modesHtml()}</p><p class="muted small">Playwright ${esc(META.playwright)}.</p>`;
+  const flowTiles = [
+    tile({ detail: 'flow1', art: 'flow1', tag: 'Flow 1', big: '1', title: 'Baseline cycle', lines: ['COM-1 + COM-10 + commission engine 1.0', '<span class="muted">GDS conflict · real 7-night defect</span>'] }),
+    tile({ detail: 'flow2', art: 'flow2', tag: 'Flow 2', big: '2', title: 'Incremental cycle', lines: ['COM-20 + commission engine 2.0', '<span class="muted">cap 500 → 750 · 3 new rules</span>'] }),
+    tile({ detail: 'demo', art: 'demo', tag: 'Capability', big: P.demo.reservationAttributes, title: 'Reservation attributes', lines: [esc(P.demo.capability)] }),
+    tile({ detail: 'labels', art: 'skill', tag: 'Trust', big: '✓', title: 'Honest labelling', lines: ['What was pulled, recorded, designed or executed'] }),
+  ];
+  const cycleTiles = cycles.slice().reverse().map(cycleTile);
+  $view.innerHTML = `<section class="hero"><div class="eyebrow">Agentic QE Platform</div><h1>Seven agents. Any input. One reviewed, tested, reported quality cycle.</h1>
+<p>The platform turns business scope and code into reviewed requirements, test cases, runnable Playwright scripts, real execution results, defects and a cycle report. This MVP proves it on <b>${esc(P.demo.capability.toLowerCase())}</b> with exactly three inputs: a Jira initiative, a Jira epic and a codebase.</p>
+<div class="facts"><div><b>7</b>agents</div><div><b>3</b>inputs in this MVP</div><div><b>${esc(P.demo.reservationAttributes)}</b>reservation attributes</div><div><b>2</b>flows: baseline and incremental</div></div>
+<div class="row"><a class="btn" href="#/run?type=baseline">&#9654; Start Flow 1 · Baseline</a><a class="btn secondary" href="#/run?type=incremental">Flow 2 · Add to a baseline</a></div></section>
+${cycleTiles.length ? rail('cycles', 'Continue with your cycles', 'open a cycle to see every phase', cycleTiles) : ''}
+${rail('flows', 'The demo', 'click a card for details', flowTiles)}
+${rail('agents', 'The platform · seven agents', 'click an agent for what it produces, the skills it reads and the hand-over it owes', agentTiles)}
+${rail('stages', 'Intake and human gates', 'deterministic code around the agents', gateTiles)}
+${rail('inputs', 'Inputs · platform vs this MVP', 'three implemented; the rest are the wider platform', inputTiles)}`;
+}
+
+function cycleTile(c) {
+  const ex = c.summary;
+  return tile({ href: `#/cycle/${c.id}`, art: c.type === 'baseline' ? 'flow1' : 'flow2', tag: c.type === 'baseline' ? 'Flow 1' : 'Flow 2', big: c.id.replace('CYC-', '#'), corner: `<span class="status-dot ${esc(c.status)}"></span>${esc(c.status)}`, title: c.name,
+    lines: [c.delta ? esc(c.delta) : `baseline ${esc(c.baselineId || '(on completion)')}`, ex ? `${ex.passed}/${ex.executed} passed · ${ex.passRate}%` : '<span class="muted">not executed yet</span>'], progress: ex ? ex.passRate : 0 });
 }
 
 /* ---------------- Run ---------------- */
@@ -186,11 +255,11 @@ ${runState.type === 'incremental' ? `<div class="card"><h3>2. Pick the baseline<
 /* ---------------- Cycles ---------------- */
 async function viewCycles() {
   setTitle('Cycles');
-  const cycles = await api('/api/cycles');
-  $view.innerHTML = `<h1>Cycles &amp; artifacts</h1>${table(['Cycle', 'Name', 'Type', 'Status', 'Baseline', 'Delta', 'Execution', 'Created'], cycles.slice().reverse().map((c) => [
-    `<a href="#/cycle/${esc(c.id)}">${esc(c.id)}</a>`, esc(c.name), esc(c.type), statusPill(c.status), esc(c.baselineId || '-'), esc(c.delta || '-'),
-    c.summary ? `${c.summary.executed} executed · ${c.summary.passed} passed · ${c.summary.failed} failed` : '<span class="muted">not executed</span>', fmtTime(c.createdAt)]))}
-<p><a class="btn" href="#/run">Run a new cycle</a></p>`;
+  const cycles = (await api('/api/cycles')).slice().reverse();
+  const base = cycles.filter((c) => c.type === 'baseline').map(cycleTile);
+  const inc = cycles.filter((c) => c.type === 'incremental').map(cycleTile);
+  $view.innerHTML = `<section class="hero small-hero"><div class="eyebrow">Cycles</div><h1>Every run, by flow</h1><p>Open a cycle to browse its phases: intake and review, the design agents, then execution, defects and the report.</p><a class="btn" href="#/run">&#9654; Run a new cycle</a></section>
+${cycles.length ? '' : '<p class="muted">No cycles yet.</p>'}${base.length ? rail('base', 'Flow 1 · Baseline cycles', '', base) : ''}${inc.length ? rail('inc', 'Flow 2 · Incremental cycles', '', inc) : ''}`;
 }
 const statusPill = (s) => pill(s, { completed: 'passed', failed: 'failed', rejected: 'failed', 'awaiting-review': 'designed', 'awaiting-merge': 'designed', running: 'enhanced', interrupted: 'failed' }[s] || 'pending');
 
@@ -198,22 +267,53 @@ function phaseArtifactTab(name, c) {
   return { ingest: 'inputs', normalise: 'normalise', review: c.status === 'awaiting-review' ? 'review' : 'normalise', delta: 'delta', requirements: 'requirements', rules: 'rules', testcases: 'testcases', scripts: 'scripts', 'merge-approval': 'merge', execution: 'execution', defects: 'defects', report: 'report' }[name];
 }
 
+const PHASE_GROUPS = [
+  ['intake', 'Intake and review', 'deterministic code and the human gate', ['ingest', 'normalise', 'review', 'delta']],
+  ['design', 'Design agents 1-4', 'requirements, rules, test cases, scripts', ['requirements', 'rules', 'testcases', 'scripts', 'merge-approval']],
+  ['run', 'Run and results · agents 5-7', 'real execution, defects from real failures, report', ['execution', 'defects', 'report']],
+];
+const PHASE_PROGRESS = { done: 100, running: 50, waiting: 50, failed: 100, pending: 0, skipped: 0 };
+
+function phaseTile(c, p, tab) {
+  const t = phaseArtifactTab(p.name, c);
+  const no = agentNo(p.name);
+  const cat = PHASE_CAT[p.name];
+  return tile({ href: `#/cycle/${c.id}?tab=${t}`, art: cat, tag: no ? `Agent ${no}` : cat === 'gate' ? 'Human gate' : 'Intake', big: no || PHASE_ICON[p.name] || '•',
+    corner: `<span class="status-dot ${esc(p.status)}"></span>${esc(p.status)}`, title: p.label, lines: [p.summary ? esc(p.summary) : '<span class="muted">not run yet</span>'], extra: handoverBadge(p),
+    cls: `${p.status} ${t === tab && (p.name !== 'review' || tab === 'review') ? 'sel' : ''}`, progress: PHASE_PROGRESS[p.status] ?? 0 });
+}
+
 async function viewCycle(id, params) {
   const c = await api(`/api/cycles/${id}`);
   setTitle(c.name);
   const tab = params.get('tab') || (c.status === 'awaiting-review' ? 'review' : c.status === 'awaiting-merge' ? 'merge' : c.status === 'completed' ? 'report' : 'inputs');
-  const phases = `<div class="steps">${c.phases.map((p) => `<a class="phase ${esc(p.status)} ${phaseArtifactTab(p.name, c) === tab && (p.name !== 'review' || tab === 'review') ? 'sel' : ''}" href="#/cycle/${esc(c.id)}?tab=${phaseArtifactTab(p.name, c)}" style="text-decoration:none;color:inherit"><b>${esc(p.label)}</b>${esc(p.status)}${p.summary ? `<br><span class="muted">${esc(p.summary)}</span>` : ''}${handoverBadge(p)}</a>`).join('')}<a class="phase ${tab === 'skills' ? 'sel' : ''}" href="#/cycle/${esc(c.id)}?tab=skills" style="text-decoration:none;color:inherit"><b>Skills</b>${esc((c.skills || []).length)} active<br><span class="muted">contracts and hand-overs</span></a></div><p class="muted small">Click a phase to open what it produced.</p>`;
+  const present = new Set(c.phases.map((p) => p.name));
+  const rails = PHASE_GROUPS.map(([gid, title, note, names]) => {
+    const tiles = names.filter((n) => present.has(n)).map((n) => phaseTile(c, c.phases.find((p) => p.name === n), tab));
+    if (gid === 'run') tiles.push(tile({ href: `#/cycle/${c.id}?tab=skills`, art: 'skill', tag: 'Skills', big: (c.skills || []).length, title: 'Skills and hand-overs', lines: ['Which skills each agent read and what it handed over'], cls: tab === 'skills' ? 'sel' : '' }));
+    return rail(gid, title, note, tiles);
+  }).join('');
+  const done = c.phases.filter((p) => p.status === 'done').length;
+  const ex = c.artifacts && c.artifacts.execution ? c.artifacts.execution.summary : null;
+  const current = c.phases.find((p) => phaseArtifactTab(p.name, c) === tab);
+  const label = tab === 'skills' ? 'Skills and hand-overs' : tab === 'merge' ? 'Human approval to merge' : tab === 'review' ? 'Human review of requirement set' : current ? current.label : tab;
   let body = '';
   try { body = await renderCycleTab(c, tab); } catch (e) { body = `<div class="banner err">${esc(e.message)}</div>`; }
-  $view.innerHTML = `<h1>${esc(c.name)} <span class="muted small">${esc(c.id)} · ${esc(c.type)}</span> ${statusPill(c.status)}</h1>
+  $view.innerHTML = `<section class="hero small-hero"><div class="eyebrow">${c.type === 'baseline' ? 'Flow 1 · Baseline cycle' : 'Flow 2 · Incremental cycle'}</div>
+<h1>${esc(c.name)} <span class="muted small">${esc(c.id)}</span> ${statusPill(c.status)}</h1>
+<div class="facts"><div><b>${done}/${c.phases.length}</b>phases done</div>${c.delta ? `<div><b>${esc(c.delta.summary)}</b>delta</div>` : ''}${ex ? `<div><b>${ex.passed}/${ex.executed}</b>passed</div><div><b>${ex.passRate}%</b>pass rate</div>` : ''}${c.artifacts && c.artifacts.defects ? `<div><b>${c.artifacts.defects.length}</b>defects</div>` : ''}</div>
+<div class="muted small">Baseline: ${esc(c.baselineId || '(created when this cycle completes)')}${c.baselineVersionAtStart ? ` v${c.baselineVersionAtStart} at start` : ''}${c.baselineVersionAfter ? ` → v${c.baselineVersionAfter}` : ''} · SUT build <code>${esc(c.sutBuild)}</code> · created ${fmtTime(c.createdAt)}</div></section>
 ${c.error ? `<div class="banner err">Failed: ${esc(c.error)} <button class="btn secondary" id="resume">Resume</button></div>` : ''}
 ${c.status === 'interrupted' ? `<div class="banner">This cycle was interrupted by a restart. <button class="btn secondary" id="resume">Resume</button></div>` : ''}
 ${c.status === 'running' ? '<div class="banner info">Agents are running... this page refreshes automatically.</div>' : ''}
-<div class="muted small">Baseline: ${esc(c.baselineId || '(created when this cycle completes)')}${c.baselineVersionAtStart ? ` v${c.baselineVersionAtStart} at start` : ''}${c.baselineVersionAfter ? ` → v${c.baselineVersionAfter}` : ''} · SUT build <code>${esc(c.sutBuild)}</code> · created ${fmtTime(c.createdAt)}</div>
-${phases}<div id="tab">${body}</div>`;
+${rails}
+<section class="panel" id="detail-panel"><div class="panel-head"><h2>${esc(label)}</h2><span class="crumbs"><a href="#/cycles">Cycles</a> › <a href="#/cycle/${esc(c.id)}">${esc(c.id)}</a> › ${esc(label)}</span></div><div id="tab">${body}</div></section>`;
   const r = document.getElementById('resume');
   if (r) r.onclick = async () => { await api(`/api/cycles/${c.id}/resume`, { method: 'POST' }); route(); };
   bindCycleTab(c, tab);
+  const sel = $view.querySelector('.tile.sel');
+  if (sel) sel.parentElement.scrollLeft = Math.max(0, sel.offsetLeft - sel.parentElement.offsetLeft - 40);
+  if (params.get('tab') && c.status !== 'running') document.getElementById('detail-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
   if (c.status === 'running') pollTimer = setTimeout(route, 1500);
 }
 
@@ -423,7 +523,7 @@ function reportView(c) {
 <div class="card"><b>Summary</b><p>${esc(r.narrative.text)}</p><p class="muted small">${esc(r.narrative.draftedBy)}</p></div>
 <div class="card" id="report-skills"><b>Active skills (${(r.skills || []).length})</b> · hand-over <span class="hand ${r.handoverStatus === 'complete' ? 'ok' : 'bad'}">${esc(r.handoverStatus || 'not checked')}</span>
 <p class="small">${(r.skills || []).map((s) => `${pill(s.id, 'designed')} ${esc(s.name)}`).join('<br>') || 'No skills were active for this cycle.'}</p><a class="small" href="#/cycle/${esc(c.id)}?tab=skills">Hand-over detail per phase</a></div>
-<iframe src="/api/cycles/${esc(c.id)}/report.html" style="width:100%;height:900px;border:1px solid #dde4ee;border-radius:8px;background:#fff" title="Cycle report"></iframe>`;
+<iframe class="report" src="/api/cycles/${esc(c.id)}/report.html" title="Cycle report"></iframe>`;
 }
 
 /* bind merge buttons after render */
@@ -502,16 +602,18 @@ ${table(['Version', 'When', 'Cycle', 'Change', 'Approved by'], b.history.map((h)
 }
 
 /* ---------------- router ---------------- */
+let lastPath = null;
 async function route() {
   clearTimeout(pollTimer);
   const [path, query] = location.hash.replace(/^#\/?/, '').split('?');
+  if (path !== lastPath) { window.scrollTo(0, 0); lastPath = path; }
   const params = new URLSearchParams(query || '');
   const parts = path.split('/');
   activeNav(parts[0] === 'cycle' ? 'cycles' : parts[0]);
   try {
     if (!META) await loadMeta();
     switch (parts[0]) {
-      case '': return viewHome();
+      case '': return await viewHome();
       case 'run': return await viewRun(params);
       case 'cycles': return await viewCycles();
       case 'cycle': return await viewCycle(parts[1], params);
