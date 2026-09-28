@@ -23,7 +23,7 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
   pipeline.recover();
   const app = express();
   app.use(express.json({ limit: '2mb' }));
-  app.use(express.static(path.join(__dirname, '..', 'public')));
+  app.use(express.static(path.join(__dirname, '..', 'public'), { setHeaders: (res) => res.setHeader('Cache-Control', 'no-cache') }));
 
   const wrap = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
   const cycle = (req) => pipeline.mustGet(req.params.id);
