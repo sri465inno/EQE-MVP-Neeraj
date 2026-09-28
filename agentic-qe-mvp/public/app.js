@@ -33,7 +33,10 @@ function activeNav(route) {
 
 async function loadMeta() {
   META = await api('/api/meta');
-  document.getElementById('modes').innerHTML = [
+}
+
+function modesHtml() {
+  return [
     META.jira.mode === 'live' ? pill(`Jira: live (${META.jira.baseUrl})`, 'live') : `<span title="${esc(META.jira.note)}">${pill(`Jira: synthetic export on GitHub (${META.jiraExport.branch}) or recorded fixture; live Jira not configured`, 'github')}</span>`,
     pill(`Source: GitHub ${META.codebase.repo}`, 'github'),
     META.model.mode === 'model' ? pill(`Prose: ${META.model.model}`, 'live') : `<span title="${esc(META.model.note)}">${pill('Prose: deterministic demo mode', 'demo')}</span>`,
@@ -102,7 +105,7 @@ ${platformCards()}
 <li>${pill('pulled live from GitHub', 'github')} fetched from the repository during this run (git clone of the codebase branch; Jira REST v3 export files from <code>${esc(META.jiraExport.branch)}</code>). The Jira issues there are synthetic test issues, so this is still not a Jira call. ${pill('recorded fixture', 'fixture')} the same content, read offline from a snapshot in this app - no call was made. ${pill('live Jira call', 'live')} appears only when <code>JIRA_BASE_URL</code>, <code>JIRA_EMAIL</code> and <code>JIRA_API_TOKEN</code> are set. ${pill('pasted', 'pasted')} typed or pasted by you.</li>
 <li>${pill('designed', 'designed')} an artifact exists; ${pill('executed', 'executed')} it was actually run by the Playwright CLI - results are parsed from its JSON report.</li>
 <li>${pill('carried over', 'carried')} unchanged from the baseline; ${pill('re-designed', 're-designed')} regenerated because its requirement changed; ${pill('new', 'new')} first designed in this cycle.</li></ul>
-<p class="muted small">Current modes: Jira ${esc(META.jira.mode)}, prose ${esc(META.model.mode)}; Playwright ${esc(META.playwright)}.</p></div>`;
+<p class="modes">${modesHtml()}</p><p class="muted small">Playwright ${esc(META.playwright)}.</p></div>`;
 }
 
 /* ---------------- Run ---------------- */
@@ -191,18 +194,15 @@ async function viewCycles() {
 }
 const statusPill = (s) => pill(s, { completed: 'passed', failed: 'failed', rejected: 'failed', 'awaiting-review': 'designed', 'awaiting-merge': 'designed', running: 'enhanced', interrupted: 'failed' }[s] || 'pending');
 
-function phaseArtifactTab(name) {
-  return { ingest: 'inputs', normalise: 'normalise', review: 'normalise', delta: 'delta', requirements: 'requirements', rules: 'rules', testcases: 'testcases', scripts: 'scripts', 'merge-approval': 'merge', execution: 'execution', defects: 'defects', report: 'report' }[name];
+function phaseArtifactTab(name, c) {
+  return { ingest: 'inputs', normalise: 'normalise', review: c.status === 'awaiting-review' ? 'review' : 'normalise', delta: 'delta', requirements: 'requirements', rules: 'rules', testcases: 'testcases', scripts: 'scripts', 'merge-approval': 'merge', execution: 'execution', defects: 'defects', report: 'report' }[name];
 }
 
 async function viewCycle(id, params) {
   const c = await api(`/api/cycles/${id}`);
   setTitle(c.name);
   const tab = params.get('tab') || (c.status === 'awaiting-review' ? 'review' : c.status === 'awaiting-merge' ? 'merge' : c.status === 'completed' ? 'report' : 'inputs');
-  const phases = `<div class="steps">${c.phases.map((p) => `<a class="phase ${esc(p.status)} ${phaseArtifactTab(p.name) === tab ? 'sel' : ''}" href="#/cycle/${esc(c.id)}?tab=${phaseArtifactTab(p.name)}" style="text-decoration:none;color:inherit"><b>${esc(p.label)}</b>${esc(p.status)}${p.summary ? `<br><span class="muted">${esc(p.summary)}</span>` : ''}${handoverBadge(p)}</a>`).join('')}</div>`;
-  const tabs = [['inputs', 'Inputs'], ['normalise', 'Normalisation'], ...(c.status === 'awaiting-review' ? [['review', 'Review']] : []), ...(c.type === 'incremental' ? [['delta', 'Delta']] : []),
-    ['requirements', 'Requirements'], ['rules', 'Business rules'], ['testcases', 'Test cases'], ['scripts', 'Scripts'], ...(c.type === 'incremental' ? [['merge', 'Merge approval']] : []),
-    ['execution', 'Execution'], ['defects', 'Defects'], ['report', 'Report'], ['skills', 'Skills']];
+  const phases = `<div class="steps">${c.phases.map((p) => `<a class="phase ${esc(p.status)} ${phaseArtifactTab(p.name, c) === tab && (p.name !== 'review' || tab === 'review') ? 'sel' : ''}" href="#/cycle/${esc(c.id)}?tab=${phaseArtifactTab(p.name, c)}" style="text-decoration:none;color:inherit"><b>${esc(p.label)}</b>${esc(p.status)}${p.summary ? `<br><span class="muted">${esc(p.summary)}</span>` : ''}${handoverBadge(p)}</a>`).join('')}<a class="phase ${tab === 'skills' ? 'sel' : ''}" href="#/cycle/${esc(c.id)}?tab=skills" style="text-decoration:none;color:inherit"><b>Skills</b>${esc((c.skills || []).length)} active<br><span class="muted">contracts and hand-overs</span></a></div><p class="muted small">Click a phase to open what it produced.</p>`;
   let body = '';
   try { body = await renderCycleTab(c, tab); } catch (e) { body = `<div class="banner err">${esc(e.message)}</div>`; }
   $view.innerHTML = `<h1>${esc(c.name)} <span class="muted small">${esc(c.id)} · ${esc(c.type)}</span> ${statusPill(c.status)}</h1>
@@ -210,7 +210,7 @@ ${c.error ? `<div class="banner err">Failed: ${esc(c.error)} <button class="btn 
 ${c.status === 'interrupted' ? `<div class="banner">This cycle was interrupted by a restart. <button class="btn secondary" id="resume">Resume</button></div>` : ''}
 ${c.status === 'running' ? '<div class="banner info">Agents are running... this page refreshes automatically.</div>' : ''}
 <div class="muted small">Baseline: ${esc(c.baselineId || '(created when this cycle completes)')}${c.baselineVersionAtStart ? ` v${c.baselineVersionAtStart} at start` : ''}${c.baselineVersionAfter ? ` → v${c.baselineVersionAfter}` : ''} · SUT build <code>${esc(c.sutBuild)}</code> · created ${fmtTime(c.createdAt)}</div>
-${phases}<div class="tabs">${tabs.map(([t, l]) => `<a href="#/cycle/${esc(c.id)}?tab=${t}" class="${t === tab ? 'active' : ''}">${esc(l)}</a>`).join('')}</div><div id="tab">${body}</div>`;
+${phases}<div id="tab">${body}</div>`;
   const r = document.getElementById('resume');
   if (r) r.onclick = async () => { await api(`/api/cycles/${c.id}/resume`, { method: 'POST' }); route(); };
   bindCycleTab(c, tab);

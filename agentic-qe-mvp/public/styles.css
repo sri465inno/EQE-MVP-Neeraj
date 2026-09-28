@@ -7,7 +7,7 @@ a{color:#1557b0}
 #nav{display:flex;gap:2px;flex-wrap:wrap}
 #nav a{color:#dbe6f7;text-decoration:none;padding:6px 9px;border-radius:6px}
 #nav a.active,#nav a:hover{background:#1f4a8a;color:#fff}
-.modes{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.modes{display:flex;gap:6px;flex-wrap:wrap}
 .pill{display:inline-block;border-radius:12px;padding:2px 9px;font-size:12px;background:#e8eef8;color:#1d2433;white-space:nowrap}
 .pill.fixture{background:#fff1cc;color:#6b4d00}.pill.live{background:#d8f3e2;color:#0b5a2d}.pill.pasted{background:#e9e2fb;color:#46307f}
 .pill.github{background:#dcefff;color:#0b3f73}.pill.demo{background:#e8eef8}
