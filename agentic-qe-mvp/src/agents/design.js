@@ -145,9 +145,9 @@ function candidateSpecs(req, c, ctx) {
 function caseLabels(type, suite, kind, slot, automated, tt) {
   return [
     type === 'functional' ? 'functional' : 'non-functional',
-    ...(tt.id === 'e2e' && ['ui', 'journey'].includes(suite) ? ['e2e'] : []),
-    ...(tt.id === 'performance' && ['nfr', 'load'].includes(suite) ? ['performance'] : []),
-    ...(tt.id === 'smoke' && SMOKE_SLOTS.has(`${kind}|${slot}`) ? ['smoke'] : []),
+    ...(tt.ids.includes('e2e') && ['ui', 'journey'].includes(suite) ? ['e2e'] : []),
+    ...(tt.ids.includes('performance') && ['nfr', 'load'].includes(suite) ? ['performance'] : []),
+    ...(tt.ids.includes('smoke') && SMOKE_SLOTS.has(`${kind}|${slot}`) ? ['smoke'] : []),
     ...(automated ? ['automation'] : []),
   ];
 }
@@ -267,15 +267,15 @@ function selectionSummary(tt, requirements, testCases, previous) {
   const coveredInRun = new Set(run.map((t) => t.requirementId));
   const outOfScope = requirements.filter((r) => !coveredInRun.has(r.id)).map((r) => r.id);
   const gaps = [];
-  if (tt.id === 'performance' && !run.length) {
+  if (tt.ids.includes('performance') && !run.some((t) => ['nfr', 'load'].includes(t.suite))) {
     gaps.push({ kind: 'no-performance-target', severity: 'high',
       message: 'The inputs state no response-time target, so no performance case was designed. Add a target (e.g. "p95 within 300 ms") to the epic or the codebase README.' });
   }
-  if (tt.id === 'e2e' && !run.some((t) => t.suite === 'ui')) {
+  if (tt.ids.includes('e2e') && !run.some((t) => t.suite === 'ui')) {
     gaps.push({ kind: 'no-ui-requirement', severity: 'medium',
       message: 'No input describes the advisor screen, so the journeys check the statement page the codebase ships without a stated requirement for it.' });
   }
-  if (!run.length && tt.id !== 'performance') gaps.push({ kind: 'nothing-to-run', severity: 'high', message: `The inputs give ${tt.name.toLowerCase()} nothing to run.` });
+  if (!run.length && !tt.ids.includes('performance')) gaps.push({ kind: 'nothing-to-run', severity: 'high', message: `The inputs give ${tt.name.toLowerCase()} nothing to run.` });
   return {
     testingType: tt.id,
     name: tt.name,

@@ -77,10 +77,36 @@ const TESTING_TYPES = [
 const DEFAULT_TESTING_TYPE = 'regression';
 const BY_ID = new Map(TESTING_TYPES.map((t) => [t.id, t]));
 
-function getTestingType(id) {
-  const t = BY_ID.get(id === undefined || id === null || id === '' ? DEFAULT_TESTING_TYPE : id);
-  if (!t) throw new Error(`testingType must be one of: ${TESTING_TYPES.map((x) => x.id).join(', ')}`);
-  return t;
+/** Ids of a testing-type value: one id, a list of ids, or ids joined with "+" (as persisted on a cycle). */
+function testingTypeIds(value) {
+  if (value === undefined || value === null || value === '') return [DEFAULT_TESTING_TYPE];
+  const list = Array.isArray(value) ? value : String(value).split('+');
+  const unknown = list.filter((id) => !BY_ID.has(id));
+  if (unknown.length || !list.length) throw new Error(`testingType must be one of: ${TESTING_TYPES.map((x) => x.id).join(', ')}${list.length ? '' : ' (choose at least one)'}`);
+  return TESTING_TYPES.map((t) => t.id).filter((id) => list.includes(id));
+}
+
+/**
+ * The type of testing for a run. Several types combine into one run: the union of their suites,
+ * the smoke critical path if smoke is among them, and carried-over cases re-run if regression is.
+ */
+function getTestingType(value) {
+  const ids = testingTypeIds(value);
+  if (ids.length === 1) return { ...BY_ID.get(ids[0]), ids };
+  const parts = ids.map((id) => BY_ID.get(id));
+  const each = (field) => parts.map((p) => `${p.short}: ${p[field]}`).join(' ');
+  const agents = {};
+  for (const p of parts) for (const [agent, text] of Object.entries(p.agents)) agents[agent] = [...(agents[agent] ? [agents[agent]] : []), `${p.short}: ${text}`].join(' · ');
+  return {
+    id: ids.join('+'), ids,
+    name: `${parts.map((p) => p.short).join(' + ')} testing`,
+    short: parts.map((p) => p.short).join(' + '),
+    suites: [...new Set(parts.flatMap((p) => p.suites))],
+    smoke: parts.some((p) => p.smoke),
+    rerunsCarried: parts.some((p) => p.rerunsCarried),
+    produces: { functional: parts.some((p) => p.produces.functional), nonFunctional: parts.some((p) => p.produces.nonFunctional) },
+    focus: each('focus'), baseline: each('baseline'), incremental: each('incremental'), agents,
+  };
 }
 
 /** Suite of a persisted case; cases designed before suites existed fall back on their type. */
@@ -92,9 +118,9 @@ function suiteOf(tc) {
 
 /** Whether a case belongs in a run of this testing type. Carried-over cases are re-run by regression. */
 function inRun(type, { suite, kind, slot }, { carried = false } = {}) {
-  if (type.smoke) return SMOKE_SLOTS.has(`${kind}|${slot}`);
+  if (type.smoke && SMOKE_SLOTS.has(`${kind}|${slot}`)) return true;
   if (carried && type.rerunsCarried) return true;
   return type.suites.includes(suite);
 }
 
-module.exports = { TESTING_TYPES, DEFAULT_TESTING_TYPE, SMOKE_SLOTS, getTestingType, suiteOf, inRun };
+module.exports = { TESTING_TYPES, DEFAULT_TESTING_TYPE, SMOKE_SLOTS, getTestingType, testingTypeIds, suiteOf, inRun };

@@ -151,3 +151,35 @@ test('regression: the incremental run reruns the reused pack as well as what cha
   const executed = new Set(c3.artifacts.execution.results.filter((r) => r.status !== 'not-run').map((r) => r.key));
   assert.ok(carried.length && carried.every((k) => executed.has(k)));
 });
+
+test('several types of testing combine into one run: union of suites, each type\'s skill, labels and review checks', async () => {
+  const ctx = createApp({ dataDir: tmpDir('tt-multi'), env: {} });
+  const server = ctx.app.listen(0);
+  const base = `http://127.0.0.1:${server.address().port}`;
+  const post = async (body) => { const r = await fetch(`${base}/api/cycles`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); return { status: r.status, body: await r.json() }; };
+  try {
+    const none = await post({ type: 'baseline', testingTypes: [], inputs: BASELINE_INPUTS });
+    assert.equal(none.status, 400);
+    assert.match(none.body.error, /choose at least one/);
+    const bad = await post({ type: 'baseline', testingTypes: ['functional', 'soak'], inputs: BASELINE_INPUTS });
+    assert.equal(bad.status, 400);
+    const ok = await post({ type: 'baseline', testingTypes: ['e2e', 'functional'], inputs: BASELINE_INPUTS });
+    assert.equal(ok.status, 201);
+    assert.equal(ok.body.testingType, 'functional+e2e', 'ids are stored in the platform order');
+    assert.deepEqual(ok.body.testingTypes, ['functional', 'e2e']);
+    const skillIds = ok.body.skills.map((s) => s.id);
+    assert.ok(skillIds.includes('testing-functional') && skillIds.includes('testing-e2e') && !skillIds.includes('testing-smoke'));
+    assert.equal(ok.body.reviewAgent.testingType, 'functional+e2e');
+  } finally { server.close(); }
+
+  const { pipeline, store } = createApp({ dataDir: tmpDir('tt-multi-run'), env: {} });
+  const c = await baselineCycle(pipeline, store, { testingType: ['functional', 'e2e'] });
+  const run = inRunCases(c);
+  const suites = new Set(run.map((t) => t.suite));
+  assert.ok(suites.has('api') && suites.has('ui'), 'functional API cases and end-to-end browser cases are both in the run');
+  assert.ok(!suites.has('nfr') && !suites.has('load'), 'performance cases stay out of the run');
+  assert.ok(run.some((t) => t.labels.includes('e2e')));
+  assert.equal(c.status, 'completed');
+  assert.ok(c.artifacts.execution.summary.executed > 0);
+  assert.match(c.report.testing.name, /Functional \+ End-to-end testing/);
+});

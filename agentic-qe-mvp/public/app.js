@@ -4,7 +4,7 @@ const TITLE = 'Agentic QE Platform - MVP';
 const $view = document.getElementById('view');
 let META = null;
 let pollTimer = null;
-const runState = { type: 'baseline', testingType: 'functional', baselineId: '', inputs: {}, skills: null };
+const runState = { type: 'baseline', testingTypes: ['functional'], baselineId: '', inputs: {}, inputsOff: new Set(), skills: null, open: new Set() };
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const pill = (text, cls) => `<span class="pill ${esc(cls || String(text).replace(/\s+/g, '-'))}">${esc(text)}</span>`;
@@ -76,16 +76,52 @@ function modesHtml() {
 }
 
 /* ---------------- Home ---------------- */
-const skillFitsType = (s, tt) => !s.testingType || s.testingType === tt;
-const selectedSkills = () => runState.skills || META.skills.filter((s) => skillFitsType(s, runState.testingType)).map((s) => s.id);
-const testingTypeOf = (id) => META.testingTypes.find((t) => t.id === id) || META.testingTypes.find((t) => t.id === META.defaultTestingType);
+const skillFitsType = (s, ids) => !s.testingType || ids.includes(s.testingType);
+const selectedSkills = () => runState.skills || META.skills.filter((s) => skillFitsType(s, runState.testingTypes)).map((s) => s.id);
 const ownes = (s) => Object.entries(s.delivers).map(([a, keys]) => `${a}: ${keys.join(', ')}`).join(' · ');
 
-function skillsCard() {
+/** A single type of testing, or several ticked together (persisted as ids joined with "+"). */
+function testingTypeOf(value) {
+  const ids = String(value || META.defaultTestingType).split('+');
+  const parts = META.testingTypes.filter((t) => ids.includes(t.id));
+  if (!parts.length) return META.testingTypes.find((t) => t.id === META.defaultTestingType);
+  if (parts.length === 1) return parts[0];
+  const each = (f) => parts.map((p) => `${p.short}: ${p[f]}`).join(' ');
+  const agents = {};
+  for (const p of parts) for (const [k, v] of Object.entries(p.agents)) agents[k] = agents[k] ? `${agents[k]} · ${p.short}: ${v}` : `${p.short}: ${v}`;
+  return {
+    id: parts.map((p) => p.id).join('+'), name: `${parts.map((p) => p.short).join(' + ')} testing`, short: parts.map((p) => p.short).join(' + '),
+    focus: each('focus'), baseline: each('baseline'), incremental: each('incremental'), agents,
+  };
+}
+
+/** A drop-down whose options are checkboxes. Open state survives the Run page re-rendering. */
+function checkDropdown(id, summaryHtml, bodyHtml) {
+  return `<details class="ms" data-ms="${id}" ${runState.open.has(id) ? 'open' : ''}><summary><span class="ms-value">${summaryHtml}</span><span class="ms-caret" aria-hidden="true">▾</span></summary><div class="ms-menu">${bodyHtml}</div></details>`;
+}
+function checkItem({ cls, value, checked, disabled = false, title, tag = '', sub = '', extra = '' }) {
+  return `<label class="ms-item ${checked ? 'on' : ''} ${disabled ? 'off' : ''}"><input type="checkbox" class="${cls}" value="${esc(value)}" ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''}><span><b>${esc(title)}</b>${tag}${sub ? `<span class="muted">${esc(sub)}</span>` : ''}${extra}</span></label>`;
+}
+const closeDropdowns = (except = null) => {
+  document.querySelectorAll('details.ms[open]').forEach((d) => { if (d !== except) d.open = false; });
+  runState.open = except ? new Set([except.dataset.ms]) : new Set();
+};
+document.addEventListener('click', (ev) => closeDropdowns(ev.target.closest ? ev.target.closest('details.ms') : null));
+document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') closeDropdowns(); });
+const chips = (names) => names.map((n) => `<span class="ms-chip">${esc(n)}</span>`).join('');
+const skillsSummary = (n) => `${chips([`${n} of ${META.skills.length} selected`])}<span class="muted small">skills</span>`;
+
+function skillsDropdown() {
   const on = new Set(selectedSkills());
-  return `<div class="card"><p class="muted small">Markdown skill files loaded from <code>skills/</code> at startup. A skill's text is given only to the agents it names; after each phase, what the phase produced is checked against what the skill says it owes. The general skills are on by default, plus the skill for the chosen type of testing. <span id="skill-count">${on.size} of ${META.skills.length} selected</span></p>
-${META.skillWarnings && META.skillWarnings.length ? `<div class="banner">${META.skillWarnings.map(esc).join('<br>')}</div>` : ''}
-<div class="skills">${META.skills.map((s) => `<label class="skill ${s.testingType ? 'skill-tt' : ''}"><input type="checkbox" class="skill-on" value="${esc(s.id)}" ${on.has(s.id) ? 'checked' : ''}> <b>${esc(s.name)}</b> <code class="small">${esc(s.id)}</code><br><span class="small">${esc(s.description)}</span><br><span class="small muted">${s.testingType ? `for ${esc(testingTypeOf(s.testingType).name)} · ` : ''}seen by: ${esc(s.appliesTo.join(', '))} · owes: ${esc(ownes(s))}</span></label>`).join('')}</div></div>`;
+  const item = (s) => checkItem({
+    cls: 'skill-on', value: s.id, checked: on.has(s.id), title: s.name, sub: s.description,
+    extra: `<span class="small muted">${s.testingType ? `for ${esc(testingTypeOf(s.testingType).name)} · ` : ''}seen by: ${esc(s.appliesTo.join(', '))} · owes: ${esc(ownes(s))}</span>`,
+  });
+  const general = META.skills.filter((s) => !s.testingType);
+  const typed = META.skills.filter((s) => s.testingType);
+  return checkDropdown('skills', skillsSummary(on.size), `<div class="ms-group">General skills</div>${general.map(item).join('')}
+<div class="ms-group">Skills for a type of testing</div>${typed.map(item).join('')}
+<div class="ms-foot">Markdown files loaded from <code>skills/</code> at startup. Each skill's text goes only to the agents it names, and what each phase produced is checked against what the skill says it owes.</div>`);
 }
 
 function handoverBadge(p) {
@@ -252,13 +288,32 @@ const RUN_SLOTS = {
 };
 let DEMO_INPUTS = null;
 
-function inputTypeRow(t, inFlow, type) {
-  const on = inFlow.has(t.id) || (t.id === 'data-model' && inFlow.has('codebase'));
-  const tag = inFlow.has(t.id) ? pill('in this demo', 'passed')
-    : t.id === 'data-model' ? pill('read from the codebase', 'carried')
-      : t.mvp === 'implemented' ? pill(type === 'incremental' ? 'baseline only' : 'not used', 'pending')
-        : pill('platform', 'pending');
-  return `<label class="type-choice ${on ? 'on' : ''}"><input type="checkbox" disabled ${on ? 'checked' : ''}><span><b>${esc(t.name)}</b> ${tag}<span class="muted">${esc(t.about)}</span></span></label>`;
+function inputsDropdown(type, slots, active) {
+  const inFlow = new Map(slots.map((sl) => [sl[2], sl[0]]));
+  const used = new Set(active.map((sl) => sl[2]));
+  const item = (t) => {
+    const slot = inFlow.get(t.id);
+    if (slot) return checkItem({ cls: 'input-on', value: slot, checked: used.has(t.id), title: t.name, tag: pill('in this demo', 'passed'), sub: t.about });
+    const viaCode = t.id === 'data-model';
+    const tag = viaCode ? pill('read from the codebase', 'carried')
+      : t.mvp === 'implemented' ? pill(type === 'incremental' ? 'baseline only' : 'not used', 'pending') : pill('platform', 'pending');
+    return checkItem({ cls: 'input-fixed', value: t.id, checked: viaCode && used.has('codebase'), disabled: true, title: t.name, tag, sub: t.about });
+  };
+  const types = META.platform.inputTypes;
+  const names = types.filter((t) => used.has(t.id) || (t.id === 'data-model' && used.has('codebase'))).map((t) => t.name.replace(/ \(.*\)$/, ''));
+  return checkDropdown('inputs', `${chips(names)}<span class="muted small">${names.length} of ${types.length} input types</span>`,
+    `<div class="ms-group">In this demo (Flow ${type === 'baseline' ? 1 : 2})</div>${types.filter((t) => inFlow.has(t.id) || t.id === 'data-model').map(item).join('')}
+<div class="ms-group">The platform also accepts</div>${types.filter((t) => !inFlow.has(t.id) && t.id !== 'data-model').map(item).join('')}`);
+}
+
+function testingTypesDropdown(type) {
+  const ids = runState.testingTypes;
+  const parts = META.testingTypes.filter((t) => ids.includes(t.id));
+  const body = META.testingTypes.map((t) => checkItem({ cls: 'tt-on', value: t.id, checked: ids.includes(t.id), title: t.name, sub: t.focus })).join('')
+    + '<div class="ms-foot">Tick more than one to combine them in a single run: the agents design, script and run the cases every ticked type needs.</div>';
+  return `${checkDropdown('testing', chips(parts.map((p) => p.short)), body)}
+<ul class="tt-how-list">${parts.map((p) => `<li><b>${esc(p.short)}:</b> ${esc(type === 'baseline' ? p.baseline : p.incremental)}</li>`).join('')}</ul>
+<p class="hint" id="tt-msg"></p>`;
 }
 
 function slotSourceHtml(slot, st) {
@@ -316,13 +371,13 @@ async function viewRun(params) {
     const cur = runState.inputs[slot];
     if (!cur || cur.forType !== type) runState.inputs[slot] = slot === 'codebase' ? { forType: type, mode: 'github', branch: def, text: '' } : { forType: type, mode: META.jira.mode === 'live' ? 'jira' : 'github', key: def, text: '' };
   }
-  const inFlow = new Set(slots.map((s) => s[2]));
+  const active = slots.filter(([slot]) => !runState.inputsOff.has(`${type}:${slot}`));
   const flowNo = type === 'baseline' ? 1 : 2;
   const modeOption = (v, title, text) => `<label class="mode-option"><input type="radio" name="run-type" value="${v}" ${type === v ? 'checked' : ''}><span><b>${title}</b><span class="muted">${text}</span></span></label>`;
   const agents = META.platform.agents;
-  const tt = testingTypeOf(runState.testingType);
+  const tt = testingTypeOf(runState.testingTypes.join('+'));
+  const ttParts = META.testingTypes.filter((t) => runState.testingTypes.includes(t.id));
   const ra = META.platform.reviewAgent;
-  const ttOption = (t) => `<label class="mode-option"><input type="radio" name="testing-type" value="${esc(t.id)}" ${t.id === tt.id ? 'checked' : ''}><span><b>${esc(t.name)}</b><span class="muted">${esc(t.focus)}</span>${t.id === tt.id ? `<span class="small tt-how">${esc(type === 'baseline' ? t.baseline : t.incremental)}</span>` : ''}</span></label>`;
 
   $view.innerHTML = `${pendingBanner(cycles)}<div class="run-layout">
 <div class="panel">
@@ -338,22 +393,24 @@ async function viewRun(params) {
   <div class="step-block">
     <h3><span class="step-num">2</span>Type of testing</h3>
     <p class="hint">Steers what the agents design, script and run. The project inputs, this choice, the skills and the flow together decide the artifacts.</p>
-    <div class="tt-choices">${META.testingTypes.map(ttOption).join('')}</div>
+    ${testingTypesDropdown(type)}
   </div>
   <div class="step-block">
     <h3><span class="step-num">3</span>Choose what you are bringing</h3>
-    <p class="hint">The platform accepts all of these. This demo runs Flow ${flowNo} on the ${slots.length} inputs marked "in this demo"; the rest show what else a project can bring.</p>
-    <div class="type-choices">${META.platform.inputTypes.map((t) => inputTypeRow(t, inFlow, type)).join('')}</div>
+    <p class="hint">The platform accepts all of these. This demo runs Flow ${flowNo} on the ${slots.length} inputs marked "in this demo"; untick one to leave it out. The rest show what else a project can bring.</p>
+    ${inputsDropdown(type, slots, active)}
+    <p class="hint" id="input-msg"></p>
   </div>
   <div class="step-block">
     <h3><span class="step-num">4</span>Provide the content</h3>
     <p class="hint">Pull each input from GitHub, or download the Flow ${flowNo} test inputs and upload them by hand.</p>
-    ${slots.map(([slot, label]) => `<h4>${esc(label)}</h4>${slotSourceHtml(slot, runState.inputs[slot])}`).join('')}
+    ${active.map(([slot, label]) => `<h4>${esc(label)}</h4>${slotSourceHtml(slot, runState.inputs[slot])}`).join('')}
   </div>
   <div class="step-block">
     <h3><span class="step-num">5</span>Skills the agents must follow</h3>
-    <p class="hint">Skills tune and govern each agent to your standards. The ${esc(tt.name.toLowerCase())} skill is added automatically; untick any you do not want.</p>
-    <details class="guidance"><summary>${selectedSkills().length} of ${META.skills.length} skills selected</summary>${skillsCard()}</details>
+    <p class="hint">Skills tune and govern each agent to your standards. The general skills are on, plus the skill for each ticked type of testing; untick any you do not want.</p>
+    ${META.skillWarnings && META.skillWarnings.length ? `<div class="banner">${META.skillWarnings.map(esc).join('<br>')}</div>` : ''}
+    ${skillsDropdown()}
   </div>
   <div class="step-block">
     <h3><span class="step-num">6</span>Run the agents</h3>
@@ -372,10 +429,10 @@ async function viewRun(params) {
   <h3 class="panel-title">Before the human review</h3>
   <div class="agent-card gate review-agent-card"><div class="agent-head"><span class="step-num small">⚑</span><b>${esc(ra.name)}</b><span class="state">advisory</span></div><p>${esc(ra.produces)}</p><p class="muted small">${esc(ra.note)}</p></div>
   <h3 class="panel-title">Agents, and what each one produces for ${esc(tt.name.toLowerCase())}</h3>
-  <div class="agent-grid">${agents.map((a) => `<div class="agent-card ${a.no === 1 || (a.no === 4 && type === 'incremental') ? 'gate' : ''}"><div class="agent-head"><span class="step-num small">${a.no}</span><b>${esc(a.name)}</b><span class="state">pending</span></div><p>${esc(a.produces)}</p>${tt.agents[a.id] ? `<p class="tt-steer small"><b>${esc(tt.short)}:</b> ${esc(tt.agents[a.id])}</p>` : ''}<p class="muted small">${a.no === 1 ? 'You approve the requirement set first' : a.no === 4 && type === 'incremental' ? 'You approve the merge into the baseline' : 'Runs after your approval'}</p></div>`).join('')}</div>
+  <div class="agent-grid">${agents.map((a) => `<div class="agent-card ${a.no === 1 || (a.no === 4 && type === 'incremental') ? 'gate' : ''}"><div class="agent-head"><span class="step-num small">${a.no}</span><b>${esc(a.name)}</b><span class="state">pending</span></div><p>${esc(a.produces)}</p>${ttParts.filter((p) => p.agents[a.id]).map((p) => `<p class="tt-steer small"><b>${esc(p.short)}:</b> ${esc(p.agents[a.id])}</p>`).join('')}<p class="muted small">${a.no === 1 ? 'You approve the requirement set first' : a.no === 4 && type === 'incremental' ? 'You approve the merge into the baseline' : 'Runs after your approval'}</p></div>`).join('')}</div>
   <div class="legend"><span class="l-agent">AI agent</span><span class="l-human">Human approval before this agent</span></div>
   <h3 class="panel-title">What the agents will read</h3>
-  <ul class="read-list">${slots.map(([slot, label]) => readSummary(slot, label, runState.inputs[slot])).join('')}</ul>
+  <ul class="read-list">${active.map(([slot, label]) => readSummary(slot, label, runState.inputs[slot])).join('')}</ul>
   <h3 class="panel-title">Flow ${flowNo} test inputs</h3>
   ${demoInputsHtml(type)}
 </div>
@@ -383,15 +440,35 @@ async function viewRun(params) {
 
   const rerender = () => viewRun(new URLSearchParams());
   $view.querySelectorAll('input[name=run-type]').forEach((el) => el.onchange = () => { location.hash = `#/run?type=${el.value}`; });
-  $view.querySelectorAll('input[name=testing-type]').forEach((el) => el.onchange = () => {
-    const prev = runState.testingType;
-    runState.testingType = el.value;
-    if (runState.skills) {
-      const typed = new Set(META.skills.filter((x) => x.testingType).map((x) => x.id));
-      const hadPrev = META.skills.some((x) => x.testingType === prev && runState.skills.includes(x.id));
-      runState.skills = runState.skills.filter((id) => !typed.has(id));
-      if (hadPrev) runState.skills.push(...META.skills.filter((x) => x.testingType === el.value).map((x) => x.id));
+  $view.querySelectorAll('details.ms').forEach((d) => d.ontoggle = () => {
+    if (d.open) closeDropdowns(d);
+    else runState.open.delete(d.dataset.ms);
+  });
+  $view.querySelectorAll('.tt-on').forEach((el) => el.onchange = () => {
+    const ids = [...$view.querySelectorAll('.tt-on')].filter((x) => x.checked).map((x) => x.value);
+    if (!ids.length) {
+      el.checked = true;
+      document.getElementById('tt-msg').textContent = 'Keep at least one type of testing ticked.';
+      return;
     }
+    const prev = runState.testingTypes;
+    runState.testingTypes = ids;
+    if (runState.skills) {
+      const typedFor = (list) => META.skills.filter((x) => x.testingType && list.includes(x.testingType)).map((x) => x.id);
+      const dropped = new Set(typedFor(prev.filter((id) => !ids.includes(id))));
+      const added = typedFor(ids.filter((id) => !prev.includes(id)));
+      runState.skills = [...runState.skills.filter((id) => !dropped.has(id)), ...added.filter((id) => !runState.skills.includes(id))];
+    }
+    rerender();
+  });
+  $view.querySelectorAll('.input-on').forEach((el) => el.onchange = () => {
+    const key = `${type}:${el.value}`;
+    if (!el.checked && active.length === 1) {
+      el.checked = true;
+      document.getElementById('input-msg').textContent = 'Keep at least one input: the agents need something to read.';
+      return;
+    }
+    if (el.checked) runState.inputsOff.delete(key); else runState.inputsOff.add(key);
     rerender();
   });
   $view.querySelectorAll('.mode').forEach((el) => el.onchange = () => { runState.inputs[el.dataset.slot].mode = el.value; rerender(); });
@@ -415,7 +492,8 @@ async function viewRun(params) {
   });
   $view.querySelectorAll('.skill-on').forEach((el) => el.onchange = () => {
     runState.skills = [...$view.querySelectorAll('.skill-on')].filter((x) => x.checked).map((x) => x.value);
-    document.getElementById('skill-count').textContent = `${runState.skills.length} of ${META.skills.length} selected`;
+    el.closest('.ms-item').classList.toggle('on', el.checked);
+    $view.querySelector('details.ms[data-ms=skills] .ms-value').innerHTML = skillsSummary(runState.skills.length);
   });
   const sel = document.getElementById('baseline');
   if (sel) sel.onchange = () => { runState.baselineId = sel.value; };
@@ -424,11 +502,11 @@ async function viewRun(params) {
     const who = document.getElementById('who').value.trim();
     localStorage.setItem('aqe-user', who);
     const inputs = {};
-    for (const [slot] of slots) { const { forType, fileName, ...rest } = runState.inputs[slot]; inputs[slot] = rest; }
+    for (const [slot] of active) { const { forType, fileName, ...rest } = runState.inputs[slot]; inputs[slot] = rest; }
     ev.target.disabled = true;
     document.getElementById('run-msg').innerHTML = '<div class="banner info">Ingesting, normalising and running the review agent...</div>';
     try {
-      const c = await api('/api/cycles', { method: 'POST', body: { type, testingType: runState.testingType, baselineId: runState.baselineId, inputs, reviewer: who, skills: selectedSkills() } });
+      const c = await api('/api/cycles', { method: 'POST', body: { type, testingTypes: runState.testingTypes, baselineId: runState.baselineId, inputs, reviewer: who, skills: selectedSkills() } });
       location.hash = `#/cycle/${c.id}`;
     } catch (e) {
       document.getElementById('run-msg').innerHTML = `<div class="banner err">${esc(e.message)}</div>`;

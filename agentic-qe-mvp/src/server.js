@@ -99,7 +99,7 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
   });
 
   app.get('/api/cycles', (req, res) => res.json(store.listCycles().map((c) => ({
-    id: c.id, name: c.name, type: c.type, testingType: c.testingType || DEFAULT_TESTING_TYPE, status: c.status, createdAt: c.createdAt, completedAt: c.completedAt || null, baselineId: c.baselineId,
+    id: c.id, name: c.name, type: c.type, testingType: c.testingType || DEFAULT_TESTING_TYPE, testingTypeName: c.testingTypeName || null, status: c.status, createdAt: c.createdAt, completedAt: c.completedAt || null, baselineId: c.baselineId,
     summary: c.artifacts?.execution?.summary || null, delta: c.delta?.summary || c.deltaPreview?.summary || null,
   }))));
   app.get('/api/cycles/:id', (req, res) => res.json(cycle(req)));

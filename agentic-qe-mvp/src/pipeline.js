@@ -85,12 +85,12 @@ class Pipeline {
     return h;
   }
 
-  async startCycle({ type = 'baseline', name, baselineId, inputs = {}, sutBuild, reviewer, skills, testingType }) {
+  async startCycle({ type = 'baseline', name, baselineId, inputs = {}, sutBuild, reviewer, skills, testingType, testingTypes }) {
     if (!['baseline', 'incremental'].includes(type)) throw httpError(400, 'type must be "baseline" or "incremental"');
     let tt;
-    try { tt = getTestingType(testingType); } catch (e) { throw httpError(400, e.message, [{ field: 'testingType', message: e.message }]); }
+    try { tt = getTestingType(testingTypes ?? testingType); } catch (e) { throw httpError(400, e.message, [{ field: 'testingType', message: e.message }]); }
     let activeSkills;
-    try { activeSkills = selectSkills(this.skills, skills, tt.id); } catch (e) { throw httpError(400, e.message); }
+    try { activeSkills = selectSkills(this.skills, skills, tt.ids); } catch (e) { throw httpError(400, e.message); }
     let baseline = null;
     if (type === 'incremental') {
       baseline = this.store.getBaseline(baselineId);
@@ -109,6 +109,7 @@ class Pipeline {
       name: name || `Cycle ${n} - ${type === 'baseline' ? 'Baseline' : 'Incremental'}`,
       type,
       testingType: tt.id,
+      testingTypes: tt.ids,
       testingTypeName: tt.name,
       status: 'awaiting-review',
       createdAt: now(),

@@ -80,7 +80,7 @@ function buildLeadReport(cycle) {
 
   const risks = [
     ...(sel ? sel.gaps.map((g) => `${tt.name}: ${g.message}`) : []),
-    ...(sel && sel.outOfScope.length ? [`${plural(sel.outOfScope.length, 'requirement')} had no case in this ${tt.name.toLowerCase()} run (${sel.outOfScope.join(', ')}); a ${tt.id === 'smoke' ? 'passing smoke run is not a release decision' : 'wider run is needed before release'}.`] : []),
+    ...(sel && sel.outOfScope.length ? [`${plural(sel.outOfScope.length, 'requirement')} had no case in this ${tt.name.toLowerCase()} run (${sel.outOfScope.join(', ')}); a ${String(tt.id).split('+').includes('smoke') ? 'passing smoke run is not a release decision' : 'wider run is needed before release'}.`] : []),
     ...(ra ? ra.findings.filter((f) => f.severity === 'high' && f.category === 'missing').map((f) => `Review agent (${f.id}): ${f.title}. ${f.suggestion}`) : []),
     ...defects.map((d) => `${d.id} (${d.severity}): ${d.impact || d.title}. Expected ${d.expected}, got ${d.actual}. ${d.releaseDecision || ''}`),
     ...(manual.length ? [`${plural(manual.length, 'test case')} cannot be automated and ${manual.length === 1 ? 'was' : 'were'} not executed: ${manual.map((t) => `${t.key} ${t.name}`).join('; ')}. Needs a manual run before sign-off.`] : []),

@@ -96,8 +96,12 @@ function reviewInputs({ normalisation, inputs = [], testingType, deltaPreview = 
     smoke: !kinds.has('base-commission-rate') && { title: 'Smoke testing was chosen but no input states the base commission rate', suggestion: 'Add the base rate; the smoke run checks it first.' },
     functional: !groups.some((g) => classify(groupText(g)) && MONEY_KINDS.has(kindOf(g))) && { title: 'Functional testing was chosen but no input states a commission rule', suggestion: 'Add the commission rules with their values to the epic.' },
     regression: false,
-  }[tt.id];
-  if (missingFor) add({ category: 'missing', severity: 'high', groupId: null, title: missingFor.title, detail: `${tt.name}: ${tt.focus}`, suggestion: missingFor.suggestion, sources: [] });
+  };
+  for (const id of tt.ids) {
+    const gap = missingFor[id];
+    const part = getTestingType(id);
+    if (gap) add({ category: 'missing', severity: 'high', groupId: null, title: gap.title, detail: `${part.name}: ${part.focus}`, suggestion: gap.suggestion, sources: [] });
+  }
 
   if (deltaPreview && baseline) {
     const oldById = new Map(baseline.requirements.map((r) => [r.id, r]));

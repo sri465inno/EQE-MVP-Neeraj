@@ -139,7 +139,8 @@ function checkHandover(agentId, produced, active) {
  * By default every general skill is on, plus the skill written for the chosen type of testing.
  */
 function selectSkills(library, ids, testingType = null) {
-  if (ids === undefined || ids === null) return library.filter((s) => !s.testingType || s.testingType === testingType).map((s) => ({ ...s }));
+  const types = [].concat(testingType || []);
+  if (ids === undefined || ids === null) return library.filter((s) => !s.testingType || types.includes(s.testingType)).map((s) => ({ ...s }));
   if (!Array.isArray(ids)) throw new Error('skills must be a list of skill ids');
   const unknown = ids.filter((id) => !library.some((s) => s.id === id));
   if (unknown.length) throw new Error(`Unknown skill id(s): ${unknown.join(', ')}`);

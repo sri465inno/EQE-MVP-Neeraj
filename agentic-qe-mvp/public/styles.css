@@ -211,3 +211,19 @@ input[type=number]{border:1px solid var(--line2);border-radius:3px;padding:8px 1
 .review-agent-card{margin-bottom:6px}
 details.review-agent summary{cursor:pointer;padding:2px 0}
 .skill.skill-tt{border-left:3px solid var(--gold)}
+details.ms{position:relative;margin-top:6px}
+details.ms>summary{list-style:none;display:flex;align-items:center;gap:8px;min-height:40px;padding:6px 10px;border:1px solid var(--line2);border-radius:3px;background:var(--s1);cursor:pointer;font-size:13px}
+details.ms>summary::-webkit-details-marker{display:none}
+details.ms>summary:hover{border-color:var(--navy2)}
+details.ms[open]>summary{border-color:var(--navy);box-shadow:0 0 0 2px var(--navy-soft)}
+.ms-value{flex:1;display:flex;flex-wrap:wrap;gap:4px;align-items:center}.ms-value .muted{margin-left:4px}
+.ms-chip{background:var(--navy-soft);color:var(--navy);border-radius:10px;padding:1px 9px;font-size:12px;font-weight:600;white-space:nowrap}
+.ms-caret{color:var(--mut);transition:transform .15s}details.ms[open] .ms-caret{transform:rotate(180deg)}
+.ms-menu{position:absolute;z-index:40;left:0;right:0;top:calc(100% + 4px);max-height:380px;overflow:auto;background:var(--s1);border:1px solid var(--line2);border-radius:3px;box-shadow:0 8px 24px rgba(13,39,66,.16);padding:4px 0}
+.ms-group{padding:8px 12px 3px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);font-weight:600}
+.ms-item{display:flex;gap:10px;align-items:flex-start;padding:7px 12px;cursor:pointer;border-left:3px solid transparent}
+.ms-item:hover{background:var(--s2)}.ms-item.on{border-left-color:var(--gold);background:var(--gold-soft)}.ms-item.off{cursor:default;opacity:.62}
+.ms-item input{margin-top:3px}.ms-item>span>span{display:block}.ms-item b{font-size:13px;color:var(--tx)}.ms-item .muted{font-size:12px;margin-top:1px}
+.ms-item span.pill{display:inline-block;margin-left:6px;font-size:10.5px;padding:0 8px}
+.ms-foot{padding:8px 12px 6px;margin-top:4px;border-top:1px solid var(--s3);font-size:12px;color:var(--mut)}
+.tt-how-list{margin:8px 0 0;padding-left:18px;font-size:12.5px;color:var(--navy)}.tt-how-list li{margin:3px 0}
