@@ -14,6 +14,7 @@ const { modelConfig } = require('./llm');
 const { PW_VERSION } = require('./execution');
 const { loadSkills } = require('./skills');
 const { SEVEN_AGENTS, INTAKE_STAGES, INPUT_TYPES, DEMO } = require('./platform');
+const { FLOWS: DEMO_INPUT_FLOWS } = require('../scripts/make-demo-inputs');
 
 const XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 
@@ -26,6 +27,7 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
   const app = express();
   app.use(express.json({ limit: '2mb' }));
   app.use('/fonts/inter', express.static(path.join(__dirname, '..', 'node_modules', '@fontsource', 'inter'), { maxAge: '7d' }));
+  app.use('/demo-inputs', express.static(path.join(__dirname, '..', 'demo-inputs'), { setHeaders: (res, file) => res.setHeader('Content-Disposition', `attachment; filename="${path.basename(file)}"`) }));
   app.use(express.static(path.join(__dirname, '..', 'public'), { setHeaders: (res) => res.setHeader('Cache-Control', 'no-cache') }));
 
   const wrap = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
@@ -53,6 +55,16 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
       platform: { agents: SEVEN_AGENTS, intakeStages: INTAKE_STAGES, inputTypes: INPUT_TYPES, demo: DEMO },
       samples: { initiative: 'COM-1', epic: 'COM-10', incrementalEpic: 'COM-20', baselineBranch: 'demo/commission-engine', incrementalBranch: 'demo/commission-engine-v2' },
     });
+  });
+
+  app.get('/api/demo-inputs', (req, res) => res.json(DEMO_INPUT_FLOWS.map((f) => ({
+    flow: f.dir, files: f.files.map(([name, slot]) => ({ name, slot, url: `/demo-inputs/${f.dir}/${name}` })),
+  }))));
+
+  app.post('/api/reset', (req, res) => {
+    if (pipeline.running.size) return res.status(409).json({ error: 'A cycle is still running. Wait for it to finish, then reset.' });
+    store.reset();
+    res.json({ cycles: 0, baselines: 0 });
   });
 
   app.get('/api/skills', (req, res) => res.json({ dir: 'skills/', skills: skillLib.skills, warnings: skillLib.warnings }));

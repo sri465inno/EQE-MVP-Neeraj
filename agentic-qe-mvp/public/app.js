@@ -212,56 +212,146 @@ function cycleTile(c) {
 }
 
 /* ---------------- Run ---------------- */
+const RUN_SLOTS = {
+  baseline: [['initiative', 'Jira initiative', 'jira-initiative', 'initiative'], ['epic', 'Jira epic', 'jira-epic', 'epic'], ['codebase', 'Codebase', 'codebase', 'baselineBranch']],
+  incremental: [['epic', 'New Jira epic', 'jira-epic', 'incrementalEpic'], ['codebase', 'Updated codebase', 'codebase', 'incrementalBranch']],
+};
+let DEMO_INPUTS = null;
+
+function inputTypeRow(t, inFlow, type) {
+  const on = inFlow.has(t.id) || (t.id === 'data-model' && inFlow.has('codebase'));
+  const tag = inFlow.has(t.id) ? pill('in this demo', 'passed')
+    : t.id === 'data-model' ? pill('read from the codebase', 'carried')
+      : t.mvp === 'implemented' ? pill(type === 'incremental' ? 'baseline only' : 'not used', 'pending')
+        : pill('platform', 'pending');
+  return `<label class="type-choice ${on ? 'on' : ''}"><input type="checkbox" disabled ${on ? 'checked' : ''}><span><b>${esc(t.name)}</b> ${tag}<span class="muted">${esc(t.about)}</span></span></label>`;
+}
+
+function slotSourceHtml(slot, st) {
+  const isCode = slot === 'codebase';
+  const modes = isCode
+    ? [['github', `Pull the branch from GitHub (${META.codebase.repo})`], ['sample', 'Recorded snapshot of the branch (offline)'], ['paste', 'Paste or upload a file']]
+    : [['github', `Pull the Jira REST v3 export from GitHub (${META.jiraExport.branch})`], ['jira', META.jira.mode === 'live' ? 'Jira issue key (live Jira call)' : 'Jira issue key (recorded fixture, offline)'], ['paste', 'Paste or upload a file']];
+  const control = st.mode === 'paste'
+    ? `<textarea data-slot="${slot}" class="paste" rows="6" placeholder="${isCode ? 'README and source notes (lines with @rule)' : 'Jira issue JSON, search JSON, or one statement per line'}">${esc(st.text)}</textarea>
+<div class="row"><label class="btn secondary file-btn">Upload a file<input type="file" class="upload" data-slot="${slot}" accept=".json,.md,.txt" hidden></label><button class="btn secondary sample" data-slot="${slot}">Use the sample</button></div>
+<p class="hint">${st.fileName ? `Loaded <b>${esc(st.fileName)}</b> · ` : ''}${st.text ? `${st.text.length.toLocaleString()} characters` : 'Nothing pasted yet.'}</p>`
+    : isCode
+      ? `<select data-slot="${slot}" class="branch">${META.codebase.branches.map((b) => `<option ${b === st.branch ? 'selected' : ''}>${esc(b)}</option>`).join('')}</select>`
+      : `<input type="text" data-slot="${slot}" class="key" value="${esc(st.key)}">`;
+  return `<select data-slot="${slot}" class="mode">${modes.map(([m, t]) => `<option value="${m}" ${st.mode === m ? 'selected' : ''}>${esc(t)}</option>`).join('')}</select>${control}`;
+}
+
+function readSummary(slot, label, st) {
+  const where = st.mode === 'paste' ? (st.fileName ? `uploaded file ${st.fileName}` : st.text ? 'pasted text' : 'nothing pasted yet')
+    : slot === 'codebase' ? `${META.codebase.repo} @ ${st.branch}` : st.key;
+  const prov = st.mode === 'paste' ? pill('pasted', 'pasted') : st.mode === 'github' ? pill('pulled live from GitHub', 'github')
+    : st.mode === 'jira' && META.jira.mode === 'live' ? pill('live Jira call', 'live') : pill('recorded fixture', 'fixture');
+  return `<li><b>${esc(label)}</b><span class="muted small">${esc(where)}</span>${prov}</li>`;
+}
+
+function demoInputsHtml(type) {
+  const flow = (DEMO_INPUTS || []).find((f) => f.flow.startsWith(type === 'baseline' ? 'flow-1' : 'flow-2'));
+  if (!flow) return '';
+  return `<ul class="downloads">${flow.files.map((f) => `<li><a href="${esc(f.url)}" download>${esc(f.name)}</a></li>`).join('')}</ul>
+<p class="hint">Set an input's source to "Paste or upload a file", then upload the matching file. <a href="/demo-inputs/README.md" download>README</a></p>`;
+}
+
+async function resetDemo() {
+  if (!confirm('Delete every cycle, baseline, report and defect, and start the demo from a clean slate?')) return;
+  try {
+    await api('/api/reset', { method: 'POST' });
+    runState.type = 'baseline';
+    runState.baselineId = '';
+    runState.inputs = {};
+    if (location.hash === '#/run?type=baseline') route();
+    else location.hash = '#/run?type=baseline';
+  } catch (e) { alert(e.message); }
+}
+
 async function viewRun(params) {
   setTitle('Run');
   if (params.get('type')) runState.type = params.get('type');
-  const baselines = await api('/api/baselines');
-  if (runState.type === 'incremental' && !runState.baselineId && baselines.length) runState.baselineId = baselines[baselines.length - 1].id;
-  const s = META.samples;
-  const slots = runState.type === 'baseline'
-    ? [['initiative', 'Jira initiative', s.initiative], ['epic', 'Jira epic', s.epic], ['codebase', 'Codebase', s.baselineBranch]]
-    : [['epic', 'New Jira epic', s.incrementalEpic], ['codebase', 'Updated codebase', s.incrementalBranch]];
-  for (const [slot, , def] of slots) {
+  const [baselines, cycles] = await Promise.all([api('/api/baselines'), api('/api/cycles')]);
+  if (!DEMO_INPUTS) DEMO_INPUTS = await api('/api/demo-inputs');
+  if (runState.type === 'incremental' && !baselines.some((b) => b.id === runState.baselineId)) runState.baselineId = baselines.length ? baselines[baselines.length - 1].id : '';
+  const type = runState.type;
+  const slots = RUN_SLOTS[type];
+  for (const [slot, , , sampleKey] of slots) {
+    const def = META.samples[sampleKey];
     const cur = runState.inputs[slot];
-    if (!cur || cur.forType !== runState.type) runState.inputs[slot] = slot === 'codebase' ? { forType: runState.type, mode: 'github', branch: def, text: '' } : { forType: runState.type, mode: META.jira.mode === 'live' ? 'jira' : 'github', key: def, text: '' };
+    if (!cur || cur.forType !== type) runState.inputs[slot] = slot === 'codebase' ? { forType: type, mode: 'github', branch: def, text: '' } : { forType: type, mode: META.jira.mode === 'live' ? 'jira' : 'github', key: def, text: '' };
   }
-  const slotCard = ([slot, label]) => {
-    const st = runState.inputs[slot];
-    const isCode = slot === 'codebase';
-    const modes = isCode ? [['github', `Pull branch from GitHub (${META.codebase.repo})`], ['sample', 'Recorded snapshot of the branch (offline)'], ['paste', 'Paste README / source notes']]
-      : [['github', `Pull the Jira REST v3 export from GitHub (${META.jiraExport.branch})`], ['jira', META.jira.mode === 'live' ? 'Jira issue key (live Jira call)' : 'Jira issue key (recorded fixture, offline)'], ['paste', 'Paste issue JSON or one statement per line']];
-    return `<div class="card"><h3>${esc(label)}</h3>
-<div class="row">${modes.map(([m, t]) => `<label><input type="radio" name="mode-${slot}" value="${m}" ${st.mode === m ? 'checked' : ''} data-slot="${slot}" class="mode"> ${esc(t)}</label>`).join('<br>')}</div>
-<div style="margin-top:8px">${st.mode === 'paste'
-    ? `<textarea data-slot="${slot}" class="paste" placeholder="Paste here">${esc(st.text)}</textarea><button class="btn secondary sample" data-slot="${slot}">Fill with sample content</button> ${pill('pasted', 'pasted')}`
-    : isCode ? `<select data-slot="${slot}" class="branch">${META.codebase.branches.map((b) => `<option ${b === st.branch ? 'selected' : ''}>${esc(b)}</option>`).join('')}</select> <span class="muted small">${esc(META.codebase.repo)}</span> ${st.mode === 'github' ? pill('pulled live from GitHub', 'github') : pill('recorded fixture', 'fixture')}`
-      : `<input type="text" data-slot="${slot}" class="key" value="${esc(st.key)}"> ${st.mode === 'github' ? pill('pulled live from GitHub', 'github') : META.jira.mode === 'live' ? pill('live Jira call', 'live') : pill('recorded fixture', 'fixture')}`}</div></div>`;
-  };
-  $view.innerHTML = `<h1>Run a cycle</h1>
+  const inFlow = new Set(slots.map((s) => s[2]));
+  const flowNo = type === 'baseline' ? 1 : 2;
+  const modeOption = (v, title, text) => `<label class="mode-option"><input type="radio" name="run-type" value="${v}" ${type === v ? 'checked' : ''}><span><b>${title}</b><span class="muted">${text}</span></span></label>`;
+  const agents = META.platform.agents;
 
-<div class="card"><h3>1. What do you want to do?</h3><div class="row">
-<div class="choice ${runState.type === 'baseline' ? 'selected' : ''}" data-type="baseline"><b>New baseline</b><br><span class="muted">Jira initiative + Jira epic + codebase</span></div>
-<div class="choice ${runState.type === 'incremental' ? 'selected' : ''}" data-type="incremental"><b>Add to a baseline</b><br><span class="muted">One new Jira epic + updated codebase, against an approved baseline</span></div></div></div>
-${runState.type === 'incremental' ? `<div class="card"><h3>2. Pick the baseline</h3>${baselines.length
-    ? `<select id="baseline">${baselines.map((b) => `<option value="${esc(b.id)}" ${b.id === runState.baselineId ? 'selected' : ''}>${esc(b.id)} v${b.version} - ${esc(b.name)} (${b.counts.requirements} requirements, ${b.counts.testCases} test cases)</option>`).join('')}</select> <span class="muted small">The baseline is selected, not re-uploaded.</span>`
-    : '<div class="banner">No approved baseline yet. Run a new baseline first.</div>'}</div>` : ''}
-<h2>${runState.type === 'incremental' ? '3' : '2'}. Inputs</h2><div class="grid${slots.length}">${slots.map(slotCard).join('')}</div>
-<h2>${runState.type === 'incremental' ? '4' : '3'}. Skills for this run</h2>${skillsCard()}
-<div class="card"><div class="row"><label>Your name (recorded on approvals) <input type="text" id="who" value="${esc(localStorage.getItem('aqe-user') || '')}" placeholder="e.g. Priya Shah"></label>
-<button class="btn" id="go" ${runState.type === 'incremental' && !baselines.length ? 'disabled' : ''}>Run: ingest &amp; normalise</button></div>
-<p class="muted small">The run ingests the inputs and normalises them, then pauses on the human review screen. Nothing is designed until you approve.</p><div id="run-msg"></div></div>`;
+  $view.innerHTML = `<div class="run-layout">
+<div class="panel">
+  <div class="step-block">
+    <h3><span class="step-num">1</span>Is this a new baseline, or an addition to one?</h3>
+    <p class="hint">Early in a project you build the baseline. Later, as epics and code changes arrive, you add them on top and only the additions are designed.</p>
+    ${modeOption('baseline', 'Flow 1 · Start a new baseline', 'Everything you bring is read, compared and designed from scratch.')}
+    ${modeOption('incremental', 'Flow 2 · Add to an existing baseline', 'The baseline is carried over untouched; you review the additions and approve the merge.')}
+    ${type === 'incremental' ? (baselines.length
+    ? `<label class="field">Baseline to add to<select id="baseline">${baselines.map((b) => `<option value="${esc(b.id)}" ${b.id === runState.baselineId ? 'selected' : ''}>${esc(b.id)} v${b.version} - ${esc(b.name)} (${b.counts.requirements} requirements)</option>`).join('')}</select></label>`
+    : '<div class="banner">No approved baseline yet. Run Flow 1 first.</div>') : ''}
+  </div>
+  <div class="step-block">
+    <h3><span class="step-num">2</span>Choose what you are bringing</h3>
+    <p class="hint">The platform accepts all of these. This demo runs Flow ${flowNo} on the ${slots.length} inputs marked "in this demo"; the rest show what else a project can bring.</p>
+    <div class="type-choices">${META.platform.inputTypes.map((t) => inputTypeRow(t, inFlow, type)).join('')}</div>
+  </div>
+  <div class="step-block">
+    <h3><span class="step-num">3</span>Provide the content</h3>
+    <p class="hint">Pull each input from GitHub, or download the Flow ${flowNo} test inputs and upload them by hand.</p>
+    ${slots.map(([slot, label]) => `<h4>${esc(label)}</h4>${slotSourceHtml(slot, runState.inputs[slot])}`).join('')}
+  </div>
+  <details class="guidance"><summary>Additional guidance: skills the agents must follow (optional)</summary>${skillsCard()}</details>
+  <div class="step-block">
+    <h3><span class="step-num">4</span>Run the agents</h3>
+    <p class="hint">The run reads and normalises the inputs, then stops for your review. Nothing is designed until you approve.</p>
+    <label class="field">Your name (recorded on approvals)<input type="text" id="who" value="${esc(localStorage.getItem('aqe-user') || '')}" placeholder="e.g. Priya Shah"></label>
+    <div class="row"><button class="btn" id="go" ${type === 'incremental' && !baselines.length ? 'disabled' : ''}>Start Flow ${flowNo}</button></div>
+    <div id="run-msg"></div>
+  </div>
+  <div class="step-block">
+    <h3><span class="step-num small">↺</span>Clean slate</h3>
+    <p class="hint">${cycles.length} cycle(s) and ${baselines.length} baseline(s) are saved. Reset removes them all so the demo starts again from Flow 1.</p>
+    <button class="btn danger" id="reset" ${cycles.length || baselines.length ? '' : 'disabled'}>Reset the demo</button>
+  </div>
+</div>
+<div class="panel wide">
+  <h3 class="panel-title">Agents, and what each one produces</h3>
+  <div class="agent-grid">${agents.map((a) => `<div class="agent-card"><div class="agent-head"><span class="step-num small">${a.no}</span><b>${esc(a.name)}</b><span class="state">pending</span></div><p>${esc(a.produces)}</p><p class="muted small">${a.no === 1 ? 'You approve the requirement set first' : a.no === 4 && type === 'incremental' ? 'You approve the merge into the baseline' : 'Runs after your approval'}</p></div>`).join('')}</div>
+  <h3 class="panel-title">What the agents will read</h3>
+  <ul class="read-list">${slots.map(([slot, label]) => readSummary(slot, label, runState.inputs[slot])).join('')}</ul>
+  <h3 class="panel-title">Flow ${flowNo} test inputs</h3>
+  ${demoInputsHtml(type)}
+</div>
+</div>`;
 
-  $view.querySelectorAll('.choice').forEach((el) => el.onclick = () => { runState.type = el.dataset.type; location.hash = `#/run?type=${runState.type}`; });
-  $view.querySelectorAll('.mode').forEach((el) => el.onchange = () => { runState.inputs[el.dataset.slot].mode = el.value; viewRun(new URLSearchParams()); });
+  const rerender = () => viewRun(new URLSearchParams());
+  $view.querySelectorAll('input[name=run-type]').forEach((el) => el.onchange = () => { location.hash = `#/run?type=${el.value}`; });
+  $view.querySelectorAll('.mode').forEach((el) => el.onchange = () => { runState.inputs[el.dataset.slot].mode = el.value; rerender(); });
   $view.querySelectorAll('.key').forEach((el) => el.oninput = () => { runState.inputs[el.dataset.slot].key = el.value.trim(); });
-  $view.querySelectorAll('.branch').forEach((el) => el.onchange = () => { runState.inputs[el.dataset.slot].branch = el.value; });
-  $view.querySelectorAll('.paste').forEach((el) => el.oninput = () => { runState.inputs[el.dataset.slot].text = el.value; });
+  $view.querySelectorAll('.key').forEach((el) => el.onchange = rerender);
+  $view.querySelectorAll('.branch').forEach((el) => el.onchange = () => { runState.inputs[el.dataset.slot].branch = el.value; rerender(); });
+  $view.querySelectorAll('.paste').forEach((el) => el.oninput = () => { Object.assign(runState.inputs[el.dataset.slot], { text: el.value, fileName: '' }); });
+  $view.querySelectorAll('.paste').forEach((el) => el.onchange = rerender);
+  $view.querySelectorAll('.upload').forEach((el) => el.onchange = async () => {
+    const file = el.files[0];
+    if (!file) return;
+    Object.assign(runState.inputs[el.dataset.slot], { text: await file.text(), fileName: file.name });
+    rerender();
+  });
   $view.querySelectorAll('.sample').forEach((el) => el.onclick = async () => {
     const slot = el.dataset.slot;
-    const def = slots.find((x) => x[0] === slot)[2];
+    const def = META.samples[slots.find((x) => x[0] === slot)[3]];
     const q = slot === 'codebase' ? `slot=codebase&branch=${encodeURIComponent(def)}` : `slot=${slot}&key=${def}`;
-    runState.inputs[slot].text = await api(`/api/sample-text?${q}`);
-    viewRun(new URLSearchParams());
+    Object.assign(runState.inputs[slot], { text: await api(`/api/sample-text?${q}`), fileName: '' });
+    rerender();
   });
   $view.querySelectorAll('.skill-on').forEach((el) => el.onchange = () => {
     runState.skills = [...$view.querySelectorAll('.skill-on')].filter((x) => x.checked).map((x) => x.value);
@@ -269,15 +359,16 @@ ${runState.type === 'incremental' ? `<div class="card"><h3>2. Pick the baseline<
   });
   const sel = document.getElementById('baseline');
   if (sel) sel.onchange = () => { runState.baselineId = sel.value; };
+  document.getElementById('reset').onclick = resetDemo;
   document.getElementById('go').onclick = async (ev) => {
     const who = document.getElementById('who').value.trim();
     localStorage.setItem('aqe-user', who);
     const inputs = {};
-    for (const [slot] of slots) { const { forType, ...rest } = runState.inputs[slot]; inputs[slot] = rest; }
+    for (const [slot] of slots) { const { forType, fileName, ...rest } = runState.inputs[slot]; inputs[slot] = rest; }
     ev.target.disabled = true;
     document.getElementById('run-msg').innerHTML = '<div class="banner info">Ingesting and normalising...</div>';
     try {
-      const c = await api('/api/cycles', { method: 'POST', body: { type: runState.type, baselineId: runState.baselineId, inputs, reviewer: who, skills: selectedSkills() } });
+      const c = await api('/api/cycles', { method: 'POST', body: { type, baselineId: runState.baselineId, inputs, reviewer: who, skills: selectedSkills() } });
       location.hash = `#/cycle/${c.id}`;
     } catch (e) {
       document.getElementById('run-msg').innerHTML = `<div class="banner err">${esc(e.message)}</div>`;
@@ -292,8 +383,10 @@ async function viewCycles() {
   const cycles = (await api('/api/cycles')).slice().reverse();
   const base = cycles.filter((c) => c.type === 'baseline').map(cycleTile);
   const inc = cycles.filter((c) => c.type === 'incremental').map(cycleTile);
-  $view.innerHTML = `<section class="hero small-hero"><div class="eyebrow">Cycles</div><h1>Every run, by flow</h1><p>Open a cycle to browse its phases: intake and review, the design agents, then execution, defects and the report.</p><a class="btn" href="#/run">&#9654; Run a new cycle</a></section>
+  $view.innerHTML = `<section class="hero small-hero"><div class="eyebrow">Cycles</div><h1>Every run, by flow</h1><p>Open a cycle to browse its phases: intake and review, the design agents, then execution, defects and the report.</p><div class="row"><a class="btn" href="#/run">&#9654; Run a new cycle</a>${cycles.length ? '<button class="btn secondary" id="reset">Reset the demo</button>' : ''}</div></section>
 ${cycles.length ? '' : '<p class="muted">No cycles yet.</p>'}${base.length ? rail('base', 'Flow 1 · Baseline cycles', '', base) : ''}${inc.length ? rail('inc', 'Flow 2 · Incremental cycles', '', inc) : ''}`;
+  const reset = document.getElementById('reset');
+  if (reset) reset.onclick = resetDemo;
 }
 const statusPill = (s) => pill(s, { completed: 'passed', failed: 'failed', rejected: 'failed', 'awaiting-review': 'designed', 'awaiting-merge': 'designed', running: 'enhanced', interrupted: 'failed' }[s] || 'pending');
 

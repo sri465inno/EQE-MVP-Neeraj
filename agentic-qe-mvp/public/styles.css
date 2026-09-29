@@ -134,3 +134,36 @@ ol,ul{padding-left:20px}li{margin:3px 0}
 .lc-k{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#7aa7ff}
 @media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.lifecycle ol{grid-template-columns:1fr}.lifecycle li::after{display:none}.home-hero h1{font-size:28px}}
 #nav{align-items:center}.nav-sep{margin-left:14px;padding-left:14px;border-left:1px solid var(--line);color:#6f7d98;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-right:2px}
+.run-layout{display:grid;grid-template-columns:minmax(340px,430px) minmax(0,1fr);gap:18px;align-items:start}
+.panel{background:var(--s1);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.panel.wide{position:sticky;top:64px}
+.step-block{border-top:1px solid var(--line);padding-top:14px;margin-top:16px}.step-block:first-child{border-top:0;padding-top:0;margin-top:0}
+.step-block h3{display:flex;align-items:center;gap:10px;margin:0 0 6px;font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:#cdd6e6}
+.step-block h4{margin:14px 0 6px;font-size:13px;color:#fff}
+.step-num{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:var(--red);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;letter-spacing:0}
+.step-num.small{width:22px;height:22px;font-size:11.5px}
+.hint{color:var(--mut);font-size:12.5px;line-height:1.5;margin:4px 0 8px}
+.mode-option{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-left:3px solid #3a4968;border-radius:6px;padding:10px 12px;margin:8px 0;cursor:pointer;background:var(--s2)}
+.mode-option:has(input:checked){border-left-color:var(--red);background:#13213d}
+.mode-option input{margin-top:3px}.mode-option span{display:block}.mode-option b{color:#fff;font-size:13.5px}.mode-option .muted{font-size:12.5px;margin-top:2px}
+.type-choices{border:1px solid var(--line);border-radius:6px;padding:4px 10px}
+.type-choice{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid rgba(36,51,82,.6);opacity:.62}
+.type-choice:last-child{border-bottom:0}.type-choice.on{opacity:1}
+.type-choice input{margin-top:3px}.type-choice span{display:block}.type-choice b{color:#fff;font-size:13px}.type-choice .muted{font-size:12px;margin-top:2px}.type-choice .pill{margin-left:4px;font-size:10.5px}
+.step-block select,.step-block input[type=text],.step-block textarea{width:100%;margin:4px 0}
+.field{display:block;font-size:12.5px;color:var(--mut);margin-top:8px}
+.step-block .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}.step-block .row .btn{flex:1 1 auto;text-align:center}
+.file-btn{cursor:pointer}
+details.guidance{margin-top:16px;border:1px solid var(--line);border-radius:6px;padding:8px 12px;background:var(--s2)}
+details.guidance summary{cursor:pointer;font-weight:600;font-size:13px;color:#dbe3f2}details.guidance .card{background:transparent;border:0;padding:6px 0;margin:0}
+.panel-title{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:#cdd6e6;border-bottom:1px solid var(--line);padding-bottom:8px;margin:18px 0 12px}.panel-title:first-child{margin-top:0}
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.agent-card{background:var(--s2);border:1px solid var(--line);border-left:3px solid var(--red);border-radius:6px;padding:10px 12px}
+.agent-card p{margin:6px 0 0;font-size:12.5px;line-height:1.45;color:#c3cbdb}.agent-card p.muted{color:var(--mut)}
+.agent-head{display:flex;align-items:center;gap:8px}.agent-head b{color:#fff;font-size:13.5px;flex:1}
+.agent-head .state{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;border:1px solid #3a4968;border-radius:10px;padding:1px 8px;color:var(--mut)}
+.read-list,.downloads{list-style:none;margin:0;padding:0}
+.read-list li{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:8px 10px;border:1px dashed var(--line);border-radius:6px;margin-bottom:6px}.read-list li b{color:#fff;min-width:130px}.read-list li .muted{flex:1}
+.downloads li{padding:6px 0;border-bottom:1px solid rgba(36,51,82,.6)}.downloads a{font-family:"JetBrains Mono",Consolas,monospace;font-size:12.5px}
+@media (max-width:1000px){.run-layout{grid-template-columns:1fr}.panel.wide{position:static}}
+.type-choice span.pill{display:inline-block;margin-top:0}

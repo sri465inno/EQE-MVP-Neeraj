@@ -11,7 +11,8 @@
     "lint": "node scripts/lint.js",
     "jira-export": "node scripts/make-jira-export.js",
     "record-github": "node scripts/record-github-fixtures.js",
-    "demo:artifacts": "node scripts/export-demo-artifacts.js"
+    "demo:artifacts": "node scripts/export-demo-artifacts.js",
+    "demo:inputs": "node scripts/make-demo-inputs.js"
   },
   "engines": {
     "node": ">=20"
