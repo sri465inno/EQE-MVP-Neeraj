@@ -112,9 +112,26 @@ function addTestCaseSheet(wb, cycle) {
   return { ws, spec };
 }
 
+function addTestDataSheet(wb, cycle) {
+  const sets = cycle.artifacts.testData;
+  if (!sets) return;
+  const ws = wb.addWorksheet('Test Data');
+  ws.columns = [
+    { header: 'Data Set', key: 'id', width: 12 }, { header: 'Test Case', key: 'key', width: 12 }, { header: 'Requirement', key: 'req', width: 12 },
+    { header: 'Set By Test Case', key: 'drivers', width: 48 }, { header: 'Generated From Spec', key: 'generated', width: 20 },
+    { header: 'Check Against Spec', key: 'conformance', width: 18 }, { header: 'Problems', key: 'problems', width: 40 },
+    { header: 'Change', key: 'status', width: 14 }, { header: 'Version', key: 'version', width: 9 },
+  ];
+  for (const d of sets) {
+    ws.addRow({ id: d.id, key: d.testCaseKey, req: d.requirementId, drivers: d.drivers.map((x) => `${x.attribute} = ${(x.variants || [x.value]).join(' | ')}`).join('\n') || 'standard booking', generated: `${d.generated} attributes`, conformance: d.conformance, problems: d.problems.join('; '), status: d.status, version: d.version }).alignment = { wrapText: true, vertical: 'top' };
+  }
+  styleHeader(ws);
+}
+
 async function testCasesExport(cycle) {
   const wb = newBook();
   const { spec } = addTestCaseSheet(wb, cycle);
+  addTestDataSheet(wb, cycle);
   const gaps = cycle.artifacts.testCases.map((t) => ({ key: t.key, gap: exportGap(t) })).filter((g) => g.gap);
   const info = wb.addWorksheet('About');
   info.columns = [{ header: 'Field', key: 'k', width: 26 }, { header: 'Value', key: 'v', width: 90 }];

@@ -12,8 +12,9 @@ const { jiraLiveConfig, EXPORT } = require('./connectors/jira');
 const { listFixtureBranches, loadCodebaseFixture, DEFAULT_BRANCH, SOURCE } = require('./connectors/codebase');
 const { modelConfig } = require('./llm');
 const { PW_VERSION } = require('./execution');
+const { dataSetFile } = require('./agents/testdata');
 const { loadSkills } = require('./skills');
-const { SEVEN_AGENTS, REVIEW_AGENT, INTAKE_STAGES, INPUT_TYPES, DEMO } = require('./platform');
+const { PLATFORM_AGENTS, REVIEW_AGENT, INTAKE_STAGES, INPUT_TYPES, DEMO } = require('./platform');
 const { TESTING_TYPES, DEFAULT_TESTING_TYPE } = require('./testing-types');
 const { FLOWS: DEMO_INPUT_FLOWS } = require('../scripts/make-demo-inputs');
 const { DEMOS: LAB_DEMOS, EXAMPLES: LAB_EXAMPLES, FIELDS: LAB_FIELDS, generateData, runLabCase } = require('./lab');
@@ -57,7 +58,7 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
       playwright: PW_VERSION,
       skills: skillLib.skills.map(({ body, ...s }) => s),
       skillWarnings: skillLib.warnings,
-      platform: { agents: SEVEN_AGENTS, reviewAgent: REVIEW_AGENT, intakeStages: INTAKE_STAGES, inputTypes: INPUT_TYPES, demo: DEMO },
+      platform: { agents: PLATFORM_AGENTS, reviewAgent: REVIEW_AGENT, intakeStages: INTAKE_STAGES, inputTypes: INPUT_TYPES, demo: DEMO },
       testingTypes: TESTING_TYPES,
       defaultTestingType: DEFAULT_TESTING_TYPE,
       samples: { initiative: 'COM-1', epic: 'COM-10', incrementalEpic: 'COM-20', baselineBranch: 'demo/commission-engine', incrementalBranch: 'demo/commission-engine-v2' },
@@ -123,6 +124,12 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
     if (!s) return res.status(404).json({ error: 'Script not found' });
     if (req.query.download) res.setHeader('Content-Disposition', `attachment; filename="${s.file}"`);
     res.type('text/javascript').send(s.code);
+  });
+  app.get('/api/cycles/:id/testdata/:key.json', (req, res) => {
+    const c = cycle(req);
+    const d = (c.artifacts?.testData || []).find((x) => x.testCaseKey === req.params.key);
+    if (!d) return res.status(404).json({ error: 'No test data for that test case' });
+    res.json(dataSetFile(d, pipeline.dictionaryOf(c).dictionary));
   });
   app.get('/api/cycles/:id/evidence/:file', (req, res) => {
     if (!/^[A-Z]+-(?:[A-Z]-)?[A-Z]?\d+-\d+\.(json|png|txt)$/.test(req.params.file)) return res.status(400).json({ error: 'bad name' });

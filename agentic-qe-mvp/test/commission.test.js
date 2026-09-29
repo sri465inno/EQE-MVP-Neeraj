@@ -7,7 +7,7 @@ const { loadCodebaseFixture, BRANCHES } = require('../src/connectors/codebase');
 const { loadJiraIssue, EXPORT } = require('../src/connectors/jira');
 const { loadInputs } = require('../src/inputs');
 const { computeAttributeCoverage } = require('../src/coverage');
-const { SEVEN_AGENTS, INPUT_TYPES } = require('../src/platform');
+const { PLATFORM_AGENTS, INPUT_TYPES } = require('../src/platform');
 const { PHASES } = require('../src/pipeline');
 const { createSutApp, BUILDS } = require('../sut/server');
 
@@ -62,10 +62,10 @@ test('the MVP accepts exactly three input types for a baseline; the platform lis
   assert.deepEqual(loaded[1].children, ['COM-11']);
 });
 
-test('the seven platform agents are exactly the design phases the pipeline runs, in order', () => {
-  assert.equal(SEVEN_AGENTS.length, 7);
+test('the eight platform agents are exactly the design phases the pipeline runs, in order', () => {
+  assert.equal(PLATFORM_AGENTS.length, 8);
   for (const type of ['baseline', 'incremental']) {
-    assert.deepEqual(PHASES[type].filter((p) => SEVEN_AGENTS.some((g) => g.id === p)), SEVEN_AGENTS.map((g) => g.id), type);
+    assert.deepEqual(PHASES[type].filter((p) => PLATFORM_AGENTS.some((g) => g.id === p)), PLATFORM_AGENTS.map((g) => g.id), type);
   }
 });
 

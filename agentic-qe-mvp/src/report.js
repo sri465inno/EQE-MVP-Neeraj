@@ -1,6 +1,6 @@
 'use strict';
 const { getTestingType } = require('./testing-types');
-const { SEVEN_AGENTS, INPUT_TYPES, DEMO } = require('./platform');
+const { PLATFORM_AGENTS, INPUT_TYPES, DEMO } = require('./platform');
 // Cycle report: every figure is computed here from persisted artifacts; the model (optional) drafts the narrative only.
 const { draftNarrative } = require('./llm');
 
@@ -57,7 +57,7 @@ async function buildCycleReport(cycle, { env = process.env, fetchImpl, guidance 
       sutBuild: cycle.sutBuild, ranBy: cycle.createdBy || null,
     },
     platform: {
-      agents: SEVEN_AGENTS.map((g) => ({ ...g, status: g.id === 'report' ? 'producing this report' : (cycle.phases.find((p) => p.name === g.id) || {}).status || 'not in this cycle' })),
+      agents: PLATFORM_AGENTS.map((g) => ({ ...g, status: g.id === 'report' ? 'producing this report' : (cycle.phases.find((p) => p.name === g.id) || {}).status || 'not in this cycle' })),
       inputsImplemented: INPUT_TYPES.filter((t) => t.mvp !== 'platform only').map((t) => `${t.name} (${t.mvp})`),
       inputsPlatformOnly: INPUT_TYPES.filter((t) => t.mvp === 'platform only').map((t) => t.name),
       capability: DEMO.capability,
@@ -103,6 +103,7 @@ async function buildCycleReport(cycle, { env = process.env, fetchImpl, guidance 
       percent: cycle.type === 'incremental' && a.testCases.length ? Math.round((carried / a.testCases.length) * 1000) / 10 : 0,
       note: 'Reuse means these artefacts were not re-designed, not that they were not executed.',
     },
+    testData: a.testDataSummary ? { ...a.testDataSummary, sets: (a.testData || []).map((d) => ({ id: d.id, testCaseKey: d.testCaseKey, drivers: d.drivers.map((x) => `${x.attribute}=${x.value}`).join('; '), conformance: d.conformance, problems: d.problems, status: d.status })) } : null,
     scripts: { total: a.scripts.length, byStatus: countBy(a.scripts, (s) => s.status), files: a.scripts.map((s) => ({ file: s.file, covers: s.covers, status: s.status, version: s.version })) },
     execution: exec && exec.executed !== false ? {
       executed: true, quarantined: 'not measured', durationMs: Date.parse(exec.finishedAt) - Date.parse(exec.startedAt), tool: exec.tool, command: exec.command, sut: exec.sut, startedAt: exec.startedAt, finishedAt: exec.finishedAt, summary: exec.summary,
@@ -143,7 +144,7 @@ function renderReportHtml(r) {
 <h1>${esc(r.title)}</h1>
 <p><b>${esc(r.cycle.name)}</b> (${esc(r.cycle.id)}, ${esc(r.cycle.type)}) &middot; status ${esc(r.cycle.status)} &middot; baseline ${esc(r.cycle.baselineId || '-')} ${r.cycle.baselineVersionAfter ? `v${esc(r.cycle.baselineVersionAfter)}` : ''} &middot; SUT build <code>${esc(r.cycle.sutBuild)}</code> &middot; run by ${esc(r.cycle.ranBy || 'not recorded')} &middot; ${esc(r.cycle.createdAt)} to ${esc(r.cycle.completedAt || '-')} &middot; generated ${esc(r.generatedAt)}</p>
 ${r.platform ? `<h2>Platform scope</h2><p>Capability under test: <b>${esc(r.platform.capability)}</b>${r.dataModel ? ` &middot; reservation model <b>${esc(r.dataModel.attributeCount)}</b> attributes in ${esc(r.dataModel.groupCount)} groups, <b>${esc(r.dataModel.drivers.length)}</b> of them commission drivers (${esc(r.dataModel.file)})` : ''}.</p>
-<p>Seven platform agents: ${r.platform.agents.map((g) => `${g.no}. ${esc(g.name)} <span class="muted">(${esc(g.status)})</span>`).join(' &middot; ')}</p>
+<p>${r.platform.agents.length} platform agents: ${r.platform.agents.map((g) => `${g.no}. ${esc(g.name)} <span class="muted">(${esc(g.status)})</span>`).join(' &middot; ')}</p>
 <p>Inputs implemented in this MVP: ${esc(r.platform.inputsImplemented.join('; '))}. Platform input types not in this MVP: <span class="muted">${esc(r.platform.inputsPlatformOnly.join('; '))}</span>.</p>` : ''}
 <h2>Type of testing</h2>${r.testing ? `<p><b>${esc(r.testing.name)}</b>: ${esc(r.testing.focus)}<br>${esc(r.testing.approach)}</p>${r.testing.selection ? `<p>${kv({ 'cases in the pack': r.testing.selection.designed, 'in this run': r.testing.selection.inRun, reused: r.testing.selection.reused, 're-designed': r.testing.selection.redesigned, added: r.testing.selection.added, 'kept outside this run': r.testing.selection.notInRun })}</p>${r.testing.selection.gaps.length ? `<ul>${r.testing.selection.gaps.map((g) => `<li class="fail">${esc(g.message)}</li>`).join('')}</ul>` : ''}` : ''}` : ''}
 <h2>Review agent suggestions</h2>${r.reviewAgent ? `<p>${kv(r.reviewAgent.counts)} &middot; <span class="muted">${esc(r.reviewAgent.note)}</span></p>${table(['ID', 'Kind', 'Severity', 'Suggestion', 'Source'], r.reviewAgent.findings.map((f) => [esc(f.id), esc(f.category), esc(f.severity), `<b>${esc(f.title)}</b><br>${esc(f.detail || '')}<br><span class="muted">${esc(f.suggestion)}</span>`, esc(f.sources.map((x) => [x.ref, x.line].filter(Boolean).join(':')).join(', '))]))}` : '<p>No review agent ran for this cycle.</p>'}

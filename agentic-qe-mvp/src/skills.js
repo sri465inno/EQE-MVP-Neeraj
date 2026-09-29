@@ -12,6 +12,7 @@ const AGENTS = {
   requirements: 'Requirements repository agent',
   rules: 'Business rules agent',
   testcases: 'Test case agent',
+  testdata: 'Test data agent',
   scripts: 'Automation script agent',
   execution: 'Execution agent',
   defects: 'Defect agent',

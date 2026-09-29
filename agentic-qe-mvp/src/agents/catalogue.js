@@ -266,7 +266,7 @@ ${quoteCode(STD)}
       precondition: 'The commission engine is running.', varies: [],
       steps: ['Build a full 1000-attribute reservation', 'POST /api/commission/quote 20 times, timing each call', `Compute the p${percentile} latency`],
       testData: `samples=20; ${data(STD)}`, expected: `p${percentile} <= ${ms} ms`,
-      code: () => `  const body = { reservation: await reservation(request, ${JSON.stringify(STD)}) };
+      code: () => `  const body = { reservation: await reservation(request, ${JSON.stringify(STD)}, testInfo) };
   const samples = [];
   for (let i = 0; i < 20; i += 1) {
     const t0 = Date.now();
@@ -294,7 +294,7 @@ ${quoteCode(STD)}
         precondition: 'A stored GDS reservation; the commission statement page is reachable.', varies: [],
         steps: ['Store a full reservation (POST /api/reservations)', 'Open the commission statement page', 'Enter the reservation ID and click "Show commission"', 'Read the breakdown'],
         testData: data(o), expected: 'Page shows "Commission breakdown", the base commission line and "Total commission"',
-        code: () => `  const created = await call(request, testInfo, 'POST', '/api/reservations', { reservation: await reservation(request, ${JSON.stringify(o)}) });
+        code: () => `  const created = await call(request, testInfo, 'POST', '/api/reservations', { reservation: await reservation(request, ${JSON.stringify(o)}, testInfo) });
   expect(created.status).toBe(201);
   await page.goto('/');
   await page.fill('#reservation-id', created.body.id);
@@ -391,7 +391,7 @@ ${quoteCode(STD)}
 ];
 
 // Browser journey: the advisor stores a reservation, opens the commission statement and checks what they see.
-const journeyCode = (o, total, lines) => `  const created = await call(request, testInfo, 'POST', '/api/reservations', { reservation: await reservation(request, ${JSON.stringify(o)}) });
+const journeyCode = (o, total, lines) => `  const created = await call(request, testInfo, 'POST', '/api/reservations', { reservation: await reservation(request, ${JSON.stringify(o)}, testInfo) });
   expect(created.status).toBe(201);
   await page.goto('/');
   await page.fill('#reservation-id', created.body.id);
@@ -449,7 +449,7 @@ const EXTRAS = {
     precondition: 'The commission engine is running.', varies: [],
     steps: ['Build a full 1000-attribute reservation', 'Start 5 concurrent clients, each posting 8 quotes and timing each call', `Compute the p${percentile} latency over all 40 samples`],
     testData: `clients=5; quotes per client=8; ${data(STD)}`, expected: `p${percentile} <= ${ms} ms under 5 concurrent clients`,
-    code: () => `  const body = { reservation: await reservation(request, ${JSON.stringify(STD)}) };
+    code: () => `  const body = { reservation: await reservation(request, ${JSON.stringify(STD)}, testInfo) };
   const samples = [];
   await Promise.all(Array.from({ length: 5 }, async () => {
     for (let i = 0; i < 8; i += 1) {
@@ -499,7 +499,18 @@ async function call(request, testInfo, method, url, data, overrides) {
   return { status: res.status(), body };
 }
 
-async function reservation(request, overrides) {
+const TEST_DATA = require('path').join(__dirname, '..', 'test-data');
+
+/** The test data agent's data set for this case (test-data/<case key>.json), when present. */
+function dataSet(testInfo) {
+  const key = testInfo && (testInfo.title.match(/^(TC-[FN]-\\d+)\\s/) || [])[1];
+  const file = key && require('path').join(TEST_DATA, \`\${key}.json\`);
+  return file && require('fs').existsSync(file) ? JSON.parse(require('fs').readFileSync(file, 'utf8')) : null;
+}
+
+async function reservation(request, overrides, testInfo) {
+  const set = dataSet(testInfo);
+  if (set) return { ...set.reservation, ...overrides };
   if (!dictionary) dictionary = await (await request.get('/api/data-dictionary')).json();
   const res = {};
   for (const a of dictionary.attributes) res[a.name] = a.example;
@@ -507,7 +518,7 @@ async function reservation(request, overrides) {
 }
 
 async function quote(request, testInfo, overrides) {
-  return call(request, testInfo, 'POST', '/api/commission/quote', { reservation: await reservation(request, overrides) }, overrides);
+  return call(request, testInfo, 'POST', '/api/commission/quote', { reservation: await reservation(request, overrides, testInfo) }, overrides);
 }`;
 
 const COMMISSION_KINDS = ['base-commission-rate', 'commissionable-revenue', 'gds-channel-uplift', 'long-stay-bonus', 'commission-cap', 'commission-rounding',

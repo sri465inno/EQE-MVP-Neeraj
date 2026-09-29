@@ -8,7 +8,7 @@ const design = require('./agents/design');
 const { executeSuite, summarise } = require('./execution');
 const { raiseDefects } = require('./defects');
 const { computeCoverage } = require('./coverage');
-const { DEFAULT_BUILD } = require('../sut/server');
+const { DEFAULT_BUILD, BUILDS, ENGINE_DIR } = require('../sut/server');
 const fs = require('fs');
 const { buildCycleReport, collectHandovers } = require('./report');
 const { compareCycles } = require('./compare');
@@ -17,17 +17,20 @@ const { agentContext, checkHandover, selectSkills } = require('./skills');
 const { producedBy } = require('./handover');
 const { reviewInputs } = require('./agents/review');
 const { getTestingType } = require('./testing-types');
+const { testDataAgent, dataSetFile } = require('./agents/testdata');
+
+const DICTIONARY_FILE = 'inputs/data-dictionary.json';
 
 const clone = (x) => JSON.parse(JSON.stringify(x));
 const now = () => new Date().toISOString();
 
 const PHASES = {
-  baseline: ['ingest', 'normalise', 'review-agent', 'review', 'requirements', 'rules', 'testcases', 'scripts', 'execution', 'defects', 'report'],
-  incremental: ['ingest', 'normalise', 'review-agent', 'review', 'delta', 'requirements', 'rules', 'testcases', 'scripts', 'merge-approval', 'execution', 'defects', 'report'],
+  baseline: ['ingest', 'normalise', 'review-agent', 'review', 'requirements', 'rules', 'testcases', 'testdata', 'scripts', 'execution', 'defects', 'report'],
+  incremental: ['ingest', 'normalise', 'review-agent', 'review', 'delta', 'requirements', 'rules', 'testcases', 'testdata', 'scripts', 'merge-approval', 'execution', 'defects', 'report'],
 };
 const PHASE_LABEL = {
   ingest: 'Ingest inputs', normalise: 'Normalise (3-way compare)', review: 'Human review of requirement set', delta: 'Delta classification',
-  requirements: 'Requirements repository agent', rules: 'Business rules agent', testcases: 'Test case agent', scripts: 'Automation script agent',
+  requirements: 'Requirements repository agent', rules: 'Business rules agent', testcases: 'Test case agent', testdata: 'Test data agent', scripts: 'Automation script agent',
   'merge-approval': 'Human approval to merge', execution: 'Execution agent (Playwright, real run)', defects: 'Defect agent', report: 'Cycle report agent',
 };
 
@@ -66,6 +69,26 @@ class Pipeline {
         c.note = 'The server restarted while this cycle was running. Use Resume to re-run the remaining phases.';
         this.store.saveCycle(c);
       }
+    }
+  }
+
+  /** The data dictionary the codebase input carried; the build's own copy only for cycles recorded before it was kept. */
+  dictionaryOf(cycle) {
+    const file = path.join(this.store.runDir(cycle.id), DICTIONARY_FILE);
+    if (cycle.dataDictionary && fs.existsSync(file)) return { dictionary: JSON.parse(fs.readFileSync(file, 'utf8')), source: cycle.dataDictionary.source || 'codebase input' };
+    const own = path.join(ENGINE_DIR, BUILDS[cycle.sutBuild] || BUILDS[DEFAULT_BUILD], 'data-dictionary', 'reservation-attributes.json');
+    return { dictionary: JSON.parse(fs.readFileSync(own, 'utf8')), source: `data dictionary of build ${cycle.sutBuild}` };
+  }
+
+  /** Writes the test data agent's data sets where the generated specs load them (test-data/<case key>.json). */
+  writeTestData(cycle, cases) {
+    const dir = path.join(this.store.runDir(cycle.id), 'test-data');
+    fs.rmSync(dir, { recursive: true, force: true });
+    fs.mkdirSync(dir, { recursive: true });
+    const { dictionary } = this.dictionaryOf(cycle);
+    const keys = new Set(cases.map((t) => t.key));
+    for (const d of cycle.artifacts.testData || []) {
+      if (keys.has(d.testCaseKey)) fs.writeFileSync(path.join(dir, `${d.testCaseKey}.json`), `${JSON.stringify(dataSetFile(d, dictionary), null, 2)}\n`);
     }
   }
 
@@ -117,13 +140,19 @@ class Pipeline {
       baselineId: baseline ? baseline.id : null,
       baselineVersionAtStart: baseline ? baseline.version : null,
       sutBuild: sutBuild || codebase?.branch || DEFAULT_BUILD,
-      inputs: loaded.map(({ statements: s, ...rest }) => ({ ...rest, statementCount: s.length })),
+      inputs: loaded.map(({ statements: s, dictionary: _d, ...rest }) => ({ ...rest, statementCount: s.length })),
+      dataDictionary: codebase?.dictionary ? { file: DICTIONARY_FILE, source: codebase.dataModel?.url || null, name: codebase.dictionary.name, version: codebase.dictionary.version, attributeCount: codebase.dictionary.attributes.length } : null,
       normalisation,
       skills: activeSkills,
       phases: PHASES[type].map((p) => ({ name: p, label: PHASE_LABEL[p], status: 'pending' })),
       approvals: [],
       artifacts: {},
     };
+    if (codebase?.dictionary) {
+      const file = path.join(this.store.runDir(id), DICTIONARY_FILE);
+      fs.mkdirSync(path.dirname(file), { recursive: true });
+      fs.writeFileSync(file, JSON.stringify(codebase.dictionary));
+    }
     setPhase(cycle, 'ingest', 'done', `${loaded.length} input(s), ${statements.length} statements`);
     this.skillContext(cycle, 'normalise');
     this.handover(cycle, 'normalise');
@@ -195,7 +224,7 @@ class Pipeline {
     const counters = cycle.counters;
     this.skillContext(cycle, 'requirements');
     setPhase(cycle, 'requirements', 'done', `${requirements.length} requirements`);
-    const skills = Object.fromEntries(['rules', 'testcases', 'scripts'].map((a) => [a, this.skillContext(cycle, a)]));
+    const skills = Object.fromEntries(['rules', 'testcases', 'testdata', 'scripts'].map((a) => [a, this.skillContext(cycle, a)]));
     const out = design.designAgents(requirements, { cycle, counters, previous, skills, testingType: cycle.testingType });
     const count = (arr, st) => arr.filter((x) => x.status === st).length;
     const split = (arr) => (previous ? ` (${count(arr, 'new') + count(arr, 'added')} new · ${count(arr, 're-designed')} re-designed · ${count(arr, 'carried over')} carried over)` : '');
@@ -203,9 +232,15 @@ class Pipeline {
     const scope = sel.notInRun ? ` · ${sel.inRun} in this ${sel.name.toLowerCase()} run` : '';
     setPhase(cycle, 'rules', 'done', `${out.rules.length} business rules${split(out.rules)}`);
     setPhase(cycle, 'testcases', 'done', `${out.testCases.length} test cases${split(out.testCases)}${scope}`);
+    const dict = this.dictionaryOf(cycle);
+    const td = testDataAgent(out.testCases, dict.dictionary, { previous: previous?.testData, source: dict.source });
+    const byCase = new Map(td.dataSets.map((d) => [d.testCaseKey, d.id]));
+    for (const t of out.testCases) t.dataSet = byCase.get(t.key);
+    const tds = td.summary;
+    setPhase(cycle, 'testdata', 'done', `${tds.total} data sets of ${tds.dictionary.attributeCount} attributes · ${tds.conforming} conform to the data dictionary · ${tds.negative} deliberately invalid (negative tests)${tds.nonConforming ? ` · ${tds.nonConforming} do not conform` : ''}${previous ? ` (${tds.byStatus.new || 0} new · ${tds.byStatus['re-generated'] || 0} re-generated · ${tds.byStatus['carried over'] || 0} carried over)` : ''}`);
     setPhase(cycle, 'scripts', 'done', `${out.scripts.length} Playwright specs${split(out.scripts)}`);
-    cycle.artifacts = { ...cycle.artifacts, requirements, rules: out.rules, testCases: out.testCases, scripts: out.scripts, affected: out.affected, selection: sel };
-    for (const a of ['requirements', 'rules', 'testcases', 'scripts']) this.handover(cycle, a);
+    cycle.artifacts = { ...cycle.artifacts, requirements, rules: out.rules, testCases: out.testCases, testData: td.dataSets, testDataSummary: tds, scripts: out.scripts, affected: out.affected, selection: sel };
+    for (const a of ['requirements', 'rules', 'testcases', 'testdata', 'scripts']) this.handover(cycle, a);
   }
 
   async runBaseline(cycleId) {
@@ -221,7 +256,7 @@ class Pipeline {
     const baseline = {
       id: bid, name: `${done.inputs.find((i) => i.slot === 'epic')?.ref || 'Baseline'} baseline`, version: 1,
       createdAt: now(), sourceCycleId: done.id, cycles: [done.id], lastCycleId: done.id,
-      requirements: done.artifacts.requirements, rules: done.artifacts.rules, testCases: done.artifacts.testCases, scripts: done.artifacts.scripts,
+      requirements: done.artifacts.requirements, rules: done.artifacts.rules, testCases: done.artifacts.testCases, testData: done.artifacts.testData, scripts: done.artifacts.scripts,
       counters: done.counters,
       history: [{ version: 1, at: now(), cycleId: done.id, change: 'Baseline established', approvedBy: done.review.reviewer }],
     };
@@ -304,8 +339,9 @@ class Pipeline {
     a.requirements = a.requirements.filter((r) => !drop.has(r.id));
     a.rules = a.rules.filter((r) => !drop.has(r.requirementId));
     a.testCases = a.testCases.filter((t) => !drop.has(t.requirementId));
+    a.testData = a.testData.filter((d) => !drop.has(d.requirementId));
     a.scripts = a.scripts.filter((x) => !drop.has(x.requirementId));
-    for (const x of ['requirements', 'rules', 'testcases', 'scripts']) this.handover(cycle, x);
+    for (const x of ['requirements', 'rules', 'testcases', 'testdata', 'scripts']) this.handover(cycle, x);
     this.proposeMerge(cycle, baseline);
   }
 
@@ -341,7 +377,7 @@ class Pipeline {
     const merged = {
       ...baseline,
       version: baseline.version + 1,
-      requirements: a.requirements, rules: a.rules, testCases: a.testCases, scripts: a.scripts,
+      requirements: a.requirements, rules: a.rules, testCases: a.testCases, testData: a.testData, scripts: a.scripts,
       counters: cycle.counters,
       cycles: [...baseline.cycles, cycle.id],
       history: [...baseline.history, { version: baseline.version + 1, at, cycleId: cycle.id, change: cycle.delta.summary, approvedBy: approver }],
@@ -376,6 +412,7 @@ class Pipeline {
     const runCases = cycle.artifacts.testCases.filter((t) => t.inRun !== false);
     const runKeys = runCases.filter((t) => t.automation === 'Automated').map((t) => t.key);
     const partial = runCases.length !== cycle.artifacts.testCases.length;
+    this.writeTestData(cycle, runCases);
     const execution = runKeys.length ? await executeSuite({
       scripts: cycle.artifacts.scripts.filter((x) => x.covers.some((k) => runKeys.includes(k))), testCases: runCases,
       runDir: this.store.runDir(cycle.id), sutBuild: cycle.sutBuild, keys: partial ? runKeys : null,

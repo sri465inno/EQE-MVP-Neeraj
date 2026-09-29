@@ -180,7 +180,7 @@ document.addEventListener('click', (ev) => {
 /* ---------------- Home ---------------- */
 let HOME_DETAIL = {};
 const PHASE_ICON = { ingest: '⇢', normalise: '≡', 'review-agent': '⚑', review: '✎', delta: 'Δ', 'merge-approval': '⊕' };
-const PHASE_CAT = { ingest: 'intake', normalise: 'intake', 'review-agent': 'intake', review: 'gate', delta: 'intake', 'merge-approval': 'gate', requirements: 'design', rules: 'design', testcases: 'design', scripts: 'design', execution: 'run', defects: 'run', report: 'run' };
+const PHASE_CAT = { ingest: 'intake', normalise: 'intake', 'review-agent': 'intake', review: 'gate', delta: 'intake', 'merge-approval': 'gate', requirements: 'design', rules: 'design', testcases: 'design', testdata: 'design', scripts: 'design', execution: 'run', defects: 'run', report: 'run' };
 const agentNo = (id) => (META.platform.agents.find((g) => g.id === id) || {}).no;
 
 const EXEC_INPUT = {
@@ -199,6 +199,7 @@ const EXEC_AGENT = {
   requirements: ['Combines every input into one agreed list of requirements.', 'Everyone tests against the same approved scope.'],
   rules: ['Pulls out the business rules and the exact values behind them.', 'Every rule can be traced back to where it was stated.'],
   testcases: ['Writes the test cases, ready for the test management tool.', 'Every requirement gets a consistent, reviewable test case.'],
+  testdata: ['Builds complete, realistic test data for every test case from the data specs.', 'Every test runs on valid data that can be traced to the spec, never on copied production records.'],
   scripts: ['Turns the test cases into automated tests.', 'The same tests can be re-run on every release.'],
   execution: ['Runs the automated tests for real.', 'Results are actual, not estimated.'],
   defects: ['Logs a defect only when a test really fails.', 'No noise: every defect comes with evidence.'],
@@ -245,7 +246,7 @@ async function viewHome() {
     const [does, value] = EXEC_AGENT[g.id] || [g.produces, ''];
     const from = P.inputTypes.filter((t) => (t.usedBy || []).includes(g.id)).map(inName);
     HOME_DETAIL[`agent-${g.id}`] = `<h2>${esc(g.name)}</h2><ul class="brief"><li><b>What it does:</b> ${esc(does)}</li><li><b>Why it matters:</b> ${esc(value)}</li><li><b>Works from:</b> ${esc([...from, ...(g.no > 1 ? ['the output of the agent before it'] : [])].join(', '))}</li></ul>`;
-    return tile({ detail: `agent-${g.id}`, art: g.no <= 4 ? 'design' : 'run', tag: `Agent ${g.no}`, big: g.no, title: g.name, lines: [esc(does)] });
+    return tile({ detail: `agent-${g.id}`, art: g.no <= 5 ? 'design' : 'run', tag: `Agent ${g.no}`, big: g.no, title: g.name, lines: [esc(does)] });
   });
   const flowTiles = Object.entries(FLOW_BRIEF).map(([id, [name, intro, points, href, cta]], i) => {
     HOME_DETAIL[`flow-${id}`] = `<h2>${esc(name)}</h2><p>${esc(intro)}</p><ul class="brief">${points.map((x) => `<li>${esc(x)}</li>`).join('')}</ul><a class="btn" href="${href}">${esc(cta)}</a>`;
@@ -259,9 +260,9 @@ async function viewHome() {
   ];
   const lifecycle = [
     ['Bring', 'Enterprise inputs', 'Jira, code, APIs, data models and business documents.'],
-    ['Design', 'Agents 1–4', 'Requirements, business rules, test cases and automated tests.'],
+    ['Design', 'Agents 1–5', 'Requirements, business rules, test cases, test data and automated tests.'],
     ['Govern', 'Human approval', 'People settle disagreements and approve every baseline change.'],
-    ['Validate', 'Agents 5–7', 'Real execution, evidence-backed defects and the cycle report.'],
+    ['Validate', 'Agents 6–8', 'Real execution, evidence-backed defects and the cycle report.'],
     ['Release', 'Quality evidence', 'A traceable, release-ready report for sign-off.'],
   ];
   $view.innerHTML = `<section class="hero home-hero"><div class="eyebrow">Agentic QE Platform</div><h1>Engineering Quality at Scale with AI Agents and Human Governance</h1>
@@ -409,7 +410,7 @@ async function viewRun(params) {
   <h3 class="panel-title">Before the human review</h3>
   <div class="agent-card gate review-agent-card"><div class="agent-head"><span class="step-num small">⚑</span><b>${esc(ra.name)}</b><span class="state">advisory</span></div><p>${esc(ra.produces)}</p><p class="muted small">${esc(ra.note)}</p></div>
   <h3 class="panel-title">Agents, and what each one produces for ${esc(tt.name.toLowerCase())}</h3>
-  <div class="agent-grid">${agents.map((a) => `<div class="agent-card ${a.no === 1 || (a.no === 4 && type === 'incremental') ? 'gate' : ''}"><div class="agent-head"><span class="step-num small">${a.no}</span><b>${esc(a.name)}</b><span class="state">pending</span></div><p>${esc(a.produces)}</p>${ttParts.filter((p) => p.agents[a.id]).map((p) => `<p class="tt-steer small"><b>${esc(p.short)}:</b> ${esc(p.agents[a.id])}</p>`).join('')}<p class="muted small">${a.no === 1 ? 'You approve the requirement set first' : a.no === 4 && type === 'incremental' ? 'You approve the merge into the baseline' : 'Runs after your approval'}</p></div>`).join('')}</div>
+  <div class="agent-grid">${agents.map((a) => `<div class="agent-card ${a.no === 1 || (a.id === 'execution' && type === 'incremental') ? 'gate' : ''}"><div class="agent-head"><span class="step-num small">${a.no}</span><b>${esc(a.name)}</b><span class="state">pending</span></div><p>${esc(a.produces)}</p>${ttParts.filter((p) => p.agents[a.id]).map((p) => `<p class="tt-steer small"><b>${esc(p.short)}:</b> ${esc(p.agents[a.id])}</p>`).join('')}<p class="muted small">${a.no === 1 ? 'You approve the requirement set first' : a.no === 4 && type === 'incremental' ? 'You approve the merge into the baseline' : 'Runs after your approval'}</p></div>`).join('')}</div>
   <div class="legend"><span class="l-agent">AI agent</span><span class="l-human">Human approval before this agent</span></div>
   <h3 class="panel-title">What the agents will read</h3>
   <ul class="read-list">${active.map(([slot, label]) => readSummary(slot, label, runState.inputs[slot])).join('')}</ul>
@@ -490,13 +491,13 @@ ${pendingBanner(cycles)}${cycles.length ? '' : '<p class="muted">No cycles yet.<
 const statusPill = (s) => pill(s, { completed: 'passed', failed: 'failed', rejected: 'failed', 'awaiting-review': 'designed', 'awaiting-merge': 'designed', running: 'enhanced', interrupted: 'failed' }[s] || 'pending');
 
 function phaseArtifactTab(name, c) {
-  return { ingest: 'inputs', normalise: 'normalise', 'review-agent': 'review-agent', review: c.status === 'awaiting-review' ? 'review' : 'normalise', delta: 'delta', requirements: 'requirements', rules: 'rules', testcases: 'testcases', scripts: 'scripts', 'merge-approval': 'merge', execution: 'execution', defects: 'defects', report: 'report' }[name];
+  return { ingest: 'inputs', normalise: 'normalise', 'review-agent': 'review-agent', review: c.status === 'awaiting-review' ? 'review' : 'normalise', delta: 'delta', requirements: 'requirements', rules: 'rules', testcases: 'testcases', testdata: 'testdata', scripts: 'scripts', 'merge-approval': 'merge', execution: 'execution', defects: 'defects', report: 'report' }[name];
 }
 
 const PHASE_GROUPS = [
   ['intake', 'Intake and review', 'deterministic code, the review agent and the human gate', ['ingest', 'normalise', 'review-agent', 'review', 'delta']],
-  ['design', 'Design agents 1-4', 'requirements, rules, test cases, scripts', ['requirements', 'rules', 'testcases', 'scripts', 'merge-approval']],
-  ['run', 'Run and results · agents 5-7', 'real execution, defects from real failures, report', ['execution', 'defects', 'report']],
+  ['design', 'Design agents 1-5', 'requirements, rules, test cases, test data, scripts', ['requirements', 'rules', 'testcases', 'testdata', 'scripts', 'merge-approval']],
+  ['run', 'Run and results · agents 6-8', 'real execution, defects from real failures, report', ['execution', 'defects', 'report']],
 ];
 const PHASE_PROGRESS = { done: 100, running: 50, waiting: 50, failed: 100, pending: 0, skipped: 0 };
 
@@ -555,6 +556,7 @@ function artifactsView(c) {
   const a = c.artifacts || {};
   const dl = {
     testcases: a.testCases ? `<a href="/api/cycles/${esc(c.id)}/export/testcases.xlsx">Excel (.xlsx)</a>` : '',
+    testdata: (a.testData || []).length ? `${a.testData.length} data sets (JSON)` : '',
     scripts: (a.scripts || []).length ? `${a.scripts.length} spec files` : '',
     execution: a.execution ? `<a href="/api/cycles/${esc(c.id)}/playwright-report.json" target="_blank">Playwright JSON report</a>` : '',
     report: c.report ? `<a href="/api/cycles/${esc(c.id)}/report.html" target="_blank">HTML</a> · <a href="/api/cycles/${esc(c.id)}/report.xlsx">Excel</a> · <a href="/api/cycles/${esc(c.id)}/lead-report.html" target="_blank">QE lead report</a>` : '',
@@ -648,6 +650,7 @@ ${normaliseView(c, true)}
     case 'requirements': return a.requirements ? requirementsView(c) : notYet('Requirements');
     case 'rules': return a.rules ? rulesView(c) : notYet('Business rules');
     case 'testcases': return a.testCases ? testCasesView(c) : notYet('Test cases');
+    case 'testdata': return a.testData ? testDataView(c) : notYet('Test data');
     case 'scripts': return a.scripts ? scriptsView(c) : notYet('Scripts');
     case 'merge': return mergeView(c);
     case 'execution': return a.execution ? executionView(c) : `${notYet('Execution')}<p class="muted">Scripts are <b>designed</b> but have not been executed.</p>`;
@@ -725,6 +728,26 @@ ${table(['Key', 'Name / objective', 'Precondition', 'Steps', 'Test data', 'Expec
     `<ol style="margin:0;padding-left:16px">${t.steps.map((s) => `<li>${esc(s)}</li>`).join('')}</ol>`, `<code>${esc(t.testData)}</code>`,
     `${t.previous && t.previous.expected !== t.expected ? `<span class="old">${esc(t.previous.expected)}</span><br>` : ''}<span class="${t.previous ? 'newv' : ''}">${esc(t.expected)}</span>`, esc(t.priority), esc(t.type), esc(t.labels.join(', ')),
     esc([...(t.issueLinks || []), t.requirementId].join(', ')), t.scriptFile ? `${esc(t.automation)}<br><a class="small" href="#/scripts?cycle=${esc(c.id)}&file=${esc(t.scriptFile)}">${esc(t.scriptFile)}</a>` : esc(t.automation), artPill(t.status)]), (i) => `row-${tcs[i].status}`)}`;
+}
+
+const CONFORMANCE = { conforms: ['Conforms to spec', 'passed'], 'negative test': ['Negative test (invalid on purpose)', 'enhanced'], 'does not conform': ['Does not conform', 'failed'] };
+function testDataView(c) {
+  const a = c.artifacts;
+  const s = a.testDataSummary || {};
+  const d = s.dictionary || {};
+  const cases = new Map(a.testCases.map((t) => [t.key, t]));
+  return `<h2>Test data (${a.testData.length} data sets)</h2>
+<p class="small">Generated by the test data agent from <b>${esc(d.name)}</b> v${esc(d.version)} (${esc(d.attributeCount)} attributes) · specification: ${esc(d.source)}</p>
+<p class="small">${pill(`${s.conforming} conform`, 'passed')} ${pill(`${s.negative} negative test${s.negative === 1 ? "" : "s"}`, 'enhanced')} ${s.nonConforming ? pill(`${s.nonConforming} do not conform`, 'failed') : ''}${c.type === 'incremental' ? ` · ${Object.entries(s.byStatus || {}).map(([k, v]) => `${esc(k)}: <b>${v}</b>`).join(' · ')}` : ''}</p>
+<p class="muted small">${esc(s.method)} Each automation script loads its case's data set and overrides only the values the case states.</p>
+${table(['Data set', 'Test case', 'Set by the test case', 'Generated from the spec', 'Check against the spec', 'Status', 'Download'], a.testData.map((x) => {
+    const t = cases.get(x.testCaseKey) || {};
+    return [esc(x.id), `<a href="#/cycle/${esc(c.id)}?tab=testcases">${esc(x.testCaseKey)}</a><br><span class="small muted">${esc(t.name || '')}</span>`,
+      x.drivers.length ? x.drivers.map((v) => `<code>${esc(v.attribute)}</code> = <b>${esc((v.variants || [v.value]).join(' | '))}</b> <span class="small muted">(${esc(v.spec)})</span>`).join('<br>') : '<span class="muted">none: standard booking</span>',
+      `${x.generated} attributes${Object.keys(x.parameters).length ? `<br><span class="small muted">run settings: ${esc(Object.entries(x.parameters).map(([k, v]) => `${k}=${v}`).join('; '))}</span>` : ''}`,
+      `${pill(...CONFORMANCE[x.conformance])}${x.problems.length ? `<br><span class="small">${esc(x.problems.join('; '))}</span>` : ''}`,
+      artPill(x.status), `<a href="/api/cycles/${esc(c.id)}/testdata/${esc(x.testCaseKey)}.json" target="_blank">JSON</a>`];
+  }))}`;
 }
 
 function codeBlock(code, highlight = []) {

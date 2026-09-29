@@ -71,11 +71,12 @@ function buildLeadReport(cycle) {
     { name: 'Requirements repository', count: r.requirements.total, note: Object.entries(r.requirements.byStatus).map(([k, v]) => `${v} ${k}`).join(' · '), tab: 'requirements', file: '02-requirements/' },
     { name: 'Business rules', count: r.rules.total, note: `${r.rules.executable} executable, each with a source quote`, tab: 'rules', file: '03-business-rules/' },
     { name: 'Test cases (Excel, Zephyr Scale format)', count: r.testCases.total, note: Object.entries(r.testCases.byAutomation).map(([k, v]) => `${v} ${k.toLowerCase()}`).join(' · '), tab: 'testcases', file: '04-test-cases/' },
-    { name: 'Automation scripts (Playwright)', count: r.scripts.total, note: Object.entries(r.scripts.byStatus).map(([k, v]) => `${v} ${k}`).join(' · '), tab: 'scripts', file: '05-automation-scripts/' },
-    ...(mergeApproval ? [{ name: 'Merge approval', count: 1, note: `${mergeApproval.decision} by ${mergeApproval.by}`, tab: 'merge', file: '09-merge-approval/' }] : []),
-    { name: 'Execution results and evidence', count: ex ? ex.executed : 0, note: ex ? `${ex.passed} passed · ${ex.failed} failed · ${ex.notRun} manual` : 'not executed', tab: 'execution', file: '06-execution/' },
-    { name: 'Defects', count: defects.length, note: defects.length ? defects.map((d) => `${d.id} ${d.severity}`).join(' · ') : 'none', tab: 'defects', file: '07-defects/' },
-    { name: 'Cycle report (HTML, Excel)', count: 1, note: 'full detail behind this summary', tab: 'report', file: '08-report/' },
+    ...(r.testData ? [{ name: 'Test data (one data set per test case)', count: r.testData.total, note: `${r.testData.conforming} conform to ${r.testData.dictionary.name} v${r.testData.dictionary.version} (${r.testData.dictionary.attributeCount} attributes) · ${r.testData.negative} negative test${r.testData.negative === 1 ? "" : "s"}${r.testData.nonConforming ? ` · ${r.testData.nonConforming} do not conform` : ''}`, tab: 'testdata', file: '05-test-data/' }] : []),
+    { name: 'Automation scripts (Playwright)', count: r.scripts.total, note: Object.entries(r.scripts.byStatus).map(([k, v]) => `${v} ${k}`).join(' · '), tab: 'scripts', file: '06-automation-scripts/' },
+    ...(mergeApproval ? [{ name: 'Merge approval', count: 1, note: `${mergeApproval.decision} by ${mergeApproval.by}`, tab: 'merge', file: '10-merge-approval/' }] : []),
+    { name: 'Execution results and evidence', count: ex ? ex.executed : 0, note: ex ? `${ex.passed} passed · ${ex.failed} failed · ${ex.notRun} manual` : 'not executed', tab: 'execution', file: '07-execution/' },
+    { name: 'Defects', count: defects.length, note: defects.length ? defects.map((d) => `${d.id} ${d.severity}`).join(' · ') : 'none', tab: 'defects', file: '08-defects/' },
+    { name: 'Cycle report (HTML, Excel)', count: 1, note: 'full detail behind this summary', tab: 'report', file: '09-report/' },
   ];
 
   const risks = [

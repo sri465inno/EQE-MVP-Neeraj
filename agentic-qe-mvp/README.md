@@ -1,6 +1,6 @@
 # Agentic QE Platform - MVP
 
-A standalone MVP of the Agentic QE Platform. The platform chains **seven agents** (requirements, business rules, test design, automation, execution, defects, reporting) and is built to take many input types (Jira, Confluence/BRDs, API contracts, existing test suites, defect history, designs...). This MVP implements exactly **three inputs** - a Jira initiative, a Jira epic and a codebase - and demonstrates two flows on one complex capability:
+A standalone MVP of the Agentic QE Platform. The platform chains **eight agents** (requirements, business rules, test design, test data, automation, execution, defects, reporting) and is built to take many input types (Jira, Confluence/BRDs, API contracts, existing test suites, defect history, designs...). This MVP implements exactly **three inputs** - a Jira initiative, a Jira epic and a codebase - and demonstrates two flows on one complex capability:
 
 **Demo capability: travel-advisor commission for Aurora Hotels**, calculated from a reservation that carries **1000 attributes** (20 groups x 50, 11 of them commission drivers: status, nights, revenue parts, channel, IATA, loyalty payment, rate plan, room count).
 
@@ -33,7 +33,7 @@ Node 20+.
 
 ## Layout
 
-- `src/platform.js` - the seven agents, platform input types vs the three MVP inputs, demo scenario
+- `src/platform.js` - the eight agents, platform input types vs the three MVP inputs, demo scenario
 - `src/connectors` - Jira (live Jira, GitHub-hosted export, or fixture) and codebase (git clone of a GitHub branch, or recorded snapshot)
 - `src/extract.js`, `src/text.js` - statement extraction and value parsing
 - `src/normalise.js`, `src/delta.js` - deterministic comparison engines

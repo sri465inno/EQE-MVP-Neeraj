@@ -45,7 +45,8 @@
     "previous": null,
     "revisionNote": null,
     "ui": false,
-    "varies": []
+    "varies": [],
+    "dataSet": "TD-F-001"
   },
   {
     "key": "TC-F-002",
@@ -94,7 +95,8 @@
     "previous": null,
     "revisionNote": null,
     "ui": true,
-    "varies": []
+    "varies": [],
+    "dataSet": "TD-F-002"
   },
   {
     "key": "TC-N-001",
@@ -142,7 +144,8 @@
     "previous": null,
     "revisionNote": null,
     "ui": false,
-    "varies": []
+    "varies": [],
+    "dataSet": "TD-N-001"
   },
   {
     "key": "TC-F-003",
@@ -191,7 +194,8 @@
     "previous": null,
     "revisionNote": null,
     "ui": false,
-    "varies": []
+    "varies": [],
+    "dataSet": "TD-F-003"
   },
   {
     "key": "TC-F-004",
@@ -244,7 +248,8 @@
       "revenue.taxAmount",
       "revenue.resortFeeAmount",
       "revenue.ancillaryAmount"
-    ]
+    ],
+    "dataSet": "TD-F-004"
   },
   {
     "key": "TC-F-005",
@@ -295,7 +300,8 @@
     "ui": false,
     "varies": [
       "channel.bookingChannel"
-    ]
+    ],
+    "dataSet": "TD-F-005"
   },
   {
     "key": "TC-F-006",
@@ -346,7 +352,8 @@
     "ui": false,
     "varies": [
       "stay.nights"
-    ]
+    ],
+    "dataSet": "TD-F-006"
   },
   {
     "key": "TC-F-007",
@@ -397,7 +404,8 @@
     "ui": false,
     "varies": [
       "stay.nights"
-    ]
+    ],
+    "dataSet": "TD-F-007"
   },
   {
     "key": "TC-F-008",
@@ -454,7 +462,8 @@
     "ui": false,
     "varies": [
       "revenue.totalAmount"
-    ]
+    ],
+    "dataSet": "TD-F-008"
   },
   {
     "key": "TC-F-009",
@@ -505,7 +514,8 @@
     "ui": false,
     "varies": [
       "revenue.totalAmount"
-    ]
+    ],
+    "dataSet": "TD-F-009"
   },
   {
     "key": "TC-F-010",
@@ -556,7 +566,8 @@
     "ui": false,
     "varies": [
       "payment.loyaltyPointsRedemption"
-    ]
+    ],
+    "dataSet": "TD-F-010"
   },
   {
     "key": "TC-F-011",
@@ -607,7 +618,8 @@
     "ui": false,
     "varies": [
       "reservation.status"
-    ]
+    ],
+    "dataSet": "TD-F-011"
   },
   {
     "key": "TC-F-012",
@@ -651,7 +663,8 @@
     "previous": null,
     "revisionNote": null,
     "ui": false,
-    "varies": []
+    "varies": [],
+    "dataSet": "TD-F-012"
   },
   {
     "key": "TC-F-013",
@@ -700,7 +713,8 @@
     "ui": false,
     "varies": [
       "advisor.iataNumber"
-    ]
+    ],
+    "dataSet": "TD-F-013"
   },
   {
     "key": "TC-F-014",
@@ -744,7 +758,8 @@
     "previous": null,
     "revisionNote": null,
     "ui": false,
-    "varies": []
+    "varies": [],
+    "dataSet": "TD-F-014"
   },
   {
     "key": "TC-F-015",
@@ -794,7 +809,8 @@
     "ui": false,
     "varies": [
       "room.roomCount"
-    ]
+    ],
+    "dataSet": "TD-F-015"
   },
   {
     "key": "TC-F-016",
@@ -844,7 +860,8 @@
     "ui": false,
     "varies": [
       "room.roomCount"
-    ]
+    ],
+    "dataSet": "TD-F-016"
   },
   {
     "key": "TC-F-017",
@@ -894,7 +911,8 @@
     "ui": false,
     "varies": [
       "rate.planCategory"
-    ]
+    ],
+    "dataSet": "TD-F-017"
   },
   {
     "key": "TC-F-018",
@@ -943,6 +961,7 @@
     "ui": false,
     "varies": [
       "rate.planCategory"
-    ]
+    ],
+    "dataSet": "TD-F-018"
   }
 ]

@@ -55,6 +55,7 @@ function shapeCodebase({ branch, commit, commitMessage, files, compare, provenan
     description: pkg ? JSON.parse(pkg.text).description : null,
     files: files.filter((f) => f.path !== 'package.json' && !DICTIONARY_FILE.test(f.path)).map(({ path: p, url, text }) => ({ path: p, url, text })),
     dataModel: dict ? summariseDictionary(dict) : null,
+    dictionary: dict ? JSON.parse(dict.text) : null,
     compare, provenance,
   };
 }

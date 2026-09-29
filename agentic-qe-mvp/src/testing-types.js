@@ -20,6 +20,7 @@ const TESTING_TYPES = [
     incremental: 'Keeps the functional cases already in the baseline, re-designs the ones whose rule changed, adds cases for new rules, then runs the functional pack.',
     agents: {
       testcases: 'Functional cases for every business rule, including both sides of each boundary',
+      testdata: 'One data set per case, with the drivers either side of each boundary',
       scripts: 'API-level Playwright specs, one per business rule',
       execution: 'Runs every functional case against the build',
     },
@@ -32,6 +33,7 @@ const TESTING_TYPES = [
     incremental: 'Keeps the journeys already in the baseline, adds journeys for new and changed rules, then runs them in the browser.',
     agents: {
       testcases: 'User-journey cases written from the advisor’s point of view',
+      testdata: 'A stored reservation for each advisor journey',
       scripts: 'Browser Playwright specs that drive the statement page',
       execution: 'Runs the journeys in headless Chromium and keeps a screenshot of each',
     },
@@ -44,6 +46,7 @@ const TESTING_TYPES = [
     incremental: 'Re-runs every case carried over from the baseline alongside the new and re-designed ones.',
     agents: {
       testcases: 'The full pack: functional, screen and non-functional cases',
+      testdata: 'Keeps the data sets of carried-over cases; regenerates only the changed ones',
       scripts: 'Playwright specs for every automatable case',
       execution: 'Re-runs the whole pack, carried-over cases included',
     },
@@ -56,6 +59,7 @@ const TESTING_TYPES = [
     incremental: 'Keeps the baseline pack untouched and runs only its critical-path cases on the new build.',
     agents: {
       testcases: 'Only the critical-path cases',
+      testdata: 'Data sets for the critical-path cases only',
       scripts: 'Playwright specs for the critical path',
       execution: 'Runs the critical path only, in seconds',
     },
@@ -68,6 +72,7 @@ const TESTING_TYPES = [
     incremental: 'Keeps the baseline targets, re-designs checks for changed targets and re-measures them on the new build.',
     agents: {
       testcases: 'Latency and concurrent-load cases, one pair per stated target',
+      testdata: 'One full reservation reused for every timed request',
       scripts: 'Playwright specs that time real requests and attach the samples',
       execution: 'Measures p95 response times against the build',
     },

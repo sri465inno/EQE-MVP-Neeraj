@@ -8,17 +8,19 @@ a{color:var(--link)}a:hover{color:var(--navy)}
 code{font-family:"JetBrains Mono",Consolas,Menlo,monospace;font-size:.88em}
 
 /* header */
-.top{background:var(--navy);color:#fff;display:flex;align-items:center;gap:32px;padding:12px 4%;flex-wrap:wrap;position:sticky;top:0;z-index:20;border-bottom:3px solid var(--gold)}
-.brand{display:flex;align-items:center;gap:12px}
+.top{background:var(--navy);color:#fff;display:flex;align-items:center;gap:32px;height:66px;padding:0 4%;flex-wrap:nowrap;position:sticky;top:0;z-index:20;border-bottom:3px solid var(--gold)}
+.brand{display:flex;align-items:center;gap:12px;flex:none}
 .logo{display:grid;place-items:center;width:38px;height:38px;border-radius:3px;background:var(--gold);color:var(--navy);font-size:13px;font-weight:700;letter-spacing:.08em}
 .brand-text{display:flex;flex-direction:column;line-height:1.2}
 #app-title{font-size:16px;font-weight:600;color:#fff;letter-spacing:.01em}
 .brand-sub{font-size:11.5px;color:#aebfd3;letter-spacing:.02em}
-#nav{display:flex;gap:2px;flex-wrap:wrap;align-items:center}
-#nav a{color:#c9d6e5;text-decoration:none;padding:8px 12px;font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border-bottom:3px solid transparent;margin-bottom:-3px}
+#nav{display:flex;gap:2px;flex-wrap:nowrap;align-items:center;min-width:0;overflow-x:auto;scrollbar-width:none;align-self:stretch}#nav::-webkit-scrollbar{display:none}
+#nav a{color:#c9d6e5;text-decoration:none;white-space:nowrap;flex:none;display:flex;align-items:center;padding:0 12px;font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border-bottom:3px solid transparent}
 #nav a:hover{color:#fff}#nav a.active{color:#fff;border-bottom-color:var(--gold)}
-.nav-sep{margin-left:14px;padding-left:14px;border-left:1px solid rgba(255,255,255,.2);color:#8ea3bb;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-right:2px}
+.nav-sep{white-space:nowrap;flex:none;margin-left:14px;padding-left:14px;border-left:1px solid rgba(255,255,255,.2);color:#8ea3bb;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-right:2px}
 main{padding:22px 4% 30px;max-width:1600px;margin:0 auto}
+html{overflow-y:scroll}
+@media (max-width:1180px){.brand-sub{display:none}.top{gap:18px}}
 h1{font-size:24px;font-weight:600;margin:6px 0 12px;color:var(--navy);letter-spacing:-.015em}
 h2{font-size:17px;font-weight:600;margin:22px 0 10px;color:var(--navy)}
 h3{font-size:14px;font-weight:600;margin:14px 0 6px;color:var(--tx)}
@@ -78,7 +80,7 @@ h3{font-size:14px;font-weight:600;margin:14px 0 6px;color:var(--tx)}
 .pill.fixture{background:var(--gold-soft);color:#7d5c1c;border-color:#e2cd9f}.pill.live{background:#eaf5ee;color:var(--ok);border-color:#b6d5c2}.pill.pasted{background:#efedf7;color:#4f4a86;border-color:#cfcbe6}
 .pill.github{background:var(--navy-soft);color:var(--navy);border-color:#b9cbe0}.pill.demo{background:var(--s3)}
 .pill.new,.pill.passed,.pill.agreed,.pill.executed{background:#eaf5ee;color:var(--ok);border-color:#b6d5c2}
-.pill.enhanced,.pill.re-designed{background:var(--gold-soft);color:#7d5c1c;border-color:#e2cd9f}
+.pill.enhanced,.pill.re-designed,.pill.re-generated{background:var(--gold-soft);color:#7d5c1c;border-color:#e2cd9f}
 .pill.unchanged,.pill.carried,.pill.not-run,.pill.skipped,.pill.pending{background:var(--s3);color:var(--mut)}
 .pill.failed,.pill.conflict{background:#fbeeee;color:var(--bad);border-color:#e6bcbc}
 .pill.jira-only,.pill.designed{background:var(--navy-soft);color:var(--navy);border-color:#b9cbe0}.pill.code-only{background:#efedf7;color:#4f4a86;border-color:#cfcbe6}

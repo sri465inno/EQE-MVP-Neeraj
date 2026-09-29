@@ -34,6 +34,13 @@ const OUTPUTS = {
       performanceChecks: of((x) => ['nfr', 'load'].includes(suiteOf(x))),
     };
   },
+  testdata: (c) => {
+    const d = c.artifacts?.testData;
+    return {
+      dataSets: { value: present(d) },
+      specConformance: d ? { value: d.filter((x) => x.conformance === 'does not conform'), allowEmpty: true, count: d.filter((x) => x.conformance !== 'does not conform').length, note: `${d.filter((x) => x.conformance === 'negative test').length} deliberately invalid for negative tests` } : { value: null },
+    };
+  },
   scripts: (c) => ({ specs: { value: present(c.artifacts?.scripts) } }),
   execution: (c) => {
     const e = c.artifacts?.execution;

@@ -176,13 +176,13 @@ test('cycle report contains provenance, counts by type and phase tag, execution,
   assert.match(html, /Agentic QE Platform - MVP/);
   assert.match(html, /recorded|fixture/i);
   assert.match(html, /toBe\(92\)/);
-  assert.match(html, /Seven platform agents/);
+  assert.match(html, /8 platform agents: .*4\. Test data agent/);
   assert.match(html, /1000<\/b> attributes/);
   assert.equal(r.coverage.attributes.attributeCount, 1000);
   assert.ok(r.coverage.attributes.exercised >= 8, 'most commission drivers are varied by some case');
   assert.equal(r.coverage.attributes.rows.find((x) => x.attribute === 'stay.nights').status, 'exercised - failing', 'the seeded 7-night defect shows on its driver');
-  assert.equal(r.platform.agents.length, 7);
-  assert.deepEqual(r.platform.agents.map((g) => g.status), [...Array(6).fill('done'), 'producing this report']);
+  assert.equal(r.platform.agents.length, 8);
+  assert.deepEqual(r.platform.agents.map((g) => g.status), [...Array(7).fill('done'), 'producing this report']);
   assert.deepEqual(r.platform.inputsImplemented.slice(0, 3), ['Jira initiative (implemented)', 'Jira epic (+ child stories) (implemented)', 'Codebase (GitHub branch) (implemented)']);
   const r2 = F.c2.report;
   assert.match(r2.delta.summary, /unchanged · \d+ enhanced · \d+ new/);
@@ -253,4 +253,24 @@ test('merge gate: rejecting one row keeps the baseline value for it and merges t
   assert.deepEqual(c2.artifacts.requirements.filter((r) => r.status === 'new').map((r) => r.id), added, 'ids unchanged');
   assert.equal(store.getBaseline(c1.baselineId).version, 2);
   assert.match(c2.approvals.find((a) => a.gate === 'Merge into baseline').detail, new RegExp(`rows rejected at the gate: ${sla.id}`));
+});
+
+test('test data agent runs between test design and automation, and the specs really load its data sets', () => {
+  for (const c of [F.c1, F.c2]) {
+    const names = c.phases.map((p) => p.name);
+    assert.ok(names.indexOf('testcases') < names.indexOf('testdata') && names.indexOf('testdata') < names.indexOf('scripts'), `${c.id}: testcases -> testdata -> scripts`);
+    const a = c.artifacts;
+    assert.deepEqual(a.testData.map((d) => d.testCaseKey), a.testCases.map((t) => t.key));
+    assert.equal(a.testDataSummary.dictionary.attributeCount, 1000);
+    assert.equal(a.testDataSummary.nonConforming, 0, 'every data set conforms to the dictionary or is a deliberate negative test');
+    const dir = path.join(F.store.runDir(c.id), 'test-data');
+    for (const t of a.testCases.filter((x) => x.automation === 'Automated')) {
+      const f = JSON.parse(fs.readFileSync(path.join(dir, `${t.key}.json`), 'utf8'));
+      assert.equal(Object.keys(f.reservation).length, 1000);
+      for (const d of a.testData.find((x) => x.testCaseKey === t.key).drivers) assert.deepEqual(f.reservation[d.attribute], d.value, `${t.key} ${d.attribute}`);
+    }
+    assert.ok(a.scripts.every((s) => /dataSet\(testInfo\)/.test(s.code)));
+  }
+  const statuses = new Set(F.c2.artifacts.testData.map((d) => d.status));
+  assert.ok(statuses.has('carried over') && statuses.has('new'), 'the increment carries unchanged data sets and generates new ones');
 });

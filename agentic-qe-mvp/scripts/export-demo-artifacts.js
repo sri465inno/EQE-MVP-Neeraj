@@ -9,6 +9,7 @@ const { renderReportHtml } = require('../src/report');
 const { compareCycles, renderCompareHtml } = require('../src/compare');
 const { testCasesWorkbook, reportWorkbook, compareWorkbook } = require('../src/excel');
 const { buildLeadReport, renderLeadPage, renderLeadMarkdown } = require('../src/lead-report');
+const { dataSetFile } = require('../src/agents/testdata');
 
 const OUT = path.resolve(process.argv[2] || path.join(__dirname, '..', 'demo-artifacts'));
 const REVIEWER = 'Priya Shah';
@@ -21,7 +22,7 @@ function write(f, body) { fs.mkdirSync(path.dirname(f), { recursive: true }); fs
 const cell = (v) => String(v ?? '').replace(/\|/g, '\\|').replace(/\n/g, ' ');
 const mdTable = (head, rows) => [`| ${head.join(' | ')} |`, `|${head.map(() => '---').join('|')}|`, ...rows.map((r) => `| ${r.map(cell).join(' | ')} |`)].join('\n');
 
-async function exportCycle(store, c, dir) {
+async function exportCycle(pipeline, store, c, dir) {
   const a = c.artifacts;
   const run = store.runDir(c.id);
   json(path.join(dir, '01-inputs', 'inputs.json'), c.inputs);
@@ -32,19 +33,22 @@ async function exportCycle(store, c, dir) {
   json(path.join(dir, '03-business-rules', 'business-rules.json'), a.rules);
   json(path.join(dir, '04-test-cases', 'test-cases.json'), a.testCases);
   write(path.join(dir, '04-test-cases', `${c.id}-test-cases.xlsx`), await testCasesWorkbook(c));
-  for (const s of a.scripts) write(path.join(dir, '05-automation-scripts', s.file), s.code);
-  json(path.join(dir, '06-execution', 'results.json'), a.execution);
-  for (const f of ['playwright-report.json', 'playwright-output.txt']) fs.copyFileSync(path.join(run, f), path.join(dir, '06-execution', f));
-  fs.cpSync(path.join(run, 'evidence'), path.join(dir, '06-execution', 'evidence'), { recursive: true });
-  json(path.join(dir, '07-defects', 'defects.json'), a.defects);
-  write(path.join(dir, '08-report', `${c.id}-cycle-report.html`), renderReportHtml(c.report));
-  write(path.join(dir, '08-report', `${c.id}-cycle-report.xlsx`), await reportWorkbook(c.report, c));
-  json(path.join(dir, '08-report', `${c.id}-cycle-report.json`), c.report);
-  if (c.mergeProposal) json(path.join(dir, '09-merge-approval', 'merge-proposal.json'), { proposal: c.mergeProposal, approvals: c.approvals });
+  const { dictionary } = pipeline.dictionaryOf(c);
+  json(path.join(dir, '05-test-data', 'test-data-summary.json'), { ...a.testDataSummary, sets: a.testData });
+  for (const d of a.testData) json(path.join(dir, '05-test-data', `${d.testCaseKey}.json`), dataSetFile(d, dictionary));
+  for (const s of a.scripts) write(path.join(dir, '06-automation-scripts', s.file), s.code);
+  json(path.join(dir, '07-execution', 'results.json'), a.execution);
+  for (const f of ['playwright-report.json', 'playwright-output.txt']) fs.copyFileSync(path.join(run, f), path.join(dir, '07-execution', f));
+  fs.cpSync(path.join(run, 'evidence'), path.join(dir, '07-execution', 'evidence'), { recursive: true });
+  json(path.join(dir, '08-defects', 'defects.json'), a.defects);
+  write(path.join(dir, '09-report', `${c.id}-cycle-report.html`), renderReportHtml(c.report));
+  write(path.join(dir, '09-report', `${c.id}-cycle-report.xlsx`), await reportWorkbook(c.report, c));
+  json(path.join(dir, '09-report', `${c.id}-cycle-report.json`), c.report);
+  if (c.mergeProposal) json(path.join(dir, '10-merge-approval', 'merge-proposal.json'), { proposal: c.mergeProposal, approvals: c.approvals });
 
   const lead = buildLeadReport(c);
-  write(path.join(dir, '08-report', `${c.id}-qe-lead-report.html`), renderLeadPage(lead));
-  write(path.join(dir, '08-report', `${c.id}-qe-lead-report.md`), renderLeadMarkdown(lead));
+  write(path.join(dir, '09-report', `${c.id}-qe-lead-report.html`), renderLeadPage(lead));
+  write(path.join(dir, '09-report', `${c.id}-qe-lead-report.md`), renderLeadMarkdown(lead));
   const ex = a.execution.summary;
   const md = [renderLeadMarkdown(lead),
     '## Appendix A: test results (real Playwright run)', mdTable(['Key', 'Test', 'Result', 'ms'], a.execution.results.map((r) => [r.key, r.name, r.status, r.duration ?? ''])), '',
@@ -71,8 +75,8 @@ async function main() {
   for (const c of [c1, c2]) if (c.status !== 'completed') throw new Error(`${c.id} ended as ${c.status}`);
 
   fs.rmSync(OUT, { recursive: true, force: true });
-  const e1 = await exportCycle(store, c1, path.join(OUT, `flow-1-baseline-${c1.id}`));
-  const e2 = await exportCycle(store, c2, path.join(OUT, `flow-2-incremental-${c2.id}`));
+  const e1 = await exportCycle(pipeline, store, c1, path.join(OUT, `flow-1-baseline-${c1.id}`));
+  const e2 = await exportCycle(pipeline, store, c2, path.join(OUT, `flow-2-incremental-${c2.id}`));
   const cmp = compareCycles(c1, c2);
   write(path.join(OUT, 'comparison', `compare-${c1.id}-vs-${c2.id}.html`), renderCompareHtml(cmp));
   write(path.join(OUT, 'comparison', `compare-${c1.id}-vs-${c2.id}.xlsx`), await compareWorkbook(cmp));
@@ -90,11 +94,12 @@ async function main() {
     '- `02-requirements/` reviewed requirements repository',
     '- `03-business-rules/` business rules with source quotes',
     '- `04-test-cases/` test cases (JSON and Zephyr Scale Excel export)',
-    '- `05-automation-scripts/` generated Playwright specs',
-    '- `06-execution/` real Playwright JSON report, console output, mapped results and per-test evidence',
-    '- `07-defects/` defects raised from real failures only',
-    '- `08-report/` QE lead report (HTML, Markdown) and full cycle report (HTML, Excel, JSON)',
-    '- `09-merge-approval/` (Flow 2) merge proposal and approvals', '',
+    '- `05-test-data/` one data set per test case, generated by the test data agent from the data dictionary and checked against it',
+    '- `06-automation-scripts/` generated Playwright specs (each loads its case\'s data set)',
+    '- `07-execution/` real Playwright JSON report, console output, mapped results and per-test evidence',
+    '- `08-defects/` defects raised from real failures only',
+    '- `09-report/` QE lead report (HTML, Markdown) and full cycle report (HTML, Excel, JSON)',
+    '- `10-merge-approval/` (Flow 2) merge proposal and approvals', '',
     '`comparison/` holds the cycle 1 vs cycle 2 comparison (HTML, Excel, JSON).',
     'Open the `.html` files in a browser (download them or clone the repo; GitHub shows HTML as source).', '',
   ].join('\n'));
