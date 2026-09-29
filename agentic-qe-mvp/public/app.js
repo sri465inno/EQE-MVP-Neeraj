@@ -930,37 +930,16 @@ ${table(['Version', 'When', 'Cycle', 'Change', 'Approved by'], b.history.map((h)
 
 /* ---------------- Test Lab ---------------- */
 let LAB = null;
-const labState = { demo: 'happy', data: null, result: null, busy: '' };
-const LAB_NUM = ['nights', 'rooms', 'totalAmount', 'taxAmount', 'resortFeeAmount', 'ancillaryAmount'];
-const LAB_LABEL = { status: 'Reservation status', channel: 'Booking channel', nights: 'Nights', ratePlan: 'Rate plan', rooms: 'Rooms', loyalty: 'Paid with loyalty points',
-  totalAmount: 'Total amount (USD)', taxAmount: 'Tax (USD)', resortFeeAmount: 'Resort fee (USD)', ancillaryAmount: 'Ancillaries (USD)' };
+const labState = { demo: 'happy', text: null, data: null, result: null, busy: '' };
 const usd = (n) => (n == null ? '-' : `USD ${Number(n).toFixed(2)}`);
-
-function labCaseFromForm() {
-  const v = (id) => document.getElementById(`lab-${id}`).value;
-  const given = {};
-  for (const f of Object.keys(LAB_LABEL)) given[f] = f === 'loyalty' ? document.getElementById('lab-loyalty').checked : v(f);
-  return { title: v('title').trim(), build: v('build'), given, expected: v('expected').trim() };
-}
-
-function labForm(tc) {
-  const sel = (f, values) => `<label class="field">${esc(LAB_LABEL[f])}<select id="lab-${f}">${values.map((x) => `<option ${x === tc.given[f] ? 'selected' : ''}>${esc(x)}</option>`).join('')}</select></label>`;
-  const num = (f) => `<label class="field">${esc(LAB_LABEL[f])}<input type="number" min="0" step="${f === 'nights' || f === 'rooms' ? 1 : 0.01}" id="lab-${f}" value="${esc(tc.given[f])}"></label>`;
-  return `<label class="field">Test case title<input type="text" id="lab-title" value="${esc(tc.title)}"></label>
-<label class="field">Engine build under test<select id="lab-build">${LAB.builds.map((b) => `<option value="${esc(b)}" ${b === tc.build ? 'selected' : ''}>${esc(b)} (release ${b.endsWith('-v2') ? '2.0' : '1.0'})</option>`).join('')}</select></label>
-<div class="lab-grid">${sel('status', LAB.values.status)}${sel('channel', LAB.values.channel)}${num('nights')}${sel('ratePlan', LAB.values.ratePlan)}${num('rooms')}
-<label class="field check"><input type="checkbox" id="lab-loyalty" ${tc.given.loyalty ? 'checked' : ''}> ${esc(LAB_LABEL.loyalty)}</label>
-${num('totalAmount')}${num('taxAmount')}${num('resortFeeAmount')}${num('ancillaryAmount')}</div>
-<label class="field">Expected commission (USD)<input type="number" step="0.01" id="lab-expected" value="${esc(tc.expected ?? '')}" placeholder="leave empty to use the business rules"></label>`;
-}
 
 function labAgents() {
   const d = labState.data;
   const r = labState.result;
   const st = (on, bad) => (bad ? 'failed' : on ? 'done' : labState.busy ? 'running' : 'pending');
   const steps = [
-    ['Test design agent', 'Reads your test case and works out the expected result from the business rules.', st(d)],
-    ['Test data agent', `Builds a full ${d ? d.attributeCount : 1000}-attribute reservation and applies your commission drivers.`, st(d)],
+    ['Test design agent', 'Reads your plain-English test case and works out the expected result from the business rules.', st(d)],
+    ['Test data agent', `Builds a full ${d ? d.attributeCount : 1000}-attribute reservation that matches what you described.`, st(d)],
     ['Automation agent', 'Writes the Playwright script for the case.', st(r)],
     ['Execution agent', 'Runs the script for real against the engine build.', st(r, r && r.status === 'failed')],
     ['Defect agent', r && r.defect ? 'Raised a defect from the real failure.' : 'Raises a defect only if the run really fails.', r ? (r.defect ? 'failed' : 'done') : 'pending'],
@@ -975,11 +954,16 @@ function labOutput() {
   let html = `<h3 class="panel-title">Agents</h3>${labAgents()}`;
   if (labState.busy) html += `<div class="banner info">${esc(labState.busy)}</div>`;
   if (d) {
+    if (d.reading) {
+      html += `<h3 class="panel-title">How the platform read your test</h3>
+${table(['', 'Value', 'Where it came from'], d.reading.map((x) => [esc(x.label), `<b>${esc(x.value)}</b>`, x.from === 'your test' || x.from.startsWith('your test') ? pill(x.from, 'passed') : `<span class="muted">${esc(x.from)}</span>`]))}
+${d.notes.length ? `<div class="banner info">${d.notes.map(esc).join('<br>')}</div>` : ''}`;
+    }
     html += `<h3 class="panel-title">Test data</h3>
-<p class="small">A full reservation of <b>${d.attributeCount}</b> attributes built from the data dictionary. These commission drivers come from your test case; every other attribute keeps its dictionary example value.</p>
+<p class="small">A full reservation of <b>${d.attributeCount}</b> attributes built from the data dictionary. These commission drivers follow your test case; every other attribute keeps its dictionary example value.</p>
 ${table(['Attribute', 'Value', 'Dictionary example', 'Meaning'], d.drivers.map((x) => [`<code>${esc(x.name)}</code>`, `<b>${esc(x.value)}</b>`, esc(x.example), esc(x.description)]))}
 <details><summary class="small">A few of the other ${d.attributeCount - d.drivers.length} attributes</summary>${table(['Attribute', 'Value'], d.sample.map((x) => [`<code>${esc(x.name)}</code>`, esc(x.value)]))}</details>
-<div class="banner info">By the release ${esc(d.byRules.release)} business rules: commissionable revenue ${usd(d.byRules.revenue)}; ${esc(d.byRules.applied.join('; ') || 'no rate applies')}. Expected commission <b>${usd(d.byRules.commission)}</b>.${d.testCase.expected !== d.byRules.commission ? ` You set <b>${usd(d.testCase.expected)}</b>, and the test will check your value.` : ''}</div>`;
+<div class="banner info">By the release ${esc(d.byRules.release)} business rules: commissionable revenue ${usd(d.byRules.revenue)}; ${esc(d.byRules.applied.join('; ') || 'no rate applies')}. Expected commission <b>${usd(d.byRules.commission)}</b>.</div>`;
   }
   if (r) {
     const ok = r.status === 'passed';
@@ -998,27 +982,27 @@ ${r.defect ? `<div class="card defect-card"><h3>Defect raised ${pill(r.defect.se
 <p class="small muted">Really executed by ${esc(r.execution.tool)} against ${esc(r.execution.sut.name)} at ${fmtTime(r.execution.finishedAt)}.</p>
 <details><summary class="small">Playwright script the automation agent wrote (${esc(r.script.file)})</summary><pre class="code">${esc(r.script.code)}</pre></details>`;
   }
-  if (!d && !r && !labState.busy) html += '<p class="muted">Generate the test data, then run the test agents. The results appear here.</p>';
+  if (!d && !r && !labState.busy) html += '<p class="muted">Write your test case, generate the test data, then run the test agents. The results appear here.</p>';
   return html;
 }
 
 function labProblems(el, e) {
-  $view.querySelectorAll('.need').forEach((n) => n.classList.remove('need'));
   const list = e.details || [];
-  list.forEach((p) => { const f = document.getElementById(`lab-${p.field}`); if (f) f.classList.add('need'); });
-  el.innerHTML = `<div class="banner err blocked"><b>${list.length ? 'Fix the test case first' : esc(e.message)}</b>${list.length ? `<ul>${list.map((p) => `<li>${esc(p.message)}</li>`).join('')}</ul>` : ''}</div>`;
+  document.getElementById('lab-text').classList.toggle('need', list.length > 0);
+  el.innerHTML = `<div class="banner err blocked"><b>${esc(e.message)}</b>${list.length ? `<ul>${list.map((p) => `<li>${esc(p.message)}</li>`).join('')}</ul>` : ''}
+<p class="small">For example: "${esc(LAB.demos[0].text)}"</p></div>`;
 }
 
 async function viewLab(params) {
   setTitle('Test Lab');
   if (!LAB) LAB = await api('/api/lab');
   if (params.get('demo') && LAB.demos.some((x) => x.id === params.get('demo'))) {
-    if (labState.demo !== params.get('demo')) Object.assign(labState, { data: null, result: null });
+    if (labState.demo !== params.get('demo')) Object.assign(labState, { data: null, result: null, text: null });
     labState.demo = params.get('demo');
   }
   const demo = LAB.demos.find((x) => x.id === labState.demo);
-  const tc = labState.data ? labState.data.testCase : demo.testCase;
-  $view.innerHTML = `<section class="hero small-hero"><div class="eyebrow">Test Lab</div><h1>Write a test, generate its data, run the agents</h1><p>Check one business rule against the commission engine and see straight away whether the code does what the rule says: expected against actual.</p></section>
+  if (labState.text == null) labState.text = demo.text;
+  $view.innerHTML = `<section class="hero small-hero"><div class="eyebrow">Test Lab</div><h1>Write a test in plain English, generate its data, run the agents</h1><p>Describe a booking and what it should earn. The platform builds matching test data from the specs, runs it against the commission engine and shows expected against actual.</p></section>
 <div class="run-layout">
 <div class="panel">
   <div class="step-block">
@@ -1027,8 +1011,9 @@ async function viewLab(params) {
   </div>
   <div class="step-block">
     <h3><span class="step-num">2</span>Write the test case</h3>
-    <p class="hint">Change anything. The expected commission is what the business says should be paid.</p>
-    ${labForm(tc)}
+    <p class="hint">In plain English: the booking (nights, channel, rate plan, status, amounts) and, if you like, what it should earn. Anything you leave out comes from a standard booking.</p>
+    <label class="field">Test case<textarea id="lab-text" rows="4">${esc(labState.text)}</textarea></label>
+    <details class="lab-examples"><summary class="small">More examples</summary>${LAB.examples.map((x) => `<button type="button" class="linkish lab-example">${esc(x)}</button>`).join('')}</details>
   </div>
   <div class="step-block">
     <h3><span class="step-num">3</span>Generate test data</h3>
@@ -1047,18 +1032,26 @@ async function viewLab(params) {
   const out = () => { document.getElementById('lab-out').innerHTML = labOutput(); };
   const msg = document.getElementById('lab-msg');
   $view.querySelectorAll('input[name=lab-demo]').forEach((el) => el.onchange = () => { location.hash = `#/lab?demo=${el.value}`; });
-  $view.querySelectorAll('.run-layout input, .run-layout select').forEach((el) => {
-    if (el.name !== 'lab-demo') el.addEventListener('change', () => { labState.result = null; el.classList.remove('need'); out(); });
+  const box = document.getElementById('lab-text');
+  box.addEventListener('input', () => { labState.text = box.value; box.classList.remove('need'); });
+  box.addEventListener('change', () => { Object.assign(labState, { data: null, result: null }); msg.innerHTML = ''; out(); });
+  $view.querySelectorAll('.lab-example').forEach((el) => el.onclick = () => {
+    Object.assign(labState, { text: el.textContent, data: null, result: null });
+    box.value = labState.text;
+    box.classList.remove('need');
+    msg.innerHTML = '';
+    out();
   });
   const gen = async () => {
-    const body = labCaseFromForm();
-    labState.data = await api('/api/lab/data', { method: 'POST', body });
-    if (body.expected === '') document.getElementById('lab-expected').value = labState.data.testCase.expected;
+    labState.data = null;
+    labState.data = await api('/api/lab/data', { method: 'POST', body: { text: labState.text } });
     return labState.data;
   };
   document.getElementById('lab-gen').onclick = async () => {
     msg.innerHTML = '';
-    try { labState.result = null; await gen(); out(); } catch (e) { labProblems(msg, e); }
+    labState.result = null;
+    try { await gen(); } catch (e) { labProblems(msg, e); }
+    out();
   };
   document.getElementById('lab-run').onclick = async (ev) => {
     msg.innerHTML = '';
@@ -1068,7 +1061,7 @@ async function viewLab(params) {
       labState.result = null;
       labState.busy = 'The automation agent is writing the script and the execution agent is running it...';
       out();
-      labState.result = await api('/api/lab/run', { method: 'POST', body: labState.data.testCase });
+      labState.result = await api('/api/lab/run', { method: 'POST', body: { text: labState.text } });
     } catch (e) { labProblems(msg, e); }
     labState.busy = '';
     ev.target.disabled = false;

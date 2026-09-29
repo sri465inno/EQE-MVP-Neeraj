@@ -16,7 +16,7 @@ const { loadSkills } = require('./skills');
 const { SEVEN_AGENTS, REVIEW_AGENT, INTAKE_STAGES, INPUT_TYPES, DEMO } = require('./platform');
 const { TESTING_TYPES, DEFAULT_TESTING_TYPE } = require('./testing-types');
 const { FLOWS: DEMO_INPUT_FLOWS } = require('../scripts/make-demo-inputs');
-const { DEMOS: LAB_DEMOS, FIELDS: LAB_FIELDS, generateData, runLabCase } = require('./lab');
+const { DEMOS: LAB_DEMOS, EXAMPLES: LAB_EXAMPLES, FIELDS: LAB_FIELDS, generateData, runLabCase } = require('./lab');
 const { BUILDS } = require('../sut/server');
 
 const META_DICTIONARY = require('../samples/commission-engine/baseline/data-dictionary/reservation-attributes.json');
@@ -76,7 +76,7 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
 
   app.get('/api/lab', (req, res) => {
     const values = (attr) => (META_DICTIONARY.attributes.find((a) => a.name === attr) || {}).values || [];
-    res.json({ demos: LAB_DEMOS, fields: LAB_FIELDS, builds: Object.keys(BUILDS), values: { status: values(LAB_FIELDS.status), channel: values(LAB_FIELDS.channel), ratePlan: values(LAB_FIELDS.ratePlan) } });
+    res.json({ demos: LAB_DEMOS, examples: LAB_EXAMPLES, fields: LAB_FIELDS, builds: Object.keys(BUILDS), values: { status: values(LAB_FIELDS.status), channel: values(LAB_FIELDS.channel), ratePlan: values(LAB_FIELDS.ratePlan) } });
   });
   app.post('/api/lab/data', (req, res) => res.json(generateData(req.body || {})));
   let labSeq = 0;

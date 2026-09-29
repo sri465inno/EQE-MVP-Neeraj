@@ -1,5 +1,5 @@
 'use strict';
-// Test Lab: a person writes one test case, the platform generates the full reservation test data,
+// Test Lab: a person writes one test case in plain English, the platform generates the full reservation test data,
 // writes a Playwright spec, really runs it against the chosen engine build and reports expected vs actual.
 const fs = require('fs');
 const path = require('path');
@@ -37,24 +37,21 @@ const DEMOS = [
     id: 'happy',
     name: 'Happy path',
     summary: 'A 10-night direct stay earns the 1.5% long-stay bonus. The engine pays what the rule says, so the test passes.',
-    testCase: {
-      title: 'A 10-night direct stay earns base 10% plus the 1.5% long-stay bonus',
-      build: 'demo/commission-engine',
-      given: { ...STD_GIVEN, nights: 10 },
-      expected: 92,
-    },
+    text: 'A 10-night direct booking should earn base 10% plus the 1.5% long-stay bonus: USD 92 commission.',
   },
   {
     id: 'defect',
     name: 'Defect path',
     summary: 'A stay of exactly 7 nights should also earn the bonus ("7 nights or more"). Release 1.0 checks "more than 7", so the test fails and a defect is raised.',
-    testCase: {
-      title: 'A stay of exactly 7 nights earns the 1.5% long-stay bonus',
-      build: 'demo/commission-engine',
-      given: { ...STD_GIVEN, nights: 7 },
-      expected: 92,
-    },
+    text: 'A direct booking of exactly 7 nights should earn the long-stay bonus, because the rule is 7 nights or more: USD 92 commission.',
   },
+];
+
+const EXAMPLES = [
+  'A 3-night GDS booking with a total of USD 2,000 should earn 11.5% commission.',
+  'A cancelled booking should earn no commission.',
+  'A 2-night corporate booking on release 2.0 should earn 5%.',
+  'A booking paid with loyalty points should earn no commission.',
 ];
 
 const httpError = (status, message, details) => Object.assign(new Error(message), { status, details });
@@ -89,6 +86,161 @@ function normaliseCase(tc = {}) {
   return { title, build, given, expected };
 }
 
+const PLAIN = {
+  status: { CONFIRMED: 'Confirmed', CHECKED_OUT: 'Checked out', CANCELLED: 'Cancelled', NO_SHOW: 'No-show' },
+  channel: { DIRECT: 'Direct (hotel or brand website)', GDS: 'GDS (travel agents)', OTA: 'Online travel agency', CALL_CENTER: 'Call centre' },
+  ratePlan: { BAR: 'Best available rate', CORP: 'Corporate', PKG: 'Package', GROUP: 'Group rate', PROMO: 'Promotional' },
+};
+const LABELS = { status: 'Booking status', channel: 'Booking channel', nights: 'Nights', ratePlan: 'Rate plan', rooms: 'Rooms', loyalty: 'Paid with loyalty points',
+  totalAmount: 'Booking total', taxAmount: 'Tax', resortFeeAmount: 'Resort fee', ancillaryAmount: 'Extras (ancillaries)' };
+const MONEY_FIELDS = ['totalAmount', 'taxAmount', 'resortFeeAmount', 'ancillaryAmount'];
+const RATE_NAMES = { base: 'base commission', gds: 'GDS uplift', longStay: 'long-stay bonus', corporate: 'corporate rate', group: 'group rate', packagePct: 'package room share' };
+
+const WORDS = {
+  status: [[/cancel+ed|cancellation/, 'CANCELLED'], [/no[\s-]?show/, 'NO_SHOW'], [/checked[\s-]?out/, 'CHECKED_OUT'], [/\bconfirmed\b/, 'CONFIRMED']],
+  channel: [[/\bgds\b|global distribution|travel agents?\b/, 'GDS'], [/\bota\b|online travel|expedia|booking\.com/, 'OTA'], [/call[\s-]?cent(er|re)|by phone|phone booking/, 'CALL_CENTER'], [/\bdirect\b|brand (web)?site|hotel (web)?site/, 'DIRECT']],
+  ratePlan: [[/corporate|negotiated/, 'CORP'], [/\bpackage\b/, 'PKG'], [/\bpromo(tion|tional)?\b/, 'PROMO'], [/group rate\b|group plan\b/, 'GROUP'], [/best available|\bbar\b/, 'BAR']],
+};
+const MONEY_KEYS = [
+  ['taxAmount', /\btax(es)?\b/], ['resortFeeAmount', /resort fee|\bfees?\b/], ['ancillaryAmount', /ancillar(y|ies)|\bextras?\b|add[\s-]?ons?/],
+  ['expected', /commission|\bearns?\b|\bearning\b|\bpays?\b|\bpaid\b|payout|\breceives?\b|\bgets?\b|expect(ed|s)?\b|should be/],
+  ['totalAmount', /\btotal\b|\bworth\b|\bvalued?\b|\bcost(s|ing)?\b|\bpriced?\b|\bprice\b|\bbooking\b|\bstay\b|\breservation\b|\bspend(ing)?\b|\bbill\b/],
+];
+const RATE_KEYS = [
+  ['longStay', /long[\s-]?stay/], ['gds', /\bgds\b|uplift/], ['base', /\bbase\b/], ['corporate', /corporate/], ['group', /\bgroup\b/], ['packagePct', /package|room component/],
+  ['total', /commission|\bearns?\b|\bpays?\b|\breceives?\b|\bgets?\b|expect|\btotal\b|\brate\b|should be/],
+];
+const NUMBER_WORDS = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, fourteen: 14, fifteen: 15, twenty: 20 };
+const usdText = (n) => `USD ${Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const plainValue = (f, v) => (PLAIN[f] ? PLAIN[f][v] : MONEY_FIELDS.includes(f) ? usdText(v) : typeof v === 'boolean' ? (v ? 'Yes' : 'No') : String(v));
+const listText = (xs) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} and ${xs[xs.length - 1]}`);
+
+function nearestKey(before, after, table) {
+  let best = null;
+  for (const [key, re] of table) {
+    const g = new RegExp(re.source, 'g');
+    for (const m of before.matchAll(g)) {
+      const d = before.length - (m.index + m[0].length);
+      if (!best || d < best.d) best = { key, d };
+    }
+    for (const m of after.matchAll(g)) if (!best || m.index < best.d) best = { key, d: m.index };
+  }
+  return best && best.key;
+}
+
+/**
+ * Reads a test case written in plain English into a structured case, filling what it does not mention from the
+ * standard booking. Throws 400 with plain-language problems when the sentence cannot be turned into a test that
+ * agrees with the business rules.
+ */
+function readPlainEnglish(raw) {
+  const original = String(raw || '').trim();
+  const fail = (headline, problems) => { throw httpError(400, headline, problems.map((message) => ({ field: 'text', message }))); };
+  if (!original) fail('Write the test case first', ['Describe the booking in a sentence and, if you like, what commission it should earn.']);
+  const text = original.toLowerCase()
+    .replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|fourteen|fifteen|twenty)\b(?=[\s-]*(nights?|rooms?|weeks?)\b)/g, (w) => String(NUMBER_WORDS[w]))
+    .replace(/\bfortnight\b/g, '14 nights').replace(/\b(a|one) week\b/g, '7 nights');
+  const problems = [];
+  const tokens = [];
+  const scan = (kind, re, value) => { for (const m of text.matchAll(re)) tokens.push({ kind, value: value(m), start: m.index, end: m.index + m[0].length, raw: m[0] }); };
+  const num = (x) => Number(String(x).replace(/,/g, ''));
+  scan('money', /(?:usd|us\$|\$)\s*(\d[\d,]*(?:\.\d+)?)|(\d[\d,]*(?:\.\d+)?)\s*(?:usd|dollars?)\b/g, (m) => num(m[1] || m[2]));
+  scan('percent', /(\d+(?:\.\d+)?)\s*(?:%|percent\b)/g, (m) => num(m[1]));
+  scan('release', /\b(?:release|version|v)\s*([12])(?:\.0)?\b/g, (m) => Number(m[1]));
+  scan('nights', /(\d+)[\s-]*nights?\b/g, (m) => num(m[1]));
+  scan('nights', /(\d+)[\s-]*weeks?\b/g, (m) => num(m[1]) * 7);
+  scan('rooms', /(\d+)[\s-]*rooms?\b/g, (m) => num(m[1]));
+  tokens.sort((a, b) => a.start - b.start || b.end - a.end);
+  const kept = tokens.filter((t, i) => !tokens.slice(0, i).some((o) => o.start < t.end && t.start < o.end));
+  const said = {};
+  const rates = [];
+  const one = (field, value, what) => {
+    if (said[field] !== undefined && said[field] !== value) problems.push(`Your test gives two different ${what} (${plainValue(field, said[field])} and ${plainValue(field, value)}). Keep just one.`);
+    else said[field] = value;
+  };
+  let release = null;
+  kept.forEach((t, i) => {
+    const before = text.slice(i ? kept[i - 1].end : 0, t.start);
+    const after = text.slice(t.end, i + 1 < kept.length ? kept[i + 1].start : text.length);
+    if (t.kind === 'nights') one('nights', t.value, 'lengths of stay');
+    else if (t.kind === 'rooms') one('rooms', t.value, 'room counts');
+    else if (t.kind === 'release') release = t.value;
+    else if (t.kind === 'money') {
+      const key = nearestKey(before, after, MONEY_KEYS);
+      if (!key) problems.push(`I can see "${t.raw.toUpperCase()}" but can't tell what it is. Say whether it is the booking total, the tax, the resort fee, the extras or the commission you expect.`);
+      else if (key === 'expected') one('expected', t.value, 'expected commissions');
+      else one(key, t.value, `amounts for the ${LABELS[key].toLowerCase()}`);
+    } else if (t.kind === 'percent') {
+      const key = nearestKey(before, after, RATE_KEYS);
+      if (!key) problems.push(`I can see "${t.raw}" but can't tell which rate it is. Say whether it is the total commission rate or a named rule, such as the long-stay bonus.`);
+      else rates.push({ key, value: t.value, raw: t.raw });
+    }
+  });
+  for (const [field, list] of Object.entries(WORDS)) {
+    const hits = [...new Set(list.filter(([re]) => re.test(text)).map(([, v]) => v))];
+    if (hits.length > 1) problems.push(`Your test mentions more than one ${LABELS[field].toLowerCase()} (${listText(hits.map((v) => PLAIN[field][v]))}). A booking has only one; keep the one you mean.`);
+    else if (hits.length) said[field] = hits[0];
+  }
+  if (/(not|without|no)\s+(loyalty\s+)?points|paid by (credit )?card|in cash/.test(text)) said.loyalty = false;
+  else if (/loyalty points|(paid|pays|paying) (with|in|using) points|points redemption|redeem(ed|s|ing)? points/.test(text)) said.loyalty = true;
+  if (said.expected === undefined && /\bno commission|zero commission|not (earn|be paid|get|receive)|\bnothing\b/.test(text)) said.expected = 0;
+
+  let rest = text;
+  for (const t of [...kept].reverse()) rest = rest.slice(0, t.start) + ' '.repeat(t.end - t.start) + rest.slice(t.end);
+  for (const m of rest.matchAll(/\S*\d[\d.,]*\S*(?:\s+[a-z]+)?/g)) {
+    problems.push(`I can't tell what "${m[0].trim()}" means for commission. The rules only look at the booking status, channel, nights, rooms, rate plan, loyalty points and the amounts (total, tax, resort fee, extras). Remove it or say it in those terms.`);
+  }
+  const facts = Object.keys(said).filter((k) => k !== 'expected');
+  if (!facts.length && said.expected === undefined && !rates.length && !problems.length) {
+    fail('The platform could not find a booking in your test', ['Describe the booking the test is about, for example how many nights, the booking channel (direct, GDS, online travel agency) or the rate plan, and what commission it should earn.']);
+  }
+  if (said.nights !== undefined && said.nights < 1) problems.push('A stay has to be at least 1 night.');
+  if (said.rooms !== undefined && said.rooms < 1) problems.push('A booking needs at least 1 room.');
+  if (problems.length) fail('The platform could not turn this into a test yet', problems);
+
+  const notes = [];
+  const v2Only = said.ratePlan === 'CORP' || said.ratePlan === 'PKG' || (said.rooms || 0) >= RULES['demo/commission-engine-v2'].groupRooms || rates.some((r) => ['corporate', 'group', 'packagePct'].includes(r.key));
+  let build = 'demo/commission-engine';
+  if (release === 2) build = 'demo/commission-engine-v2';
+  else if (release === null && v2Only) {
+    build = 'demo/commission-engine-v2';
+    notes.push('Corporate rates, package rates and group bookings are release 2.0 rules, so this test runs against release 2.0.');
+  } else if (release === 1 && v2Only) notes.push('Release 1.0 has no corporate, package or group rule, so the standard rates apply.');
+  const r = RULES[build];
+
+  const given = { ...STD_GIVEN };
+  for (const k of Object.keys(STD_GIVEN)) if (said[k] !== undefined) given[k] = said[k];
+  const unsaid = ['taxAmount', 'resortFeeAmount', 'ancillaryAmount'].filter((k) => said[k] === undefined);
+  const deductions = () => given.taxAmount + given.resortFeeAmount + given.ancillaryAmount;
+  if (said.totalAmount !== undefined && given.totalAmount < deductions() && unsaid.length) {
+    for (const k of unsaid) given[k] = 0;
+    notes.push(`The standard tax, resort fee and extras are more than your booking total, so they are set to 0 for this test (${listText(unsaid.map((k) => LABELS[k].toLowerCase()))}).`);
+  }
+  if (given.totalAmount < deductions()) {
+    fail('The platform could not turn this into a test yet', [`The booking total (${usdText(given.totalAmount)}) is less than the tax, resort fee and extras together (${usdText(deductions())}). The total has to include them.`]);
+  }
+  const tc = { title: original, text: original, build, given, expected: null };
+  const oracle = expectedByRules(tc);
+  const why = `by the release ${r.release} rules this booking earns ${usdText(oracle.commission)} (${listText(oracle.applied) || 'no rate applies'}${oracle.lines.length ? ` on ${usdText(oracle.basis)} commissionable revenue` : ''})`;
+  const mismatch = [];
+  for (const rt of rates) {
+    if (rt.key === 'total') {
+      const want = oracle.lines.length ? oracle.ratePct : 0;
+      if (Math.abs(want - rt.value) > 1e-9) mismatch.push(`Your test says the commission rate is ${rt.raw}, but ${why}, a rate of ${want}%.`);
+    } else if (r[rt.key] === undefined) mismatch.push(`Release ${r.release} has no ${RATE_NAMES[rt.key]}. Say "release 2.0" if you want to test it.`);
+    else if (r[rt.key] !== rt.value) mismatch.push(`Your test says the ${RATE_NAMES[rt.key]} is ${rt.raw}, but the specs set it at ${r[rt.key]}%.`);
+  }
+  if (said.expected !== undefined && Math.abs(said.expected - oracle.commission) > 0.005) {
+    mismatch.push(`Your test expects ${usdText(said.expected)}, but ${why}.`);
+  }
+  if (mismatch.length) fail('Your expected result does not match the specs', [...mismatch, 'Correct the number, or leave it out and the platform will work out the expected commission from the rules.']);
+  tc.expected = oracle.commission;
+  const reading = Object.keys(STD_GIVEN).map((k) => ({ field: k, label: LABELS[k], value: plainValue(k, given[k]), from: said[k] !== undefined ? 'your test' : unsaid.includes(k) && given[k] === 0 && STD_GIVEN[k] ? 'set to 0 (see note)' : 'standard booking' }));
+  reading.push({ field: 'build', label: 'Engine release', value: r.release, from: release !== null ? 'your test' : v2Only ? 'from the rules you mention' : 'standard (release 1.0)' });
+  reading.push({ field: 'expected', label: 'Expected commission', value: usdText(tc.expected), from: said.expected !== undefined || rates.length ? 'your test, checked against the specs' : 'worked out from the specs' });
+  return { testCase: tc, reading, notes };
+}
+
 const overridesOf = (given) => Object.fromEntries(Object.entries(FIELDS).map(([f, attr]) => [attr, given[f]]));
 
 /** Expected result per the business rules, independent of the engine's code. */
@@ -117,8 +269,9 @@ function expectedByRules(tc) {
 }
 
 /** Test-data agent: the full 1000-attribute reservation, with the case's commission drivers applied. */
-function generateData(input) {
-  const tc = normaliseCase(input);
+function generateData(input = {}) {
+  const read = typeof input.text === 'string' ? readPlainEnglish(input.text) : null;
+  const tc = read ? read.testCase : normaliseCase(input);
   const reservation = {};
   for (const a of DICTIONARY.attributes) reservation[a.name] = a.example;
   const overrides = overridesOf(tc.given);
@@ -130,6 +283,8 @@ function generateData(input) {
     drivers: Object.entries(overrides).map(([name, value]) => ({ name, value, example: ATTR.get(name).example, description: ATTR.get(name).description })),
     sample: DICTIONARY.attributes.filter((a) => !a.commissionDriver).slice(0, 8).map((a) => ({ name: a.name, value: a.example })),
     byRules: { release: RULES[tc.build].release, ...oracle },
+    reading: read ? read.reading : null,
+    notes: read ? read.notes : [],
   };
 }
 
@@ -208,4 +363,4 @@ async function runLabCase(input, runDir) {
   return result;
 }
 
-module.exports = { DEMOS, FIELDS, normaliseCase, generateData, expectedByRules, renderLabSpec, runLabCase };
+module.exports = { DEMOS, EXAMPLES, FIELDS, readPlainEnglish, normaliseCase, generateData, expectedByRules, renderLabSpec, runLabCase };
