@@ -116,3 +116,20 @@ ol,ul{padding-left:20px}li{margin:3px 0}
 .lead-rec.bad{border-color:#7a3a3a;background:#2a1a20}.lead-rec.warn{border-color:#7a6230;background:#2a2418}.lead-rec.ok{border-color:#2f6b4f;background:#16281f}
 .lead-decision{font-weight:700;font-size:18px;white-space:nowrap}
 .lead-rec.bad .lead-decision{color:var(--bad)}.lead-rec.warn .lead-decision{color:var(--warn)}.lead-rec.ok .lead-decision{color:var(--ok)}
+
+/* home redesign */
+.home-hero{padding:48px 44px 40px;background:radial-gradient(900px 320px at 85% 0%,rgba(47,111,237,.22),transparent 60%),linear-gradient(135deg,#13213d 0%,#0f1a30 60%,#0d1628 100%)}
+.home-hero h1{font-size:36px;max-width:980px}
+.home-hero p{font-size:16px;max-width:900px}
+.hero-cta{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0 8px}
+.stat{background:var(--s1);border:1px solid var(--line);border-top:3px solid var(--red);border-radius:8px;padding:16px 18px;display:flex;flex-direction:column;gap:3px}
+.stat b{font-size:30px;font-weight:700;color:#fff;line-height:1.1;letter-spacing:-.02em}
+.stat-t{font-size:14px;font-weight:600;color:#fff}
+.stat-d{font-size:12.5px;color:var(--mut);line-height:1.4}
+.lifecycle ol{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(5,1fr);gap:10px;counter-reset:lc}
+.lifecycle li{position:relative;background:var(--s1);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:#aab5ca;line-height:1.45}
+.lifecycle li:not(:last-child)::after{content:"›";position:absolute;right:-9px;top:50%;transform:translateY(-50%);color:#7aa7ff;font-size:20px;z-index:1}
+.lifecycle li b{color:#fff;font-size:14px;font-weight:600}
+.lc-k{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#7aa7ff}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.lifecycle ol{grid-template-columns:1fr}.lifecycle li::after{display:none}.home-hero h1{font-size:28px}}

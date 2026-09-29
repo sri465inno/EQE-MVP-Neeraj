@@ -181,9 +181,24 @@ async function viewHome() {
     HOME_DETAIL[`flow-${id}`] = `<h2>${esc(name)}</h2><p>${esc(intro)}</p><ul class="brief">${points.map((x) => `<li>${esc(x)}</li>`).join('')}</ul><a class="btn" href="${href}">${esc(cta)}</a>`;
     return tile({ detail: `flow-${id}`, art: i ? 'flow2' : 'flow1', tag: `Flow ${i + 1}`, big: i + 1, title: name, lines: [esc(intro)] });
   });
-  $view.innerHTML = `<section class="hero"><div class="eyebrow">Agentic QE Platform</div><h1>Quality engineering by seven specialised agents, with people in control.</h1>
-<p>Bring what your project already has: Jira, code and documents. The platform turns it into tested, reported quality, and keeps every approved result as a baseline for the next release.</p>
-<div class="facts"><div><b>${P.inputTypes.length}</b>kinds of input</div><div><b>${P.agents.length}</b>specialised agents</div><div><b>2</b>ways to run</div><div><b>Human</b>approval on every baseline change</div></div></section>
+  const stats = [
+    ['10+', 'Enterprise Inputs', 'Requirements, Code, APIs & Documents'],
+    [String(P.agents.length), 'Specialized AI Agents', 'Collaborating Across The QE Lifecycle'],
+    ['100%', 'Traceability', 'Requirements To Test Evidence'],
+    ['Human', 'Governance', 'Approval For Every Critical Outcome'],
+  ];
+  const lifecycle = [
+    ['Bring', 'Enterprise inputs', 'Jira, code, APIs, data models and business documents.'],
+    ['Design', 'Agents 1–4', 'Requirements, business rules, test cases and automated tests.'],
+    ['Govern', 'Human approval', 'People settle disagreements and approve every baseline change.'],
+    ['Validate', 'Agents 5–7', 'Real execution, evidence-backed defects and the cycle report.'],
+    ['Release', 'Quality evidence', 'A traceable, release-ready report for sign-off.'],
+  ];
+  $view.innerHTML = `<section class="hero home-hero"><div class="eyebrow">Agentic QE Platform</div><h1>Engineering Quality at Scale with AI Agents and Human Governance</h1>
+<p>Transform requirements, code, APIs, and business documents into traceable test assets, automated validation, execution intelligence, and release-ready quality evidence, while keeping humans in control of every critical decision.</p>
+<div class="hero-cta"><a class="btn" href="#/run?type=baseline">&#9654; Start a baseline</a><a class="btn secondary" href="#/cycles">View cycles</a></div></section>
+<section class="stats">${stats.map(([n, t, d]) => `<div class="stat"><b>${esc(n)}</b><span class="stat-t">${esc(t)}</span><span class="stat-d">${esc(d)}</span></div>`).join('')}</section>
+<section class="lifecycle"><h2>How the platform works</h2><ol>${lifecycle.map(([k, t, d]) => `<li><span class="lc-k">${esc(k)}</span><b>${esc(t)}</b><span>${esc(d)}</span></li>`).join('')}</ol></section>
 ${rail('value', 'Why it matters', 'click an outcome for details', valueTiles)}
 ${rail('inputs', 'What goes in', 'click an input for details', inputTiles)}
 ${rail('agents', 'Who does the work', 'click an agent for details', agentTiles)}
