@@ -27,6 +27,8 @@ test('Test Lab: a plain-English test becomes the full reservation, expected valu
     assert.equal(body.reading.find((x) => x.field === 'nights').from, 'your test');
     assert.equal(body.reading.find((x) => x.field === 'totalAmount').from, 'standard booking');
     for (const text of lab.examples) assert.equal((await post('/api/lab/data', { text })).status, 200, text);
+    const words = (await post('/api/lab/data', { text: 'A thirteen-night direct booking.' })).body;
+    assert.equal(words.testCase.given.nights, 13);
     const corp = (await post('/api/lab/data', { text: 'A 2-night corporate booking should earn 5%.' })).body;
     assert.equal(corp.testCase.build, 'demo/commission-engine-v2');
     assert.equal(corp.byRules.commission, 40);
@@ -49,6 +51,9 @@ test('Test Lab: sentences that cannot become a test get plain-language reasons',
     const b = await says('A 7-night direct booking should earn USD 80 commission.', /expects USD 80.00, but by the release 1.0 rules this booking earns USD 92.00/);
     assert.equal(b.error, 'Your expected result does not match the specs');
     await says('A direct booking of 0 nights.', /at least 1 night/);
+    await says('A booking that is not cancelled.', /status is not \("not cancelled"\)/);
+    await says('A direct booking of -7 nights.', /cannot be negative/);
+    await says('A direct booking for a few nights.', /can't tell how many/);
     await says('A booking with a total of USD 100 including USD 200 tax.', /less than the tax, resort fee and extras/);
   });
 });

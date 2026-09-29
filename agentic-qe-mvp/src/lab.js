@@ -110,10 +110,14 @@ const RATE_KEYS = [
   ['longStay', /long[\s-]?stay/], ['gds', /\bgds\b|uplift/], ['base', /\bbase\b/], ['corporate', /corporate/], ['group', /\bgroup\b/], ['packagePct', /package|room component/],
   ['total', /commission|\bearns?\b|\bpays?\b|\breceives?\b|\bgets?\b|expect|\btotal\b|\brate\b|should be/],
 ];
-const NUMBER_WORDS = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, fourteen: 14, fifteen: 15, twenty: 20 };
+const UNITS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+const TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+const NUMBER_WORD_RE = new RegExp(`\\b(?:(${TENS.slice(2).join('|')})(?:[\\s-](${UNITS.slice(1, 10).join('|')}))?|(${UNITS.join('|')}))\\b(?=[\\s-]*(?:nights?|rooms?|weeks?)\\b)`, 'g');
+const numberWord = (m, tens, unit, small) => String(small ? UNITS.indexOf(small) : TENS.indexOf(tens) * 10 + (unit ? UNITS.indexOf(unit) : 0));
+const NEGATED = /\b(?:not|non|isn't|isnt|wasn't|wasnt|never|no longer)\b[\s-]*(?:\w+\s+)?$/;
 const usdText = (n) => `USD ${Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const plainValue = (f, v) => (PLAIN[f] ? PLAIN[f][v] : MONEY_FIELDS.includes(f) ? usdText(v) : typeof v === 'boolean' ? (v ? 'Yes' : 'No') : String(v));
-const listText = (xs) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} and ${xs[xs.length - 1]}`);
+const listText = (xs, conj = 'and') => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} ${conj} ${xs[xs.length - 1]}`);
 
 function nearestKey(before, after, table) {
   let best = null;
@@ -138,9 +142,10 @@ function readPlainEnglish(raw) {
   const fail = (headline, problems) => { throw httpError(400, headline, problems.map((message) => ({ field: 'text', message }))); };
   if (!original) fail('Write the test case first', ['Describe the booking in a sentence and, if you like, what commission it should earn.']);
   const text = original.toLowerCase()
-    .replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|fourteen|fifteen|twenty)\b(?=[\s-]*(nights?|rooms?|weeks?)\b)/g, (w) => String(NUMBER_WORDS[w]))
+    .replace(NUMBER_WORD_RE, numberWord)
     .replace(/\bfortnight\b/g, '14 nights').replace(/\b(a|one) week\b/g, '7 nights');
   const problems = [];
+  if (/(^|[\s(:=])(-|minus\s)\s*\d/.test(text)) problems.push('Nights, rooms, amounts and rates cannot be negative. Remove the minus sign.');
   const tokens = [];
   const scan = (kind, re, value) => { for (const m of text.matchAll(re)) tokens.push({ kind, value: value(m), start: m.index, end: m.index + m[0].length, raw: m[0] }); };
   const num = (x) => Number(String(x).replace(/,/g, ''));
@@ -177,7 +182,11 @@ function readPlainEnglish(raw) {
     }
   });
   for (const [field, list] of Object.entries(WORDS)) {
-    const hits = [...new Set(list.filter(([re]) => re.test(text)).map(([, v]) => v))];
+    const found = list.flatMap(([re, v]) => [...text.matchAll(new RegExp(re.source, 'g'))].map((m) => ({ v, word: m[0], negated: NEGATED.test(text.slice(Math.max(0, m.index - 24), m.index)) })));
+    for (const f of found.filter((x) => x.negated)) {
+      problems.push(`Your test says what the ${LABELS[field].toLowerCase()} is not ("not ${f.word}"). Say what it is instead, for example ${listText(Object.values(PLAIN[field]).filter((x) => x !== PLAIN[field][f.v]).slice(0, 2).map((x) => `"${x}"`), 'or')}.`);
+    }
+    const hits = [...new Set(found.filter((x) => !x.negated).map((x) => x.v))];
     if (hits.length > 1) problems.push(`Your test mentions more than one ${LABELS[field].toLowerCase()} (${listText(hits.map((v) => PLAIN[field][v]))}). A booking has only one; keep the one you mean.`);
     else if (hits.length) said[field] = hits[0];
   }
@@ -188,8 +197,11 @@ function readPlainEnglish(raw) {
   let rest = text;
   for (const t of [...kept].reverse()) rest = rest.slice(0, t.start) + ' '.repeat(t.end - t.start) + rest.slice(t.end);
   for (const m of rest.matchAll(/\S*\d[\d.,]*\S*(?:\s+[a-z]+)?/g)) {
+    if (m[0].startsWith('-')) continue;
     problems.push(`I can't tell what "${m[0].trim()}" means for commission. The rules only look at the booking status, channel, nights, rooms, rate plan, loyalty points and the amounts (total, tax, resort fee, extras). Remove it or say it in those terms.`);
   }
+  if (said.nights === undefined && /\bnights?\b|\bweeks?\b/.test(text)) problems.push('Your test mentions nights but I can\'t tell how many. Write the number, for example "7 nights".');
+  if (said.rooms === undefined && /\b(?:many|several|some|multiple|few|lots of)\s+rooms\b/.test(text)) problems.push('Your test mentions rooms but I can\'t tell how many. Write the number, for example "12 rooms".');
   const facts = Object.keys(said).filter((k) => k !== 'expected');
   if (!facts.length && said.expected === undefined && !rates.length && !problems.length) {
     fail('The platform could not find a booking in your test', ['Describe the booking the test is about, for example how many nights, the booking channel (direct, GDS, online travel agency) or the rate plan, and what commission it should earn.']);
