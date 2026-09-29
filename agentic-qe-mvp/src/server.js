@@ -15,6 +15,10 @@ const { PW_VERSION } = require('./execution');
 const { loadSkills } = require('./skills');
 const { SEVEN_AGENTS, INTAKE_STAGES, INPUT_TYPES, DEMO } = require('./platform');
 const { FLOWS: DEMO_INPUT_FLOWS } = require('../scripts/make-demo-inputs');
+const { DEMOS: LAB_DEMOS, FIELDS: LAB_FIELDS, generateData, runLabCase } = require('./lab');
+const { BUILDS } = require('../sut/server');
+
+const META_DICTIONARY = require('../samples/commission-engine/baseline/data-dictionary/reservation-attributes.json');
 
 const XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 
@@ -66,6 +70,17 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
     store.reset();
     res.json({ cycles: 0, baselines: 0 });
   });
+
+  app.get('/api/lab', (req, res) => {
+    const values = (attr) => (META_DICTIONARY.attributes.find((a) => a.name === attr) || {}).values || [];
+    res.json({ demos: LAB_DEMOS, fields: LAB_FIELDS, builds: Object.keys(BUILDS), values: { status: values(LAB_FIELDS.status), channel: values(LAB_FIELDS.channel), ratePlan: values(LAB_FIELDS.ratePlan) } });
+  });
+  app.post('/api/lab/data', (req, res) => res.json(generateData(req.body || {})));
+  let labSeq = 0;
+  app.post('/api/lab/run', wrap(async (req, res) => {
+    labSeq += 1;
+    res.json(await runLabCase(req.body || {}, store.runDir(`LAB-${Date.now()}-${labSeq}`)));
+  }));
 
   app.get('/api/skills', (req, res) => res.json({ dir: 'skills/', skills: skillLib.skills, warnings: skillLib.warnings }));
 
@@ -175,7 +190,7 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
   });
 
   app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
-    res.status(err.status || 500).json({ error: err.message });
+    res.status(err.status || 500).json({ error: err.message, ...(err.details ? { details: err.details } : {}) });
   });
   return { app, store, pipeline, skills: skillLib };
 }

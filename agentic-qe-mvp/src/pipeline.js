@@ -128,8 +128,19 @@ class Pipeline {
 
   review(cycleId, { reviewer, excluded = [], resolutions = {}, comment = '' }) {
     const cycle = this.mustGet(cycleId);
+    if (cycle.status === 'awaiting-merge') {
+      throw httpError(409, `The requirement set of ${cycle.id} is already approved. The step still open is the merge into baseline ${cycle.baselineId}: approve it on the merge screen.`, [{ gate: 'merge' }]);
+    }
     if (cycle.status !== 'awaiting-review') throw httpError(409, `Cycle is ${cycle.status}, not awaiting review`);
-    if (!reviewer || !String(reviewer).trim()) throw httpError(400, 'Reviewer name is required');
+    const open = cycle.normalisation.groups.filter((g) => g.bucket === 'conflict' && !excluded.includes(g.id) && !resolutions[g.id]);
+    const missing = [
+      ...(!reviewer || !String(reviewer).trim() ? [{ field: 'reviewer', message: 'Reviewer name is required: every approval is recorded against a person' }] : []),
+      ...open.map((g) => ({ group: g.id, message: `Conflict ${g.id} needs a decision (${g.options.map((o) => `${o.sources.join('/')} says ${o.signature}`).join(', ')}): choose a value or exclude it` })),
+    ];
+    if (missing.length) {
+      const head = open.length ? `Unresolved conflicts: ${open.map((g) => g.id).join(', ')}. ` : '';
+      throw httpError(400, `${head}Cannot approve the requirement set yet: ${missing.map((m) => m.message).join('; ')}`, missing);
+    }
     let reviewed;
     try {
       reviewed = applyReview(cycle.normalisation, { excluded, resolutions });
@@ -277,8 +288,11 @@ class Pipeline {
 
   decideMerge(cycleId, { decision, approver, comment = '', rejectedRows = [] }) {
     const cycle = this.mustGet(cycleId);
+    if (cycle.status === 'awaiting-review') {
+      throw httpError(409, `Approve the requirement set first: ${cycle.id} is still waiting at the review stage. The merge into baseline ${cycle.baselineId} comes after the design agents have run.`, [{ gate: 'review' }]);
+    }
     if (cycle.status !== 'awaiting-merge') throw httpError(409, `Cycle is ${cycle.status}, not awaiting merge approval`);
-    if (!approver || !String(approver).trim()) throw httpError(400, 'Approver name is required');
+    if (!approver || !String(approver).trim()) throw httpError(400, 'Approver name is required: every merge into the baseline is recorded against a person', [{ field: 'approver', message: 'Approver name is required' }]);
     if (!['approve', 'reject'].includes(decision)) throw httpError(400, 'decision must be "approve" or "reject"');
     const baseline = this.store.getBaseline(cycle.baselineId);
     const at = now();
@@ -384,9 +398,10 @@ class Pipeline {
   runDir(id) { return path.join(this.store.runDir(id)); }
 }
 
-function httpError(status, message) {
+function httpError(status, message, details) {
   const e = new Error(message);
   e.status = status;
+  if (details) e.details = details;
   return e;
 }
 

@@ -14,7 +14,7 @@ async function api(path, opts = {}) {
   const res = await fetch(path, { headers: { 'Content-Type': 'application/json' }, ...opts, body: opts.body ? JSON.stringify(opts.body) : undefined });
   const ct = res.headers.get('content-type') || '';
   const data = ct.includes('json') ? await res.json() : await res.text();
-  if (!res.ok) throw new Error((data && data.error) || res.statusText);
+  if (!res.ok) throw Object.assign(new Error((data && data.error) || res.statusText), { details: (data && data.details) || null });
   return data;
 }
 
@@ -25,6 +25,38 @@ function table(headers, rows, rowClass) {
 const PROV_TEXT = { live: 'live Jira call', github: 'pulled live from GitHub', fixture: 'recorded fixture', pasted: 'pasted' };
 const provPill = (p) => pill(PROV_TEXT[p.kind] || p.kind, p.kind);
 const artPill = (s) => pill(s, s === 'carried over' ? 'carried' : s);
+
+/** Error box that names what is missing before an approval and links to each missing item. */
+function showBlocked(el, title, problems, cycleId) {
+  const items = problems.filter((p) => p.message || p.gate).map((p, i) => {
+    const text = p.message || (p.gate === 'review' ? 'Open the requirement-set review and approve it first' : 'Open the merge screen and approve the merge into the baseline');
+    return `<li><a href="#" data-go="${i}">${esc(text)}</a></li>`;
+  });
+  el.innerHTML = `<div class="banner err blocked"><b>${esc(title)}</b>${items.length ? `<ul>${items.join('')}</ul>` : ''}</div>`;
+  $view.querySelectorAll('.need').forEach((n) => n.classList.remove('need'));
+  const targets = problems.filter((p) => p.message || p.gate).map((p) => {
+    if (p.field) return document.getElementById(p.field);
+    if (p.group) return $view.querySelector(`[data-conflict="${p.group}"]`);
+    return null;
+  });
+  targets.forEach((t) => t && t.classList.add('need'));
+  el.querySelectorAll('[data-go]').forEach((a) => a.onclick = (ev) => {
+    ev.preventDefault();
+    const p = problems.filter((x) => x.message || x.gate)[Number(a.dataset.go)];
+    if (p.gate) { location.hash = `#/cycle/${cycleId}?tab=${p.gate}`; return; }
+    const t = targets[Number(a.dataset.go)];
+    if (t) { t.scrollIntoView({ block: 'center', behavior: 'smooth' }); if (t.focus) t.focus(); }
+  });
+  el.scrollIntoView({ block: 'nearest' });
+}
+
+const GATE_TEXT = { 'awaiting-review': 'approve the requirement set', 'awaiting-merge': 'approve the merge into the baseline' };
+/** "Action needed" banner for every cycle stopped at a human approval. */
+function pendingBanner(cycles, exceptId) {
+  const waiting = cycles.filter((x) => GATE_TEXT[x.status] && x.id !== exceptId);
+  if (!waiting.length) return '';
+  return `<div class="banner action"><b>Action needed</b><ul>${waiting.map((x) => `<li>${esc(x.id)} · ${esc(x.name)} is waiting for you to ${GATE_TEXT[x.status]}${x.status === 'awaiting-merge' && x.baselineId ? ` ${esc(x.baselineId)}` : ''}. <a href="#/cycle/${esc(x.id)}?tab=${x.status === 'awaiting-review' ? 'review' : 'merge'}">Go to the approval</a></li>`).join('')}</ul></div>`;
+}
 
 function setTitle(sub) { document.title = sub ? `${sub} - ${TITLE}` : TITLE; }
 function activeNav(route) {
@@ -287,7 +319,7 @@ async function viewRun(params) {
   const modeOption = (v, title, text) => `<label class="mode-option"><input type="radio" name="run-type" value="${v}" ${type === v ? 'checked' : ''}><span><b>${title}</b><span class="muted">${text}</span></span></label>`;
   const agents = META.platform.agents;
 
-  $view.innerHTML = `<div class="run-layout">
+  $view.innerHTML = `${pendingBanner(cycles)}<div class="run-layout">
 <div class="panel">
   <div class="step-block">
     <h3><span class="step-num">1</span>Is this a new baseline, or an addition to one?</h3>
@@ -385,7 +417,7 @@ async function viewCycles() {
   const base = cycles.filter((c) => c.type === 'baseline').map(cycleTile);
   const inc = cycles.filter((c) => c.type === 'incremental').map(cycleTile);
   $view.innerHTML = `<section class="hero small-hero"><div class="eyebrow">Cycles</div><h1>Every run, by flow</h1><p>Open a cycle to browse its phases: intake and review, the design agents, then execution, defects and the report.</p><div class="row"><a class="btn" href="#/run">&#9654; Run a new cycle</a>${cycles.length ? '<button class="btn secondary" id="reset">Reset the demo</button>' : ''}</div></section>
-${cycles.length ? '' : '<p class="muted">No cycles yet.</p>'}${base.length ? rail('base', 'Flow 1 · Baseline cycles', '', base) : ''}${inc.length ? rail('inc', 'Flow 2 · Incremental cycles', '', inc) : ''}`;
+${pendingBanner(cycles)}${cycles.length ? '' : '<p class="muted">No cycles yet.</p>'}${base.length ? rail('base', 'Flow 1 · Baseline cycles', '', base) : ''}${inc.length ? rail('inc', 'Flow 2 · Incremental cycles', '', inc) : ''}`;
   const reset = document.getElementById('reset');
   if (reset) reset.onclick = resetDemo;
 }
@@ -440,6 +472,7 @@ async function viewCycle(id, params) {
 ${c.error ? `<div class="banner err">Failed: ${esc(c.error)} <button class="btn secondary" id="resume">Resume</button></div>` : ''}
 ${c.status === 'interrupted' ? `<div class="banner">This cycle was interrupted by a restart. <button class="btn secondary" id="resume">Resume</button></div>` : ''}
 ${c.status === 'running' ? '<div class="banner info">Agents are running... this page refreshes automatically.</div>' : ''}
+${GATE_TEXT[c.status] && tab !== (c.status === 'awaiting-review' ? 'review' : 'merge') ? `<div class="banner action"><b>Action needed</b> This cycle is stopped until you ${GATE_TEXT[c.status]}${c.status === 'awaiting-merge' ? ` ${esc(c.baselineId)}` : ''}. <a href="#/cycle/${esc(c.id)}?tab=${c.status === 'awaiting-review' ? 'review' : 'merge'}">Go to the approval</a></div>` : ''}
 ${summaryRail}
 ${rails}
 <section class="panel" id="detail-panel"><div class="panel-head"><h2>${esc(label)}</h2><span class="crumbs"><a href="#/cycles">Cycles</a> › <a href="#/cycle/${esc(c.id)}">${esc(c.id)}</a> › ${esc(label)}</span></div><div id="tab">${body}</div></section>`;
@@ -489,7 +522,7 @@ function normaliseView(c, interactive) {
   const conflicts = byBucket('conflict');
   return `<div class="kpis"><div class="kpi">Statements<b>${n.counts.statements}</b></div><div class="kpi">Agreed<b>${n.counts.agreed}</b></div><div class="kpi">Only Jira<b>${n.counts['jira-only']}</b></div><div class="kpi">Only code<b>${n.counts['code-only']}</b></div><div class="kpi">Conflicts<b>${n.counts.conflict}</b></div></div>
 <p class="muted small">Computed in code: statements are grouped by subject (token similarity) and compared on extracted values (%, days, hours, ms, HTTP status...). Nothing here was decided by a model.</p>
-<h2>Conflicting values ${pill(`${conflicts.length}`, 'conflict')}</h2>${conflicts.length ? conflicts.map((g) => `<div class="card"><b>${esc(g.id)}</b> - subject: <i>${esc(g.subject)}</i>
+<h2>Conflicting values ${pill(`${conflicts.length}`, 'conflict')}</h2>${conflicts.length ? conflicts.map((g) => `<div class="card" data-conflict="${esc(g.id)}"><b>${esc(g.id)}</b> - subject: <i>${esc(g.subject)}</i>
 ${table(['Choose', 'Value', 'Statement', 'Source'], g.options.map((o) => [interactive ? `<input type="radio" name="res-${esc(g.id)}" value="${esc(o.optionId)}" class="res" data-g="${esc(g.id)}">` : (decisions.resolutions[g.id] === o.optionId ? pill('chosen', 'passed') : ''),
     `<b>${esc(o.signature)}</b>`, esc(o.text), o.sources.map((s) => pill(s, s === 'jira' ? 'jira-only' : 'code-only')).join(' ')]))}
 ${interactive ? `<label class="small"><input type="radio" name="res-${esc(g.id)}" value="__exclude" class="res" data-g="${esc(g.id)}"> exclude this requirement</label> <span class="pill conflict res-state" data-g="${esc(g.id)}">unresolved</span>` : (decisions.excluded.includes(g.id) ? pill('excluded', 'failed') : '')}</div>`).join('') : '<p class="muted">No conflicting values.</p>'}
@@ -523,7 +556,7 @@ ${c.type === 'incremental' ? `<div class="card" id="delta-box">${deltaView(c.del
 ${normaliseView(c, true)}
 <div class="card"><div class="row"><label>Reviewer <input type="text" id="reviewer" value="${esc(localStorage.getItem('aqe-user') || c.createdBy || '')}"></label>
 <label>Comment <input type="text" id="comment" size="40"></label>
-<button class="btn good" id="approve-review">Approve requirement set</button><span id="review-msg" class="small"></span></div></div>`;
+<button class="btn good" id="approve-review">Approve requirement set</button></div><div id="review-msg"></div></div>`;
     }
     case 'delta': return c.delta ? deltaView(c.delta) : deltaView(c.deltaPreview, { title: 'Delta preview (not yet reviewed)' });
     case 'requirements': return a.requirements ? requirementsView(c) : notYet('Requirements');
@@ -556,8 +589,7 @@ function bindCycleTab(c, tab) {
     const d = collect();
     const open = conflicts.filter((g) => !d.resolutions[g.id] && !d.excluded.includes(g.id));
     $view.querySelectorAll('.res-state').forEach((el) => { const ok = !open.some((g) => g.id === el.dataset.g); el.textContent = ok ? 'settled' : 'unresolved'; el.className = `pill ${ok ? 'passed' : 'conflict'} res-state`; });
-    btn.disabled = open.length > 0;
-    document.getElementById('review-msg').textContent = open.length ? `${open.length} conflict(s) still need a decision` : '';
+    $view.querySelectorAll('[data-conflict]').forEach((el) => { if (!open.some((g) => g.id === el.dataset.conflict)) el.classList.remove('need'); });
     if (c.type === 'incremental') {
       const p = await api(`/api/cycles/${c.id}/delta-preview`, { method: 'POST', body: d });
       document.getElementById('delta-box').innerHTML = deltaView(p, { title: 'Delta preview (before anything is designed)' });
@@ -567,13 +599,19 @@ function bindCycleTab(c, tab) {
   refresh();
   btn.onclick = async () => {
     const reviewer = document.getElementById('reviewer').value.trim();
-    if (!reviewer) { document.getElementById('review-msg').textContent = 'Enter the reviewer name'; return; }
+    const d = collect();
+    const problems = [
+      ...(reviewer ? [] : [{ field: 'reviewer', message: 'Enter the reviewer name: every approval is recorded against a person' }]),
+      ...conflicts.filter((g) => !d.resolutions[g.id] && !d.excluded.includes(g.id)).map((g) => ({ group: g.id, message: `Conflict ${g.id} needs a decision (${g.options.map((o) => `${o.sources.join('/')} says ${o.signature}`).join(', ')}): choose a value or exclude it` })),
+    ];
+    const msg = document.getElementById('review-msg');
+    if (problems.length) { showBlocked(msg, 'The requirement set cannot be approved yet', problems, c.id); return; }
     localStorage.setItem('aqe-user', reviewer);
     btn.disabled = true;
     try {
-      await api(`/api/cycles/${c.id}/review`, { method: 'POST', body: { reviewer, comment: document.getElementById('comment').value, ...collect() } });
+      await api(`/api/cycles/${c.id}/review`, { method: 'POST', body: { reviewer, comment: document.getElementById('comment').value, ...d } });
       location.hash = `#/cycle/${c.id}?tab=${c.type === 'incremental' ? 'delta' : 'requirements'}`;
-    } catch (e) { document.getElementById('review-msg').textContent = e.message; btn.disabled = false; }
+    } catch (e) { showBlocked(msg, e.message, e.details || [], c.id); btn.disabled = false; }
   };
 }
 
@@ -644,7 +682,7 @@ ${c.rejectedRows && c.rejectedRows.length ? `<div class="banner">Rows rejected a
       oldL.length ? `<code class="old">${oldL.map((l) => esc(l.trim())).join('<br>')}</code>` : '-', s.previous ? `<code class="newv">${newL.map((l) => esc(l.trim())).join('<br>')}</code>` : `<span class="small">new spec, ${s.code.split('\n').length} lines</span>`];
   }), (i) => `row-${scripts[i].status}`)}
 ${c.status === 'awaiting-merge' ? `<div class="card"><div class="row"><label>Approver <input type="text" id="approver" value="${esc(localStorage.getItem('aqe-user') || '')}"></label><label>Comment <input type="text" id="mcomment" size="40"></label>
-<button class="btn good" id="merge-approve">Approve merge</button><button class="btn danger" id="merge-reject">Reject</button><span id="merge-msg" class="small"></span></div></div>` : ''}`;
+<button class="btn good" id="merge-approve">Approve merge</button><button class="btn danger" id="merge-reject">Reject</button></div><div id="merge-msg"></div></div>` : ''}`;
 }
 
 function executionView(c) {
@@ -686,7 +724,7 @@ document.addEventListener('click', async (ev) => {
   const cycleId = location.hash.match(/cycle\/([^?]+)/)[1];
   const approver = document.getElementById('approver').value.trim();
   const msg = document.getElementById('merge-msg');
-  if (!approver) { msg.textContent = 'Enter the approver name'; return; }
+  if (!approver) { showBlocked(msg, `The merge into the baseline cannot be ${id === 'merge-approve' ? 'approved' : 'rejected'} yet`, [{ field: 'approver', message: 'Enter the approver name: every merge decision is recorded against a person' }], cycleId); return; }
   localStorage.setItem('aqe-user', approver);
   ev.target.disabled = true;
   try {
@@ -694,7 +732,7 @@ document.addEventListener('click', async (ev) => {
       rejectedRows: [...document.querySelectorAll('.reject-row')].filter((x) => x.checked).map((x) => x.value) } });
     location.hash = `#/cycle/${cycleId}?tab=${id === 'merge-approve' ? 'execution' : 'merge'}`;
     route();
-  } catch (e) { msg.textContent = e.message; ev.target.disabled = false; }
+  } catch (e) { showBlocked(msg, e.message, e.details || [], cycleId); ev.target.disabled = false; }
 });
 
 /* ---------------- per-artifact pages with a cycle picker ---------------- */
@@ -735,8 +773,9 @@ function downloadsView(c) {
 
 async function viewReporting(params) {
   setTitle('Reporting');
-  const cycles = (await api('/api/cycles')).filter((c) => c.status === 'completed');
-  const hero = '<section class="hero small-hero"><div class="eyebrow">Reporting</div><h1>Quality reports by cycle</h1><p>Pick a cycle to read its QE lead report, results, defects and the full cycle report, or download them.</p></section>';
+  const all = await api('/api/cycles');
+  const cycles = all.filter((c) => c.status === 'completed');
+  const hero = pendingBanner(all) + '<section class="hero small-hero"><div class="eyebrow">Reporting</div><h1>Quality reports by cycle</h1><p>Pick a cycle to read its QE lead report, results, defects and the full cycle report, or download them.</p></section>';
   if (!cycles.length) { $view.innerHTML = `${hero}<p class="muted">No cycle has completed yet. <a href="#/run">Run a cycle</a>.</p>`; return; }
   const id = cycles.some((c) => c.id === params.get('cycle')) ? params.get('cycle') : cycles[cycles.length - 1].id;
   const view = REPORT_VIEWS.some(([v]) => v === params.get('view')) ? params.get('view') : 'lead';
@@ -803,6 +842,155 @@ async function viewBaselines() {
 ${table(['Version', 'When', 'Cycle', 'Change', 'Approved by'], b.history.map((h) => [`v${h.version}`, fmtTime(h.at), esc(h.cycleId), esc(h.change), esc(h.approvedBy)]))}</div>`).join('') : '<p class="muted">No baseline yet.</p>'}`;
 }
 
+/* ---------------- Test Lab ---------------- */
+let LAB = null;
+const labState = { demo: 'happy', data: null, result: null, busy: '' };
+const LAB_NUM = ['nights', 'rooms', 'totalAmount', 'taxAmount', 'resortFeeAmount', 'ancillaryAmount'];
+const LAB_LABEL = { status: 'Reservation status', channel: 'Booking channel', nights: 'Nights', ratePlan: 'Rate plan', rooms: 'Rooms', loyalty: 'Paid with loyalty points',
+  totalAmount: 'Total amount (USD)', taxAmount: 'Tax (USD)', resortFeeAmount: 'Resort fee (USD)', ancillaryAmount: 'Ancillaries (USD)' };
+const usd = (n) => (n == null ? '-' : `USD ${Number(n).toFixed(2)}`);
+
+function labCaseFromForm() {
+  const v = (id) => document.getElementById(`lab-${id}`).value;
+  const given = {};
+  for (const f of Object.keys(LAB_LABEL)) given[f] = f === 'loyalty' ? document.getElementById('lab-loyalty').checked : v(f);
+  return { title: v('title').trim(), build: v('build'), given, expected: v('expected').trim() };
+}
+
+function labForm(tc) {
+  const sel = (f, values) => `<label class="field">${esc(LAB_LABEL[f])}<select id="lab-${f}">${values.map((x) => `<option ${x === tc.given[f] ? 'selected' : ''}>${esc(x)}</option>`).join('')}</select></label>`;
+  const num = (f) => `<label class="field">${esc(LAB_LABEL[f])}<input type="number" min="0" step="${f === 'nights' || f === 'rooms' ? 1 : 0.01}" id="lab-${f}" value="${esc(tc.given[f])}"></label>`;
+  return `<label class="field">Test case title<input type="text" id="lab-title" value="${esc(tc.title)}"></label>
+<label class="field">Engine build under test<select id="lab-build">${LAB.builds.map((b) => `<option value="${esc(b)}" ${b === tc.build ? 'selected' : ''}>${esc(b)} (release ${b.endsWith('-v2') ? '2.0' : '1.0'})</option>`).join('')}</select></label>
+<div class="lab-grid">${sel('status', LAB.values.status)}${sel('channel', LAB.values.channel)}${num('nights')}${sel('ratePlan', LAB.values.ratePlan)}${num('rooms')}
+<label class="field check"><input type="checkbox" id="lab-loyalty" ${tc.given.loyalty ? 'checked' : ''}> ${esc(LAB_LABEL.loyalty)}</label>
+${num('totalAmount')}${num('taxAmount')}${num('resortFeeAmount')}${num('ancillaryAmount')}</div>
+<label class="field">Expected commission (USD)<input type="number" step="0.01" id="lab-expected" value="${esc(tc.expected ?? '')}" placeholder="leave empty to use the business rules"></label>`;
+}
+
+function labAgents() {
+  const d = labState.data;
+  const r = labState.result;
+  const st = (on, bad) => (bad ? 'failed' : on ? 'done' : labState.busy ? 'running' : 'pending');
+  const steps = [
+    ['Test design agent', 'Reads your test case and works out the expected result from the business rules.', st(d)],
+    ['Test data agent', `Builds a full ${d ? d.attributeCount : 1000}-attribute reservation and applies your commission drivers.`, st(d)],
+    ['Automation agent', 'Writes the Playwright script for the case.', st(r)],
+    ['Execution agent', 'Runs the script for real against the engine build.', st(r, r && r.status === 'failed')],
+    ['Defect agent', r && r.defect ? 'Raised a defect from the real failure.' : 'Raises a defect only if the run really fails.', r ? (r.defect ? 'failed' : 'done') : 'pending'],
+  ];
+  const label = { done: 'done', failed: 'found a problem', running: labState.busy ? 'working' : 'pending', pending: 'pending' };
+  return `<div class="agent-grid">${steps.map(([n, p, s], i) => `<div class="agent-card lab-${s}"><div class="agent-head"><span class="step-num small">${i + 1}</span><b>${esc(n)}</b><span class="state">${esc(label[s])}</span></div><p>${esc(p)}</p></div>`).join('')}</div>`;
+}
+
+function labOutput() {
+  const d = labState.data;
+  const r = labState.result;
+  let html = `<h3 class="panel-title">Agents</h3>${labAgents()}`;
+  if (labState.busy) html += `<div class="banner info">${esc(labState.busy)}</div>`;
+  if (d) {
+    html += `<h3 class="panel-title">Test data</h3>
+<p class="small">A full reservation of <b>${d.attributeCount}</b> attributes built from the data dictionary. These commission drivers come from your test case; every other attribute keeps its dictionary example value.</p>
+${table(['Attribute', 'Value', 'Dictionary example', 'Meaning'], d.drivers.map((x) => [`<code>${esc(x.name)}</code>`, `<b>${esc(x.value)}</b>`, esc(x.example), esc(x.description)]))}
+<details><summary class="small">A few of the other ${d.attributeCount - d.drivers.length} attributes</summary>${table(['Attribute', 'Value'], d.sample.map((x) => [`<code>${esc(x.name)}</code>`, esc(x.value)]))}</details>
+<div class="banner info">By the release ${esc(d.byRules.release)} business rules: commissionable revenue ${usd(d.byRules.revenue)}; ${esc(d.byRules.applied.join('; ') || 'no rate applies')}. Expected commission <b>${usd(d.byRules.commission)}</b>.${d.testCase.expected !== d.byRules.commission ? ` You set <b>${usd(d.testCase.expected)}</b>, and the test will check your value.` : ''}</div>`;
+  }
+  if (r) {
+    const ok = r.status === 'passed';
+    const rows = [...new Set([...r.expectedLines.map((l) => l.code), ...r.actualLines.map((l) => l.code)])].map((code) => {
+      const e = r.expectedLines.find((l) => l.code === code);
+      const a = r.actualLines.find((l) => l.code === code);
+      return [esc((e || a).label), e ? `${e.ratePct}% · ${usd(e.amount)}` : '<span class="muted">not expected</span>', a ? `${a.ratePct}% · ${usd(a.amount)}` : '<b class="bad">missing</b>', e && a && e.amount === a.amount ? pill('match', 'passed') : pill('differs', 'failed')];
+    });
+    html += `<h3 class="panel-title">Result</h3>
+<div class="lab-verdict ${ok ? 'ok' : 'bad'}"><b>${ok ? 'Passed: the code works as expected' : 'Failed: the code does not work as expected'}</b><span>${esc(r.testCase.title)} · build <code>${esc(r.testCase.build)}</code> · ${r.durationMs} ms</span></div>
+<div class="lab-compare"><div><span>Expected</span><b>${usd(r.expected)}</b></div><div class="${ok ? 'ok' : 'bad'}"><span>Actual</span><b>${usd(r.actual)}</b></div></div>
+${table(['Commission line', 'Expected', 'Actual (engine)', ''], rows)}
+${r.error && r.error.assertion ? `<p class="small">Failing assertion: <code>${esc(r.error.assertion)}</code> (${esc(r.error.location || '')})</p>` : ''}
+${r.defect ? `<div class="card defect-card"><h3>Defect raised ${pill(r.defect.severity, 'failed')}</h3><p><b>${esc(r.defect.title)}</b></p>
+<p>Expected <b>${esc(r.defect.expected)}</b>, actual <b>${esc(r.defect.actual)}</b>. ${esc(r.defect.cause)}.</p><ol class="small">${r.defect.steps.map((x) => `<li>${esc(x)}</li>`).join('')}</ol></div>` : ''}
+<p class="small muted">Really executed by ${esc(r.execution.tool)} against ${esc(r.execution.sut.name)} at ${fmtTime(r.execution.finishedAt)}.</p>
+<details><summary class="small">Playwright script the automation agent wrote (${esc(r.script.file)})</summary><pre class="code">${esc(r.script.code)}</pre></details>`;
+  }
+  if (!d && !r && !labState.busy) html += '<p class="muted">Generate the test data, then run the test agents. The results appear here.</p>';
+  return html;
+}
+
+function labProblems(el, e) {
+  $view.querySelectorAll('.need').forEach((n) => n.classList.remove('need'));
+  const list = e.details || [];
+  list.forEach((p) => { const f = document.getElementById(`lab-${p.field}`); if (f) f.classList.add('need'); });
+  el.innerHTML = `<div class="banner err blocked"><b>${list.length ? 'Fix the test case first' : esc(e.message)}</b>${list.length ? `<ul>${list.map((p) => `<li>${esc(p.message)}</li>`).join('')}</ul>` : ''}</div>`;
+}
+
+async function viewLab(params) {
+  setTitle('Test Lab');
+  if (!LAB) LAB = await api('/api/lab');
+  if (params.get('demo') && LAB.demos.some((x) => x.id === params.get('demo'))) {
+    if (labState.demo !== params.get('demo')) Object.assign(labState, { data: null, result: null });
+    labState.demo = params.get('demo');
+  }
+  const demo = LAB.demos.find((x) => x.id === labState.demo);
+  const tc = labState.data ? labState.data.testCase : demo.testCase;
+  $view.innerHTML = `<section class="hero small-hero"><div class="eyebrow">Test Lab</div><h1>Write a test, generate its data, run the agents</h1><p>Check one business rule against the commission engine and see straight away whether the code does what the rule says: expected against actual.</p></section>
+<div class="run-layout">
+<div class="panel">
+  <div class="step-block">
+    <h3><span class="step-num">1</span>Pick a demo</h3>
+    ${LAB.demos.map((x) => `<label class="mode-option"><input type="radio" name="lab-demo" value="${esc(x.id)}" ${x.id === labState.demo ? 'checked' : ''}><span><b>${esc(x.name)}</b><span class="muted">${esc(x.summary)}</span></span></label>`).join('')}
+  </div>
+  <div class="step-block">
+    <h3><span class="step-num">2</span>Write the test case</h3>
+    <p class="hint">Change anything. The expected commission is what the business says should be paid.</p>
+    ${labForm(tc)}
+  </div>
+  <div class="step-block">
+    <h3><span class="step-num">3</span>Generate test data</h3>
+    <p class="hint">Builds the full reservation from the data dictionary and works out the expected result from the rules.</p>
+    <div class="row"><button class="btn secondary" id="lab-gen">Generate test data</button></div>
+  </div>
+  <div class="step-block">
+    <h3><span class="step-num">4</span>Run the test agents</h3>
+    <p class="hint">Writes the Playwright script and really runs it against the chosen engine build.</p>
+    <div class="row"><button class="btn" id="lab-run">Run the test agents</button></div>
+  </div>
+  <div id="lab-msg"></div>
+</div>
+<div class="panel wide" id="lab-out">${labOutput()}</div>
+</div>`;
+  const out = () => { document.getElementById('lab-out').innerHTML = labOutput(); };
+  const msg = document.getElementById('lab-msg');
+  $view.querySelectorAll('input[name=lab-demo]').forEach((el) => el.onchange = () => { location.hash = `#/lab?demo=${el.value}`; });
+  $view.querySelectorAll('.run-layout input, .run-layout select').forEach((el) => {
+    if (el.name !== 'lab-demo') el.addEventListener('change', () => { labState.result = null; el.classList.remove('need'); out(); });
+  });
+  const gen = async () => {
+    const body = labCaseFromForm();
+    labState.data = await api('/api/lab/data', { method: 'POST', body });
+    if (body.expected === '') document.getElementById('lab-expected').value = labState.data.testCase.expected;
+    return labState.data;
+  };
+  document.getElementById('lab-gen').onclick = async () => {
+    msg.innerHTML = '';
+    try { labState.result = null; await gen(); out(); } catch (e) { labProblems(msg, e); }
+  };
+  document.getElementById('lab-run').onclick = async (ev) => {
+    msg.innerHTML = '';
+    ev.target.disabled = true;
+    try {
+      await gen();
+      labState.result = null;
+      labState.busy = 'The automation agent is writing the script and the execution agent is running it...';
+      out();
+      labState.result = await api('/api/lab/run', { method: 'POST', body: labState.data.testCase });
+    } catch (e) { labProblems(msg, e); }
+    labState.busy = '';
+    ev.target.disabled = false;
+    out();
+    if (labState.result) document.getElementById('lab-out').scrollIntoView({ block: 'start', behavior: 'smooth' });
+  };
+}
+
 /* ---------------- router ---------------- */
 let lastPath = null;
 async function route() {
@@ -817,6 +1005,7 @@ async function route() {
     switch (parts[0]) {
       case '': return await viewHome();
       case 'run': return await viewRun(params);
+      case 'lab': return await viewLab(params);
       case 'cycles': return await viewCycles();
       case 'cycle': return await viewCycle(parts[1], params);
       case 'testcases': return await pickCycle(params, 'Test cases', testCasesView, (c) => ['completed', 'awaiting-merge'].includes(c.status));

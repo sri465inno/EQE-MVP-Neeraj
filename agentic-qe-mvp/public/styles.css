@@ -191,3 +191,18 @@ details.guidance summary{cursor:pointer;font-weight:600;font-size:13px;color:var
 .cycle-picker{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 20px}
 .cycle-picker .field{margin:0;font-weight:600;color:var(--navy);text-transform:uppercase;letter-spacing:.1em;font-size:11.5px}
 .cycle-picker select{min-width:min(560px,100%);flex:0 1 auto}
+input[type=number]{border:1px solid var(--line2);border-radius:3px;padding:8px 10px;font-size:14px;font-family:inherit;background:#fff;color:var(--tx);width:100%;margin:4px 0}
+.need{outline:2px solid var(--bad)!important;outline-offset:2px;background:#fff7f7}
+.banner.blocked ul,.banner.action ul{margin:6px 0 0;padding-left:18px}.banner.blocked a{color:var(--bad);font-weight:600}
+.banner.action{background:var(--gold-soft);border:1px solid #e2cd9f;border-left:4px solid var(--gold);color:#5c430f}.banner.action a{color:var(--navy);font-weight:600}
+.lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}.lab-grid .field.check{display:flex;align-items:center;gap:6px;margin-top:24px}
+.agent-card.lab-done{border-left-color:var(--ok)}.agent-card.lab-failed{border-left-color:var(--bad)}.agent-card.lab-running{border-left-color:var(--gold)}
+.agent-card.lab-done .state{color:var(--ok);border-color:#b6d5c2}.agent-card.lab-failed .state{color:var(--bad);border-color:#e6b9b9}
+.lab-verdict{display:flex;flex-direction:column;gap:4px;padding:12px 14px;border-radius:4px;border:1px solid var(--line);border-left:4px solid var(--ok);background:#eaf5ee;color:#17623b}
+.lab-verdict.bad{border-left-color:var(--bad);background:#fbeeee;color:var(--bad)}.lab-verdict b{font-size:16px}.lab-verdict span{font-size:12.5px;color:var(--mut)}
+.lab-compare{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.lab-compare div{background:#fff;border:1px solid var(--line);border-top:3px solid var(--navy);border-radius:3px;padding:10px 14px}
+.lab-compare div.ok{border-top-color:var(--ok)}.lab-compare div.bad{border-top-color:var(--bad)}
+.lab-compare span{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}.lab-compare b{font-size:26px;color:var(--navy)}
+.lab-compare div.bad b{color:var(--bad)}b.bad{color:var(--bad)}
+.defect-card{border-left:4px solid var(--bad)}
