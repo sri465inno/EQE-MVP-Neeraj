@@ -1033,8 +1033,11 @@ async function viewLab(params) {
   const msg = document.getElementById('lab-msg');
   $view.querySelectorAll('input[name=lab-demo]').forEach((el) => el.onchange = () => { location.hash = `#/lab?demo=${el.value}`; });
   const box = document.getElementById('lab-text');
-  box.addEventListener('input', () => { labState.text = box.value; box.classList.remove('need'); });
-  box.addEventListener('change', () => { Object.assign(labState, { data: null, result: null }); msg.innerHTML = ''; out(); });
+  box.addEventListener('input', () => {
+    labState.text = box.value;
+    box.classList.remove('need');
+    if (labState.data || labState.result) { Object.assign(labState, { data: null, result: null }); out(); }
+  });
   $view.querySelectorAll('.lab-example').forEach((el) => el.onclick = () => {
     Object.assign(labState, { text: el.textContent, data: null, result: null });
     box.value = labState.text;

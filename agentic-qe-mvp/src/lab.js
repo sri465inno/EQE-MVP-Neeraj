@@ -190,8 +190,9 @@ function readPlainEnglish(raw) {
     if (hits.length > 1) problems.push(`Your test mentions more than one ${LABELS[field].toLowerCase()} (${listText(hits.map((v) => PLAIN[field][v]))}). A booking has only one; keep the one you mean.`);
     else if (hits.length) said[field] = hits[0];
   }
+  const points = text.match(/loyalty points|(paid|pays|paying) (with|in|using) points|points redemption|redeem(ed|s|ing)? points/);
   if (/(not|without|no)\s+(loyalty\s+)?points|paid by (credit )?card|in cash/.test(text)) said.loyalty = false;
-  else if (/loyalty points|(paid|pays|paying) (with|in|using) points|points redemption|redeem(ed|s|ing)? points/.test(text)) said.loyalty = true;
+  else if (points) said.loyalty = !/\b(?:not|non|never|without|isn't|isnt|wasn't|wasnt)\b/.test(text.slice(Math.max(0, points.index - 30), points.index));
   if (said.expected === undefined && /\bno commission|zero commission|not (earn|be paid|get|receive)|\bnothing\b/.test(text)) said.expected = 0;
 
   let rest = text;

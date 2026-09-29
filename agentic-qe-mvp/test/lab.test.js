@@ -29,6 +29,7 @@ test('Test Lab: a plain-English test becomes the full reservation, expected valu
     for (const text of lab.examples) assert.equal((await post('/api/lab/data', { text })).status, 200, text);
     const words = (await post('/api/lab/data', { text: 'A thirteen-night direct booking.' })).body;
     assert.equal(words.testCase.given.nights, 13);
+    assert.equal((await post('/api/lab/data', { text: 'A booking that is not paid with loyalty points.' })).body.testCase.given.loyalty, false);
     const corp = (await post('/api/lab/data', { text: 'A 2-night corporate booking should earn 5%.' })).body;
     assert.equal(corp.testCase.build, 'demo/commission-engine-v2');
     assert.equal(corp.byRules.commission, 40);
