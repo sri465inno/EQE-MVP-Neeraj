@@ -25,7 +25,7 @@
     "expected": "92",
     "actual": "80",
     "assertion": "expect(r.body.commission).toBe(92);",
-    "location": "br-007-long-stay-bonus.spec.js:46:29",
+    "location": "br-007-long-stay-bonus.spec.js:47:29",
     "errorMessage": "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: 92\nReceived: 80",
     "evidence": [
       {
@@ -39,11 +39,11 @@
         "contentType": "text/markdown"
       }
     ],
-    "executedAt": "2026-09-28T21:43:30.401Z",
+    "executedAt": "2026-09-29T17:20:33.033Z",
     "occurrences": [
       {
         "cycleId": "CYC-1",
-        "executedAt": "2026-09-28T21:43:27.231Z",
+        "executedAt": "2026-09-29T17:20:29.655Z",
         "actual": "80",
         "evidence": [
           {
@@ -60,7 +60,7 @@
       },
       {
         "cycleId": "CYC-2",
-        "executedAt": "2026-09-28T21:43:30.401Z",
+        "executedAt": "2026-09-29T17:20:33.033Z",
         "actual": "80",
         "evidence": [
           {

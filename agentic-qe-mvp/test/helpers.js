@@ -9,8 +9,8 @@ const INCREMENT_INPUTS = { epic: { mode: 'jira', key: 'COM-20' }, codebase: { mo
 
 const tmpDir = (label) => fs.mkdtempSync(path.join(os.tmpdir(), `aqe-${label}-`));
 
-async function baselineCycle(pipeline, store, { reviewer = 'Priya Shah', pick = '1.5 %' } = {}) {
-  let c = await pipeline.startCycle({ type: 'baseline', inputs: BASELINE_INPUTS, reviewer });
+async function baselineCycle(pipeline, store, { reviewer = 'Priya Shah', pick = '1.5 %', testingType } = {}) {
+  let c = await pipeline.startCycle({ type: 'baseline', inputs: BASELINE_INPUTS, reviewer, testingType });
   const conflict = c.normalisation.groups.find((g) => g.bucket === 'conflict');
   const opt = conflict.options.find((o) => o.signature === pick);
   const { done } = pipeline.review(c.id, { reviewer, resolutions: { [conflict.id]: opt.optionId } });
@@ -19,8 +19,8 @@ async function baselineCycle(pipeline, store, { reviewer = 'Priya Shah', pick = 
   return c;
 }
 
-async function incrementalDesign(pipeline, store, baselineId, reviewer = 'Priya Shah') {
-  const c = await pipeline.startCycle({ type: 'incremental', baselineId, inputs: INCREMENT_INPUTS, reviewer });
+async function incrementalDesign(pipeline, store, baselineId, reviewer = 'Priya Shah', testingType = undefined) {
+  const c = await pipeline.startCycle({ type: 'incremental', baselineId, inputs: INCREMENT_INPUTS, reviewer, testingType });
   const { done } = pipeline.review(c.id, { reviewer });
   await done;
   return store.getCycle(c.id);

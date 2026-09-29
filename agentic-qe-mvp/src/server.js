@@ -13,7 +13,8 @@ const { listFixtureBranches, loadCodebaseFixture, DEFAULT_BRANCH, SOURCE } = req
 const { modelConfig } = require('./llm');
 const { PW_VERSION } = require('./execution');
 const { loadSkills } = require('./skills');
-const { SEVEN_AGENTS, INTAKE_STAGES, INPUT_TYPES, DEMO } = require('./platform');
+const { SEVEN_AGENTS, REVIEW_AGENT, INTAKE_STAGES, INPUT_TYPES, DEMO } = require('./platform');
+const { TESTING_TYPES, DEFAULT_TESTING_TYPE } = require('./testing-types');
 const { FLOWS: DEMO_INPUT_FLOWS } = require('../scripts/make-demo-inputs');
 const { DEMOS: LAB_DEMOS, FIELDS: LAB_FIELDS, generateData, runLabCase } = require('./lab');
 const { BUILDS } = require('../sut/server');
@@ -56,7 +57,9 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
       playwright: PW_VERSION,
       skills: skillLib.skills.map(({ body, ...s }) => s),
       skillWarnings: skillLib.warnings,
-      platform: { agents: SEVEN_AGENTS, intakeStages: INTAKE_STAGES, inputTypes: INPUT_TYPES, demo: DEMO },
+      platform: { agents: SEVEN_AGENTS, reviewAgent: REVIEW_AGENT, intakeStages: INTAKE_STAGES, inputTypes: INPUT_TYPES, demo: DEMO },
+      testingTypes: TESTING_TYPES,
+      defaultTestingType: DEFAULT_TESTING_TYPE,
       samples: { initiative: 'COM-1', epic: 'COM-10', incrementalEpic: 'COM-20', baselineBranch: 'demo/commission-engine', incrementalBranch: 'demo/commission-engine-v2' },
     });
   });
@@ -96,7 +99,7 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
   });
 
   app.get('/api/cycles', (req, res) => res.json(store.listCycles().map((c) => ({
-    id: c.id, name: c.name, type: c.type, status: c.status, createdAt: c.createdAt, completedAt: c.completedAt || null, baselineId: c.baselineId,
+    id: c.id, name: c.name, type: c.type, testingType: c.testingType || DEFAULT_TESTING_TYPE, status: c.status, createdAt: c.createdAt, completedAt: c.completedAt || null, baselineId: c.baselineId,
     summary: c.artifacts?.execution?.summary || null, delta: c.delta?.summary || c.deltaPreview?.summary || null,
   }))));
   app.get('/api/cycles/:id', (req, res) => res.json(cycle(req)));

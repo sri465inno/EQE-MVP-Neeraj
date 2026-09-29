@@ -1,4 +1,5 @@
 'use strict';
+const { getTestingType } = require('./testing-types');
 const { SEVEN_AGENTS, INPUT_TYPES, DEMO } = require('./platform');
 // Cycle report: every figure is computed here from persisted artifacts; the model (optional) drafts the narrative only.
 const { draftNarrative } = require('./llm');
@@ -25,9 +26,11 @@ async function buildCycleReport(cycle, { env = process.env, fetchImpl, guidance 
   const a = cycle.artifacts;
   const exec = a.execution || null;
   const defects = a.defects || [];
+  const tt = getTestingType(cycle.testingType);
   const facts = {
     cycleName: cycle.name,
     cycleType: cycle.type,
+  testingType: tt.name,
     inputs: cycle.inputs.map((i) => `${i.label} ${i.ref} (${PROVENANCE[i.provenance.kind] || i.provenance.kind})`).join(', '),
     requirements: a.requirements.length,
     delta: cycle.delta ? cycle.delta.summary : null,
@@ -49,7 +52,7 @@ async function buildCycleReport(cycle, { env = process.env, fetchImpl, guidance 
     title: `${APP_TITLE} - Cycle report`,
     generatedAt: new Date().toISOString(),
     cycle: {
-      id: cycle.id, name: cycle.name, type: cycle.type, status: cycle.status, createdAt: cycle.createdAt, completedAt: cycle.completedAt || null,
+      id: cycle.id, name: cycle.name, type: cycle.type, testingType: tt.id, testingTypeName: tt.name, status: cycle.status, createdAt: cycle.createdAt, completedAt: cycle.completedAt || null,
       baselineId: cycle.baselineId, baselineVersionAtStart: cycle.baselineVersionAtStart, baselineVersionAfter: cycle.baselineVersionAfter ?? null,
       sutBuild: cycle.sutBuild, ranBy: cycle.createdBy || null,
     },
@@ -59,6 +62,11 @@ async function buildCycleReport(cycle, { env = process.env, fetchImpl, guidance 
       inputsPlatformOnly: INPUT_TYPES.filter((t) => t.mvp === 'platform only').map((t) => t.name),
       capability: DEMO.capability,
     },
+    testing: {
+      id: tt.id, name: tt.name, focus: tt.focus, approach: cycle.type === 'incremental' ? tt.incremental : tt.baseline,
+      selection: a.selection || null,
+    },
+    reviewAgent: cycle.reviewAgent ? { counts: cycle.reviewAgent.counts, note: cycle.reviewAgent.note, findings: cycle.reviewAgent.findings } : null,
     dataModel: (cycle.inputs.find((i) => i.slot === 'codebase') || {}).dataModel || null,
     skills: (cycle.skills || []).map((k) => ({ id: k.id, name: k.name, description: k.description, file: k.file, sha256: k.sha256, appliesTo: k.appliesTo, delivers: k.delivers })),
     handovers,
@@ -96,10 +104,10 @@ async function buildCycleReport(cycle, { env = process.env, fetchImpl, guidance 
       note: 'Reuse means these artefacts were not re-designed, not that they were not executed.',
     },
     scripts: { total: a.scripts.length, byStatus: countBy(a.scripts, (s) => s.status), files: a.scripts.map((s) => ({ file: s.file, covers: s.covers, status: s.status, version: s.version })) },
-    execution: exec ? {
+    execution: exec && exec.executed !== false ? {
       executed: true, quarantined: 'not measured', durationMs: Date.parse(exec.finishedAt) - Date.parse(exec.startedAt), tool: exec.tool, command: exec.command, sut: exec.sut, startedAt: exec.startedAt, finishedAt: exec.finishedAt, summary: exec.summary,
       results: exec.results.map((r) => ({ key: r.key, requirementId: r.requirementId, name: r.name, status: r.status, duration: r.duration, reason: r.reason || null })),
-    } : { executed: false },
+    } : { executed: false, reason: exec ? exec.tool : null },
     defects: {
       open: defects.map((d) => ({ id: d.id, title: d.title, severity: d.severity, blocksRelease: d.blocksRelease ?? null, ruleId: d.ruleId || null, movement: d.movement, testCaseKey: d.testCaseKey, requirementId: d.requirementId, expected: d.expected, actual: d.actual, assertion: d.assertion })),
       resolved: (a.resolvedDefects || []).map((d) => ({ id: d.id, title: d.title, testCaseKey: d.testCaseKey })),
@@ -137,6 +145,8 @@ function renderReportHtml(r) {
 ${r.platform ? `<h2>Platform scope</h2><p>Capability under test: <b>${esc(r.platform.capability)}</b>${r.dataModel ? ` &middot; reservation model <b>${esc(r.dataModel.attributeCount)}</b> attributes in ${esc(r.dataModel.groupCount)} groups, <b>${esc(r.dataModel.drivers.length)}</b> of them commission drivers (${esc(r.dataModel.file)})` : ''}.</p>
 <p>Seven platform agents: ${r.platform.agents.map((g) => `${g.no}. ${esc(g.name)} <span class="muted">(${esc(g.status)})</span>`).join(' &middot; ')}</p>
 <p>Inputs implemented in this MVP: ${esc(r.platform.inputsImplemented.join('; '))}. Platform input types not in this MVP: <span class="muted">${esc(r.platform.inputsPlatformOnly.join('; '))}</span>.</p>` : ''}
+<h2>Type of testing</h2>${r.testing ? `<p><b>${esc(r.testing.name)}</b>: ${esc(r.testing.focus)}<br>${esc(r.testing.approach)}</p>${r.testing.selection ? `<p>${kv({ 'cases in the pack': r.testing.selection.designed, 'in this run': r.testing.selection.inRun, reused: r.testing.selection.reused, 're-designed': r.testing.selection.redesigned, added: r.testing.selection.added, 'kept outside this run': r.testing.selection.notInRun })}</p>${r.testing.selection.gaps.length ? `<ul>${r.testing.selection.gaps.map((g) => `<li class="fail">${esc(g.message)}</li>`).join('')}</ul>` : ''}` : ''}` : ''}
+<h2>Review agent suggestions</h2>${r.reviewAgent ? `<p>${kv(r.reviewAgent.counts)} &middot; <span class="muted">${esc(r.reviewAgent.note)}</span></p>${table(['ID', 'Kind', 'Severity', 'Suggestion', 'Source'], r.reviewAgent.findings.map((f) => [esc(f.id), esc(f.category), esc(f.severity), `<b>${esc(f.title)}</b><br>${esc(f.detail || '')}<br><span class="muted">${esc(f.suggestion)}</span>`, esc(f.sources.map((x) => [x.ref, x.line].filter(Boolean).join(':')).join(', '))]))}` : '<p>No review agent ran for this cycle.</p>'}
 <h2>Active skills</h2>${(r.skills || []).length ? table(['Skill', 'Description', 'Seen by agents', 'Owes', 'File'], r.skills.map((k) => [`<b>${esc(k.name)}</b><br><code>${esc(k.id)}</code>`, esc(k.description), esc(k.appliesTo.join(', ')), esc(Object.entries(k.delivers).map(([ag, keys]) => `${ag}: ${keys.join(', ')}`).join('; ')), `${esc(k.file)} <span class="muted">${esc(k.sha256)}</span>`])) : '<p>No skills were active for this cycle.</p>'}
 <div class="kpis">
 <div class="kpi">Requirements<b>${r.requirements.total}</b></div><div class="kpi">Test cases<b>${r.testCases.total}</b></div><div class="kpi">Scripts<b>${r.scripts.total}</b></div>

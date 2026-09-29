@@ -1,13 +1,15 @@
 {
   "title": "Agentic QE Platform - MVP - Cycle report",
-  "generatedAt": "2026-09-28T21:43:30.425Z",
+  "generatedAt": "2026-09-29T17:20:33.056Z",
   "cycle": {
     "id": "CYC-2",
     "name": "Commission increment (COM-20, engine 2.0)",
     "type": "incremental",
+    "testingType": "regression",
+    "testingTypeName": "Regression testing",
     "status": "completed",
-    "createdAt": "2026-09-28T21:43:29.080Z",
-    "completedAt": "2026-09-28T21:43:30.407Z",
+    "createdAt": "2026-09-29T17:20:31.623Z",
+    "completedAt": "2026-09-29T17:20:33.040Z",
     "baselineId": "BL-1",
     "baselineVersionAtStart": 1,
     "baselineVersionAfter": 2,
@@ -81,6 +83,439 @@
       "Policy and contract documents (e.g. commission agreements)"
     ],
     "capability": "Travel-advisor commission calculated from reservation attributes"
+  },
+  "testing": {
+    "id": "regression",
+    "name": "Regression testing",
+    "focus": "The full pack: every functional, screen and non-functional case, so nothing that worked before has broken.",
+    "approach": "Re-runs every case carried over from the baseline alongside the new and re-designed ones.",
+    "selection": {
+      "testingType": "regression",
+      "name": "Regression testing",
+      "focus": "The full pack: every functional, screen and non-functional case, so nothing that worked before has broken.",
+      "approach": "Re-runs every case carried over from the baseline alongside the new and re-designed ones.",
+      "designed": 19,
+      "inRun": 19,
+      "automatedInRun": 18,
+      "reused": 14,
+      "redesigned": 1,
+      "added": 4,
+      "notInRun": 0,
+      "bySuite": {
+        "api": 17,
+        "ui": 1,
+        "journey": 0,
+        "nfr": 1,
+        "load": 0
+      },
+      "outOfScope": [],
+      "gaps": []
+    }
+  },
+  "reviewAgent": {
+    "counts": {
+      "added": 15,
+      "missing": 3,
+      "conflicts": 0,
+      "high": 8
+    },
+    "note": "Suggestions only. The human reviewer decides every conflict and approves the requirement set.",
+    "findings": [
+      {
+        "id": "RA-01",
+        "category": "added",
+        "severity": "high",
+        "groupId": "G4",
+        "title": "In the code but in no Jira story",
+        "detail": "Base commission is 10% of commissionable room revenue.",
+        "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+        "sources": [
+          {
+            "source": "code",
+            "ref": "README.md",
+            "line": 11,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+            "quote": "- Base commission is 10% of commissionable room revenue."
+          },
+          {
+            "source": "code",
+            "ref": "src/rules.js",
+            "line": 6,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/src/rules.js",
+            "quote": "/** @rule Base commission is 10% of commissionable room revenue. */"
+          }
+        ]
+      },
+      {
+        "id": "RA-02",
+        "category": "added",
+        "severity": "high",
+        "groupId": "G5",
+        "title": "In the code but in no Jira story",
+        "detail": "Commissionable room revenue excludes taxes, resort fees and ancillary charges.",
+        "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+        "sources": [
+          {
+            "source": "code",
+            "ref": "README.md",
+            "line": 12,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+            "quote": "- Commissionable room revenue excludes taxes, resort fees and ancillary charges."
+          }
+        ]
+      },
+      {
+        "id": "RA-03",
+        "category": "added",
+        "severity": "high",
+        "groupId": "G6",
+        "title": "In the code but in no Jira story",
+        "detail": "Reservations booked through the GDS channel earn an additional 1.5% channel uplift.",
+        "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+        "sources": [
+          {
+            "source": "code",
+            "ref": "README.md",
+            "line": 13,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+            "quote": "- Reservations booked through the GDS channel earn an additional 1.5% channel uplift."
+          },
+          {
+            "source": "code",
+            "ref": "src/rules.js",
+            "line": 9,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/src/rules.js",
+            "quote": "/** @rule Reservations booked through the GDS channel earn an additional 1.5% channel uplift. */"
+          }
+        ]
+      },
+      {
+        "id": "RA-04",
+        "category": "added",
+        "severity": "high",
+        "groupId": "G7",
+        "title": "In the code but in no Jira story",
+        "detail": "Stays of 7 nights or more earn a long-stay bonus of 1.5%.",
+        "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+        "sources": [
+          {
+            "source": "code",
+            "ref": "README.md",
+            "line": 14,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+            "quote": "- Stays of 7 nights or more earn a long-stay bonus of 1.5%."
+          },
+          {
+            "source": "code",
+            "ref": "src/rules.js",
+            "line": 12,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/src/rules.js",
+            "quote": "/** @rule Stays of 7 nights or more earn a long-stay bonus of 1.5%. */"
+          }
+        ]
+      },
+      {
+        "id": "RA-05",
+        "category": "added",
+        "severity": "high",
+        "groupId": "G8",
+        "title": "In the code but in no Jira story",
+        "detail": "Commission is rounded half-up to 2 decimal places.",
+        "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+        "sources": [
+          {
+            "source": "code",
+            "ref": "README.md",
+            "line": 16,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+            "quote": "- Commission is rounded half-up to 2 decimal places."
+          },
+          {
+            "source": "code",
+            "ref": "src/rules.js",
+            "line": 19,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/src/rules.js",
+            "quote": "/** @rule Commission is rounded half-up to 2 decimal places. */"
+          }
+        ]
+      },
+      {
+        "id": "RA-06",
+        "category": "added",
+        "severity": "high",
+        "groupId": "G9",
+        "title": "In the code but in no Jira story",
+        "detail": "Reservations paid with loyalty points are not commissionable.",
+        "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+        "sources": [
+          {
+            "source": "code",
+            "ref": "README.md",
+            "line": 17,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+            "quote": "- Reservations paid with loyalty points are not commissionable."
+          }
+        ]
+      },
+      {
+        "id": "RA-07",
+        "category": "added",
+        "severity": "medium",
+        "groupId": "G10",
+        "title": "In the code but in no Jira story",
+        "detail": "Every reservation is described by a data dictionary of 1000 attributes.",
+        "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+        "sources": [
+          {
+            "source": "code",
+            "ref": "README.md",
+            "line": 18,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+            "quote": "- Every reservation is described by a data dictionary of 1000 attributes."
+          }
+        ]
+      },
+      {
+        "id": "RA-08",
+        "category": "added",
+        "severity": "medium",
+        "groupId": "G11",
+        "title": "In the code but in no Jira story",
+        "detail": "Every commission calculation is written to the commission audit ledger.",
+        "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+        "sources": [
+          {
+            "source": "code",
+            "ref": "README.md",
+            "line": 19,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+            "quote": "- Every commission calculation is written to the commission audit ledger."
+          }
+        ]
+      },
+      {
+        "id": "RA-09",
+        "category": "added",
+        "severity": "high",
+        "groupId": "G12",
+        "title": "In the code but in no Jira story",
+        "detail": "Negotiated corporate rates (rate plan CORP) are commissioned at a flat 5%.",
+        "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+        "sources": [
+          {
+            "source": "code",
+            "ref": "README.md",
+            "line": 21,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+            "quote": "- Negotiated corporate rates (rate plan CORP) are commissioned at a flat 5%."
+          },
+          {
+            "source": "code",
+            "ref": "src/rules.js",
+            "line": 26,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/src/rules.js",
+            "quote": "/** @rule Negotiated corporate rates (rate plan CORP) are commissioned at a flat 5%. */"
+          }
+        ]
+      },
+      {
+        "id": "RA-10",
+        "category": "added",
+        "severity": "medium",
+        "groupId": "G13",
+        "title": "In the code but in no Jira story",
+        "detail": "A reservation without an advisor IATA number returns HTTP 422.",
+        "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+        "sources": [
+          {
+            "source": "code",
+            "ref": "README.md",
+            "line": 25,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+            "quote": "- A reservation without an advisor IATA number returns HTTP 422."
+          }
+        ]
+      },
+      {
+        "id": "RA-11",
+        "category": "added",
+        "severity": "medium",
+        "groupId": "G14",
+        "title": "In the code but in no Jira story",
+        "detail": "Unknown reservation IDs return HTTP 404.",
+        "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+        "sources": [
+          {
+            "source": "code",
+            "ref": "README.md",
+            "line": 26,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+            "quote": "- Unknown reservation IDs return HTTP 404."
+          }
+        ]
+      },
+      {
+        "id": "RA-12",
+        "category": "missing",
+        "severity": "high",
+        "groupId": "G3",
+        "title": "Asked for in Jira but not mentioned in the code",
+        "detail": "Package rates are commissioned on 70% of the package price.",
+        "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "COM-20",
+            "line": null,
+            "url": "https://aurora-hotels.atlassian.net/browse/COM-20",
+            "quote": "Package rates are commissioned on 70% of the package price."
+          }
+        ]
+      },
+      {
+        "id": "RA-13",
+        "category": "missing",
+        "severity": "low",
+        "groupId": "G11",
+        "title": "No testable expected value",
+        "detail": "Every commission calculation is written to the commission audit ledger.",
+        "suggestion": "Add an example with an exact expected result (amount, status or error code); until then it can only become a manual case.",
+        "sources": [
+          {
+            "source": "code",
+            "ref": "README.md",
+            "line": 19,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+            "quote": "- Every commission calculation is written to the commission audit ledger."
+          }
+        ]
+      },
+      {
+        "id": "RA-14",
+        "category": "missing",
+        "severity": "medium",
+        "groupId": null,
+        "title": "1 of 11 commission-driving attributes have no rule that varies them",
+        "detail": "reservation.status (Lifecycle status of the reservation)",
+        "suggestion": "Ask for a rule or an example per attribute in the epic; until then no test changes these attributes.",
+        "sources": [
+          {
+            "source": "code",
+            "ref": "data-dictionary/reservation-attributes.json",
+            "line": null,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/data-dictionary/reservation-attributes.json",
+            "quote": null
+          }
+        ]
+      },
+      {
+        "id": "RA-15",
+        "category": "added",
+        "severity": "medium",
+        "groupId": "G1",
+        "title": "Changes REQ-008 of baseline BL-1",
+        "detail": "Was: Commission per reservation is capped at USD 500. Now: Commission per reservation is capped at USD 750.",
+        "suggestion": "Confirm the new value; its cases will be re-designed and the old version kept in history.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "COM-20",
+            "line": null,
+            "url": "https://aurora-hotels.atlassian.net/browse/COM-20",
+            "quote": "Commission per reservation is capped at USD 750."
+          },
+          {
+            "source": "code",
+            "ref": "README.md",
+            "line": 15,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+            "quote": "- Commission per reservation is capped at USD 750."
+          },
+          {
+            "source": "code",
+            "ref": "src/rules.js",
+            "line": 16,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/src/rules.js",
+            "quote": "/** @rule Commission per reservation is capped at USD 750. */"
+          }
+        ]
+      },
+      {
+        "id": "RA-16",
+        "category": "added",
+        "severity": "medium",
+        "groupId": "G2",
+        "title": "New for baseline BL-1",
+        "detail": "Group reservations of 10 or more rooms are commissioned at a flat 8%.",
+        "suggestion": "Confirm it belongs in this increment; new cases will be designed for it.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "COM-20",
+            "line": null,
+            "url": "https://aurora-hotels.atlassian.net/browse/COM-20",
+            "quote": "Group reservations of 10 or more rooms are commissioned at a flat 8%."
+          },
+          {
+            "source": "code",
+            "ref": "README.md",
+            "line": 20,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+            "quote": "- Group reservations of 10 or more rooms are commissioned at a flat 8%."
+          },
+          {
+            "source": "code",
+            "ref": "src/rules.js",
+            "line": 22,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/src/rules.js",
+            "quote": "/** @rule Group reservations of 10 or more rooms are commissioned at a flat 8%. */"
+          }
+        ]
+      },
+      {
+        "id": "RA-17",
+        "category": "added",
+        "severity": "medium",
+        "groupId": "G3",
+        "title": "New for baseline BL-1",
+        "detail": "Package rates are commissioned on 70% of the package price.",
+        "suggestion": "Confirm it belongs in this increment; new cases will be designed for it.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "COM-20",
+            "line": null,
+            "url": "https://aurora-hotels.atlassian.net/browse/COM-20",
+            "quote": "Package rates are commissioned on 70% of the package price."
+          }
+        ]
+      },
+      {
+        "id": "RA-18",
+        "category": "added",
+        "severity": "medium",
+        "groupId": "G12",
+        "title": "New for baseline BL-1",
+        "detail": "Negotiated corporate rates (rate plan CORP) are commissioned at a flat 5%.",
+        "suggestion": "Confirm it belongs in this increment; new cases will be designed for it.",
+        "sources": [
+          {
+            "source": "code",
+            "ref": "README.md",
+            "line": 21,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+            "quote": "- Negotiated corporate rates (rate plan CORP) are commissioned at a flat 5%."
+          },
+          {
+            "source": "code",
+            "ref": "src/rules.js",
+            "line": 26,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/src/rules.js",
+            "quote": "/** @rule Negotiated corporate rates (rate plan CORP) are commissioned at a flat 5%. */"
+          }
+        ]
+      }
+    ]
   },
   "dataModel": {
     "file": "data-dictionary/reservation-attributes.json",
@@ -244,11 +679,26 @@
       }
     },
     {
+      "id": "input-review",
+      "name": "Input review before the human gate",
+      "description": "What the review agent checks in the project inputs and how it words its suggestions for the reviewer.",
+      "file": "input-review.md",
+      "sha256": "a874de06ca90",
+      "appliesTo": [
+        "review-agent"
+      ],
+      "delivers": {
+        "review-agent": [
+          "suggestions"
+        ]
+      }
+    },
+    {
       "id": "test-case-authoring",
       "name": "Test case authoring and Zephyr export shape",
       "description": "One house style for every test case, so each cycle exports into Zephyr the same way.",
       "file": "test-case-authoring.md",
-      "sha256": "8969b2225695",
+      "sha256": "c8e8199e44ba",
       "appliesTo": [
         "testcases",
         "report"
@@ -260,6 +710,26 @@
         ],
         "report": [
           "testCaseExport"
+        ]
+      }
+    },
+    {
+      "id": "testing-regression",
+      "name": "Regression pack",
+      "description": "Steers the design and execution agents to keep and re-run the full pack so nothing that worked before breaks.",
+      "file": "testing-regression.md",
+      "sha256": "c91eea0cc73d",
+      "appliesTo": [
+        "testcases",
+        "scripts",
+        "execution"
+      ],
+      "delivers": {
+        "testcases": [
+          "regressionPack"
+        ],
+        "execution": [
+          "results"
         ]
       }
     },
@@ -350,6 +820,25 @@
       ]
     },
     {
+      "phase": "review-agent",
+      "status": "complete",
+      "skills": [
+        "input-review"
+      ],
+      "missing": [],
+      "items": [
+        {
+          "key": "suggestions",
+          "status": "delivered",
+          "count": 18,
+          "skills": [
+            "input-review"
+          ],
+          "note": null
+        }
+      ]
+    },
+    {
       "phase": "delta",
       "label": "Delta classification",
       "status": "complete",
@@ -420,6 +909,7 @@
       "skills": [
         "incremental-merge",
         "test-case-authoring",
+        "testing-regression",
         "traceability-handover"
       ],
       "missing": [],
@@ -445,6 +935,15 @@
             "traceability-handover"
           ],
           "note": null
+        },
+        {
+          "key": "regressionPack",
+          "status": "delivered",
+          "count": 19,
+          "skills": [
+            "testing-regression"
+          ],
+          "note": "14 carried-over case(s) re-run"
         }
       ]
     },
@@ -455,6 +954,7 @@
       "skills": [
         "automation-script-conventions",
         "incremental-merge",
+        "testing-regression",
         "traceability-handover"
       ],
       "missing": [],
@@ -477,6 +977,7 @@
       "label": "Execution agent (Playwright, real run)",
       "status": "complete",
       "skills": [
+        "testing-regression",
         "traceability-handover"
       ],
       "missing": [],
@@ -486,6 +987,7 @@
           "status": "delivered",
           "count": 18,
           "skills": [
+            "testing-regression",
             "traceability-handover"
           ],
           "note": "1 manual case(s) handed over as not run"
@@ -578,7 +1080,7 @@
       "summary": "Travel-advisor commission engine for Aurora Hotels reservations (sample codebase for the Agentic QE Platform - MVP demo)",
       "statements": 20,
       "provenance": "github",
-      "provenanceLabel": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/commission-engine-v2 (6ccd807) at 2026-09-28T21:43:27.440Z",
+      "provenanceLabel": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/commission-engine-v2 (6ccd807) at 2026-09-29T17:20:30.020Z",
       "files": [
         "README.md",
         "data-dictionary/reservation-attributes.json",
@@ -993,16 +1495,16 @@
   "execution": {
     "executed": true,
     "quarantined": "not measured",
-    "durationMs": 1304,
+    "durationMs": 1387,
     "tool": "Playwright 1.63.0 (headless Chromium, JSON reporter)",
-    "command": "npx playwright test --config ../../../../../tmp/aqe-demo-bWmvu1/runs/CYC-2/playwright.config.js",
+    "command": "npx playwright test --config ../../../../../tmp/aqe-demo-jid1i8/runs/CYC-2/playwright.config.js",
     "sut": {
       "build": "demo/commission-engine-v2",
-      "url": "http://127.0.0.1:35703",
+      "url": "http://127.0.0.1:45959",
       "name": "Aurora commission engine, bundled copy of branch demo/commission-engine-v2 (samples/commission-engine/v2)"
     },
-    "startedAt": "2026-09-28T21:43:29.097Z",
-    "finishedAt": "2026-09-28T21:43:30.401Z",
+    "startedAt": "2026-09-29T17:20:31.646Z",
+    "finishedAt": "2026-09-29T17:20:33.033Z",
     "summary": {
       "total": 19,
       "executed": 18,
@@ -1010,7 +1512,7 @@
       "failed": 1,
       "skipped": 0,
       "notRun": 1,
-      "durationMs": 446,
+      "durationMs": 449,
       "passRate": 94.4
     },
     "results": [
@@ -1019,7 +1521,7 @@
         "requirementId": "REQ-001",
         "name": "The reservation model has 1000 attributes and a full reservation is accepted",
         "status": "passed",
-        "duration": 32,
+        "duration": 29,
         "reason": null
       },
       {
@@ -1027,7 +1529,7 @@
         "requirementId": "REQ-002",
         "name": "Advisor views the commission breakdown on the commission statement page",
         "status": "passed",
-        "duration": 216,
+        "duration": 222,
         "reason": null
       },
       {
@@ -1035,7 +1537,7 @@
         "requirementId": "REQ-003",
         "name": "Commission quote p95 response time is within 300 ms",
         "status": "passed",
-        "duration": 53,
+        "duration": 55,
         "reason": null
       },
       {
@@ -1043,7 +1545,7 @@
         "requirementId": "REQ-004",
         "name": "Base commission is 10% of commissionable room revenue",
         "status": "passed",
-        "duration": 10,
+        "duration": 11,
         "reason": null
       },
       {
@@ -1075,7 +1577,7 @@
         "requirementId": "REQ-007",
         "name": "A stay of 6 nights earns no long-stay bonus",
         "status": "passed",
-        "duration": 26,
+        "duration": 25,
         "reason": null
       },
       {
@@ -1083,7 +1585,7 @@
         "requirementId": "REQ-008",
         "name": "Commission is capped at USD 750 per reservation",
         "status": "passed",
-        "duration": 11,
+        "duration": 10,
         "reason": null
       },
       {
@@ -1091,7 +1593,7 @@
         "requirementId": "REQ-009",
         "name": "Commission is rounded half-up to 2 decimal places",
         "status": "passed",
-        "duration": 10,
+        "duration": 9,
         "reason": null
       },
       {
@@ -1099,7 +1601,7 @@
         "requirementId": "REQ-010",
         "name": "A stay paid with loyalty points earns no commission",
         "status": "passed",
-        "duration": 11,
+        "duration": 12,
         "reason": null
       },
       {
@@ -1107,7 +1609,7 @@
         "requirementId": "REQ-011",
         "name": "Cancelled and no-show reservations earn no commission",
         "status": "passed",
-        "duration": 11,
+        "duration": 10,
         "reason": null
       },
       {
@@ -1123,7 +1625,7 @@
         "requirementId": "REQ-013",
         "name": "A reservation without an advisor IATA number returns HTTP 422",
         "status": "passed",
-        "duration": 7,
+        "duration": 11,
         "reason": null
       },
       {
@@ -1147,7 +1649,7 @@
         "requirementId": "REQ-015",
         "name": "9 rooms keep the transient base rate",
         "status": "passed",
-        "duration": 6,
+        "duration": 5,
         "reason": null
       },
       {
@@ -1155,7 +1657,7 @@
         "requirementId": "REQ-016",
         "name": "Package rates are commissioned on 70% of the package price",
         "status": "passed",
-        "duration": 12,
+        "duration": 9,
         "reason": null
       },
       {
@@ -1465,7 +1967,7 @@
     {
       "gate": "Requirement set review",
       "by": "Priya Shah",
-      "at": "2026-09-28T21:43:29.081Z",
+      "at": "2026-09-29T17:20:31.626Z",
       "decision": "approved",
       "comment": "",
       "detail": "14 requirements approved; 0 excluded; 0 conflict(s) resolved"
@@ -1473,7 +1975,7 @@
     {
       "gate": "Merge into baseline",
       "by": "Sam Lee",
-      "at": "2026-09-28T21:43:29.089Z",
+      "at": "2026-09-29T17:20:31.635Z",
       "decision": "approved",
       "comment": "",
       "detail": "4 requirements, 5 test cases, 4 scripts merged: BL-1 v1 -> v2"
@@ -1485,7 +1987,7 @@
   },
   "honesty": [
     "Jira epic COM-20: Jira REST API v3 export pulled live from GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export) - synthetic test issues; no live Jira call was made",
-    "Codebase sri465inno/uc-agentic-quality-engineering@demo/commission-engine-v2 (6ccd807): Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/commission-engine-v2 (6ccd807) at 2026-09-28T21:43:27.440Z",
+    "Codebase sri465inno/uc-agentic-quality-engineering@demo/commission-engine-v2 (6ccd807): Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/commission-engine-v2 (6ccd807) at 2026-09-29T17:20:30.020Z",
     "Execution: 18 automated cases really executed by Playwright 1.63.0 (headless Chromium, JSON reporter) against Aurora commission engine, bundled copy of branch demo/commission-engine-v2 (samples/commission-engine/v2) (demo/commission-engine-v2); 1 manual case(s) designed but not executed.",
     "Normalisation, delta classification, coverage, pass/fail and defect raising are computed in code, not by a model."
   ]

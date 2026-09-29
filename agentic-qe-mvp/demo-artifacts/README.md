@@ -1,6 +1,6 @@
 # Agentic QE Platform - demo artifacts
 
-Generated 2026-09-28T21:43:30.490Z by `node scripts/export-demo-artifacts.js`. Both cycles were run end to end; the Playwright results are real runs against the bundled sample service.
+Generated 2026-09-29T17:20:33.128Z by `node scripts/export-demo-artifacts.js`. Both cycles were run end to end; the Playwright results are real runs against the bundled sample service.
 
 Inputs: Jira REST v3 exports (synthetic issues COM-1, COM-10/COM-11, COM-20) and the commission-engine codebase, pulled from GitHub branches `demo/jira-export`, `demo/commission-engine` and `demo/commission-engine-v2`. No live Jira call was made.
 

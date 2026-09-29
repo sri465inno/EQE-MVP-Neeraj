@@ -7,7 +7,8 @@ const date = (iso) => (iso ? new Date(iso).toISOString().replace('T', ' ').slice
 const plural = (n, one, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 function recommendation(r, defects) {
-  if (!r.execution.executed) return { decision: 'Not ready', tone: 'bad', reason: 'The tests have not been executed yet.' };
+  const gap = (r.testing?.selection?.gaps || []).find((g) => g.severity === 'high');
+  if (!r.execution.executed) return { decision: 'Not ready', tone: 'bad', reason: gap ? gap.message : 'The tests have not been executed yet.', conditions: gap ? [gap.message] : [] };
   const blocking = defects.filter((d) => d.blocksRelease);
   if (blocking.length) {
     return { decision: 'No-go', tone: 'bad', reason: `${plural(blocking.length, 'release-blocking defect')} open (${blocking.map((d) => d.id).join(', ')}).`,
@@ -36,9 +37,13 @@ function buildLeadReport(cycle) {
   const manual = r.automation.notAutomated;
   const gaps = (r.coverage?.rows || []).filter((x) => !/passing/.test(x.status));
   const isInc = cycle.type === 'incremental';
+  const tt = r.testing;
+  const sel = tt?.selection;
+  const ra = r.reviewAgent;
 
   const summary = [
     `${isInc ? 'Incremental' : 'Baseline'} cycle for <b>${esc(r.platform?.capability || cycle.name)}</b> on build <code>${esc(r.cycle.sutBuild)}</code>, ${esc(date(r.cycle.createdAt))}.`,
+    ...(tt ? [`Type of testing: <b>${esc(tt.name)}</b>. ${esc(tt.focus)}${sel && sel.notInRun ? ` This run executed ${plural(sel.inRun, 'case')} of the ${sel.designed} in the pack.` : ''}`] : []),
     `We took ${plural(r.inputs.length, 'input')} (${r.inputs.map((i) => `${esc(i.label)} ${esc(i.ref)}`).join(', ')}) and produced ${plural(r.requirements.total, 'requirement')}, ${plural(r.testCases.total, 'test case')} and ${plural(r.scripts.total, 'automated script')}.`,
     ex ? `We ran ${plural(ex.executed, 'automated test')} for real: <b>${ex.passed} passed, ${ex.failed} failed</b> (pass rate ${ex.passRate}%). ${ex.notRun ? `${plural(ex.notRun, 'manual test')} still to be run by hand.` : ''}` : 'Tests have not been executed yet.',
     defects.length ? `${plural(defects.length, 'defect')} raised from real failures, ${defects.filter((d) => d.blocksRelease).length} release-blocking: ${defects.map((d) => `${esc(d.id)} ${esc(d.title)}`).join('; ')}.` : 'No defects: nothing failed.',
@@ -49,8 +54,10 @@ function buildLeadReport(cycle) {
 
   const approach = [
     `Read ${n.statements} statements from the inputs and lined them up into ${n.groups} requirement groups: ${n.agreed} agreed by every source, ${n['jira-only'] || 0} only in Jira, ${n['code-only'] || 0} only in the code, ${n.conflict || 0} in conflict.`,
+    ...(ra ? [`The review agent read the inputs first and suggested ${ra.counts.added} addition(s), ${ra.counts.missing} missing piece(s) and ${ra.counts.conflicts} conflict(s) for the reviewer (${ra.counts.high} high severity). It approved nothing.`] : []),
     reviewApproval ? `${esc(reviewApproval.by)} reviewed and approved the requirement set on ${esc(date(reviewApproval.at))}${conflicts.length ? `, settling ${plural(conflicts.length, 'conflict')}: ${conflicts.map((q) => `${esc(q.title)} - kept "${esc(q.resolution.chosen.text)}" (${esc(q.resolution.chosen.sources.join('/'))}) over "${esc(q.resolution.rejected.map((x) => x.text).join('; '))}" (${esc(q.resolution.rejected.flatMap((x) => x.sources).join('/'))})`).join('; ')}` : ''}.` : 'The requirement set has not been reviewed yet.',
     ...(isInc && r.delta ? [`Compared every statement with baseline ${esc(r.cycle.baselineId)} v${esc(r.cycle.baselineVersionAtStart)}: ${esc(r.delta.summary)}.${enhanced.length ? ` Changed: ${enhanced.map((q) => `${esc(q.id)} "${esc(q.previous)}" → "${esc(q.text)}"`).join('; ')}.` : ''}`] : []),
+    ...(tt ? [`${esc(tt.name)} steered the design: ${esc(tt.approach)}${sel ? ` Result: ${sel.inRun} case(s) in this run (${sel.reused} reused, ${sel.redesigned} re-designed, ${sel.added} new)${sel.notInRun ? `, ${sel.notInRun} kept in the pack outside this run` : ''}.` : ''}`] : []),
     `Derived ${plural(r.rules.total, 'business rule')} (each quoting its source), designed ${plural(r.testCases.total, 'test case')} (${Object.entries(r.testCases.byType).map(([k, v]) => `${v} ${k}`).join(', ')}) and generated ${plural(r.scripts.total, 'Playwright script')}.`,
     ...(mergeApproval ? [`${esc(mergeApproval.by)} ${esc(mergeApproval.decision)} the merge into the baseline on ${esc(date(mergeApproval.at))}.`] : []),
     ex ? `Executed the automated suite with ${esc(r.execution.tool)} against ${esc(r.execution.sut.name)}; defects were raised only for tests that actually failed.` : 'Execution has not run.',
@@ -58,6 +65,7 @@ function buildLeadReport(cycle) {
 
   const artifacts = [
     { name: 'Inputs and provenance', count: r.inputs.length, note: 'what was taken from each source, and where from', tab: 'inputs', file: '01-inputs/' },
+    ...(ra ? [{ name: 'Review agent suggestions', count: ra.findings.length, note: `${ra.counts.added} added · ${ra.counts.missing} missing · ${ra.counts.conflicts} conflicts (advisory)`, tab: 'review-agent', file: '01-inputs/review-agent.json' }] : []),
     { name: 'Normalised requirement set', count: n.groups, note: `${n.agreed} agreed · ${n['jira-only'] || 0} Jira-only · ${n['code-only'] || 0} code-only · ${n.conflict || 0} conflicts`, tab: 'normalise', file: '01-inputs/normalisation.json' },
     ...(isInc && r.delta ? [{ name: 'Delta against baseline', count: (r.delta.unchanged || 0) + (r.delta.enhanced || 0) + (r.delta.new || 0), note: r.delta.summary, tab: 'delta', file: '01-inputs/delta-classification.json' }] : []),
     { name: 'Requirements repository', count: r.requirements.total, note: Object.entries(r.requirements.byStatus).map(([k, v]) => `${v} ${k}`).join(' · '), tab: 'requirements', file: '02-requirements/' },
@@ -71,6 +79,9 @@ function buildLeadReport(cycle) {
   ];
 
   const risks = [
+    ...(sel ? sel.gaps.map((g) => `${tt.name}: ${g.message}`) : []),
+    ...(sel && sel.outOfScope.length ? [`${plural(sel.outOfScope.length, 'requirement')} had no case in this ${tt.name.toLowerCase()} run (${sel.outOfScope.join(', ')}); a ${tt.id === 'smoke' ? 'passing smoke run is not a release decision' : 'wider run is needed before release'}.`] : []),
+    ...(ra ? ra.findings.filter((f) => f.severity === 'high' && f.category === 'missing').map((f) => `Review agent (${f.id}): ${f.title}. ${f.suggestion}`) : []),
     ...defects.map((d) => `${d.id} (${d.severity}): ${d.impact || d.title}. Expected ${d.expected}, got ${d.actual}. ${d.releaseDecision || ''}`),
     ...(manual.length ? [`${plural(manual.length, 'test case')} cannot be automated and ${manual.length === 1 ? 'was' : 'were'} not executed: ${manual.map((t) => `${t.key} ${t.name}`).join('; ')}. Needs a manual run before sign-off.`] : []),
     ...(gaps.length ? [`${plural(gaps.length, 'requirement')} not yet verified by a passing test: ${gaps.map((g) => `${g.requirementId} (${g.status})`).join('; ')}.`] : []),
@@ -87,7 +98,7 @@ function buildLeadReport(cycle) {
   ];
 
   const kpis = [
-    ['Requirements', r.requirements.total], ['Test cases', r.testCases.total], ['Automated', r.automation.casesCovered],
+    ...(tt ? [['Type of testing', tt.name]] : []), ['Requirements', r.requirements.total], ['Test cases', r.testCases.total], ['Automated', r.automation.casesCovered],
     ['Pass rate', ex ? `${ex.passRate}%` : 'n/a'], ['Defects', defects.length], ['Requirements verified', r.coverage ? `${r.coverage.percent.passing}%` : 'n/a'],
   ];
 

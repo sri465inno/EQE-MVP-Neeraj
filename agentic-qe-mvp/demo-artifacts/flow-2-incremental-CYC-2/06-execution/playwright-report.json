@@ -5,10 +5,10 @@
       "/home/ubuntu/repos/uc-agentic-quality-engineering/agentic-qe-mvp/node_modules/@playwright/test/cli.js",
       "test",
       "--config",
-      "/tmp/aqe-demo-bWmvu1/runs/CYC-2/playwright.config.js"
+      "/tmp/aqe-demo-jid1i8/runs/CYC-2/playwright.config.js"
     ],
-    "configFile": "/tmp/aqe-demo-bWmvu1/runs/CYC-2/playwright.config.js",
-    "rootDir": "/tmp/aqe-demo-bWmvu1/runs/CYC-2/specs",
+    "configFile": "/tmp/aqe-demo-jid1i8/runs/CYC-2/playwright.config.js",
+    "rootDir": "/tmp/aqe-demo-jid1i8/runs/CYC-2/specs",
     "failOnFlakyTests": false,
     "forbidOnly": false,
     "fullyParallel": false,
@@ -24,7 +24,7 @@
     "preserveOutput": "always",
     "projects": [
       {
-        "outputDir": "/tmp/aqe-demo-bWmvu1/runs/CYC-2/test-results",
+        "outputDir": "/tmp/aqe-demo-jid1i8/runs/CYC-2/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -32,7 +32,7 @@
         },
         "id": "",
         "name": "",
-        "testDir": "/tmp/aqe-demo-bWmvu1/runs/CYC-2/specs",
+        "testDir": "/tmp/aqe-demo-jid1i8/runs/CYC-2/specs",
         "testIgnore": [],
         "testMatch": [
           "**/*.spec.js"
@@ -45,7 +45,7 @@
       [
         "json",
         {
-          "outputFile": "/tmp/aqe-demo-bWmvu1/runs/CYC-2/playwright-report.json"
+          "outputFile": "/tmp/aqe-demo-jid1i8/runs/CYC-2/playwright-report.json"
         }
       ]
     ],
@@ -84,12 +84,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 32,
+                  "duration": 29,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:43:29.844Z",
+                  "startTime": "2026-09-29T17:20:32.477Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -110,7 +110,7 @@
           ],
           "id": "1aa865f977b05f08d9cf-fba93b5827849794692d",
           "file": "br-001-reservation-data-dictionary.spec.js",
-          "line": 43,
+          "line": 44,
           "column": 1
         }
       ]
@@ -137,12 +137,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 216,
+                  "duration": 222,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:43:29.842Z",
+                  "startTime": "2026-09-29T17:20:32.479Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -163,7 +163,7 @@
           ],
           "id": "193d7ffd656013b52e02-225170cc339ac1eff3eb",
           "file": "br-002-commission-statement-ui.spec.js",
-          "line": 43,
+          "line": 44,
           "column": 1
         }
       ]
@@ -190,18 +190,18 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 53,
+                  "duration": 55,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:43:29.905Z",
+                  "startTime": "2026-09-29T17:20:32.541Z",
                   "annotations": [],
                   "attachments": [
                     {
                       "name": "latency samples (ms)",
                       "contentType": "application/json",
-                      "body": "eyJzYW1wbGVzIjpbMSwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDMsMywzXSwicDk1IjozfQ=="
+                      "body": "eyJzYW1wbGVzIjpbMSwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwzLDMsMywzXSwicDk1IjozfQ=="
                     }
                   ]
                 }
@@ -211,7 +211,7 @@
           ],
           "id": "ce9ae7738eb0623a3559-8074ff1a63ff8ed463db",
           "file": "br-003-quote-latency.spec.js",
-          "line": 43,
+          "line": 44,
           "column": 1
         }
       ]
@@ -238,12 +238,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10,
+                  "duration": 11,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:43:29.969Z",
+                  "startTime": "2026-09-29T17:20:32.608Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -259,7 +259,7 @@
           ],
           "id": "eee8afa4f534c65256ee-d6b6ca26747b9ab43d55",
           "file": "br-004-base-commission-rate.spec.js",
-          "line": 43,
+          "line": 44,
           "column": 1
         }
       ]
@@ -291,7 +291,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:43:29.987Z",
+                  "startTime": "2026-09-29T17:20:32.627Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -307,7 +307,7 @@
           ],
           "id": "e8f8dc89b922dc7f624e-59cf62ce7345b11afa9b",
           "file": "br-005-commissionable-revenue.spec.js",
-          "line": 43,
+          "line": 44,
           "column": 1
         }
       ]
@@ -339,7 +339,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:43:30.006Z",
+                  "startTime": "2026-09-29T17:20:32.646Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -355,7 +355,7 @@
           ],
           "id": "247790c4a1813720579b-8274cad2f43268a33e3c",
           "file": "br-006-gds-channel-uplift.spec.js",
-          "line": 43,
+          "line": 44,
           "column": 1
         }
       ]
@@ -385,28 +385,28 @@
                   "duration": 8,
                   "error": {
                     "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m92\u001b[39m\nReceived: \u001b[31m80\u001b[39m",
-                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m92\u001b[39m\nReceived: \u001b[31m80\u001b[39m\n    at /tmp/aqe-demo-bWmvu1/runs/CYC-2/specs/br-007-long-stay-bonus.spec.js:46:29",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m92\u001b[39m\nReceived: \u001b[31m80\u001b[39m\n    at /tmp/aqe-demo-jid1i8/runs/CYC-2/specs/br-007-long-stay-bonus.spec.js:47:29",
                     "location": {
-                      "file": "/tmp/aqe-demo-bWmvu1/runs/CYC-2/specs/br-007-long-stay-bonus.spec.js",
+                      "file": "/tmp/aqe-demo-jid1i8/runs/CYC-2/specs/br-007-long-stay-bonus.spec.js",
                       "column": 29,
-                      "line": 46
+                      "line": 47
                     },
-                    "snippet": "  44 |   const r = await quote(request, testInfo, {\"reservation.status\":\"CONFIRMED\",\"channel.bookingChannel\":\"DIRECT\",\"stay.nights\":7,\"rate.planCategory\":\"BAR\",\"room.roomCount\":1,\"payment.loyaltyPointsRedemption\":false,\"revenue.totalAmount\":1000,\"revenue.taxAmount\":120,\"revenue.resortFeeAmount\":30,\"revenue.ancillaryAmount\":50});\n  45 |   expect(r.status).toBe(200);\n> 46 |   expect(r.body.commission).toBe(92);\n     |                             ^\n  47 | });\n  48 |\n  49 | test(\"TC-F-007 A stay of 6 nights earns no long-stay bonus\", async ({ request }, testInfo) => {"
+                    "snippet": "  45 |   const r = await quote(request, testInfo, {\"reservation.status\":\"CONFIRMED\",\"channel.bookingChannel\":\"DIRECT\",\"stay.nights\":7,\"rate.planCategory\":\"BAR\",\"room.roomCount\":1,\"payment.loyaltyPointsRedemption\":false,\"revenue.totalAmount\":1000,\"revenue.taxAmount\":120,\"revenue.resortFeeAmount\":30,\"revenue.ancillaryAmount\":50});\n  46 |   expect(r.status).toBe(200);\n> 47 |   expect(r.body.commission).toBe(92);\n     |                             ^\n  48 | });\n  49 |\n  50 | test(\"TC-F-007 A stay of 6 nights earns no long-stay bonus\", async ({ request }, testInfo) => {"
                   },
                   "errors": [
                     {
                       "location": {
-                        "file": "/tmp/aqe-demo-bWmvu1/runs/CYC-2/specs/br-007-long-stay-bonus.spec.js",
+                        "file": "/tmp/aqe-demo-jid1i8/runs/CYC-2/specs/br-007-long-stay-bonus.spec.js",
                         "column": 29,
-                        "line": 46
+                        "line": 47
                       },
-                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m92\u001b[39m\nReceived: \u001b[31m80\u001b[39m\n\n  44 |   const r = await quote(request, testInfo, {\"reservation.status\":\"CONFIRMED\",\"channel.bookingChannel\":\"DIRECT\",\"stay.nights\":7,\"rate.planCategory\":\"BAR\",\"room.roomCount\":1,\"payment.loyaltyPointsRedemption\":false,\"revenue.totalAmount\":1000,\"revenue.taxAmount\":120,\"revenue.resortFeeAmount\":30,\"revenue.ancillaryAmount\":50});\n  45 |   expect(r.status).toBe(200);\n> 46 |   expect(r.body.commission).toBe(92);\n     |                             ^\n  47 | });\n  48 |\n  49 | test(\"TC-F-007 A stay of 6 nights earns no long-stay bonus\", async ({ request }, testInfo) => {\n    at /tmp/aqe-demo-bWmvu1/runs/CYC-2/specs/br-007-long-stay-bonus.spec.js:46:29"
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m92\u001b[39m\nReceived: \u001b[31m80\u001b[39m\n\n  45 |   const r = await quote(request, testInfo, {\"reservation.status\":\"CONFIRMED\",\"channel.bookingChannel\":\"DIRECT\",\"stay.nights\":7,\"rate.planCategory\":\"BAR\",\"room.roomCount\":1,\"payment.loyaltyPointsRedemption\":false,\"revenue.totalAmount\":1000,\"revenue.taxAmount\":120,\"revenue.resortFeeAmount\":30,\"revenue.ancillaryAmount\":50});\n  46 |   expect(r.status).toBe(200);\n> 47 |   expect(r.body.commission).toBe(92);\n     |                             ^\n  48 | });\n  49 |\n  50 | test(\"TC-F-007 A stay of 6 nights earns no long-stay bonus\", async ({ request }, testInfo) => {\n    at /tmp/aqe-demo-jid1i8/runs/CYC-2/specs/br-007-long-stay-bonus.spec.js:47:29"
                     }
                   ],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:43:30.020Z",
+                  "startTime": "2026-09-29T17:20:32.660Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -417,13 +417,13 @@
                     {
                       "name": "error-context",
                       "contentType": "text/markdown",
-                      "path": "/tmp/aqe-demo-bWmvu1/runs/CYC-2/test-results/br-007-long-stay-bonus-TC--13b3d-rns-the-1-5-long-stay-bonus/error-context.md"
+                      "path": "/tmp/aqe-demo-jid1i8/runs/CYC-2/test-results/br-007-long-stay-bonus-TC--13b3d-rns-the-1-5-long-stay-bonus/error-context.md"
                     }
                   ],
                   "errorLocation": {
-                    "file": "/tmp/aqe-demo-bWmvu1/runs/CYC-2/specs/br-007-long-stay-bonus.spec.js",
+                    "file": "/tmp/aqe-demo-jid1i8/runs/CYC-2/specs/br-007-long-stay-bonus.spec.js",
                     "column": 29,
-                    "line": 46
+                    "line": 47
                   }
                 }
               ],
@@ -432,7 +432,7 @@
           ],
           "id": "038def38aed063add8d7-a6975c99800d8c2b6363",
           "file": "br-007-long-stay-bonus.spec.js",
-          "line": 43,
+          "line": 44,
           "column": 1
         },
         {
@@ -451,12 +451,12 @@
                   "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 26,
+                  "duration": 25,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:43:30.319Z",
+                  "startTime": "2026-09-29T17:20:32.956Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -472,7 +472,7 @@
           ],
           "id": "038def38aed063add8d7-b8462517e41e0359100d",
           "file": "br-007-long-stay-bonus.spec.js",
-          "line": 49,
+          "line": 50,
           "column": 1
         }
       ]
@@ -499,12 +499,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 11,
+                  "duration": 10,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:43:30.138Z",
+                  "startTime": "2026-09-29T17:20:32.771Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -520,7 +520,7 @@
           ],
           "id": "4c1e7a9aca679f3a5d33-456f07434fdbd748a5e7",
           "file": "br-008-commission-cap.spec.js",
-          "line": 44,
+          "line": 45,
           "column": 1
         }
       ]
@@ -547,12 +547,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 10,
+                  "duration": 9,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:43:30.159Z",
+                  "startTime": "2026-09-29T17:20:32.793Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -568,7 +568,7 @@
           ],
           "id": "bfba82c8ca7bae67ac3e-753311f7e5cebb58e6cc",
           "file": "br-009-commission-rounding.spec.js",
-          "line": 43,
+          "line": 44,
           "column": 1
         }
       ]
@@ -595,12 +595,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 11,
+                  "duration": 12,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:43:30.178Z",
+                  "startTime": "2026-09-29T17:20:32.809Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -616,7 +616,7 @@
           ],
           "id": "a210538a1cdc4feb7a6b-af337624feceddc4a41e",
           "file": "br-010-loyalty-points-exclusion.spec.js",
-          "line": 43,
+          "line": 44,
           "column": 1
         }
       ]
@@ -643,12 +643,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 11,
+                  "duration": 10,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:43:30.196Z",
+                  "startTime": "2026-09-29T17:20:32.829Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -669,7 +669,7 @@
           ],
           "id": "d12060b92e6f0ae5401d-4c70e29217f68a60ca69",
           "file": "br-011-status-exclusion.spec.js",
-          "line": 43,
+          "line": 44,
           "column": 1
         }
       ]
@@ -696,12 +696,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 7,
+                  "duration": 11,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:43:30.218Z",
+                  "startTime": "2026-09-29T17:20:32.845Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -717,7 +717,7 @@
           ],
           "id": "04044ce8bc2a713a897a-2fc10b07e89822f205e6",
           "file": "br-013-missing-iata-status.spec.js",
-          "line": 43,
+          "line": 44,
           "column": 1
         }
       ]
@@ -749,7 +749,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:43:30.232Z",
+                  "startTime": "2026-09-29T17:20:32.863Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -765,7 +765,7 @@
           ],
           "id": "777734a01320799f591a-14b778e124b58fe5fa80",
           "file": "br-014-unknown-reservation-status.spec.js",
-          "line": 43,
+          "line": 44,
           "column": 1
         }
       ]
@@ -797,7 +797,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:43:30.242Z",
+                  "startTime": "2026-09-29T17:20:32.873Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -813,7 +813,7 @@
           ],
           "id": "7f4a296ca728f43d0df5-8df309234f414ccc1c37",
           "file": "br-015-group-flat-rate.spec.js",
-          "line": 43,
+          "line": 44,
           "column": 1
         },
         {
@@ -832,12 +832,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 6,
+                  "duration": 5,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:43:30.257Z",
+                  "startTime": "2026-09-29T17:20:32.888Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -853,7 +853,7 @@
           ],
           "id": "7f4a296ca728f43d0df5-aefed8d1a6081d99d12e",
           "file": "br-015-group-flat-rate.spec.js",
-          "line": 50,
+          "line": 51,
           "column": 1
         }
       ]
@@ -880,12 +880,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 12,
+                  "duration": 9,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:43:30.271Z",
+                  "startTime": "2026-09-29T17:20:32.902Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -901,7 +901,7 @@
           ],
           "id": "0f3c51b9e77bb137ce21-40eff1aca054ea54f739",
           "file": "br-016-package-room-component.spec.js",
-          "line": 43,
+          "line": 44,
           "column": 1
         }
       ]
@@ -933,7 +933,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-28T21:43:30.291Z",
+                  "startTime": "2026-09-29T17:20:32.924Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -949,7 +949,7 @@
           ],
           "id": "931e6ec9efd9deb5cf08-221ef2b0d15236b25046",
           "file": "br-017-corporate-flat-rate.spec.js",
-          "line": 43,
+          "line": 44,
           "column": 1
         }
       ]
@@ -957,8 +957,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-09-28T21:43:29.455Z",
-    "duration": 933.61,
+    "startTime": "2026-09-29T17:20:32.072Z",
+    "duration": 949.0139999999999,
     "expected": 17,
     "skipped": 0,
     "unexpected": 1,

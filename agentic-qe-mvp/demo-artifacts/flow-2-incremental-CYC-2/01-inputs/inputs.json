@@ -10,7 +10,7 @@
       "kind": "github",
       "label": "Jira REST API v3 export pulled live from GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export) - synthetic test issues; no live Jira call was made",
       "ref": "COM-20",
-      "fetchedAt": "2026-09-28T21:43:27.440Z",
+      "fetchedAt": "2026-09-29T17:20:30.020Z",
       "files": [
         "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/COM-20.json",
         "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/COM-20.children.json"
@@ -25,9 +25,9 @@
     "ref": "sri465inno/uc-agentic-quality-engineering@demo/commission-engine-v2 (6ccd807)",
     "provenance": {
       "kind": "github",
-      "label": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/commission-engine-v2 (6ccd807) at 2026-09-28T21:43:27.440Z",
+      "label": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/commission-engine-v2 (6ccd807) at 2026-09-29T17:20:30.020Z",
       "ref": "sri465inno/uc-agentic-quality-engineering@demo/commission-engine-v2 (6ccd807)",
-      "fetchedAt": "2026-09-28T21:43:27.440Z",
+      "fetchedAt": "2026-09-29T17:20:30.020Z",
       "files": [
         "README.md",
         "data-dictionary/reservation-attributes.json",

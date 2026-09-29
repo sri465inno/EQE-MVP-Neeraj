@@ -4,7 +4,7 @@ const TITLE = 'Agentic QE Platform - MVP';
 const $view = document.getElementById('view');
 let META = null;
 let pollTimer = null;
-const runState = { type: 'baseline', baselineId: '', inputs: {}, skills: null };
+const runState = { type: 'baseline', testingType: 'functional', baselineId: '', inputs: {}, skills: null };
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const pill = (text, cls) => `<span class="pill ${esc(cls || String(text).replace(/\s+/g, '-'))}">${esc(text)}</span>`;
@@ -76,14 +76,16 @@ function modesHtml() {
 }
 
 /* ---------------- Home ---------------- */
-const selectedSkills = () => runState.skills || META.skills.map((s) => s.id);
+const skillFitsType = (s, tt) => !s.testingType || s.testingType === tt;
+const selectedSkills = () => runState.skills || META.skills.filter((s) => skillFitsType(s, runState.testingType)).map((s) => s.id);
+const testingTypeOf = (id) => META.testingTypes.find((t) => t.id === id) || META.testingTypes.find((t) => t.id === META.defaultTestingType);
 const ownes = (s) => Object.entries(s.delivers).map(([a, keys]) => `${a}: ${keys.join(', ')}`).join(' · ');
 
 function skillsCard() {
   const on = new Set(selectedSkills());
-  return `<div class="card"><p class="muted small">Markdown skill files loaded from <code>skills/</code> at startup. A skill's text is given only to the agents it names; after each phase, what the phase produced is checked against what the skill says it owes. All are on by default. <span id="skill-count">${on.size} of ${META.skills.length} selected</span></p>
+  return `<div class="card"><p class="muted small">Markdown skill files loaded from <code>skills/</code> at startup. A skill's text is given only to the agents it names; after each phase, what the phase produced is checked against what the skill says it owes. The general skills are on by default, plus the skill for the chosen type of testing. <span id="skill-count">${on.size} of ${META.skills.length} selected</span></p>
 ${META.skillWarnings && META.skillWarnings.length ? `<div class="banner">${META.skillWarnings.map(esc).join('<br>')}</div>` : ''}
-<div class="skills">${META.skills.map((s) => `<label class="skill"><input type="checkbox" class="skill-on" value="${esc(s.id)}" ${on.has(s.id) ? 'checked' : ''}> <b>${esc(s.name)}</b> <code class="small">${esc(s.id)}</code><br><span class="small">${esc(s.description)}</span><br><span class="small muted">seen by: ${esc(s.appliesTo.join(', '))} · owes: ${esc(ownes(s))}</span></label>`).join('')}</div></div>`;
+<div class="skills">${META.skills.map((s) => `<label class="skill ${s.testingType ? 'skill-tt' : ''}"><input type="checkbox" class="skill-on" value="${esc(s.id)}" ${on.has(s.id) ? 'checked' : ''}> <b>${esc(s.name)}</b> <code class="small">${esc(s.id)}</code><br><span class="small">${esc(s.description)}</span><br><span class="small muted">${s.testingType ? `for ${esc(testingTypeOf(s.testingType).name)} · ` : ''}seen by: ${esc(s.appliesTo.join(', '))} · owes: ${esc(ownes(s))}</span></label>`).join('')}</div></div>`;
 }
 
 function handoverBadge(p) {
@@ -141,8 +143,8 @@ document.addEventListener('click', (ev) => {
 
 /* ---------------- Home ---------------- */
 let HOME_DETAIL = {};
-const PHASE_ICON = { ingest: '⇢', normalise: '≡', review: '✎', delta: 'Δ', 'merge-approval': '⊕' };
-const PHASE_CAT = { ingest: 'intake', normalise: 'intake', review: 'gate', delta: 'intake', 'merge-approval': 'gate', requirements: 'design', rules: 'design', testcases: 'design', scripts: 'design', execution: 'run', defects: 'run', report: 'run' };
+const PHASE_ICON = { ingest: '⇢', normalise: '≡', 'review-agent': '⚑', review: '✎', delta: 'Δ', 'merge-approval': '⊕' };
+const PHASE_CAT = { ingest: 'intake', normalise: 'intake', 'review-agent': 'intake', review: 'gate', delta: 'intake', 'merge-approval': 'gate', requirements: 'design', rules: 'design', testcases: 'design', scripts: 'design', execution: 'run', defects: 'run', report: 'run' };
 const agentNo = (id) => (META.platform.agents.find((g) => g.id === id) || {}).no;
 
 const EXEC_INPUT = {
@@ -318,6 +320,9 @@ async function viewRun(params) {
   const flowNo = type === 'baseline' ? 1 : 2;
   const modeOption = (v, title, text) => `<label class="mode-option"><input type="radio" name="run-type" value="${v}" ${type === v ? 'checked' : ''}><span><b>${title}</b><span class="muted">${text}</span></span></label>`;
   const agents = META.platform.agents;
+  const tt = testingTypeOf(runState.testingType);
+  const ra = META.platform.reviewAgent;
+  const ttOption = (t) => `<label class="mode-option"><input type="radio" name="testing-type" value="${esc(t.id)}" ${t.id === tt.id ? 'checked' : ''}><span><b>${esc(t.name)}</b><span class="muted">${esc(t.focus)}</span>${t.id === tt.id ? `<span class="small tt-how">${esc(type === 'baseline' ? t.baseline : t.incremental)}</span>` : ''}</span></label>`;
 
   $view.innerHTML = `${pendingBanner(cycles)}<div class="run-layout">
 <div class="panel">
@@ -331,21 +336,30 @@ async function viewRun(params) {
     : '<div class="banner">No approved baseline yet. Run Flow 1 first.</div>') : ''}
   </div>
   <div class="step-block">
-    <h3><span class="step-num">2</span>Choose what you are bringing</h3>
+    <h3><span class="step-num">2</span>Type of testing</h3>
+    <p class="hint">Steers what the agents design, script and run. The project inputs, this choice, the skills and the flow together decide the artifacts.</p>
+    <div class="tt-choices">${META.testingTypes.map(ttOption).join('')}</div>
+  </div>
+  <div class="step-block">
+    <h3><span class="step-num">3</span>Choose what you are bringing</h3>
     <p class="hint">The platform accepts all of these. This demo runs Flow ${flowNo} on the ${slots.length} inputs marked "in this demo"; the rest show what else a project can bring.</p>
     <div class="type-choices">${META.platform.inputTypes.map((t) => inputTypeRow(t, inFlow, type)).join('')}</div>
   </div>
   <div class="step-block">
-    <h3><span class="step-num">3</span>Provide the content</h3>
+    <h3><span class="step-num">4</span>Provide the content</h3>
     <p class="hint">Pull each input from GitHub, or download the Flow ${flowNo} test inputs and upload them by hand.</p>
     ${slots.map(([slot, label]) => `<h4>${esc(label)}</h4>${slotSourceHtml(slot, runState.inputs[slot])}`).join('')}
   </div>
-  <details class="guidance"><summary>Additional guidance: skills the agents must follow (optional)</summary>${skillsCard()}</details>
   <div class="step-block">
-    <h3><span class="step-num">4</span>Run the agents</h3>
-    <p class="hint">The run reads and normalises the inputs, then stops for your review. Nothing is designed until you approve.</p>
+    <h3><span class="step-num">5</span>Skills the agents must follow</h3>
+    <p class="hint">Skills tune and govern each agent to your standards. The ${esc(tt.name.toLowerCase())} skill is added automatically; untick any you do not want.</p>
+    <details class="guidance"><summary>${selectedSkills().length} of ${META.skills.length} skills selected</summary>${skillsCard()}</details>
+  </div>
+  <div class="step-block">
+    <h3><span class="step-num">6</span>Run the agents</h3>
+    <p class="hint">The run reads and normalises the inputs, the review agent suggests what is added or missing, then it stops for your review. Nothing is designed until you approve.</p>
     <label class="field">Your name (recorded on approvals)<input type="text" id="who" value="${esc(localStorage.getItem('aqe-user') || '')}" placeholder="e.g. Priya Shah"></label>
-    <div class="row"><button class="btn" id="go" ${type === 'incremental' && !baselines.length ? 'disabled' : ''}>Start Flow ${flowNo}</button></div>
+    <div class="row"><button class="btn" id="go" ${type === 'incremental' && !baselines.length ? 'disabled' : ''}>Start Flow ${flowNo} · ${esc(tt.short)}</button></div>
     <div id="run-msg"></div>
   </div>
   <div class="step-block">
@@ -355,8 +369,10 @@ async function viewRun(params) {
   </div>
 </div>
 <div class="panel wide">
-  <h3 class="panel-title">Agents, and what each one produces</h3>
-  <div class="agent-grid">${agents.map((a) => `<div class="agent-card ${a.no === 1 || (a.no === 4 && type === 'incremental') ? 'gate' : ''}"><div class="agent-head"><span class="step-num small">${a.no}</span><b>${esc(a.name)}</b><span class="state">pending</span></div><p>${esc(a.produces)}</p><p class="muted small">${a.no === 1 ? 'You approve the requirement set first' : a.no === 4 && type === 'incremental' ? 'You approve the merge into the baseline' : 'Runs after your approval'}</p></div>`).join('')}</div>
+  <h3 class="panel-title">Before the human review</h3>
+  <div class="agent-card gate review-agent-card"><div class="agent-head"><span class="step-num small">⚑</span><b>${esc(ra.name)}</b><span class="state">advisory</span></div><p>${esc(ra.produces)}</p><p class="muted small">${esc(ra.note)}</p></div>
+  <h3 class="panel-title">Agents, and what each one produces for ${esc(tt.name.toLowerCase())}</h3>
+  <div class="agent-grid">${agents.map((a) => `<div class="agent-card ${a.no === 1 || (a.no === 4 && type === 'incremental') ? 'gate' : ''}"><div class="agent-head"><span class="step-num small">${a.no}</span><b>${esc(a.name)}</b><span class="state">pending</span></div><p>${esc(a.produces)}</p>${tt.agents[a.id] ? `<p class="tt-steer small"><b>${esc(tt.short)}:</b> ${esc(tt.agents[a.id])}</p>` : ''}<p class="muted small">${a.no === 1 ? 'You approve the requirement set first' : a.no === 4 && type === 'incremental' ? 'You approve the merge into the baseline' : 'Runs after your approval'}</p></div>`).join('')}</div>
   <div class="legend"><span class="l-agent">AI agent</span><span class="l-human">Human approval before this agent</span></div>
   <h3 class="panel-title">What the agents will read</h3>
   <ul class="read-list">${slots.map(([slot, label]) => readSummary(slot, label, runState.inputs[slot])).join('')}</ul>
@@ -367,6 +383,17 @@ async function viewRun(params) {
 
   const rerender = () => viewRun(new URLSearchParams());
   $view.querySelectorAll('input[name=run-type]').forEach((el) => el.onchange = () => { location.hash = `#/run?type=${el.value}`; });
+  $view.querySelectorAll('input[name=testing-type]').forEach((el) => el.onchange = () => {
+    const prev = runState.testingType;
+    runState.testingType = el.value;
+    if (runState.skills) {
+      const typed = new Set(META.skills.filter((x) => x.testingType).map((x) => x.id));
+      const hadPrev = META.skills.some((x) => x.testingType === prev && runState.skills.includes(x.id));
+      runState.skills = runState.skills.filter((id) => !typed.has(id));
+      if (hadPrev) runState.skills.push(...META.skills.filter((x) => x.testingType === el.value).map((x) => x.id));
+    }
+    rerender();
+  });
   $view.querySelectorAll('.mode').forEach((el) => el.onchange = () => { runState.inputs[el.dataset.slot].mode = el.value; rerender(); });
   $view.querySelectorAll('.key').forEach((el) => el.oninput = () => { runState.inputs[el.dataset.slot].key = el.value.trim(); });
   $view.querySelectorAll('.key').forEach((el) => el.onchange = rerender);
@@ -399,9 +426,9 @@ async function viewRun(params) {
     const inputs = {};
     for (const [slot] of slots) { const { forType, fileName, ...rest } = runState.inputs[slot]; inputs[slot] = rest; }
     ev.target.disabled = true;
-    document.getElementById('run-msg').innerHTML = '<div class="banner info">Ingesting and normalising...</div>';
+    document.getElementById('run-msg').innerHTML = '<div class="banner info">Ingesting, normalising and running the review agent...</div>';
     try {
-      const c = await api('/api/cycles', { method: 'POST', body: { type, baselineId: runState.baselineId, inputs, reviewer: who, skills: selectedSkills() } });
+      const c = await api('/api/cycles', { method: 'POST', body: { type, testingType: runState.testingType, baselineId: runState.baselineId, inputs, reviewer: who, skills: selectedSkills() } });
       location.hash = `#/cycle/${c.id}`;
     } catch (e) {
       document.getElementById('run-msg').innerHTML = `<div class="banner err">${esc(e.message)}</div>`;
@@ -424,11 +451,11 @@ ${pendingBanner(cycles)}${cycles.length ? '' : '<p class="muted">No cycles yet.<
 const statusPill = (s) => pill(s, { completed: 'passed', failed: 'failed', rejected: 'failed', 'awaiting-review': 'designed', 'awaiting-merge': 'designed', running: 'enhanced', interrupted: 'failed' }[s] || 'pending');
 
 function phaseArtifactTab(name, c) {
-  return { ingest: 'inputs', normalise: 'normalise', review: c.status === 'awaiting-review' ? 'review' : 'normalise', delta: 'delta', requirements: 'requirements', rules: 'rules', testcases: 'testcases', scripts: 'scripts', 'merge-approval': 'merge', execution: 'execution', defects: 'defects', report: 'report' }[name];
+  return { ingest: 'inputs', normalise: 'normalise', 'review-agent': 'review-agent', review: c.status === 'awaiting-review' ? 'review' : 'normalise', delta: 'delta', requirements: 'requirements', rules: 'rules', testcases: 'testcases', scripts: 'scripts', 'merge-approval': 'merge', execution: 'execution', defects: 'defects', report: 'report' }[name];
 }
 
 const PHASE_GROUPS = [
-  ['intake', 'Intake and review', 'deterministic code and the human gate', ['ingest', 'normalise', 'review', 'delta']],
+  ['intake', 'Intake and review', 'deterministic code, the review agent and the human gate', ['ingest', 'normalise', 'review-agent', 'review', 'delta']],
   ['design', 'Design agents 1-4', 'requirements, rules, test cases, scripts', ['requirements', 'rules', 'testcases', 'scripts', 'merge-approval']],
   ['run', 'Run and results · agents 5-7', 'real execution, defects from real failures, report', ['execution', 'defects', 'report']],
 ];
@@ -438,7 +465,7 @@ function phaseTile(c, p, tab) {
   const t = phaseArtifactTab(p.name, c);
   const no = agentNo(p.name);
   const cat = PHASE_CAT[p.name];
-  return tile({ href: p.name === 'report' ? `#/reporting?cycle=${c.id}` : `#/cycle/${c.id}?tab=${t}`, art: cat, tag: no ? `Agent ${no}` : cat === 'gate' ? 'Human gate' : 'Intake', big: no || PHASE_ICON[p.name] || '•',
+  return tile({ href: p.name === 'report' ? `#/reporting?cycle=${c.id}` : `#/cycle/${c.id}?tab=${t}`, art: cat, tag: no ? `Agent ${no}` : cat === 'gate' ? 'Human gate' : p.name === 'review-agent' ? 'Review agent' : 'Intake', big: no || PHASE_ICON[p.name] || '•',
     corner: `<span class="status-dot ${esc(p.status)}"></span>${esc(p.status)}`, title: p.label, lines: [p.summary ? esc(p.summary) : '<span class="muted">not run yet</span>'], extra: handoverBadge(p),
     cls: `${p.status} ${t === tab && (p.name !== 'review' || tab === 'review') ? 'sel' : ''}`, progress: PHASE_PROGRESS[p.status] ?? 0 });
 }
@@ -462,12 +489,12 @@ async function viewCycle(id, params) {
   const done = c.phases.filter((p) => p.status === 'done').length;
   const ex = c.artifacts && c.artifacts.execution ? c.artifacts.execution.summary : null;
   const current = c.phases.find((p) => phaseArtifactTab(p.name, c) === tab);
-  const label = tab === 'overview' ? 'QE lead report' : tab === 'artifacts' ? 'Artifacts produced' : tab === 'inputs' ? 'Inputs taken' : tab === 'skills' ? 'Skills and hand-overs' : tab === 'merge' ? 'Human approval to merge' : tab === 'review' ? 'Human review of requirement set' : current ? current.label : tab;
+  const label = tab === 'overview' ? 'QE lead report' : tab === 'artifacts' ? 'Artifacts produced' : tab === 'inputs' ? 'Inputs taken' : tab === 'skills' ? 'Skills and hand-overs' : tab === 'merge' ? 'Human approval to merge' : tab === 'review' ? 'Human review of requirement set' : tab === 'review-agent' ? 'Review agent suggestions' : current ? current.label : tab;
   let body = '';
   try { body = await renderCycleTab(c, tab); } catch (e) { body = `<div class="banner err">${esc(e.message)}</div>`; }
   $view.innerHTML = `<section class="hero small-hero"><div class="eyebrow">${c.type === 'baseline' ? 'Flow 1 · Baseline cycle' : 'Flow 2 · Incremental cycle'}</div>
 <h1>${esc(c.name)} <span class="muted small">${esc(c.id)}</span> ${statusPill(c.status)}</h1>
-<div class="facts"><div><b>${done}/${c.phases.length}</b>phases done</div>${c.delta ? `<div><b>${esc(c.delta.summary)}</b>delta</div>` : ''}${ex ? `<div><b>${ex.passed}/${ex.executed}</b>passed</div><div><b>${ex.passRate}%</b>pass rate</div>` : ''}${c.artifacts && c.artifacts.defects ? `<div><b>${c.artifacts.defects.length}</b>defects</div>` : ''}</div>
+<div class="facts"><div><b>${esc(testingTypeOf(c.testingType).name)}</b>type of testing</div><div><b>${done}/${c.phases.length}</b>phases done</div>${c.delta ? `<div><b>${esc(c.delta.summary)}</b>delta</div>` : ''}${ex ? `<div><b>${ex.passed}/${ex.executed}</b>passed</div><div><b>${ex.passRate}%</b>pass rate</div>` : ''}${c.artifacts && c.artifacts.defects ? `<div><b>${c.artifacts.defects.length}</b>defects</div>` : ''}</div>
 <div class="muted small">Baseline: ${esc(c.baselineId || '(created when this cycle completes)')}${c.baselineVersionAtStart ? ` v${c.baselineVersionAtStart} at start` : ''}${c.baselineVersionAfter ? ` → v${c.baselineVersionAfter}` : ''} · SUT build <code>${esc(c.sutBuild)}</code> · created ${fmtTime(c.createdAt)}</div></section>
 ${c.error ? `<div class="banner err">Failed: ${esc(c.error)} <button class="btn secondary" id="resume">Resume</button></div>` : ''}
 ${c.status === 'interrupted' ? `<div class="banner">This cycle was interrupted by a restart. <button class="btn secondary" id="resume">Resume</button></div>` : ''}
@@ -531,6 +558,24 @@ ${interactive ? `<label class="small"><input type="radio" name="res-${esc(g.id)}
 <h2>Agreed by Jira and code ${pill(byBucket('agreed').length, 'agreed')}</h2>${simple('agreed')}`;
 }
 
+const RA_CAT = { added: ['Added', 'enhanced'], missing: ['Missing', 'failed'], conflict: ['Conflict', 'conflict'] };
+function reviewAgentView(c, { compact = false } = {}) {
+  const ra = c.reviewAgent;
+  if (!ra) return '<p class="muted">No review agent ran for this cycle.</p>';
+  const src = (f) => f.sources.map((x) => `${esc(x.source)} ${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.ref || '')}</a>` : esc(x.ref || '')}${x.line ? `:${esc(x.line)}` : ''}`).join('<br>') || '<span class="muted">-</span>';
+  const rows = ra.findings.map((f) => [esc(f.id), pill(RA_CAT[f.category][0], RA_CAT[f.category][1]), esc(f.severity), `<b>${esc(f.title)}</b>${f.groupId ? ` <span class="muted small">${esc(f.groupId)}</span>` : ''}<br><span class="small">${esc(f.detail || '')}</span>`, esc(f.suggestion), src(f)]);
+  const head = `<h2>${compact ? 'Review agent suggestions for you' : 'Review agent suggestions'} <span class="muted small">for ${esc(testingTypeOf(ra.testingType).name)}</span></h2>
+<p class="small">${ra.counts.added} added · ${ra.counts.missing} missing · ${ra.counts.conflicts} conflicts · ${ra.counts.high} high severity. <span class="muted">${esc(ra.note)}</span></p>`;
+  const body = ra.findings.length ? table(['ID', 'Kind', 'Severity', 'What it found', 'Suggestion', 'Source'], rows) : '<p class="muted">No suggestions: every input agrees and nothing is missing.</p>';
+  return compact ? `<details class="card review-agent" open><summary><b>Review agent: ${ra.findings.length} suggestion(s) before you approve</b></summary>${head}${body}</details>` : `${head}${body}`;
+}
+
+function testingScope(c) {
+  const sel = c.artifacts && c.artifacts.selection;
+  if (!sel) return '';
+  return `<div class="banner info"><b>${esc(sel.name)}</b>: ${esc(sel.focus)} ${sel.inRun} of ${sel.designed} case(s) in this run (${sel.reused} reused · ${sel.redesigned} re-designed · ${sel.added} new)${sel.notInRun ? ` · ${sel.notInRun} kept in the pack outside this run` : ''}.${sel.gaps.map((g) => `<br><b>Gap:</b> ${esc(g.message)}`).join('')}</div>`;
+}
+
 function deltaView(d, { title = 'Delta against the baseline' } = {}) {
   if (!d) return '<p class="muted">No delta yet.</p>';
   return `<h2>${esc(title)}</h2><div class="split" id="split">${esc(d.summary)}</div>
@@ -548,10 +593,12 @@ async function renderCycleTab(c, tab) {
     case 'artifacts': return artifactsView(c);
     case 'overview':
     case 'report': return `<div class="banner info">The QE lead report and cycle report for ${esc(c.id)} are in <a href="#/reporting?cycle=${esc(c.id)}">Reporting</a>.</div>`;
+    case 'review-agent': return reviewAgentView(c);
     case 'normalise': return `${c.review ? `<div class="banner ok">Reviewed by ${esc(c.review.reviewer)} at ${fmtTime(c.review.at)}. The reviewed set - not the raw inputs - flowed on.</div>` : ''}${normaliseView(c, false)}`;
     case 'review': {
       if (c.status !== 'awaiting-review') return `<div class="banner ok">Review complete.</div>${normaliseView(c, false)}`;
       return `<div class="banner info">Human review: settle every conflicting value (choose a value or exclude it), optionally exclude any statement, then approve the requirement set. Only the approved set flows on.</div>
+${reviewAgentView(c, { compact: true })}
 ${c.type === 'incremental' ? `<div class="card" id="delta-box">${deltaView(c.deltaPreview, { title: 'Delta preview (before anything is designed)' })}</div>` : ''}
 ${normaliseView(c, true)}
 <div class="card"><div class="row"><label>Reviewer <input type="text" id="reviewer" value="${esc(localStorage.getItem('aqe-user') || c.createdBy || '')}"></label>
@@ -631,7 +678,7 @@ function testCasesView(c) {
   const tcs = c.artifacts.testCases;
   const cnt = (f) => tcs.reduce((m, t) => { for (const k of [].concat(f(t))) m[k] = (m[k] || 0) + 1; return m; }, {});
   const kv = (o) => Object.entries(o).map(([k, v]) => `${esc(k)}: <b>${v}</b>`).join(' · ');
-  return `<div class="row"><h2 style="margin:0">Test cases (${tcs.length})</h2><a class="btn" href="/api/cycles/${esc(c.id)}/export/testcases.xlsx">Download Excel (.xlsx, Zephyr Scale columns)</a></div>
+  return `${testingScope(c)}<div class="row"><h2 style="margin:0">Test cases (${tcs.length})</h2><a class="btn" href="/api/cycles/${esc(c.id)}/export/testcases.xlsx">Download Excel (.xlsx, Zephyr Scale columns)</a></div>
 <p class="small">By type: ${kv(cnt((t) => t.type))} · by label: ${kv(cnt((t) => t.labels))} · ${kv(cnt((t) => t.automation))}${c.type === 'incremental' ? ` · ${kv(cnt((t) => t.status))}` : ''}</p>
 <p class="muted small">These are <b>designed</b> test cases. Execution results are on the Execution tab.${c.type === 'incremental' ? ' In the Excel export, new rows are green, changed rows amber (superseded expected result in a cell note).' : ''}</p>
 ${table(['Key', 'Name / objective', 'Precondition', 'Steps', 'Test data', 'Expected result', 'Priority', 'Type', 'Labels', 'Links', 'Automation', 'Status'], tcs.map((t) => [esc(t.key),
@@ -785,7 +832,7 @@ async function viewReporting(params) {
   const result = (x) => (x.summary ? `${x.summary.passed}/${x.summary.executed} passed · ${x.summary.passRate}%` : 'not executed');
   const picked = cycles.find((x) => x.id === id);
   const picker = `<section class="panel cycle-picker"><label class="field" for="rep-cycle">Cycle run</label>
-<select id="rep-cycle">${cycles.slice().reverse().map((x) => `<option value="${esc(x.id)}" ${x.id === id ? 'selected' : ''}>${esc(when(x))} · ${esc(x.id)} · ${x.type === 'baseline' ? 'Flow 1 baseline' : 'Flow 2 incremental'} · ${esc(result(x))}</option>`).join('')}</select>
+<select id="rep-cycle">${cycles.slice().reverse().map((x) => `<option value="${esc(x.id)}" ${x.id === id ? 'selected' : ''}>${esc(when(x))} · ${esc(x.id)} · ${x.type === 'baseline' ? 'Flow 1 baseline' : 'Flow 2 incremental'} · ${esc(testingTypeOf(x.testingType).short)} · ${esc(result(x))}</option>`).join('')}</select>
 <span class="muted small">${cycles.length} completed cycle(s) · run on ${esc(when(picked))}</span></section>`;
   const ex = c.artifacts.execution ? c.artifacts.execution.summary : null;
   const defects = c.artifacts.defects || [];

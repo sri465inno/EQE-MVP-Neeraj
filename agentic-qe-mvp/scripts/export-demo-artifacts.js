@@ -26,6 +26,7 @@ async function exportCycle(store, c, dir) {
   const run = store.runDir(c.id);
   json(path.join(dir, '01-inputs', 'inputs.json'), c.inputs);
   json(path.join(dir, '01-inputs', 'normalisation.json'), c.normalisation);
+  if (c.reviewAgent) json(path.join(dir, '01-inputs', 'review-agent.json'), c.reviewAgent);
   if (c.delta) json(path.join(dir, '01-inputs', 'delta-classification.json'), c.delta);
   json(path.join(dir, '02-requirements', 'requirements.json'), a.requirements);
   json(path.join(dir, '03-business-rules', 'business-rules.json'), a.rules);

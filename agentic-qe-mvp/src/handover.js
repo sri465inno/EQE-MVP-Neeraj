@@ -1,5 +1,7 @@
 'use strict';
 // What each agent actually produced, read from the persisted cycle, keyed by the artefact names skills declare.
+const { getTestingType, suiteOf } = require('./testing-types');
+
 const present = (v) => (v === undefined ? null : v);
 
 const OUTPUTS = {
@@ -12,21 +14,35 @@ const OUTPUTS = {
       conflicts: { value: by('conflict'), allowEmpty: true },
     };
   },
+  'review-agent': (c) => ({ suggestions: { value: present(c.reviewAgent?.findings), allowEmpty: true } }),
   delta: (c) => ({ delta: { value: present(c.delta?.items) } }),
   requirements: (c) => ({ requirements: { value: present(c.artifacts?.requirements) } }),
   rules: (c) => ({ businessRules: { value: present(c.artifacts?.rules) } }),
   testcases: (c) => {
     const t = c.artifacts?.testCases;
+    const tt = getTestingType(c.testingType);
+    const run = t ? t.filter((x) => x.inRun !== false) : null;
+    const of = (fn) => (run ? { value: run.filter(fn) } : { value: null });
+    const skip = (what) => ({ na: `${tt.name} does not design ${what} cases` });
     return {
       testCases: { value: present(t) },
-      functional: { value: t ? t.filter((x) => x.type === 'functional') : null },
-      nonFunctional: { value: t ? t.filter((x) => x.type === 'non-functional') : null },
+      functional: tt.produces.functional ? { value: t ? t.filter((x) => x.type === 'functional') : null } : skip('functional'),
+      nonFunctional: tt.produces.nonFunctional ? { value: t ? t.filter((x) => x.type === 'non-functional') : null } : skip('non-functional'),
+      regressionPack: { ...of(() => true), note: t ? `${t.filter((x) => x.status === 'carried over' && x.inRun !== false).length} carried-over case(s) re-run` : null },
+      journeys: of((x) => ['ui', 'journey'].includes(suiteOf(x))),
+      smokeSet: of(() => true),
+      performanceChecks: of((x) => ['nfr', 'load'].includes(suiteOf(x))),
     };
   },
   scripts: (c) => ({ specs: { value: present(c.artifacts?.scripts) } }),
   execution: (c) => {
     const e = c.artifacts?.execution;
-    return { results: { value: e ? e.results.filter((r) => r.status !== 'not-run') : null, note: e ? `${e.summary.notRun} manual case(s) handed over as not run` : null } };
+    const ran = e ? e.results.filter((r) => r.status !== 'not-run') : null;
+    return {
+      results: { value: ran, note: e ? `${e.summary.notRun} manual case(s) handed over as not run` : null },
+      screenshots: { value: ran ? ran.flatMap((r) => (r.evidence || []).filter((x) => x.contentType === 'image/png')) : null },
+      timings: { value: ran ? ran.filter((r) => r.type === 'non-functional') : null },
+    };
   },
   defects: (c) => ({ defects: { value: present(c.artifacts?.defects), allowEmpty: true } }),
   report: (c) => ({

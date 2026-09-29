@@ -5,7 +5,7 @@ const { loadInputs } = require('./inputs');
 const { normalise, applyReview } = require('./normalise');
 const { classifyDelta } = require('./delta');
 const design = require('./agents/design');
-const { executeSuite } = require('./execution');
+const { executeSuite, summarise } = require('./execution');
 const { raiseDefects } = require('./defects');
 const { computeCoverage } = require('./coverage');
 const { DEFAULT_BUILD } = require('../sut/server');
@@ -15,13 +15,15 @@ const { compareCycles } = require('./compare');
 const { testCasesExport } = require('./excel');
 const { agentContext, checkHandover, selectSkills } = require('./skills');
 const { producedBy } = require('./handover');
+const { reviewInputs } = require('./agents/review');
+const { getTestingType } = require('./testing-types');
 
 const clone = (x) => JSON.parse(JSON.stringify(x));
 const now = () => new Date().toISOString();
 
 const PHASES = {
-  baseline: ['ingest', 'normalise', 'review', 'requirements', 'rules', 'testcases', 'scripts', 'execution', 'defects', 'report'],
-  incremental: ['ingest', 'normalise', 'review', 'delta', 'requirements', 'rules', 'testcases', 'scripts', 'merge-approval', 'execution', 'defects', 'report'],
+  baseline: ['ingest', 'normalise', 'review-agent', 'review', 'requirements', 'rules', 'testcases', 'scripts', 'execution', 'defects', 'report'],
+  incremental: ['ingest', 'normalise', 'review-agent', 'review', 'delta', 'requirements', 'rules', 'testcases', 'scripts', 'merge-approval', 'execution', 'defects', 'report'],
 };
 const PHASE_LABEL = {
   ingest: 'Ingest inputs', normalise: 'Normalise (3-way compare)', review: 'Human review of requirement set', delta: 'Delta classification',
@@ -36,6 +38,15 @@ function setPhase(cycle, name, status, summary) {
   if (['done', 'failed', 'skipped'].includes(status)) p.finishedAt = now();
   p.status = status;
   if (summary !== undefined) p.summary = summary;
+}
+
+/** Execution record when the type of testing leaves nothing automated to run: nothing is faked. */
+function noAutomatedRun(runCases, cycle) {
+  const results = runCases.map((t) => ({ key: t.key, requirementId: t.requirementId, ruleId: t.ruleId || null, name: t.name, type: t.type, scriptFile: null,
+    status: 'not-run', reason: 'Manual test case - not automated, not executed', duration: 0, error: null, evidence: [] }));
+  const at = now();
+  return { executed: false, tool: 'Playwright not started: no automated case in this run', sut: { build: cycle.sutBuild }, startedAt: at, finishedAt: at,
+    specFiles: [], results, summary: summarise(results) };
 }
 
 class Pipeline {
@@ -74,10 +85,12 @@ class Pipeline {
     return h;
   }
 
-  async startCycle({ type = 'baseline', name, baselineId, inputs = {}, sutBuild, reviewer, skills }) {
+  async startCycle({ type = 'baseline', name, baselineId, inputs = {}, sutBuild, reviewer, skills, testingType }) {
     if (!['baseline', 'incremental'].includes(type)) throw httpError(400, 'type must be "baseline" or "incremental"');
+    let tt;
+    try { tt = getTestingType(testingType); } catch (e) { throw httpError(400, e.message, [{ field: 'testingType', message: e.message }]); }
     let activeSkills;
-    try { activeSkills = selectSkills(this.skills, skills); } catch (e) { throw httpError(400, e.message); }
+    try { activeSkills = selectSkills(this.skills, skills, tt.id); } catch (e) { throw httpError(400, e.message); }
     let baseline = null;
     if (type === 'incremental') {
       baseline = this.store.getBaseline(baselineId);
@@ -95,6 +108,8 @@ class Pipeline {
       id,
       name: name || `Cycle ${n} - ${type === 'baseline' ? 'Baseline' : 'Incremental'}`,
       type,
+      testingType: tt.id,
+      testingTypeName: tt.name,
       status: 'awaiting-review',
       createdAt: now(),
       createdBy: reviewer || null,
@@ -112,8 +127,13 @@ class Pipeline {
     this.skillContext(cycle, 'normalise');
     this.handover(cycle, 'normalise');
     setPhase(cycle, 'normalise', 'done', `${normalisation.counts.agreed} agreed · ${normalisation.counts['jira-only']} Jira only · ${normalisation.counts['code-only']} code only · ${normalisation.counts.conflict} conflicts`);
-    setPhase(cycle, 'review', 'waiting');
     if (baseline) cycle.deltaPreview = this.previewDelta(cycle, {}, baseline);
+    this.skillContext(cycle, 'review-agent');
+    cycle.reviewAgent = reviewInputs({ normalisation, inputs: cycle.inputs, testingType: tt.id, deltaPreview: cycle.deltaPreview || null, baseline });
+    this.handover(cycle, 'review-agent');
+    const rc = cycle.reviewAgent.counts;
+    setPhase(cycle, 'review-agent', 'done', `${rc.added} added · ${rc.missing} missing · ${rc.conflicts} conflicts suggested for the reviewer`);
+    setPhase(cycle, 'review', 'waiting');
     return this.store.saveCycle(cycle);
   }
 
@@ -175,13 +195,15 @@ class Pipeline {
     this.skillContext(cycle, 'requirements');
     setPhase(cycle, 'requirements', 'done', `${requirements.length} requirements`);
     const skills = Object.fromEntries(['rules', 'testcases', 'scripts'].map((a) => [a, this.skillContext(cycle, a)]));
-    const out = design.designAgents(requirements, { cycle, counters, previous, skills });
+    const out = design.designAgents(requirements, { cycle, counters, previous, skills, testingType: cycle.testingType });
     const count = (arr, st) => arr.filter((x) => x.status === st).length;
-    const split = (arr) => (previous ? ` (${count(arr, 'new')} new · ${count(arr, 're-designed')} re-designed · ${count(arr, 'carried over')} carried over)` : '');
+    const split = (arr) => (previous ? ` (${count(arr, 'new') + count(arr, 'added')} new · ${count(arr, 're-designed')} re-designed · ${count(arr, 'carried over')} carried over)` : '');
+    const sel = out.selection;
+    const scope = sel.notInRun ? ` · ${sel.inRun} in this ${sel.name.toLowerCase()} run` : '';
     setPhase(cycle, 'rules', 'done', `${out.rules.length} business rules${split(out.rules)}`);
-    setPhase(cycle, 'testcases', 'done', `${out.testCases.length} test cases${split(out.testCases)}`);
+    setPhase(cycle, 'testcases', 'done', `${out.testCases.length} test cases${split(out.testCases)}${scope}`);
     setPhase(cycle, 'scripts', 'done', `${out.scripts.length} Playwright specs${split(out.scripts)}`);
-    cycle.artifacts = { ...cycle.artifacts, requirements, rules: out.rules, testCases: out.testCases, scripts: out.scripts, affected: out.affected };
+    cycle.artifacts = { ...cycle.artifacts, requirements, rules: out.rules, testCases: out.testCases, scripts: out.scripts, affected: out.affected, selection: sel };
     for (const a of ['requirements', 'rules', 'testcases', 'scripts']) this.handover(cycle, a);
   }
 
@@ -350,15 +372,20 @@ class Pipeline {
     setPhase(cycle, 'execution', 'running');
     this.skillContext(cycle, 'execution');
     this.store.saveCycle(cycle);
-    const execution = await executeSuite({
-      scripts: cycle.artifacts.scripts, testCases: cycle.artifacts.testCases,
-      runDir: this.store.runDir(cycle.id), sutBuild: cycle.sutBuild,
-    });
+    const runCases = cycle.artifacts.testCases.filter((t) => t.inRun !== false);
+    const runKeys = runCases.filter((t) => t.automation === 'Automated').map((t) => t.key);
+    const partial = runCases.length !== cycle.artifacts.testCases.length;
+    const execution = runKeys.length ? await executeSuite({
+      scripts: cycle.artifacts.scripts.filter((x) => x.covers.some((k) => runKeys.includes(k))), testCases: runCases,
+      runDir: this.store.runDir(cycle.id), sutBuild: cycle.sutBuild, keys: partial ? runKeys : null,
+    }) : noAutomatedRun(runCases, cycle);
+    execution.testingType = cycle.testingType;
+    execution.notInRun = cycle.artifacts.testCases.length - runCases.length;
     cycle = this.mustGet(cycleId);
     cycle.artifacts.execution = execution;
     this.handover(cycle, 'execution');
     const s = execution.summary;
-    setPhase(cycle, 'execution', 'done', `${s.executed} executed · ${s.passed} passed · ${s.failed} failed · ${s.notRun} not run (manual)`);
+    setPhase(cycle, 'execution', 'done', `${s.executed} executed · ${s.passed} passed · ${s.failed} failed · ${s.notRun} not run (manual)${execution.notInRun ? ` · ${execution.notInRun} kept in the pack, outside this run` : ''}`);
     setPhase(cycle, 'defects', 'running');
     this.skillContext(cycle, 'defects');
     const { defects, resolved, nextNo } = raiseDefects({
@@ -370,7 +397,7 @@ class Pipeline {
     cycle.artifacts.resolvedDefects = resolved;
     this.handover(cycle, 'defects');
     setPhase(cycle, 'defects', 'done', `${defects.length} defect(s) from real failures${resolved.length ? ` · ${resolved.length} resolved` : ''}`);
-    cycle.artifacts.coverage = computeCoverage(cycle.artifacts.requirements, cycle.artifacts.testCases, execution.results, cycle.inputs.find((i) => i.slot === 'codebase')?.dataModel);
+    cycle.artifacts.coverage = computeCoverage(cycle.artifacts.requirements, runCases, execution.results, cycle.inputs.find((i) => i.slot === 'codebase')?.dataModel);
     this.store.saveCycle(cycle);
   }
 

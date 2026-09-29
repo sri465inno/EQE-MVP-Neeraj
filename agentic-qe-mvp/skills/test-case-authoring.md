@@ -28,7 +28,8 @@ Expected Result states an exact value or an exact condition — a number with it
 Never "works as expected".
 
 Labels always include the phases the case belongs to: functional or non-functional, plus regression once it is
-in the standing pack, plus automation once a generated spec covers it.
+in the standing pack, plus automation once a generated spec covers it. A case designed for an end-to-end,
+performance or smoke run also carries e2e, performance or smoke.
 
 Priority is High only when the rule it verifies is money, data loss, or a regulatory obligation.
 

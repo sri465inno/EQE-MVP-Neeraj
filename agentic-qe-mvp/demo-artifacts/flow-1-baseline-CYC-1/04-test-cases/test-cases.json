@@ -5,6 +5,7 @@
     "ruleId": "BR-001",
     "slot": "dictionary",
     "kind": "reservation-data-dictionary",
+    "suite": "api",
     "name": "The reservation model has 1000 attributes and a full reservation is accepted",
     "objective": "Verify the data dictionary defines 1000 attributes and a quote carrying all of them is accepted.",
     "precondition": "The commission engine is running.",
@@ -33,8 +34,11 @@
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
+      "testing-regression",
       "traceability-handover"
     ],
+    "designedFor": "regression",
+    "inRun": true,
     "status": "new",
     "version": 1,
     "previous": null,
@@ -48,6 +52,7 @@
     "ruleId": "BR-002",
     "slot": "ui",
     "kind": "commission-statement-ui",
+    "suite": "ui",
     "name": "Advisor views the commission breakdown on the commission statement page",
     "objective": "Verify a travel advisor can look up a reservation and see its commission breakdown in the browser.",
     "precondition": "A stored GDS reservation; the commission statement page is reachable.",
@@ -77,8 +82,11 @@
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
+      "testing-regression",
       "traceability-handover"
     ],
+    "designedFor": "regression",
+    "inRun": true,
     "status": "new",
     "version": 1,
     "previous": null,
@@ -92,6 +100,7 @@
     "ruleId": "BR-003",
     "slot": "p",
     "kind": "quote-latency",
+    "suite": "nfr",
     "name": "Commission quote p95 response time is within 300 ms",
     "objective": "Verify the 95th percentile of 20 full-reservation commission quotes is at most 300 ms.",
     "precondition": "The commission engine is running.",
@@ -120,8 +129,11 @@
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
+      "testing-regression",
       "traceability-handover"
     ],
+    "designedFor": "regression",
+    "inRun": true,
     "status": "new",
     "version": 1,
     "previous": null,
@@ -135,6 +147,7 @@
     "ruleId": "BR-004",
     "slot": "base",
     "kind": "base-commission-rate",
+    "suite": "api",
     "name": "Base commission is 10% of commissionable room revenue",
     "objective": "Verify a standard direct reservation earns 10% of its commissionable room revenue.",
     "precondition": "Direct booking, 3 nights, BAR rate, 1 room, paid by card.",
@@ -164,8 +177,11 @@
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
+      "testing-regression",
       "traceability-handover"
     ],
+    "designedFor": "regression",
+    "inRun": true,
     "status": "new",
     "version": 1,
     "previous": null,
@@ -179,6 +195,7 @@
     "ruleId": "BR-005",
     "slot": "revenue",
     "kind": "commissionable-revenue",
+    "suite": "api",
     "name": "Taxes, resort fees and ancillaries are excluded from commissionable revenue",
     "objective": "Verify commissionable room revenue = total - taxes - resort fees - ancillary charges.",
     "precondition": "A reservation whose total includes tax, resort fee and ancillary charges.",
@@ -208,8 +225,11 @@
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
+      "testing-regression",
       "traceability-handover"
     ],
+    "designedFor": "regression",
+    "inRun": true,
     "status": "new",
     "version": 1,
     "previous": null,
@@ -227,6 +247,7 @@
     "ruleId": "BR-006",
     "slot": "gds",
     "kind": "gds-channel-uplift",
+    "suite": "api",
     "name": "GDS reservations earn an additional 1.5% channel uplift",
     "objective": "Verify a GDS booking is commissioned at 10% base + 1.5% uplift = 11.5%.",
     "precondition": "GDS booking, 3 nights, BAR rate, 1 room.",
@@ -256,8 +277,11 @@
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
+      "testing-regression",
       "traceability-handover"
     ],
+    "designedFor": "regression",
+    "inRun": true,
     "status": "new",
     "version": 1,
     "previous": null,
@@ -273,6 +297,7 @@
     "ruleId": "BR-007",
     "slot": "at",
     "kind": "long-stay-bonus",
+    "suite": "api",
     "name": "A stay of exactly 7 nights earns the 1.5% long-stay bonus",
     "objective": "Verify the long-stay bonus applies at the 7-night boundary (\"7 nights or more\").",
     "precondition": "Direct booking of exactly 7 nights.",
@@ -302,8 +327,11 @@
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
+      "testing-regression",
       "traceability-handover"
     ],
+    "designedFor": "regression",
+    "inRun": true,
     "status": "new",
     "version": 1,
     "previous": null,
@@ -319,6 +347,7 @@
     "ruleId": "BR-007",
     "slot": "below",
     "kind": "long-stay-bonus",
+    "suite": "api",
     "name": "A stay of 6 nights earns no long-stay bonus",
     "objective": "Verify the long-stay bonus does not apply below 7 nights.",
     "precondition": "Direct booking of 6 nights.",
@@ -348,8 +377,11 @@
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
+      "testing-regression",
       "traceability-handover"
     ],
+    "designedFor": "regression",
+    "inRun": true,
     "status": "new",
     "version": 1,
     "previous": null,
@@ -365,6 +397,7 @@
     "ruleId": "BR-008",
     "slot": "cap",
     "kind": "commission-cap",
+    "suite": "api",
     "name": "Commission is capped at USD 500 per reservation",
     "objective": "Verify a reservation whose uncapped commission exceeds USD 500 pays exactly USD 500.",
     "precondition": "High-value direct booking: uncapped commission USD 800.00.",
@@ -394,8 +427,11 @@
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
+      "testing-regression",
       "traceability-handover"
     ],
+    "designedFor": "regression",
+    "inRun": true,
     "status": "new",
     "version": 1,
     "previous": null,
@@ -411,6 +447,7 @@
     "ruleId": "BR-009",
     "slot": "round",
     "kind": "commission-rounding",
+    "suite": "api",
     "name": "Commission is rounded half-up to 2 decimal places",
     "objective": "Verify 10% of USD 123.45 (12.345) is rounded half-up, not truncated.",
     "precondition": "Direct booking whose raw commission has a third decimal of 5.",
@@ -440,8 +477,11 @@
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
+      "testing-regression",
       "traceability-handover"
     ],
+    "designedFor": "regression",
+    "inRun": true,
     "status": "new",
     "version": 1,
     "previous": null,
@@ -457,6 +497,7 @@
     "ruleId": "BR-010",
     "slot": "points",
     "kind": "loyalty-points-exclusion",
+    "suite": "api",
     "name": "A stay paid with loyalty points earns no commission",
     "objective": "Verify reservations redeemed with loyalty points are not commissionable.",
     "precondition": "Direct booking paid with loyalty points.",
@@ -486,8 +527,11 @@
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
+      "testing-regression",
       "traceability-handover"
     ],
+    "designedFor": "regression",
+    "inRun": true,
     "status": "new",
     "version": 1,
     "previous": null,
@@ -503,6 +547,7 @@
     "ruleId": "BR-011",
     "slot": "status",
     "kind": "status-exclusion",
+    "suite": "api",
     "name": "Cancelled and no-show reservations earn no commission",
     "objective": "Verify reservation.status CANCELLED and NO_SHOW both return a commission of 0.",
     "precondition": "Two otherwise standard reservations with status CANCELLED and NO_SHOW.",
@@ -532,8 +577,11 @@
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
+      "testing-regression",
       "traceability-handover"
     ],
+    "designedFor": "regression",
+    "inRun": true,
     "status": "new",
     "version": 1,
     "previous": null,
@@ -549,6 +597,7 @@
     "ruleId": "BR-012",
     "slot": "manual",
     "kind": "unclassified",
+    "suite": "api",
     "name": "Verify: Every commission calculation is written to the commission audit ledger",
     "objective": "Confirm the behaviour \"Every commission calculation is written to the commission audit ledger.\" (no executable template in the catalogue - manual verification).",
     "precondition": "Access to the system under test and its operational logs.",
@@ -573,8 +622,11 @@
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
+      "testing-regression",
       "traceability-handover"
     ],
+    "designedFor": "regression",
+    "inRun": true,
     "status": "new",
     "version": 1,
     "previous": null,
@@ -588,6 +640,7 @@
     "ruleId": "BR-013",
     "slot": "iata",
     "kind": "missing-iata-status",
+    "suite": "api",
     "name": "A reservation without an advisor IATA number returns HTTP 422",
     "objective": "Verify the quote is rejected with HTTP 422 when advisor.iataNumber is empty.",
     "precondition": "A reservation with no booking advisor.",
@@ -615,8 +668,11 @@
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
+      "testing-regression",
       "traceability-handover"
     ],
+    "designedFor": "regression",
+    "inRun": true,
     "status": "new",
     "version": 1,
     "previous": null,
@@ -632,6 +688,7 @@
     "ruleId": "BR-014",
     "slot": "unknown",
     "kind": "unknown-reservation-status",
+    "suite": "api",
     "name": "Commission for an unknown reservation ID returns HTTP 404",
     "objective": "Verify looking up the commission of a non-existent reservation returns HTTP 404.",
     "precondition": "Reservation RES-UNKNOWN-0000 does not exist.",
@@ -656,8 +713,11 @@
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
+      "testing-regression",
       "traceability-handover"
     ],
+    "designedFor": "regression",
+    "inRun": true,
     "status": "new",
     "version": 1,
     "previous": null,

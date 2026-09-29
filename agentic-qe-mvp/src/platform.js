@@ -11,8 +11,15 @@ const SEVEN_AGENTS = [
   { no: 7, id: 'report', name: 'Reporting agent', produces: 'Cycle report, coverage and cycle comparison' },
 ];
 
+// Governance helper that runs before the human review; advisory only, it does not replace one of the seven agents.
+const REVIEW_AGENT = {
+  id: 'review-agent', name: 'Review agent',
+  produces: 'Suggestions for the reviewer: what one input adds, what is missing, what conflicts, and what the chosen type of testing still needs',
+  note: 'Advisory only. The human reviewer decides every conflict and approves the requirement set.',
+};
+
 // Deterministic intake and human gates around the agents (not agents: no design decisions are delegated here).
-const INTAKE_STAGES = ['ingest', 'normalise', 'review', 'delta', 'merge-approval'];
+const INTAKE_STAGES = ['ingest', 'normalise', 'review-agent', 'review', 'delta', 'merge-approval'];
 
 const INPUT_TYPES = [
   { id: 'jira-initiative', name: 'Jira initiative', mvp: 'implemented', note: 'Business capability scope (COM-1)', about: 'The business capability and its goals, as written in Jira.', reads: 'Scope, objectives and the business rules stated at initiative level.', usedBy: ['requirements', 'rules'] },
@@ -35,4 +42,4 @@ const DEMO = {
   flow2: 'COM-20 epic + codebase branch demo/commission-engine-v2 (release 2.0). Enhanced: cap USD 500 -> USD 750. New: group flat 8% for 10+ rooms, package commission on 70% of the price (Jira only), corporate flat 5% (code only).',
 };
 
-module.exports = { SEVEN_AGENTS, INTAKE_STAGES, INPUT_TYPES, DEMO };
+module.exports = { SEVEN_AGENTS, REVIEW_AGENT, INTAKE_STAGES, INPUT_TYPES, DEMO };

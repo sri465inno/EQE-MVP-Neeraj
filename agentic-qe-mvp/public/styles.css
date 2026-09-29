@@ -206,3 +206,8 @@ input[type=number]{border:1px solid var(--line2);border-radius:3px;padding:8px 1
 .lab-compare span{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}.lab-compare b{font-size:26px;color:var(--navy)}
 .lab-compare div.bad b{color:var(--bad)}b.bad{color:var(--bad)}
 .defect-card{border-left:4px solid var(--bad)}
+.tt-how{display:block;margin-top:5px;color:var(--navy)}
+.tt-steer{color:var(--navy)!important;border-top:1px dashed var(--line);padding-top:5px}
+.review-agent-card{margin-bottom:6px}
+details.review-agent summary{cursor:pointer;padding:2px 0}
+.skill.skill-tt{border-left:3px solid var(--gold)}

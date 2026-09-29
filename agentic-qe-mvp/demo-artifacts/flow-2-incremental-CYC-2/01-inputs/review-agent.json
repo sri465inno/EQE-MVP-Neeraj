@@ -1,0 +1,410 @@
+{
+  "agent": "Review agent",
+  "advisory": true,
+  "status": "suggestions",
+  "generatedAt": "2026-09-29T17:20:31.625Z",
+  "testingType": "regression",
+  "note": "Suggestions only. The human reviewer decides every conflict and approves the requirement set.",
+  "counts": {
+    "added": 15,
+    "missing": 3,
+    "conflicts": 0,
+    "high": 8
+  },
+  "findings": [
+    {
+      "id": "RA-01",
+      "category": "added",
+      "severity": "high",
+      "groupId": "G4",
+      "title": "In the code but in no Jira story",
+      "detail": "Base commission is 10% of commissionable room revenue.",
+      "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+      "sources": [
+        {
+          "source": "code",
+          "ref": "README.md",
+          "line": 11,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+          "quote": "- Base commission is 10% of commissionable room revenue."
+        },
+        {
+          "source": "code",
+          "ref": "src/rules.js",
+          "line": 6,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/src/rules.js",
+          "quote": "/** @rule Base commission is 10% of commissionable room revenue. */"
+        }
+      ]
+    },
+    {
+      "id": "RA-02",
+      "category": "added",
+      "severity": "high",
+      "groupId": "G5",
+      "title": "In the code but in no Jira story",
+      "detail": "Commissionable room revenue excludes taxes, resort fees and ancillary charges.",
+      "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+      "sources": [
+        {
+          "source": "code",
+          "ref": "README.md",
+          "line": 12,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+          "quote": "- Commissionable room revenue excludes taxes, resort fees and ancillary charges."
+        }
+      ]
+    },
+    {
+      "id": "RA-03",
+      "category": "added",
+      "severity": "high",
+      "groupId": "G6",
+      "title": "In the code but in no Jira story",
+      "detail": "Reservations booked through the GDS channel earn an additional 1.5% channel uplift.",
+      "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+      "sources": [
+        {
+          "source": "code",
+          "ref": "README.md",
+          "line": 13,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+          "quote": "- Reservations booked through the GDS channel earn an additional 1.5% channel uplift."
+        },
+        {
+          "source": "code",
+          "ref": "src/rules.js",
+          "line": 9,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/src/rules.js",
+          "quote": "/** @rule Reservations booked through the GDS channel earn an additional 1.5% channel uplift. */"
+        }
+      ]
+    },
+    {
+      "id": "RA-04",
+      "category": "added",
+      "severity": "high",
+      "groupId": "G7",
+      "title": "In the code but in no Jira story",
+      "detail": "Stays of 7 nights or more earn a long-stay bonus of 1.5%.",
+      "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+      "sources": [
+        {
+          "source": "code",
+          "ref": "README.md",
+          "line": 14,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+          "quote": "- Stays of 7 nights or more earn a long-stay bonus of 1.5%."
+        },
+        {
+          "source": "code",
+          "ref": "src/rules.js",
+          "line": 12,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/src/rules.js",
+          "quote": "/** @rule Stays of 7 nights or more earn a long-stay bonus of 1.5%. */"
+        }
+      ]
+    },
+    {
+      "id": "RA-05",
+      "category": "added",
+      "severity": "high",
+      "groupId": "G8",
+      "title": "In the code but in no Jira story",
+      "detail": "Commission is rounded half-up to 2 decimal places.",
+      "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+      "sources": [
+        {
+          "source": "code",
+          "ref": "README.md",
+          "line": 16,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+          "quote": "- Commission is rounded half-up to 2 decimal places."
+        },
+        {
+          "source": "code",
+          "ref": "src/rules.js",
+          "line": 19,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/src/rules.js",
+          "quote": "/** @rule Commission is rounded half-up to 2 decimal places. */"
+        }
+      ]
+    },
+    {
+      "id": "RA-06",
+      "category": "added",
+      "severity": "high",
+      "groupId": "G9",
+      "title": "In the code but in no Jira story",
+      "detail": "Reservations paid with loyalty points are not commissionable.",
+      "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+      "sources": [
+        {
+          "source": "code",
+          "ref": "README.md",
+          "line": 17,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+          "quote": "- Reservations paid with loyalty points are not commissionable."
+        }
+      ]
+    },
+    {
+      "id": "RA-07",
+      "category": "added",
+      "severity": "medium",
+      "groupId": "G10",
+      "title": "In the code but in no Jira story",
+      "detail": "Every reservation is described by a data dictionary of 1000 attributes.",
+      "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+      "sources": [
+        {
+          "source": "code",
+          "ref": "README.md",
+          "line": 18,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+          "quote": "- Every reservation is described by a data dictionary of 1000 attributes."
+        }
+      ]
+    },
+    {
+      "id": "RA-08",
+      "category": "added",
+      "severity": "medium",
+      "groupId": "G11",
+      "title": "In the code but in no Jira story",
+      "detail": "Every commission calculation is written to the commission audit ledger.",
+      "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+      "sources": [
+        {
+          "source": "code",
+          "ref": "README.md",
+          "line": 19,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+          "quote": "- Every commission calculation is written to the commission audit ledger."
+        }
+      ]
+    },
+    {
+      "id": "RA-09",
+      "category": "added",
+      "severity": "high",
+      "groupId": "G12",
+      "title": "In the code but in no Jira story",
+      "detail": "Negotiated corporate rates (rate plan CORP) are commissioned at a flat 5%.",
+      "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+      "sources": [
+        {
+          "source": "code",
+          "ref": "README.md",
+          "line": 21,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+          "quote": "- Negotiated corporate rates (rate plan CORP) are commissioned at a flat 5%."
+        },
+        {
+          "source": "code",
+          "ref": "src/rules.js",
+          "line": 26,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/src/rules.js",
+          "quote": "/** @rule Negotiated corporate rates (rate plan CORP) are commissioned at a flat 5%. */"
+        }
+      ]
+    },
+    {
+      "id": "RA-10",
+      "category": "added",
+      "severity": "medium",
+      "groupId": "G13",
+      "title": "In the code but in no Jira story",
+      "detail": "A reservation without an advisor IATA number returns HTTP 422.",
+      "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+      "sources": [
+        {
+          "source": "code",
+          "ref": "README.md",
+          "line": 25,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+          "quote": "- A reservation without an advisor IATA number returns HTTP 422."
+        }
+      ]
+    },
+    {
+      "id": "RA-11",
+      "category": "added",
+      "severity": "medium",
+      "groupId": "G14",
+      "title": "In the code but in no Jira story",
+      "detail": "Unknown reservation IDs return HTTP 404.",
+      "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+      "sources": [
+        {
+          "source": "code",
+          "ref": "README.md",
+          "line": 26,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+          "quote": "- Unknown reservation IDs return HTTP 404."
+        }
+      ]
+    },
+    {
+      "id": "RA-12",
+      "category": "missing",
+      "severity": "high",
+      "groupId": "G3",
+      "title": "Asked for in Jira but not mentioned in the code",
+      "detail": "Package rates are commissioned on 70% of the package price.",
+      "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+      "sources": [
+        {
+          "source": "jira",
+          "ref": "COM-20",
+          "line": null,
+          "url": "https://aurora-hotels.atlassian.net/browse/COM-20",
+          "quote": "Package rates are commissioned on 70% of the package price."
+        }
+      ]
+    },
+    {
+      "id": "RA-13",
+      "category": "missing",
+      "severity": "low",
+      "groupId": "G11",
+      "title": "No testable expected value",
+      "detail": "Every commission calculation is written to the commission audit ledger.",
+      "suggestion": "Add an example with an exact expected result (amount, status or error code); until then it can only become a manual case.",
+      "sources": [
+        {
+          "source": "code",
+          "ref": "README.md",
+          "line": 19,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+          "quote": "- Every commission calculation is written to the commission audit ledger."
+        }
+      ]
+    },
+    {
+      "id": "RA-14",
+      "category": "missing",
+      "severity": "medium",
+      "groupId": null,
+      "title": "1 of 11 commission-driving attributes have no rule that varies them",
+      "detail": "reservation.status (Lifecycle status of the reservation)",
+      "suggestion": "Ask for a rule or an example per attribute in the epic; until then no test changes these attributes.",
+      "sources": [
+        {
+          "source": "code",
+          "ref": "data-dictionary/reservation-attributes.json",
+          "line": null,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/data-dictionary/reservation-attributes.json",
+          "quote": null
+        }
+      ]
+    },
+    {
+      "id": "RA-15",
+      "category": "added",
+      "severity": "medium",
+      "groupId": "G1",
+      "title": "Changes REQ-008 of baseline BL-1",
+      "detail": "Was: Commission per reservation is capped at USD 500. Now: Commission per reservation is capped at USD 750.",
+      "suggestion": "Confirm the new value; its cases will be re-designed and the old version kept in history.",
+      "sources": [
+        {
+          "source": "jira",
+          "ref": "COM-20",
+          "line": null,
+          "url": "https://aurora-hotels.atlassian.net/browse/COM-20",
+          "quote": "Commission per reservation is capped at USD 750."
+        },
+        {
+          "source": "code",
+          "ref": "README.md",
+          "line": 15,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+          "quote": "- Commission per reservation is capped at USD 750."
+        },
+        {
+          "source": "code",
+          "ref": "src/rules.js",
+          "line": 16,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/src/rules.js",
+          "quote": "/** @rule Commission per reservation is capped at USD 750. */"
+        }
+      ]
+    },
+    {
+      "id": "RA-16",
+      "category": "added",
+      "severity": "medium",
+      "groupId": "G2",
+      "title": "New for baseline BL-1",
+      "detail": "Group reservations of 10 or more rooms are commissioned at a flat 8%.",
+      "suggestion": "Confirm it belongs in this increment; new cases will be designed for it.",
+      "sources": [
+        {
+          "source": "jira",
+          "ref": "COM-20",
+          "line": null,
+          "url": "https://aurora-hotels.atlassian.net/browse/COM-20",
+          "quote": "Group reservations of 10 or more rooms are commissioned at a flat 8%."
+        },
+        {
+          "source": "code",
+          "ref": "README.md",
+          "line": 20,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+          "quote": "- Group reservations of 10 or more rooms are commissioned at a flat 8%."
+        },
+        {
+          "source": "code",
+          "ref": "src/rules.js",
+          "line": 22,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/src/rules.js",
+          "quote": "/** @rule Group reservations of 10 or more rooms are commissioned at a flat 8%. */"
+        }
+      ]
+    },
+    {
+      "id": "RA-17",
+      "category": "added",
+      "severity": "medium",
+      "groupId": "G3",
+      "title": "New for baseline BL-1",
+      "detail": "Package rates are commissioned on 70% of the package price.",
+      "suggestion": "Confirm it belongs in this increment; new cases will be designed for it.",
+      "sources": [
+        {
+          "source": "jira",
+          "ref": "COM-20",
+          "line": null,
+          "url": "https://aurora-hotels.atlassian.net/browse/COM-20",
+          "quote": "Package rates are commissioned on 70% of the package price."
+        }
+      ]
+    },
+    {
+      "id": "RA-18",
+      "category": "added",
+      "severity": "medium",
+      "groupId": "G12",
+      "title": "New for baseline BL-1",
+      "detail": "Negotiated corporate rates (rate plan CORP) are commissioned at a flat 5%.",
+      "suggestion": "Confirm it belongs in this increment; new cases will be designed for it.",
+      "sources": [
+        {
+          "source": "code",
+          "ref": "README.md",
+          "line": 21,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+          "quote": "- Negotiated corporate rates (rate plan CORP) are commissioned at a flat 5%."
+        },
+        {
+          "source": "code",
+          "ref": "src/rules.js",
+          "line": 26,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/src/rules.js",
+          "quote": "/** @rule Negotiated corporate rates (rate plan CORP) are commissioned at a flat 5%. */"
+        }
+      ]
+    }
+  ]
+}

@@ -12,7 +12,10 @@ const { renderReportHtml } = require('../src/report');
 const { tmpDir, baselineCycle, BASELINE_INPUTS } = require('./helpers');
 
 const SKILLS_DIR = path.join(__dirname, '..', 'skills');
-const SHIPPED = ['automation-script-conventions', 'cycle-report', 'defect-reporting', 'incremental-merge', 'input-normalisation', 'test-case-authoring', 'traceability-handover'];
+const SHIPPED = ['automation-script-conventions', 'cycle-report', 'defect-reporting', 'incremental-merge', 'input-normalisation', 'input-review', 'test-case-authoring',
+  'testing-e2e', 'testing-functional', 'testing-performance', 'testing-regression', 'testing-smoke', 'traceability-handover'];
+/** Default selection for a cycle: every general skill plus the one for its type of testing (regression by default). */
+const DEFAULT_ON = SHIPPED.filter((id) => !id.startsWith('testing-') || id === 'testing-regression');
 
 /** A skills dir holding the shipped skills plus extra files - no code change involved. */
 function skillsDirWith(extra) {
@@ -35,7 +38,7 @@ test.before(async () => {
   D = { ctx, all, shipped, def };
 });
 
-test('skills/ is loaded at startup: all seven shipped skills parse with id, name, description, appliesTo and delivers', () => {
+test('skills/ is loaded at startup: every shipped skill parses with id, name, description, appliesTo and delivers', () => {
   const lib = loadSkills(SKILLS_DIR);
   assert.deepEqual(lib.warnings, []);
   assert.deepEqual(lib.skills.map((s) => s.id), SHIPPED);
@@ -46,7 +49,7 @@ test('skills/ is loaded at startup: all seven shipped skills parse with id, name
   }
   const inc = lib.skills.find((s) => s.id === 'incremental-merge');
   assert.deepEqual(inc.delivers, { delta: ['delta'], rules: ['businessRules'], testcases: ['functional', 'nonFunctional'], scripts: ['specs'] });
-  assert.equal(D.shipped.skills.skills.length, 7, 'createApp loads skills/');
+  assert.equal(D.shipped.skills.skills.length, SHIPPED.length, 'createApp loads skills/');
   assert.deepEqual(D.ctx.skills.skills.map((s) => s.id).sort(), [...SHIPPED, 'probe', 'risk-register'].sort(), 'a new file adds a skill without a code change');
   assert.throws(() => parseSkill('no front matter'), /front matter/);
 });
@@ -79,7 +82,7 @@ test('a phase that drops a declared artefact is reported as an incomplete hand-o
   assert.deepEqual(D.all.report.handovers.find((h) => h.phase === 'rules').missing, ['riskRegister']);
   assert.match(renderReportHtml(D.all.report), /missing: riskRegister/);
 
-  const lib = loadSkills(SKILLS_DIR).skills;
+  const lib = loadSkills(SKILLS_DIR).skills.filter((s) => DEFAULT_ON.includes(s.id));
   const good = checkHandover('scripts', producedBy('scripts', D.def), lib);
   assert.equal(good.status, 'complete');
   const dropped = { ...D.def, artifacts: { ...D.def.artifacts, scripts: undefined } };
@@ -102,8 +105,8 @@ test('shipped skills: every phase hand-over of a real baseline run is complete; 
   assert.equal(c.report.handoverStatus, 'complete');
 });
 
-test('skills are selectable per run and all on by default; the selection is persisted on the cycle', async () => {
-  assert.deepEqual(D.def.skills.map((s) => s.id), SHIPPED);
+test('skills are selectable per run and on by default for the cycle\'s type of testing; the selection is persisted on the cycle', async () => {
+  assert.deepEqual(D.def.skills.map((s) => s.id), DEFAULT_ON);
   const { pipeline, store } = D.shipped;
   const one = await pipeline.startCycle({ type: 'baseline', inputs: BASELINE_INPUTS, skills: ['cycle-report'] });
   assert.deepEqual(store.getCycle(one.id).skills.map((s) => s.id), ['cycle-report']);
@@ -114,7 +117,7 @@ test('skills are selectable per run and all on by default; the selection is pers
 
 test('the cycle report surfaces the active skills', () => {
   const r = D.def.report;
-  assert.deepEqual(r.skills.map((s) => s.id), SHIPPED);
+  assert.deepEqual(r.skills.map((s) => s.id), DEFAULT_ON);
   assert.ok(r.skills.every((s) => s.name && s.description && s.appliesTo.length));
   const html = renderReportHtml(r);
   assert.match(html, /<h2>Active skills<\/h2>/);
