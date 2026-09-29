@@ -316,21 +316,6 @@ function testingTypesDropdown(type) {
 <p class="hint" id="tt-msg"></p>`;
 }
 
-function slotSourceHtml(slot, st) {
-  const isCode = slot === 'codebase';
-  const modes = isCode
-    ? [['github', `Pull the branch from GitHub (${META.codebase.repo})`], ['sample', 'Recorded snapshot of the branch (offline)'], ['paste', 'Paste or upload a file']]
-    : [['github', `Pull the Jira REST v3 export from GitHub (${META.jiraExport.branch})`], ['jira', META.jira.mode === 'live' ? 'Jira issue key (live Jira call)' : 'Jira issue key (recorded fixture, offline)'], ['paste', 'Paste or upload a file']];
-  const control = st.mode === 'paste'
-    ? `<textarea data-slot="${slot}" class="paste" rows="6" placeholder="${isCode ? 'README and source notes (lines with @rule)' : 'Jira issue JSON, search JSON, or one statement per line'}">${esc(st.text)}</textarea>
-<div class="row"><label class="btn secondary file-btn">Upload a file<input type="file" class="upload" data-slot="${slot}" accept=".json,.md,.txt" hidden></label><button class="btn secondary sample" data-slot="${slot}">Use the sample</button></div>
-<p class="hint">${st.fileName ? `Loaded <b>${esc(st.fileName)}</b> · ` : ''}${st.text ? `${st.text.length.toLocaleString()} characters` : 'Nothing pasted yet.'}</p>`
-    : isCode
-      ? `<select data-slot="${slot}" class="branch">${META.codebase.branches.map((b) => `<option ${b === st.branch ? 'selected' : ''}>${esc(b)}</option>`).join('')}</select>`
-      : `<input type="text" data-slot="${slot}" class="key" value="${esc(st.key)}">`;
-  return `<select data-slot="${slot}" class="mode">${modes.map(([m, t]) => `<option value="${m}" ${st.mode === m ? 'selected' : ''}>${esc(t)}</option>`).join('')}</select>${control}`;
-}
-
 function readSummary(slot, label, st) {
   const where = st.mode === 'paste' ? (st.fileName ? `uploaded file ${st.fileName}` : st.text ? 'pasted text' : 'nothing pasted yet')
     : slot === 'codebase' ? `${META.codebase.repo} @ ${st.branch}` : st.key;
@@ -343,7 +328,7 @@ function demoInputsHtml(type) {
   const flow = (DEMO_INPUTS || []).find((f) => f.flow.startsWith(type === 'baseline' ? 'flow-1' : 'flow-2'));
   if (!flow) return '';
   return `<ul class="downloads">${flow.files.map((f) => `<li><a href="${esc(f.url)}" download>${esc(f.name)}</a></li>`).join('')}</ul>
-<p class="hint">Set an input's source to "Paste or upload a file", then upload the matching file. <a href="/demo-inputs/README.md" download>README</a></p>`;
+<p class="hint">The same Jira and codebase content the agents pull, to read or share. <a href="/demo-inputs/README.md" download>README</a></p>`;
 }
 
 async function resetDemo() {
@@ -402,18 +387,13 @@ async function viewRun(params) {
     <p class="hint" id="input-msg"></p>
   </div>
   <div class="step-block">
-    <h3><span class="step-num">4</span>Provide the content</h3>
-    <p class="hint">Pull each input from GitHub, or download the Flow ${flowNo} test inputs and upload them by hand.</p>
-    ${active.map(([slot, label]) => `<h4>${esc(label)}</h4>${slotSourceHtml(slot, runState.inputs[slot])}`).join('')}
-  </div>
-  <div class="step-block">
-    <h3><span class="step-num">5</span>Skills the agents must follow</h3>
+    <h3><span class="step-num">4</span>Skills the agents must follow</h3>
     <p class="hint">Skills tune and govern each agent to your standards. The general skills are on, plus the skill for each ticked type of testing; untick any you do not want.</p>
     ${META.skillWarnings && META.skillWarnings.length ? `<div class="banner">${META.skillWarnings.map(esc).join('<br>')}</div>` : ''}
     ${skillsDropdown()}
   </div>
   <div class="step-block">
-    <h3><span class="step-num">6</span>Run the agents</h3>
+    <h3><span class="step-num">5</span>Run the agents</h3>
     <p class="hint">The run reads and normalises the inputs, the review agent suggests what is added or missing, then it stops for your review. Nothing is designed until you approve.</p>
     <label class="field">Your name (recorded on approvals)<input type="text" id="who" value="${esc(localStorage.getItem('aqe-user') || '')}" placeholder="e.g. Priya Shah"></label>
     <div class="row"><button class="btn" id="go" ${type === 'incremental' && !baselines.length ? 'disabled' : ''}>Start Flow ${flowNo} · ${esc(tt.short)}</button></div>
@@ -469,25 +449,6 @@ async function viewRun(params) {
       return;
     }
     if (el.checked) runState.inputsOff.delete(key); else runState.inputsOff.add(key);
-    rerender();
-  });
-  $view.querySelectorAll('.mode').forEach((el) => el.onchange = () => { runState.inputs[el.dataset.slot].mode = el.value; rerender(); });
-  $view.querySelectorAll('.key').forEach((el) => el.oninput = () => { runState.inputs[el.dataset.slot].key = el.value.trim(); });
-  $view.querySelectorAll('.key').forEach((el) => el.onchange = rerender);
-  $view.querySelectorAll('.branch').forEach((el) => el.onchange = () => { runState.inputs[el.dataset.slot].branch = el.value; rerender(); });
-  $view.querySelectorAll('.paste').forEach((el) => el.oninput = () => { Object.assign(runState.inputs[el.dataset.slot], { text: el.value, fileName: '' }); });
-  $view.querySelectorAll('.paste').forEach((el) => el.onchange = rerender);
-  $view.querySelectorAll('.upload').forEach((el) => el.onchange = async () => {
-    const file = el.files[0];
-    if (!file) return;
-    Object.assign(runState.inputs[el.dataset.slot], { text: await file.text(), fileName: file.name });
-    rerender();
-  });
-  $view.querySelectorAll('.sample').forEach((el) => el.onclick = async () => {
-    const slot = el.dataset.slot;
-    const def = META.samples[slots.find((x) => x[0] === slot)[3]];
-    const q = slot === 'codebase' ? `slot=codebase&branch=${encodeURIComponent(def)}` : `slot=${slot}&key=${def}`;
-    Object.assign(runState.inputs[slot], { text: await api(`/api/sample-text?${q}`), fileName: '' });
     rerender();
   });
   $view.querySelectorAll('.skill-on').forEach((el) => el.onchange = () => {

@@ -1,8 +1,8 @@
 # Demo inputs for Flow 1 and Flow 2
 
-The same inputs the Run page pulls from GitHub, as files you can plug in by hand.
-On the Run page, set an input's source to **Paste or upload a file**, then either
-upload the file or paste its contents.
+The same inputs the Run page pulls from GitHub, as files to read or share.
+The API still accepts them as pasted text: send an input to `POST /api/cycles` as
+`{ "mode": "paste", "text": "<file contents>" }`.
 
 | Flow | Input | File |
 |------|-------|------|
