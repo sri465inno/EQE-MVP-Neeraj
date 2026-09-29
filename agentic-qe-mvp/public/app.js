@@ -324,7 +324,8 @@ async function viewRun(params) {
 </div>
 <div class="panel wide">
   <h3 class="panel-title">Agents, and what each one produces</h3>
-  <div class="agent-grid">${agents.map((a) => `<div class="agent-card"><div class="agent-head"><span class="step-num small">${a.no}</span><b>${esc(a.name)}</b><span class="state">pending</span></div><p>${esc(a.produces)}</p><p class="muted small">${a.no === 1 ? 'You approve the requirement set first' : a.no === 4 && type === 'incremental' ? 'You approve the merge into the baseline' : 'Runs after your approval'}</p></div>`).join('')}</div>
+  <div class="agent-grid">${agents.map((a) => `<div class="agent-card ${a.no === 1 || (a.no === 4 && type === 'incremental') ? 'gate' : ''}"><div class="agent-head"><span class="step-num small">${a.no}</span><b>${esc(a.name)}</b><span class="state">pending</span></div><p>${esc(a.produces)}</p><p class="muted small">${a.no === 1 ? 'You approve the requirement set first' : a.no === 4 && type === 'incremental' ? 'You approve the merge into the baseline' : 'Runs after your approval'}</p></div>`).join('')}</div>
+  <div class="legend"><span class="l-agent">AI agent</span><span class="l-human">Human approval before this agent</span></div>
   <h3 class="panel-title">What the agents will read</h3>
   <ul class="read-list">${slots.map(([slot, label]) => readSummary(slot, label, runState.inputs[slot])).join('')}</ul>
   <h3 class="panel-title">Flow ${flowNo} test inputs</h3>
@@ -741,8 +742,12 @@ async function viewReporting(params) {
   const view = REPORT_VIEWS.some(([v]) => v === params.get('view')) ? params.get('view') : 'lead';
   const c = await api(`/api/cycles/${id}`);
   const q = (v) => `#/reporting?cycle=${esc(id)}&view=${v}`;
-  const cycleTiles = cycles.slice().reverse().map((x) => tile({ href: `#/reporting?cycle=${x.id}&view=${view}`, art: x.type === 'baseline' ? 'flow1' : 'flow2', tag: x.type === 'baseline' ? 'Baseline' : 'Incremental', big: x.id.replace('CYC-', '#'), title: x.name,
-    lines: [x.summary ? `${x.summary.passed}/${x.summary.executed} passed · ${x.summary.passRate}%` : '<span class="muted">not executed</span>'], progress: x.summary ? x.summary.passRate : 0, cls: x.id === id ? 'sel' : '' }));
+  const when = (x) => new Date(x.completedAt || x.createdAt).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  const result = (x) => (x.summary ? `${x.summary.passed}/${x.summary.executed} passed · ${x.summary.passRate}%` : 'not executed');
+  const picked = cycles.find((x) => x.id === id);
+  const picker = `<section class="panel cycle-picker"><label class="field" for="rep-cycle">Cycle run</label>
+<select id="rep-cycle">${cycles.slice().reverse().map((x) => `<option value="${esc(x.id)}" ${x.id === id ? 'selected' : ''}>${esc(when(x))} · ${esc(x.id)} · ${x.type === 'baseline' ? 'Flow 1 baseline' : 'Flow 2 incremental'} · ${esc(result(x))}</option>`).join('')}</select>
+<span class="muted small">${cycles.length} completed cycle(s) · run on ${esc(when(picked))}</span></section>`;
   const ex = c.artifacts.execution ? c.artifacts.execution.summary : null;
   const defects = c.artifacts.defects || [];
   const big = { lead: '✔', execution: ex ? `${ex.passRate}%` : '-', defects: defects.length, cycle: '≡', downloads: '⇩' };
@@ -758,10 +763,11 @@ async function viewReporting(params) {
   else if (view === 'cycle') body = reportView(c);
   else body = downloadsView(c);
   const label = REPORT_VIEWS.find(([v]) => v === view)[1];
-  $view.innerHTML = `${hero}${rail('rep-cycles', 'Choose a cycle', `${cycles.length} completed`, cycleTiles)}
+  $view.innerHTML = `${hero}${picker}
 ${rail('rep-views', `${c.id} · ${c.name}`, `${c.type === 'baseline' ? 'baseline' : 'incremental'} cycle · <a href="#/cycle/${esc(id)}">open the cycle's run and artifacts</a>`, viewTiles)}
 <section class="panel" id="detail-panel"><div class="panel-head"><h2>${esc(label)}</h2><span class="crumbs"><a href="#/reporting">Reporting</a> › ${esc(c.id)} › ${esc(label)}</span></div><div id="tab">${body}</div></section>`;
   $view.querySelectorAll('.tile.sel').forEach((t) => { t.parentElement.scrollLeft = Math.max(0, t.offsetLeft - t.parentElement.offsetLeft - 40); });
+  document.getElementById('rep-cycle').onchange = (e) => { location.hash = `#/reporting?cycle=${e.target.value}&view=${view}`; };
   if (params.get('view')) document.getElementById('detail-panel').scrollIntoView({ block: 'start' });
 }
 
