@@ -116,7 +116,7 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
     const c = cycle(req);
     needReport(c);
     const lead = buildLeadReport(c);
-    res.json({ lead, html: renderLeadHtml(lead, { cycleLink: (tab) => `#/cycle/${c.id}?tab=${tab}` }) });
+    res.json({ lead, html: renderLeadHtml(lead, { cycleLink: (tab) => (tab === 'report' ? `#/reporting?cycle=${c.id}&view=cycle` : `#/cycle/${c.id}?tab=${tab}`) }) });
   });
   app.get('/api/cycles/:id/lead-report.html', (req, res) => {
     const c = cycle(req);

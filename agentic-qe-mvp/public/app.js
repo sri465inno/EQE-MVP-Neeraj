@@ -312,7 +312,7 @@ function phaseTile(c, p, tab) {
   const t = phaseArtifactTab(p.name, c);
   const no = agentNo(p.name);
   const cat = PHASE_CAT[p.name];
-  return tile({ href: `#/cycle/${c.id}?tab=${t}`, art: cat, tag: no ? `Agent ${no}` : cat === 'gate' ? 'Human gate' : 'Intake', big: no || PHASE_ICON[p.name] || '•',
+  return tile({ href: p.name === 'report' ? `#/reporting?cycle=${c.id}` : `#/cycle/${c.id}?tab=${t}`, art: cat, tag: no ? `Agent ${no}` : cat === 'gate' ? 'Human gate' : 'Intake', big: no || PHASE_ICON[p.name] || '•',
     corner: `<span class="status-dot ${esc(p.status)}"></span>${esc(p.status)}`, title: p.label, lines: [p.summary ? esc(p.summary) : '<span class="muted">not run yet</span>'], extra: handoverBadge(p),
     cls: `${p.status} ${t === tab && (p.name !== 'review' || tab === 'review') ? 'sel' : ''}`, progress: PHASE_PROGRESS[p.status] ?? 0 });
 }
@@ -320,7 +320,7 @@ function phaseTile(c, p, tab) {
 async function viewCycle(id, params) {
   const c = await api(`/api/cycles/${id}`);
   setTitle(c.name);
-  const tab = params.get('tab') || (c.status === 'awaiting-review' ? 'review' : c.status === 'awaiting-merge' ? 'merge' : c.status === 'completed' ? 'overview' : 'inputs');
+  const tab = params.get('tab') || (c.status === 'awaiting-review' ? 'review' : c.status === 'awaiting-merge' ? 'merge' : c.status === 'completed' ? 'artifacts' : 'inputs');
   const present = new Set(c.phases.map((p) => p.name));
   const rails = PHASE_GROUPS.map(([gid, title, note, names]) => {
     const tiles = names.filter((n) => present.has(n)).map((n) => phaseTile(c, c.phases.find((p) => p.name === n), tab));
@@ -331,7 +331,7 @@ async function viewCycle(id, params) {
   const summaryRail = rail('summary', 'Cycle summary', 'what went in, what came out, and the QE lead report', [
     tile({ href: `#/cycle/${c.id}?tab=inputs`, art: 'input', tag: 'Inputs taken', big: c.inputs.length, title: 'Inputs taken', lines: [esc(c.inputs.map((i) => `${i.label} ${i.ref}`).join(' · '))], cls: tab === 'inputs' ? 'sel' : '' }),
     tile({ href: `#/cycle/${c.id}?tab=artifacts`, art: 'design', tag: 'Artifacts produced', big: c.phases.filter((p) => p.status === 'done').length, title: 'Artifacts produced', lines: ['Every artifact of this cycle, with links and downloads'], cls: tab === 'artifacts' ? 'sel' : '' }),
-    tile({ href: `#/cycle/${c.id}?tab=overview`, art: 'run', tag: 'Final report', big: c.report ? '✔' : '…', title: 'QE lead report', lines: [c.report ? `${ex0 ? `${ex0.passed}/${ex0.executed} passed · ` : ''}${(c.artifacts.defects || []).length} defect(s) · go/no-go recommendation` : '<span class="muted">available when the cycle completes</span>'], cls: tab === 'overview' ? 'sel' : '' }),
+    tile({ href: `#/reporting?cycle=${c.id}`, art: 'run', tag: 'Reporting', big: c.report ? '✔' : '…', title: 'QE lead report', lines: [c.report ? `${ex0 ? `${ex0.passed}/${ex0.executed} passed · ` : ''}${(c.artifacts.defects || []).length} defect(s) · opens in Reporting` : '<span class="muted">available in Reporting when the cycle completes</span>'] }),
   ]);
   const done = c.phases.filter((p) => p.status === 'done').length;
   const ex = c.artifacts && c.artifacts.execution ? c.artifacts.execution.summary : null;
@@ -369,7 +369,7 @@ function artifactsView(c) {
   const rows = c.phases.map((p) => {
     const t = phaseArtifactTab(p.name, c);
     const no = agentNo(p.name);
-    return [`<a href="#/cycle/${esc(c.id)}?tab=${esc(t)}">${esc(p.label)}</a>`, no ? `Agent ${no}` : PHASE_CAT[p.name] === 'gate' ? 'Human gate' : 'Intake', `<span class="status-dot ${esc(p.status)}"></span> ${esc(p.status)}`, p.summary ? esc(p.summary) : '<span class="muted">not produced yet</span>', dl[p.name] || ''];
+    return [`<a href="${p.name === 'report' ? `#/reporting?cycle=${esc(c.id)}` : `#/cycle/${esc(c.id)}?tab=${esc(t)}`}">${esc(p.label)}</a>`, no ? `Agent ${no}` : PHASE_CAT[p.name] === 'gate' ? 'Human gate' : 'Intake', `<span class="status-dot ${esc(p.status)}"></span> ${esc(p.status)}`, p.summary ? esc(p.summary) : '<span class="muted">not produced yet</span>', dl[p.name] || ''];
   });
   return `<p class="muted">Each row is one step of the cycle and what it produced. Click a step to open its artifact.</p>${table(['Step', 'Who', 'Status', 'What it produced', 'Download'], rows)}`;
 }
@@ -419,11 +419,8 @@ async function renderCycleTab(c, tab) {
   switch (tab) {
     case 'inputs': return `<h2>Inputs taken</h2>${inputsTable(c)}`;
     case 'artifacts': return artifactsView(c);
-    case 'overview': {
-      if (!c.report) return notYet('The QE lead report');
-      const { html } = await api(`/api/cycles/${c.id}/lead-report`);
-      return `<div class="row"><a class="btn" href="/api/cycles/${esc(c.id)}/lead-report.html" target="_blank">Open as page</a><a class="btn secondary" href="/api/cycles/${esc(c.id)}/lead-report.html?download=1">Download HTML</a><a class="btn secondary" href="/api/cycles/${esc(c.id)}/lead-report.md">Download Markdown</a><a class="btn secondary" href="#/cycle/${esc(c.id)}?tab=report">Full cycle report</a></div>${html}`;
-    }
+    case 'overview':
+    case 'report': return `<div class="banner info">The QE lead report and cycle report for ${esc(c.id)} are in <a href="#/reporting?cycle=${esc(c.id)}">Reporting</a>.</div>`;
     case 'normalise': return `${c.review ? `<div class="banner ok">Reviewed by ${esc(c.review.reviewer)} at ${fmtTime(c.review.at)}. The reviewed set - not the raw inputs - flowed on.</div>` : ''}${normaliseView(c, false)}`;
     case 'review': {
       if (c.status !== 'awaiting-review') return `<div class="banner ok">Review complete.</div>${normaliseView(c, false)}`;
@@ -442,7 +439,6 @@ ${normaliseView(c, true)}
     case 'merge': return mergeView(c);
     case 'execution': return a.execution ? executionView(c) : `${notYet('Execution')}<p class="muted">Scripts are <b>designed</b> but have not been executed.</p>`;
     case 'defects': return a.defects ? defectsView(c) : notYet('Defects');
-    case 'report': return c.report ? reportView(c) : notYet('Cycle report');
     case 'skills': return skillsView(c);
     default: return '';
   }
@@ -624,12 +620,56 @@ async function pickCycle(params, title, render, needs) {
   if (f) { const el = document.getElementById(`s-${f}`); if (el) el.scrollIntoView(); }
 }
 
-async function viewReports() {
-  setTitle('Reports');
+const REPORT_VIEWS = [
+  ['lead', 'QE lead report', 'Summary, inputs, approach, risks, go/no-go and sign-off'],
+  ['execution', 'Execution results', 'Every test case with its real result and evidence'],
+  ['defects', 'Defects', 'Raised only from real failures, with expected vs actual'],
+  ['cycle', 'Full cycle report', 'Counts, coverage, approvals, skills and hand-overs'],
+  ['downloads', 'Downloads', 'HTML, Markdown and Excel files for this cycle'],
+];
+
+function downloadsView(c) {
+  const id = esc(c.id);
+  const rows = [
+    ['QE lead report', `<a href="/api/cycles/${id}/lead-report.html" target="_blank">Open</a> · <a href="/api/cycles/${id}/lead-report.html?download=1">HTML</a> · <a href="/api/cycles/${id}/lead-report.md">Markdown</a>`],
+    ['Full cycle report', `<a href="/api/cycles/${id}/report.html" target="_blank">Open</a> · <a href="/api/cycles/${id}/report.html?download=1">HTML</a> · <a href="/api/cycles/${id}/report.xlsx">Excel</a>`],
+    ['Test cases (Zephyr Scale)', `<a href="/api/cycles/${id}/export/testcases.xlsx">Excel (.xlsx)</a>`],
+    ['Execution', `<a href="/api/cycles/${id}/playwright-report.json" target="_blank">Playwright JSON report</a>`],
+  ];
+  return table(['Report', 'Files'], rows);
+}
+
+async function viewReporting(params) {
+  setTitle('Reporting');
   const cycles = (await api('/api/cycles')).filter((c) => c.status === 'completed');
-  $view.innerHTML = `<h1>Reports</h1>${table(['Cycle', 'Name', 'Type', 'Execution', 'Report'], cycles.map((c) => [esc(c.id), esc(c.name), esc(c.type), c.summary ? `${c.summary.passed}/${c.summary.executed} passed (${c.summary.passRate}%)` : '-',
-    `<a href="#/cycle/${esc(c.id)}?tab=report">View</a> · <a href="/api/cycles/${esc(c.id)}/report.html" target="_blank">HTML</a> · <a href="/api/cycles/${esc(c.id)}/report.html?download=1">download HTML</a> · <a href="/api/cycles/${esc(c.id)}/report.xlsx">Excel</a> · <a href="/api/cycles/${esc(c.id)}/export/testcases.xlsx">test cases .xlsx</a>`]))}
-${cycles.length >= 2 ? '<p><a class="btn" href="#/compare">Compare cycles</a></p>' : ''}`;
+  const hero = '<section class="hero small-hero"><div class="eyebrow">Reporting</div><h1>Quality reports by cycle</h1><p>Pick a cycle to read its QE lead report, results, defects and the full cycle report, or download them.</p></section>';
+  if (!cycles.length) { $view.innerHTML = `${hero}<p class="muted">No cycle has completed yet. <a href="#/run">Run a cycle</a>.</p>`; return; }
+  const id = cycles.some((c) => c.id === params.get('cycle')) ? params.get('cycle') : cycles[cycles.length - 1].id;
+  const view = REPORT_VIEWS.some(([v]) => v === params.get('view')) ? params.get('view') : 'lead';
+  const c = await api(`/api/cycles/${id}`);
+  const q = (v) => `#/reporting?cycle=${esc(id)}&view=${v}`;
+  const cycleTiles = cycles.slice().reverse().map((x) => tile({ href: `#/reporting?cycle=${x.id}&view=${view}`, art: x.type === 'baseline' ? 'flow1' : 'flow2', tag: x.type === 'baseline' ? 'Baseline' : 'Incremental', big: x.id.replace('CYC-', '#'), title: x.name,
+    lines: [x.summary ? `${x.summary.passed}/${x.summary.executed} passed · ${x.summary.passRate}%` : '<span class="muted">not executed</span>'], progress: x.summary ? x.summary.passRate : 0, cls: x.id === id ? 'sel' : '' }));
+  const ex = c.artifacts.execution ? c.artifacts.execution.summary : null;
+  const defects = c.artifacts.defects || [];
+  const big = { lead: '✔', execution: ex ? `${ex.passRate}%` : '-', defects: defects.length, cycle: '≡', downloads: '⇩' };
+  const viewTiles = REPORT_VIEWS.map(([v, name, line]) => tile({ href: q(v), art: v === 'defects' && defects.length ? 'gate' : 'run', tag: 'Report', big: big[v], title: name, lines: [esc(line)], cls: v === view ? 'sel' : '' }));
+  const prev = cycles.filter((x) => x.id !== id && cycles.indexOf(x) < cycles.findIndex((y) => y.id === id)).pop();
+  if (prev) viewTiles.push(tile({ href: `#/compare?a=${prev.id}&b=${id}`, art: 'flow2', tag: 'Compare', big: 'Δ', title: `Compare with ${prev.id}`, lines: ['Side by side: what changed and how results moved'] }));
+  let body;
+  if (view === 'lead') {
+    const { html } = await api(`/api/cycles/${id}/lead-report`);
+    body = `<div class="row"><a class="btn" href="/api/cycles/${esc(id)}/lead-report.html" target="_blank">Open as page</a><a class="btn secondary" href="/api/cycles/${esc(id)}/lead-report.html?download=1">Download HTML</a><a class="btn secondary" href="/api/cycles/${esc(id)}/lead-report.md">Download Markdown</a></div>${html}`;
+  } else if (view === 'execution') body = ex ? executionView(c) : '<p class="muted">Not executed.</p>';
+  else if (view === 'defects') body = defectsView(c);
+  else if (view === 'cycle') body = reportView(c);
+  else body = downloadsView(c);
+  const label = REPORT_VIEWS.find(([v]) => v === view)[1];
+  $view.innerHTML = `${hero}${rail('rep-cycles', 'Choose a cycle', `${cycles.length} completed`, cycleTiles)}
+${rail('rep-views', `${c.id} · ${c.name}`, `${c.type === 'baseline' ? 'baseline' : 'incremental'} cycle · <a href="#/cycle/${esc(id)}">open the cycle's run and artifacts</a>`, viewTiles)}
+<section class="panel" id="detail-panel"><div class="panel-head"><h2>${esc(label)}</h2><span class="crumbs"><a href="#/reporting">Reporting</a> › ${esc(c.id)} › ${esc(label)}</span></div><div id="tab">${body}</div></section>`;
+  $view.querySelectorAll('.tile.sel').forEach((t) => { t.parentElement.scrollLeft = Math.max(0, t.offsetLeft - t.parentElement.offsetLeft - 40); });
+  if (params.get('view')) document.getElementById('detail-panel').scrollIntoView({ block: 'start' });
 }
 
 async function viewCompare(params) {
@@ -684,7 +724,8 @@ async function route() {
       case 'scripts': return await pickCycle(params, 'Scripts', scriptsView, (c) => ['completed', 'awaiting-merge'].includes(c.status));
       case 'execution': return await pickCycle(params, 'Execution', executionView, (c) => c.status === 'completed');
       case 'defects': return await pickCycle(params, 'Defects', defectsView, (c) => c.status === 'completed');
-      case 'reports': return await viewReports();
+      case 'reporting': return await viewReporting(params);
+      case 'reports': location.hash = '#/reporting'; return undefined;
       case 'compare': return await viewCompare(params);
       case 'baselines': return await viewBaselines();
       default: $view.innerHTML = '<p>Not found.</p>';

@@ -133,3 +133,4 @@ ol,ul{padding-left:20px}li{margin:3px 0}
 .lifecycle li b{color:#fff;font-size:14px;font-weight:600}
 .lc-k{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#7aa7ff}
 @media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.lifecycle ol{grid-template-columns:1fr}.lifecycle li::after{display:none}.home-hero h1{font-size:28px}}
+#nav{align-items:center}.nav-sep{margin-left:14px;padding-left:14px;border-left:1px solid var(--line);color:#6f7d98;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-right:2px}
