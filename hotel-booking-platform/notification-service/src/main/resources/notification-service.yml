@@ -1,0 +1,17 @@
+server:
+  port: 8086
+platform:
+  service: notification-service
+  environment: local
+  notification:
+    max-send-attempts: 3
+    resend-limit-per-booking: 3
+    resend-booking-window: 24h
+    resend-limit-per-client: 10
+    resend-client-window: 1h
+    simulate-delivery: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
