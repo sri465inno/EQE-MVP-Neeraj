@@ -23,6 +23,10 @@ mvn -B -pl journey-tests -am test   # end-to-end journeys only
 
 Run a service: `mvn -pl hotel-service -am spring-boot:run` (start hotel, offer and notification first, then search, cart and reservation).
 
+## Business rules
+
+The rules this code enforces are tagged `@rule` next to their configured values in each service's `src/main/resources/<service>.yml`. The booking attributes, their types, limits and example values are in [data-dictionary/booking-attributes.json](data-dictionary/booking-attributes.json); test data is generated from it.
+
 ## Demo switches
 
 - Payment tokens: `tok_visa_ok` authorises, `tok_decline` declines, `tok_error` fails, `tok_timeout` loses the response (reservation goes to PENDING_UNKNOWN and is reconciled), `tok_void_fails` makes a void fail (MANUAL_REVIEW).
