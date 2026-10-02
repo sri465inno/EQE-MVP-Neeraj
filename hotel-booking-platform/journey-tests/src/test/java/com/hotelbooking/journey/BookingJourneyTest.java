@@ -143,6 +143,18 @@ class BookingJourneyTest {
     }
 
     @Test
+    @DisplayName("AQPI-8: sorting by an unsupported option is refused with the approved options, not a server error")
+    void unsupportedSortRefused() {
+        JsonNode search = post("search-service", "/api/searches", Map.of("destination", "NYC", "checkIn", CHECK_IN,
+                "checkOut", CHECK_OUT, "rooms", 1, "adults", 2, "children", 0), HttpStatus.OK);
+        JsonNode error = platform.client("search-service").get()
+                .uri("/api/searches/" + search.path("searchId").asText() + "/results?sort=NAME").exchange()
+                .expectStatus().isBadRequest().expectBody(JsonNode.class).returnResult().getResponseBody();
+        assertThat(error.path("code").asText()).isEqualTo("UNSUPPORTED_SORT");
+        assertThat(error.path("message").asText()).contains("PRICE_ASC");
+    }
+
+    @Test
     @DisplayName("AQPI-17 AQPI-21: a price change must be acknowledged before the booking can be paid")
     void priceChangeNeedsAcknowledgement() {
         String cartId = createCart("H-NYC-001", "STD-K", "FLEX").path("cartId").asText();

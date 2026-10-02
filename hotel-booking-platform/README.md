@@ -17,7 +17,7 @@ Java 21 + Spring Boot 3.5 + WebFlux reactive microservices for the "Intelligent 
 
 ```bash
 export JAVA_HOME=/path/to/jdk-21
-mvn -B install            # all modules, 48 tests
+mvn -B install            # all modules, 49 tests
 mvn -B -pl journey-tests -am test   # end-to-end journeys only
 ```
 
