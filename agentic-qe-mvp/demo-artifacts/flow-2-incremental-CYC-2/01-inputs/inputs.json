@@ -1,0 +1,136 @@
+[
+  {
+    "slot": "epic",
+    "label": "Jira epic",
+    "mode": "github",
+    "ref": "COM-20",
+    "summary": "Group and package reservation commission",
+    "children": [],
+    "provenance": {
+      "kind": "github",
+      "label": "Jira REST API v3 export pulled live from GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export) - synthetic test issues; no live Jira call was made",
+      "ref": "COM-20",
+      "fetchedAt": "2026-09-29T19:40:14.758Z",
+      "files": [
+        "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/COM-20.json",
+        "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/COM-20.children.json"
+      ]
+    },
+    "statementCount": 3
+  },
+  {
+    "slot": "codebase",
+    "label": "Codebase",
+    "mode": "github",
+    "ref": "sri465inno/uc-agentic-quality-engineering@demo/commission-engine-v2 (6ccd807)",
+    "provenance": {
+      "kind": "github",
+      "label": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/commission-engine-v2 (6ccd807) at 2026-09-29T19:40:14.758Z",
+      "ref": "sri465inno/uc-agentic-quality-engineering@demo/commission-engine-v2 (6ccd807)",
+      "fetchedAt": "2026-09-29T19:40:14.758Z",
+      "files": [
+        "README.md",
+        "data-dictionary/reservation-attributes.json",
+        "package.json",
+        "src/app.js",
+        "src/commission.js",
+        "src/rules.js",
+        "src/server.js"
+      ]
+    },
+    "branch": "demo/commission-engine-v2",
+    "repo": "sri465inno/uc-agentic-quality-engineering",
+    "commit": "6ccd8071c77a0d393af3cd653edab348e9cda94d",
+    "compare": {
+      "status": "ahead",
+      "aheadBy": null,
+      "base": "df5203e8ab429df868960d985a658967fc8408b8",
+      "baseBranch": "demo/commission-engine",
+      "files": [
+        {
+          "filename": "README.md",
+          "status": "modified"
+        },
+        {
+          "filename": "package.json",
+          "status": "modified"
+        },
+        {
+          "filename": "src/commission.js",
+          "status": "modified"
+        },
+        {
+          "filename": "src/rules.js",
+          "status": "modified"
+        }
+      ]
+    },
+    "description": "Travel-advisor commission engine for Aurora Hotels reservations (sample codebase for the Agentic QE Platform - MVP demo)",
+    "dataModel": {
+      "file": "data-dictionary/reservation-attributes.json",
+      "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/data-dictionary/reservation-attributes.json",
+      "name": "Reservation",
+      "version": "2026.3",
+      "attributeCount": 1000,
+      "groupCount": 20,
+      "drivers": [
+        {
+          "name": "reservation.status",
+          "type": "enum",
+          "description": "Lifecycle status of the reservation"
+        },
+        {
+          "name": "stay.nights",
+          "type": "integer",
+          "description": "Number of room nights"
+        },
+        {
+          "name": "room.roomCount",
+          "type": "integer",
+          "description": "Number of rooms held under the reservation"
+        },
+        {
+          "name": "rate.planCategory",
+          "type": "enum",
+          "description": "Category of the booked rate plan"
+        },
+        {
+          "name": "revenue.totalAmount",
+          "type": "decimal",
+          "description": "Gross amount charged, including taxes, fees and ancillaries"
+        },
+        {
+          "name": "revenue.taxAmount",
+          "type": "decimal",
+          "description": "Taxes included in revenue.totalAmount"
+        },
+        {
+          "name": "revenue.resortFeeAmount",
+          "type": "decimal",
+          "description": "Resort fees included in revenue.totalAmount"
+        },
+        {
+          "name": "revenue.ancillaryAmount",
+          "type": "decimal",
+          "description": "Ancillary charges (spa, dining, parking) included in revenue.totalAmount"
+        },
+        {
+          "name": "channel.bookingChannel",
+          "type": "enum",
+          "description": "Channel the reservation was booked through"
+        },
+        {
+          "name": "advisor.iataNumber",
+          "type": "string",
+          "description": "IATA number of the booking travel advisor"
+        },
+        {
+          "name": "payment.loyaltyPointsRedemption",
+          "type": "boolean",
+          "description": "True when the stay is paid with loyalty points"
+        }
+      ]
+    },
+    "statementCount": 20
+  }
+]

@@ -5,27 +5,32 @@ const { loadInputs } = require('./inputs');
 const { normalise, applyReview } = require('./normalise');
 const { classifyDelta } = require('./delta');
 const design = require('./agents/design');
-const { executeSuite } = require('./execution');
+const { executeSuite, summarise } = require('./execution');
 const { raiseDefects } = require('./defects');
 const { computeCoverage } = require('./coverage');
-const { DEFAULT_BUILD } = require('../sut/server');
+const { DEFAULT_BUILD, BUILDS, ENGINE_DIR } = require('../sut/server');
 const fs = require('fs');
 const { buildCycleReport, collectHandovers } = require('./report');
 const { compareCycles } = require('./compare');
 const { testCasesExport } = require('./excel');
 const { agentContext, checkHandover, selectSkills } = require('./skills');
 const { producedBy } = require('./handover');
+const { reviewInputs } = require('./agents/review');
+const { getTestingType } = require('./testing-types');
+const { testDataAgent, dataSetFile } = require('./agents/testdata');
+
+const DICTIONARY_FILE = 'inputs/data-dictionary.json';
 
 const clone = (x) => JSON.parse(JSON.stringify(x));
 const now = () => new Date().toISOString();
 
 const PHASES = {
-  baseline: ['ingest', 'normalise', 'review', 'requirements', 'rules', 'testcases', 'scripts', 'execution', 'defects', 'report'],
-  incremental: ['ingest', 'normalise', 'review', 'delta', 'requirements', 'rules', 'testcases', 'scripts', 'merge-approval', 'execution', 'defects', 'report'],
+  baseline: ['ingest', 'normalise', 'review-agent', 'review', 'requirements', 'rules', 'testcases', 'testdata', 'scripts', 'execution', 'defects', 'report'],
+  incremental: ['ingest', 'normalise', 'review-agent', 'review', 'delta', 'requirements', 'rules', 'testcases', 'testdata', 'scripts', 'merge-approval', 'execution', 'defects', 'report'],
 };
 const PHASE_LABEL = {
   ingest: 'Ingest inputs', normalise: 'Normalise (3-way compare)', review: 'Human review of requirement set', delta: 'Delta classification',
-  requirements: 'Requirements repository agent', rules: 'Business rules agent', testcases: 'Test case agent', scripts: 'Automation script agent',
+  requirements: 'Requirements repository agent', rules: 'Business rules agent', testcases: 'Test case agent', testdata: 'Test data agent', scripts: 'Automation script agent',
   'merge-approval': 'Human approval to merge', execution: 'Execution agent (Playwright, real run)', defects: 'Defect agent', report: 'Cycle report agent',
 };
 
@@ -36,6 +41,15 @@ function setPhase(cycle, name, status, summary) {
   if (['done', 'failed', 'skipped'].includes(status)) p.finishedAt = now();
   p.status = status;
   if (summary !== undefined) p.summary = summary;
+}
+
+/** Execution record when the type of testing leaves nothing automated to run: nothing is faked. */
+function noAutomatedRun(runCases, cycle) {
+  const results = runCases.map((t) => ({ key: t.key, requirementId: t.requirementId, ruleId: t.ruleId || null, name: t.name, type: t.type, scriptFile: null,
+    status: 'not-run', reason: 'Manual test case - not automated, not executed', duration: 0, error: null, evidence: [] }));
+  const at = now();
+  return { executed: false, tool: 'Playwright not started: no automated case in this run', sut: { build: cycle.sutBuild }, startedAt: at, finishedAt: at,
+    specFiles: [], results, summary: summarise(results) };
 }
 
 class Pipeline {
@@ -58,6 +72,26 @@ class Pipeline {
     }
   }
 
+  /** The data dictionary the codebase input carried; the build's own copy only for cycles recorded before it was kept. */
+  dictionaryOf(cycle) {
+    const file = path.join(this.store.runDir(cycle.id), DICTIONARY_FILE);
+    if (cycle.dataDictionary && fs.existsSync(file)) return { dictionary: JSON.parse(fs.readFileSync(file, 'utf8')), source: cycle.dataDictionary.source || 'codebase input' };
+    const own = path.join(ENGINE_DIR, BUILDS[cycle.sutBuild] || BUILDS[DEFAULT_BUILD], 'data-dictionary', 'reservation-attributes.json');
+    return { dictionary: JSON.parse(fs.readFileSync(own, 'utf8')), source: `data dictionary of build ${cycle.sutBuild}` };
+  }
+
+  /** Writes the test data agent's data sets where the generated specs load them (test-data/<case key>.json). */
+  writeTestData(cycle, cases) {
+    const dir = path.join(this.store.runDir(cycle.id), 'test-data');
+    fs.rmSync(dir, { recursive: true, force: true });
+    fs.mkdirSync(dir, { recursive: true });
+    const { dictionary } = this.dictionaryOf(cycle);
+    const keys = new Set(cases.map((t) => t.key));
+    for (const d of cycle.artifacts.testData || []) {
+      if (keys.has(d.testCaseKey)) fs.writeFileSync(path.join(dir, `${d.testCaseKey}.json`), `${JSON.stringify(dataSetFile(d, dictionary), null, 2)}\n`);
+    }
+  }
+
   /** Hands an agent the bodies of the skills that target it, and records which ones it saw. */
   skillContext(cycle, agentId) {
     const ctx = agentContext(cycle.skills, agentId);
@@ -74,10 +108,12 @@ class Pipeline {
     return h;
   }
 
-  async startCycle({ type = 'baseline', name, baselineId, inputs = {}, sutBuild, reviewer, skills }) {
+  async startCycle({ type = 'baseline', name, baselineId, inputs = {}, sutBuild, reviewer, skills, testingType, testingTypes }) {
     if (!['baseline', 'incremental'].includes(type)) throw httpError(400, 'type must be "baseline" or "incremental"');
+    let tt;
+    try { tt = getTestingType(testingTypes ?? testingType); } catch (e) { throw httpError(400, e.message, [{ field: 'testingType', message: e.message }]); }
     let activeSkills;
-    try { activeSkills = selectSkills(this.skills, skills); } catch (e) { throw httpError(400, e.message); }
+    try { activeSkills = selectSkills(this.skills, skills, tt.ids); } catch (e) { throw httpError(400, e.message); }
     let baseline = null;
     if (type === 'incremental') {
       baseline = this.store.getBaseline(baselineId);
@@ -95,25 +131,39 @@ class Pipeline {
       id,
       name: name || `Cycle ${n} - ${type === 'baseline' ? 'Baseline' : 'Incremental'}`,
       type,
+      testingType: tt.id,
+      testingTypes: tt.ids,
+      testingTypeName: tt.name,
       status: 'awaiting-review',
       createdAt: now(),
       createdBy: reviewer || null,
       baselineId: baseline ? baseline.id : null,
       baselineVersionAtStart: baseline ? baseline.version : null,
       sutBuild: sutBuild || codebase?.branch || DEFAULT_BUILD,
-      inputs: loaded.map(({ statements: s, ...rest }) => ({ ...rest, statementCount: s.length })),
+      inputs: loaded.map(({ statements: s, dictionary: _d, ...rest }) => ({ ...rest, statementCount: s.length })),
+      dataDictionary: codebase?.dictionary ? { file: DICTIONARY_FILE, source: codebase.dataModel?.url || null, name: codebase.dictionary.name, version: codebase.dictionary.version, attributeCount: codebase.dictionary.attributes.length } : null,
       normalisation,
       skills: activeSkills,
       phases: PHASES[type].map((p) => ({ name: p, label: PHASE_LABEL[p], status: 'pending' })),
       approvals: [],
       artifacts: {},
     };
+    if (codebase?.dictionary) {
+      const file = path.join(this.store.runDir(id), DICTIONARY_FILE);
+      fs.mkdirSync(path.dirname(file), { recursive: true });
+      fs.writeFileSync(file, JSON.stringify(codebase.dictionary));
+    }
     setPhase(cycle, 'ingest', 'done', `${loaded.length} input(s), ${statements.length} statements`);
     this.skillContext(cycle, 'normalise');
     this.handover(cycle, 'normalise');
     setPhase(cycle, 'normalise', 'done', `${normalisation.counts.agreed} agreed · ${normalisation.counts['jira-only']} Jira only · ${normalisation.counts['code-only']} code only · ${normalisation.counts.conflict} conflicts`);
-    setPhase(cycle, 'review', 'waiting');
     if (baseline) cycle.deltaPreview = this.previewDelta(cycle, {}, baseline);
+    this.skillContext(cycle, 'review-agent');
+    cycle.reviewAgent = reviewInputs({ normalisation, inputs: cycle.inputs, testingType: tt.id, deltaPreview: cycle.deltaPreview || null, baseline });
+    this.handover(cycle, 'review-agent');
+    const rc = cycle.reviewAgent.counts;
+    setPhase(cycle, 'review-agent', 'done', `${rc.added} added · ${rc.missing} missing · ${rc.conflicts} conflicts suggested for the reviewer`);
+    setPhase(cycle, 'review', 'waiting');
     return this.store.saveCycle(cycle);
   }
 
@@ -128,8 +178,19 @@ class Pipeline {
 
   review(cycleId, { reviewer, excluded = [], resolutions = {}, comment = '' }) {
     const cycle = this.mustGet(cycleId);
+    if (cycle.status === 'awaiting-merge') {
+      throw httpError(409, `The requirement set of ${cycle.id} is already approved. The step still open is the merge into baseline ${cycle.baselineId}: approve it on the merge screen.`, [{ gate: 'merge' }]);
+    }
     if (cycle.status !== 'awaiting-review') throw httpError(409, `Cycle is ${cycle.status}, not awaiting review`);
-    if (!reviewer || !String(reviewer).trim()) throw httpError(400, 'Reviewer name is required');
+    const open = cycle.normalisation.groups.filter((g) => g.bucket === 'conflict' && !excluded.includes(g.id) && !resolutions[g.id]);
+    const missing = [
+      ...(!reviewer || !String(reviewer).trim() ? [{ field: 'reviewer', message: 'Reviewer name is required: every approval is recorded against a person' }] : []),
+      ...open.map((g) => ({ group: g.id, message: `Conflict ${g.id} needs a decision (${g.options.map((o) => `${o.sources.join('/')} says ${o.signature}`).join(', ')}): choose a value or exclude it` })),
+    ];
+    if (missing.length) {
+      const head = open.length ? `Unresolved conflicts: ${open.map((g) => g.id).join(', ')}. ` : '';
+      throw httpError(400, `${head}Cannot approve the requirement set yet: ${missing.map((m) => m.message).join('; ')}`, missing);
+    }
     let reviewed;
     try {
       reviewed = applyReview(cycle.normalisation, { excluded, resolutions });
@@ -163,15 +224,23 @@ class Pipeline {
     const counters = cycle.counters;
     this.skillContext(cycle, 'requirements');
     setPhase(cycle, 'requirements', 'done', `${requirements.length} requirements`);
-    const skills = Object.fromEntries(['rules', 'testcases', 'scripts'].map((a) => [a, this.skillContext(cycle, a)]));
-    const out = design.designAgents(requirements, { cycle, counters, previous, skills });
+    const skills = Object.fromEntries(['rules', 'testcases', 'testdata', 'scripts'].map((a) => [a, this.skillContext(cycle, a)]));
+    const out = design.designAgents(requirements, { cycle, counters, previous, skills, testingType: cycle.testingType });
     const count = (arr, st) => arr.filter((x) => x.status === st).length;
-    const split = (arr) => (previous ? ` (${count(arr, 'new')} new · ${count(arr, 're-designed')} re-designed · ${count(arr, 'carried over')} carried over)` : '');
+    const split = (arr) => (previous ? ` (${count(arr, 'new') + count(arr, 'added')} new · ${count(arr, 're-designed')} re-designed · ${count(arr, 'carried over')} carried over)` : '');
+    const sel = out.selection;
+    const scope = sel.notInRun ? ` · ${sel.inRun} in this ${sel.name.toLowerCase()} run` : '';
     setPhase(cycle, 'rules', 'done', `${out.rules.length} business rules${split(out.rules)}`);
-    setPhase(cycle, 'testcases', 'done', `${out.testCases.length} test cases${split(out.testCases)}`);
+    setPhase(cycle, 'testcases', 'done', `${out.testCases.length} test cases${split(out.testCases)}${scope}`);
+    const dict = this.dictionaryOf(cycle);
+    const td = testDataAgent(out.testCases, dict.dictionary, { previous: previous?.testData, source: dict.source });
+    const byCase = new Map(td.dataSets.map((d) => [d.testCaseKey, d.id]));
+    for (const t of out.testCases) t.dataSet = byCase.get(t.key);
+    const tds = td.summary;
+    setPhase(cycle, 'testdata', 'done', `${tds.total} data sets of ${tds.dictionary.attributeCount} attributes · ${tds.conforming} conform to the data dictionary · ${tds.negative} deliberately invalid (negative tests)${tds.nonConforming ? ` · ${tds.nonConforming} do not conform` : ''}${previous ? ` (${tds.byStatus.new || 0} new · ${tds.byStatus['re-generated'] || 0} re-generated · ${tds.byStatus['carried over'] || 0} carried over)` : ''}`);
     setPhase(cycle, 'scripts', 'done', `${out.scripts.length} Playwright specs${split(out.scripts)}`);
-    cycle.artifacts = { ...cycle.artifacts, requirements, rules: out.rules, testCases: out.testCases, scripts: out.scripts, affected: out.affected };
-    for (const a of ['requirements', 'rules', 'testcases', 'scripts']) this.handover(cycle, a);
+    cycle.artifacts = { ...cycle.artifacts, requirements, rules: out.rules, testCases: out.testCases, testData: td.dataSets, testDataSummary: tds, scripts: out.scripts, affected: out.affected, selection: sel };
+    for (const a of ['requirements', 'rules', 'testcases', 'testdata', 'scripts']) this.handover(cycle, a);
   }
 
   async runBaseline(cycleId) {
@@ -187,7 +256,7 @@ class Pipeline {
     const baseline = {
       id: bid, name: `${done.inputs.find((i) => i.slot === 'epic')?.ref || 'Baseline'} baseline`, version: 1,
       createdAt: now(), sourceCycleId: done.id, cycles: [done.id], lastCycleId: done.id,
-      requirements: done.artifacts.requirements, rules: done.artifacts.rules, testCases: done.artifacts.testCases, scripts: done.artifacts.scripts,
+      requirements: done.artifacts.requirements, rules: done.artifacts.rules, testCases: done.artifacts.testCases, testData: done.artifacts.testData, scripts: done.artifacts.scripts,
       counters: done.counters,
       history: [{ version: 1, at: now(), cycleId: done.id, change: 'Baseline established', approvedBy: done.review.reviewer }],
     };
@@ -270,15 +339,19 @@ class Pipeline {
     a.requirements = a.requirements.filter((r) => !drop.has(r.id));
     a.rules = a.rules.filter((r) => !drop.has(r.requirementId));
     a.testCases = a.testCases.filter((t) => !drop.has(t.requirementId));
+    a.testData = a.testData.filter((d) => !drop.has(d.requirementId));
     a.scripts = a.scripts.filter((x) => !drop.has(x.requirementId));
-    for (const x of ['requirements', 'rules', 'testcases', 'scripts']) this.handover(cycle, x);
+    for (const x of ['requirements', 'rules', 'testcases', 'testdata', 'scripts']) this.handover(cycle, x);
     this.proposeMerge(cycle, baseline);
   }
 
   decideMerge(cycleId, { decision, approver, comment = '', rejectedRows = [] }) {
     const cycle = this.mustGet(cycleId);
+    if (cycle.status === 'awaiting-review') {
+      throw httpError(409, `Approve the requirement set first: ${cycle.id} is still waiting at the review stage. The merge into baseline ${cycle.baselineId} comes after the design agents have run.`, [{ gate: 'review' }]);
+    }
     if (cycle.status !== 'awaiting-merge') throw httpError(409, `Cycle is ${cycle.status}, not awaiting merge approval`);
-    if (!approver || !String(approver).trim()) throw httpError(400, 'Approver name is required');
+    if (!approver || !String(approver).trim()) throw httpError(400, 'Approver name is required: every merge into the baseline is recorded against a person', [{ field: 'approver', message: 'Approver name is required' }]);
     if (!['approve', 'reject'].includes(decision)) throw httpError(400, 'decision must be "approve" or "reject"');
     const baseline = this.store.getBaseline(cycle.baselineId);
     const at = now();
@@ -304,7 +377,7 @@ class Pipeline {
     const merged = {
       ...baseline,
       version: baseline.version + 1,
-      requirements: a.requirements, rules: a.rules, testCases: a.testCases, scripts: a.scripts,
+      requirements: a.requirements, rules: a.rules, testCases: a.testCases, testData: a.testData, scripts: a.scripts,
       counters: cycle.counters,
       cycles: [...baseline.cycles, cycle.id],
       history: [...baseline.history, { version: baseline.version + 1, at, cycleId: cycle.id, change: cycle.delta.summary, approvedBy: approver }],
@@ -336,15 +409,21 @@ class Pipeline {
     setPhase(cycle, 'execution', 'running');
     this.skillContext(cycle, 'execution');
     this.store.saveCycle(cycle);
-    const execution = await executeSuite({
-      scripts: cycle.artifacts.scripts, testCases: cycle.artifacts.testCases,
-      runDir: this.store.runDir(cycle.id), sutBuild: cycle.sutBuild,
-    });
+    const runCases = cycle.artifacts.testCases.filter((t) => t.inRun !== false);
+    const runKeys = runCases.filter((t) => t.automation === 'Automated').map((t) => t.key);
+    const partial = runCases.length !== cycle.artifacts.testCases.length;
+    this.writeTestData(cycle, runCases);
+    const execution = runKeys.length ? await executeSuite({
+      scripts: cycle.artifacts.scripts.filter((x) => x.covers.some((k) => runKeys.includes(k))), testCases: runCases,
+      runDir: this.store.runDir(cycle.id), sutBuild: cycle.sutBuild, keys: partial ? runKeys : null,
+    }) : noAutomatedRun(runCases, cycle);
+    execution.testingType = cycle.testingType;
+    execution.notInRun = cycle.artifacts.testCases.length - runCases.length;
     cycle = this.mustGet(cycleId);
     cycle.artifacts.execution = execution;
     this.handover(cycle, 'execution');
     const s = execution.summary;
-    setPhase(cycle, 'execution', 'done', `${s.executed} executed · ${s.passed} passed · ${s.failed} failed · ${s.notRun} not run (manual)`);
+    setPhase(cycle, 'execution', 'done', `${s.executed} executed · ${s.passed} passed · ${s.failed} failed · ${s.notRun} not run (manual)${execution.notInRun ? ` · ${execution.notInRun} kept in the pack, outside this run` : ''}`);
     setPhase(cycle, 'defects', 'running');
     this.skillContext(cycle, 'defects');
     const { defects, resolved, nextNo } = raiseDefects({
@@ -356,7 +435,7 @@ class Pipeline {
     cycle.artifacts.resolvedDefects = resolved;
     this.handover(cycle, 'defects');
     setPhase(cycle, 'defects', 'done', `${defects.length} defect(s) from real failures${resolved.length ? ` · ${resolved.length} resolved` : ''}`);
-    cycle.artifacts.coverage = computeCoverage(cycle.artifacts.requirements, cycle.artifacts.testCases, execution.results, cycle.inputs.find((i) => i.slot === 'codebase')?.dataModel);
+    cycle.artifacts.coverage = computeCoverage(cycle.artifacts.requirements, runCases, execution.results, cycle.inputs.find((i) => i.slot === 'codebase')?.dataModel);
     this.store.saveCycle(cycle);
   }
 
@@ -384,9 +463,10 @@ class Pipeline {
   runDir(id) { return path.join(this.store.runDir(id)); }
 }
 
-function httpError(status, message) {
+function httpError(status, message, details) {
   const e = new Error(message);
   e.status = status;
+  if (details) e.details = details;
   return e;
 }
 

@@ -17,7 +17,7 @@ async function loadInput(slot, spec, opts = {}) {
     const branch = spec.branch || DEFAULT_BRANCH;
     const cb = spec.mode === 'github' ? await loadCodebaseLive(branch, { cloneUrl: opts.cloneUrl }) : loadCodebaseFixture(branch);
     return { slot, label: SLOT_LABEL[slot], mode: spec.mode === 'github' ? 'github' : 'sample', ref: cb.provenance.ref, statements: x.statementsFromCodebase(cb, { input: slot }),
-      provenance: cb.provenance, branch: cb.branch, repo: cb.repo, commit: cb.commit, compare: cb.compare, description: cb.description, dataModel: cb.dataModel };
+      provenance: cb.provenance, branch: cb.branch, repo: cb.repo, commit: cb.commit, compare: cb.compare, description: cb.description, dataModel: cb.dataModel, dictionary: cb.dictionary };
   }
   if (spec.mode === 'paste') {
     const statements = x.statementsFromPastedJira(spec.text, { input: slot });

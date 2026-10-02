@@ -60,6 +60,15 @@ class Store {
   }
 
   runDir(cycleId) { return path.join(this.dir, 'runs', cycleId); }
+
+  /** Deletes every cycle, baseline and run and restarts the id counters. */
+  reset() {
+    for (const d of ['cycles', 'baselines', 'runs']) {
+      fs.rmSync(path.join(this.dir, d), { recursive: true, force: true });
+      fs.mkdirSync(path.join(this.dir, d), { recursive: true });
+    }
+    this.writeJson(this.metaFile, { nextCycle: 1, nextBaseline: 1, nextDefect: 0 });
+  }
 }
 
 module.exports = { Store };

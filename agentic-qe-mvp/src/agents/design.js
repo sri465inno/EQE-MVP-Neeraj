@@ -3,6 +3,7 @@
 //   requirements repository -> business rules -> test cases -> automation scripts
 // All structure and decisions are deterministic; the optional model only drafts prose elsewhere.
 const { classify, CATALOGUE, MONEY_KINDS, SPEC_PRELUDE } = require('./catalogue');
+const { getTestingType, inRun, suiteOf, SMOKE_SLOTS } = require('../testing-types');
 
 const pad = (n, w = 3) => String(n).padStart(w, '0');
 const clone = (x) => JSON.parse(JSON.stringify(x));
@@ -133,12 +134,32 @@ function manualCase(req) {
   };
 }
 
+/** Every case the catalogue can design for a requirement, each tagged with its suite. */
+function candidateSpecs(req, c, ctx) {
+  if (!c) return [{ ...manualCase(req), suite: req.type === 'non-functional' ? 'nfr' : 'api' }];
+  const own = c.entry.cases(c.params, ctx).map((x) => ({ ...x, suite: x.suite || (c.entry.ui ? 'ui' : c.entry.type === 'non-functional' ? 'nfr' : 'api') }));
+  const extra = c.entry.extras ? c.entry.extras(c.params, ctx) : [];
+  return [...own, ...extra];
+}
+
+function caseLabels(type, suite, kind, slot, automated, tt) {
+  return [
+    type === 'functional' ? 'functional' : 'non-functional',
+    ...(tt.ids.includes('e2e') && ['ui', 'journey'].includes(suite) ? ['e2e'] : []),
+    ...(tt.ids.includes('performance') && ['nfr', 'load'].includes(suite) ? ['performance'] : []),
+    ...(tt.ids.includes('smoke') && SMOKE_SLOTS.has(`${kind}|${slot}`) ? ['smoke'] : []),
+    ...(automated ? ['automation'] : []),
+  ];
+}
+
 /**
- * Agents 2-4: business rules, test cases and scripts.
+ * Agents 2-4: business rules, test cases and scripts, steered by the type of testing.
  * With `previous` (incremental), unaffected artifacts are carried over untouched and
  * affected ones are re-designed, keeping their keys and the superseded version.
+ * Cases the type of testing asks for but the pack lacks are added; cases it does not run stay in the pack with inRun=false.
  */
-function designAgents(requirements, { cycle, counters, previous = null, skills = {} }) {
+function designAgents(requirements, { cycle, counters, previous = null, skills = {}, testingType = cycle.testingType }) {
+  const tt = getTestingType(testingType);
   const used = (agent) => (skills[agent]?.skills || []).map((x) => x.id);
   counters.caseF = counters.caseF || 0;
   counters.caseN = counters.caseN || 0;
@@ -152,18 +173,75 @@ function designAgents(requirements, { cycle, counters, previous = null, skills =
   const prevRules = new Map((previous?.rules || []).map((x) => [x.requirementId, x]));
   const prevCases = new Map((previous?.testCases || []).map((x) => [`${x.requirementId}|${x.slot}`, x]));
   const prevScripts = new Map((previous?.scripts || []).map((x) => [x.requirementId, x]));
+  const kindOfReq = (req) => classify(req.text)?.entry.kind || 'unclassified';
+  const wants = (spec, kind) => inRun(tt, { suite: spec.suite, kind, slot: spec.slot });
 
   const rules = [];
   const testCases = [];
   const scripts = [];
 
+  const nextKey = (req) => {
+    const nf = req.type === 'non-functional';
+    counters[nf ? 'caseN' : 'caseF'] += 1;
+    return `TC-${nf ? 'N' : 'F'}-${pad(counters[nf ? 'caseN' : 'caseF'])}`;
+  };
+
+  const designCase = (req, c, s, ruleId, scriptFile, prev) => {
+    const kind = c ? c.entry.kind : 'unclassified';
+    const automated = !s.manual && Boolean(scriptFile);
+    return {
+      key: prev?.key || nextKey(req), requirementId: req.id, ruleId, slot: s.slot, kind, suite: s.suite,
+      name: s.name, objective: s.objective, precondition: s.precondition, steps: s.steps, testData: s.testData,
+      expected: s.expected, priority: s.manual ? 'Low' : (c && MONEY_KINDS.has(c.entry.kind) ? 'High' : 'Medium'), type: req.type,
+      labels: caseLabels(req.type, s.suite, kind, s.slot, automated, tt),
+      automation: automated ? 'Automated' : 'Not automated', scriptFile: automated ? scriptFile : null,
+      issueLinks: req.jiraKeys, sourceRefs: sourceRefs(req), cycle: cycle.name, designedWith: used('testcases'), designedFor: tt.id,
+      inRun: inRun(tt, { suite: s.suite, kind, slot: s.slot }),
+      status: prev ? 're-designed' : 'new', version: prev ? prev.version + 1 : 1,
+      previous: prev ? { name: prev.name, expected: prev.expected, testData: prev.testData, version: prev.version } : null,
+      revisionNote: prev ? `v${prev.version + 1} (${cycle.id}): ${revision(prev, s)}` : null,
+      ui: Boolean(s.ui ?? c?.entry.ui), varies: s.varies || [],
+      code: automated ? s.code() : null,
+    };
+  };
+
+  const writeScript = (req, rule, scriptFile, reqCases, prevScript) => {
+    const code = renderSpec(req, reqCases, { rule, skills: used('scripts'), testingType: tt });
+    const changed = !prevScript || prevScript.code !== code;
+    scripts.push({
+      file: scriptFile, requirementId: req.id, ruleId: rule.id, designedWith: used('scripts'), covers: reqCases.map((t) => t.key), code,
+      inRun: reqCases.some((t) => t.inRun),
+      status: !prevScript ? 'new' : (changed ? 're-designed' : 'carried over'),
+      version: !prevScript ? 1 : prevScript.version + (changed ? 1 : 0),
+      previous: prevScript && changed ? { code: prevScript.code, version: prevScript.version } : null,
+    });
+  };
+
   for (const req of requirements) {
+    const c = classify(req.text);
+    const kind = kindOfReq(req);
+    const candidates = candidateSpecs(req, c, ctx);
     if (!affected.has(req.id) && prevRules.has(req.id)) {
-      rules.push({ ...clone(prevRules.get(req.id)), status: 'carried over' });
-      for (const tc of (previous.testCases || []).filter((t) => t.requirementId === req.id)) {
-        testCases.push({ ...clone(tc), status: 'carried over', labels: [...new Set([...tc.labels, 'regression'])], cycle: cycle.name });
+      const rule = { ...clone(prevRules.get(req.id)), status: 'carried over' };
+      rules.push(rule);
+      const kept = (previous.testCases || []).filter((t) => t.requirementId === req.id).map((tc) => ({
+        ...clone(tc), status: 'carried over', labels: [...new Set([...tc.labels, 'regression'])], cycle: cycle.name,
+        suite: suiteOf(tc), inRun: inRun(tt, { suite: suiteOf(tc), kind: tc.kind, slot: tc.slot }, { carried: true }),
+      }));
+      const have = new Set(kept.map((t) => t.slot));
+      const add = candidates.filter((s) => !have.has(s.slot) && wants(s, kind) && !s.manual);
+      const prevScript = prevScripts.get(req.id);
+      if (!add.length) {
+        testCases.push(...kept);
+        if (prevScript) scripts.push({ ...clone(prevScript), status: 'carried over', inRun: kept.some((t) => t.inRun && t.automation === 'Automated') });
+        continue;
       }
-      if (prevScripts.has(req.id)) scripts.push({ ...clone(prevScripts.get(req.id)), status: 'carried over' });
+      const scriptFile = prevScript?.file || `${rule.id.toLowerCase()}-${c.entry.kind}.spec.js`;
+      const added = add.map((s) => ({ ...designCase(req, c, s, rule.id, scriptFile, null), status: 'added' }));
+      const bySlot = new Map(candidates.map((s) => [s.slot, s]));
+      const keptWithCode = kept.map((t) => ({ ...t, code: t.automation === 'Automated' && bySlot.get(t.slot) ? bySlot.get(t.slot).code() : null }));
+      testCases.push(...kept, ...added.map(({ code, ...rest }) => rest));
+      writeScript(req, rule, scriptFile, [...keptWithCode.filter((t) => t.code), ...added], prevScript);
       continue;
     }
     const redesign = Boolean(previous && prevRules.has(req.id));
@@ -174,47 +252,46 @@ function designAgents(requirements, { cycle, counters, previous = null, skills =
       previous: redesign ? { statement: prevRule.statement, parameters: prevRule.parameters, version: prevRule.version } : null };
     rules.push(rule);
 
-    const c = classify(req.text);
-    const specs = (c && c.entry.cases(c.params, ctx)) || [manualCase(req)];
-    const scriptFile = c && !specs[0].manual ? `${ruleId.toLowerCase()}-${c.entry.kind}.spec.js` : null;
-    const reqCases = specs.map((s) => {
-      const prev = prevCases.get(`${req.id}|${s.slot}`);
-      let key = prev?.key;
-      if (!key) {
-        const nf = req.type === 'non-functional';
-        counters[nf ? 'caseN' : 'caseF'] += 1;
-        key = `TC-${nf ? 'N' : 'F'}-${pad(counters[nf ? 'caseN' : 'caseF'])}`;
-      }
-      const automated = !s.manual && Boolean(scriptFile);
-      const labels = [req.type === 'functional' ? 'functional' : 'non-functional', ...(automated ? ['automation'] : [])];
-      const tc = {
-        key, requirementId: req.id, ruleId, slot: s.slot, kind: c ? c.entry.kind : 'unclassified',
-        name: s.name, objective: s.objective, precondition: s.precondition, steps: s.steps, testData: s.testData,
-        expected: s.expected, priority: s.manual ? 'Low' : (c && MONEY_KINDS.has(c.entry.kind) ? 'High' : 'Medium'), type: req.type, labels,
-        automation: automated ? 'Automated' : 'Not automated', scriptFile: automated ? scriptFile : null,
-        issueLinks: req.jiraKeys, sourceRefs: sourceRefs(req), cycle: cycle.name, designedWith: used('testcases'),
-        status: prev ? 're-designed' : 'new', version: prev ? prev.version + 1 : 1,
-        previous: prev ? { name: prev.name, expected: prev.expected, testData: prev.testData, version: prev.version } : null,
-        revisionNote: prev ? `v${prev.version + 1} (${cycle.id}): ${revision(prev, s)}` : null,
-        ui: Boolean(c?.entry.ui), varies: s.varies || [],
-        code: automated ? s.code() : null,
-      };
-      return tc;
-    });
+    const specs = candidates.filter((s) => wants(s, kind) || prevCases.has(`${req.id}|${s.slot}`));
+    const scriptFile = c && specs.some((s) => !s.manual) ? `${ruleId.toLowerCase()}-${c.entry.kind}.spec.js` : null;
+    const reqCases = specs.map((s) => designCase(req, c, s, ruleId, scriptFile, prevCases.get(`${req.id}|${s.slot}`)));
     testCases.push(...reqCases.map(({ code, ...rest }) => rest));
-    if (scriptFile) {
-      const prevScript = prevScripts.get(req.id);
-      const code = renderSpec(req, reqCases, { rule, skills: used('scripts') });
-      const changed = !prevScript || prevScript.code !== code;
-      scripts.push({
-        file: scriptFile, requirementId: req.id, ruleId, designedWith: used('scripts'), covers: reqCases.map((t) => t.key), code,
-        status: !prevScript ? 'new' : (changed ? 're-designed' : 'carried over'),
-        version: !prevScript ? 1 : prevScript.version + (changed ? 1 : 0),
-        previous: prevScript && changed ? { code: prevScript.code, version: prevScript.version } : null,
-      });
-    }
+    if (scriptFile) writeScript(req, rule, scriptFile, reqCases.filter((t) => t.code), prevScripts.get(req.id));
   }
-  return { rules, testCases, scripts, affected: [...affected] };
+  return { rules, testCases, scripts, affected: [...affected], selection: selectionSummary(tt, requirements, testCases, previous) };
+}
+
+/** What the type of testing selected, reused and left out, and the gaps it leaves. */
+function selectionSummary(tt, requirements, testCases, previous) {
+  const run = testCases.filter((t) => t.inRun);
+  const coveredInRun = new Set(run.map((t) => t.requirementId));
+  const outOfScope = requirements.filter((r) => !coveredInRun.has(r.id)).map((r) => r.id);
+  const gaps = [];
+  if (tt.ids.includes('performance') && !run.some((t) => ['nfr', 'load'].includes(t.suite))) {
+    gaps.push({ kind: 'no-performance-target', severity: 'high',
+      message: 'The inputs state no response-time target, so no performance case was designed. Add a target (e.g. "p95 within 300 ms") to the epic or the codebase README.' });
+  }
+  if (tt.ids.includes('e2e') && !run.some((t) => t.suite === 'ui')) {
+    gaps.push({ kind: 'no-ui-requirement', severity: 'medium',
+      message: 'No input describes the advisor screen, so the journeys check the statement page the codebase ships without a stated requirement for it.' });
+  }
+  if (!run.length && !tt.ids.includes('performance')) gaps.push({ kind: 'nothing-to-run', severity: 'high', message: `The inputs give ${tt.name.toLowerCase()} nothing to run.` });
+  return {
+    testingType: tt.id,
+    name: tt.name,
+    focus: tt.focus,
+    approach: previous ? tt.incremental : tt.baseline,
+    designed: testCases.length,
+    inRun: run.length,
+    automatedInRun: run.filter((t) => t.automation === 'Automated').length,
+    reused: run.filter((t) => t.status === 'carried over').length,
+    redesigned: run.filter((t) => t.status === 're-designed').length,
+    added: run.filter((t) => ['new', 'added'].includes(t.status)).length,
+    notInRun: testCases.length - run.length,
+    bySuite: Object.fromEntries(['api', 'ui', 'journey', 'nfr', 'load'].map((x) => [x, run.filter((t) => t.suite === x).length])),
+    outOfScope,
+    gaps,
+  };
 }
 
 function revision(prev, s) {
@@ -223,13 +300,14 @@ function revision(prev, s) {
   return changed.map((f) => `${f} was "${prev[f]}"`).join('; ');
 }
 
-function renderSpec(req, cases, { rule, skills = [] } = {}) {
+function renderSpec(req, cases, { rule, skills = [], testingType = null } = {}) {
   const tests = cases.map((tc) => `test(${JSON.stringify(`${tc.key} ${tc.name}`)}, async ({ ${tc.ui ? 'page, request' : 'request'} }, testInfo) => {
 ${tc.code}
 });`).join('\n\n');
   const block = [
     'Generated by Agentic QE Platform - MVP (automation script agent).',
     `Business rule: ${rule.id} - ${rule.title}`,
+    ...(testingType ? [`Type of testing: ${testingType.name}`] : []),
     `Statement: ${rule.statement}`,
     `Requirement: ${req.id} v${req.version}; sources: ${sourceRefs(req).join(', ')}`,
     `Covers test cases: ${cases.map((t) => `${t.key} (${t.name})`).join('; ')}`,

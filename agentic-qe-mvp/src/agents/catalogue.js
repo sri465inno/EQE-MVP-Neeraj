@@ -266,7 +266,7 @@ ${quoteCode(STD)}
       precondition: 'The commission engine is running.', varies: [],
       steps: ['Build a full 1000-attribute reservation', 'POST /api/commission/quote 20 times, timing each call', `Compute the p${percentile} latency`],
       testData: `samples=20; ${data(STD)}`, expected: `p${percentile} <= ${ms} ms`,
-      code: () => `  const body = { reservation: await reservation(request, ${JSON.stringify(STD)}) };
+      code: () => `  const body = { reservation: await reservation(request, ${JSON.stringify(STD)}, testInfo) };
   const samples = [];
   for (let i = 0; i < 20; i += 1) {
     const t0 = Date.now();
@@ -294,7 +294,7 @@ ${quoteCode(STD)}
         precondition: 'A stored GDS reservation; the commission statement page is reachable.', varies: [],
         steps: ['Store a full reservation (POST /api/reservations)', 'Open the commission statement page', 'Enter the reservation ID and click "Show commission"', 'Read the breakdown'],
         testData: data(o), expected: 'Page shows "Commission breakdown", the base commission line and "Total commission"',
-        code: () => `  const created = await call(request, testInfo, 'POST', '/api/reservations', { reservation: await reservation(request, ${JSON.stringify(o)}) });
+        code: () => `  const created = await call(request, testInfo, 'POST', '/api/reservations', { reservation: await reservation(request, ${JSON.stringify(o)}, testInfo) });
   expect(created.status).toBe(201);
   await page.goto('/');
   await page.fill('#reservation-id', created.body.id);
@@ -390,6 +390,83 @@ ${quoteCode(STD)}
   },
 ];
 
+// Browser journey: the advisor stores a reservation, opens the commission statement and checks what they see.
+const journeyCode = (o, total, lines) => `  const created = await call(request, testInfo, 'POST', '/api/reservations', { reservation: await reservation(request, ${JSON.stringify(o)}, testInfo) });
+  expect(created.status).toBe(201);
+  await page.goto('/');
+  await page.fill('#reservation-id', created.body.id);
+  await page.click('#show');
+  const statement = page.locator('#statement');
+  await expect(statement).toContainText('Commission breakdown');
+  await testInfo.attach('statement screenshot', { body: await page.screenshot(), contentType: 'image/png' });
+${lines.map((l) => `  await expect(statement).toContainText(${JSON.stringify(l)});`).join('\n')}
+  await expect(statement.locator('tr', { hasText: 'Total commission' })).toContainText(${JSON.stringify(money(total))});`;
+
+const journey = ({ slot, name, precondition, o, total, lines, varies = [] }) => ({
+  slot: `journey-${slot}`, suite: 'journey', ui: true, name, varies,
+  objective: `Verify the travel advisor sees ${lines.join(', ')} and a total of ${money(total)} on the commission statement.`,
+  precondition,
+  steps: ['Store a full reservation (POST /api/reservations)', 'Open the advisor commission statement page', 'Enter the reservation ID and click "Show commission"',
+    `Check the statement lists ${lines.map((l) => `"${l}"`).join(', ')} and the total ${money(total)}`],
+  testData: data(o), expected: `Statement shows ${lines.map((l) => `"${l}"`).join(', ')} and Total commission ${money(total)}`,
+  code: () => journeyCode(o, total, lines),
+});
+
+const baseOf = (ctx) => ctx.paramsOf('base-commission-rate')?.pct;
+
+// Cases a rule adds beyond its functional checks, used by end-to-end and performance runs.
+const EXTRAS = {
+  'base-commission-rate': ({ pct }) => [journey({ slot: 'base', name: 'Advisor sees the base commission and total on the statement for a standard stay',
+    precondition: 'Stored direct booking, 3 nights, BAR rate, 1 room.', o: STD, total: round((COMMISSIONABLE * pct) / 100), lines: ['Base commission'] })],
+  'gds-channel-uplift': ({ pct }, ctx) => {
+    const base = baseOf(ctx);
+    if (base === undefined) return [];
+    const o = { ...STD, 'channel.bookingChannel': 'GDS' };
+    return [journey({ slot: 'gds', name: 'Advisor sees the GDS uplift line and total on the statement for a GDS booking', precondition: 'Stored GDS booking, 3 nights.',
+      o, total: round((COMMISSIONABLE * round(base + pct, 4)) / 100), lines: ['Base commission', 'GDS channel uplift'], varies: ['channel.bookingChannel'] })];
+  },
+  'long-stay-bonus': ({ nights, pct }, ctx) => {
+    const base = baseOf(ctx);
+    if (base === undefined) return [];
+    const o = { ...STD, 'stay.nights': nights };
+    return [journey({ slot: 'long-stay', name: `Advisor sees the long-stay bonus on the statement for a ${nights}-night stay`, precondition: `Stored direct booking of exactly ${nights} nights.`,
+      o, total: round((COMMISSIONABLE * round(base + pct, 4)) / 100), lines: ['Base commission', 'Long-stay bonus'], varies: ['stay.nights'] })];
+  },
+  'commission-cap': ({ cap }, ctx) => {
+    const base = baseOf(ctx);
+    if (base === undefined) return [];
+    const o = { ...STD, ...flat(round((cap * 1.6 * 100) / base)) };
+    return [journey({ slot: 'cap', name: `Advisor sees the cap applied and a total of USD ${cap} on a high-value reservation`, precondition: 'Stored high-value direct booking above the cap.',
+      o, total: cap, lines: ['Cap applied'], varies: ['revenue.totalAmount'] })];
+  },
+  'group-flat-rate': ({ rooms, pct }) => [journey({ slot: 'group', name: `Advisor sees the group flat rate on the statement for ${rooms} rooms`, precondition: `Stored direct booking holding ${rooms} rooms.`,
+    o: { ...STD, 'room.roomCount': rooms }, total: round((COMMISSIONABLE * pct) / 100), lines: ['Group flat rate'], varies: ['room.roomCount'] })],
+  'corporate-flat-rate': ({ pct }) => [journey({ slot: 'corp', name: 'Advisor sees the negotiated corporate rate on the statement', precondition: 'Stored booking on a corporate rate plan.',
+    o: { ...STD, 'rate.planCategory': 'CORP' }, total: round((COMMISSIONABLE * pct) / 100), lines: ['Negotiated corporate rate'], varies: ['rate.planCategory'] })],
+  'quote-latency': ({ ms, percentile }) => [{
+    slot: 'load', suite: 'load', name: `Commission quote p${percentile} stays within ${ms} ms with 5 advisors quoting at once`,
+    objective: `Verify the ${percentile}th percentile of 40 full-reservation quotes from 5 concurrent clients is at most ${ms} ms.`,
+    precondition: 'The commission engine is running.', varies: [],
+    steps: ['Build a full 1000-attribute reservation', 'Start 5 concurrent clients, each posting 8 quotes and timing each call', `Compute the p${percentile} latency over all 40 samples`],
+    testData: `clients=5; quotes per client=8; ${data(STD)}`, expected: `p${percentile} <= ${ms} ms under 5 concurrent clients`,
+    code: () => `  const body = { reservation: await reservation(request, ${JSON.stringify(STD)}, testInfo) };
+  const samples = [];
+  await Promise.all(Array.from({ length: 5 }, async () => {
+    for (let i = 0; i < 8; i += 1) {
+      const t0 = Date.now();
+      const res = await request.post('/api/commission/quote', { data: body });
+      samples.push(Date.now() - t0);
+      expect(res.status()).toBe(200);
+    }
+  }));
+  samples.sort((a, b) => a - b);
+  const p = samples[Math.ceil((${percentile} / 100) * samples.length) - 1];
+  await testInfo.attach('latency samples under load (ms)', { body: JSON.stringify({ clients: 5, samples, p${percentile}: p }), contentType: 'application/json' });
+  expect(p).toBeLessThanOrEqual(${ms});`,
+  }],
+};
+for (const e of CATALOGUE) if (EXTRAS[e.kind]) e.extras = EXTRAS[e.kind];
+
 function classify(text) {
   const { values } = extractValues(text);
   for (const entry of CATALOGUE) {
@@ -422,7 +499,18 @@ async function call(request, testInfo, method, url, data, overrides) {
   return { status: res.status(), body };
 }
 
-async function reservation(request, overrides) {
+const TEST_DATA = require('path').join(__dirname, '..', 'test-data');
+
+/** The test data agent's data set for this case (test-data/<case key>.json), when present. */
+function dataSet(testInfo) {
+  const key = testInfo && (testInfo.title.match(/^(TC-[FN]-\\d+)\\s/) || [])[1];
+  const file = key && require('path').join(TEST_DATA, \`\${key}.json\`);
+  return file && require('fs').existsSync(file) ? JSON.parse(require('fs').readFileSync(file, 'utf8')) : null;
+}
+
+async function reservation(request, overrides, testInfo) {
+  const set = dataSet(testInfo);
+  if (set) return { ...set.reservation, ...overrides };
   if (!dictionary) dictionary = await (await request.get('/api/data-dictionary')).json();
   const res = {};
   for (const a of dictionary.attributes) res[a.name] = a.example;
@@ -430,7 +518,7 @@ async function reservation(request, overrides) {
 }
 
 async function quote(request, testInfo, overrides) {
-  return call(request, testInfo, 'POST', '/api/commission/quote', { reservation: await reservation(request, overrides) }, overrides);
+  return call(request, testInfo, 'POST', '/api/commission/quote', { reservation: await reservation(request, overrides, testInfo) }, overrides);
 }`;
 
 const COMMISSION_KINDS = ['base-commission-rate', 'commissionable-revenue', 'gds-channel-uplift', 'long-stay-bonus', 'commission-cap', 'commission-rounding',

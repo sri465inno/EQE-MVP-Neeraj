@@ -7,10 +7,12 @@ const crypto = require('crypto');
 
 const AGENTS = {
   normalise: 'Normalise (3-way compare)',
+  'review-agent': 'Review agent (added / missing pieces)',
   delta: 'Delta classification',
   requirements: 'Requirements repository agent',
   rules: 'Business rules agent',
   testcases: 'Test case agent',
+  testdata: 'Test data agent',
   scripts: 'Automation script agent',
   execution: 'Execution agent',
   defects: 'Defect agent',
@@ -69,7 +71,7 @@ function parseSkill(text, file = '(inline)') {
   const delivers = meta.delivers && typeof meta.delivers === 'object' && !Array.isArray(meta.delivers) ? meta.delivers : {};
   const body = m[2].trim();
   return {
-    id: meta.id, name: meta.name, description: meta.description, appliesTo, delivers, body,
+    id: meta.id, name: meta.name, description: meta.description, appliesTo, delivers, body, testingType: typeof meta.testingType === 'string' ? meta.testingType : null,
     file: path.basename(file), sha256: crypto.createHash('sha256').update(text).digest('hex').slice(0, 12),
   };
 }
@@ -133,9 +135,13 @@ function checkHandover(agentId, produced, active) {
   };
 }
 
-/** Snapshot persisted on a cycle so reruns and restarts use the same skill text. */
-function selectSkills(library, ids) {
-  if (ids === undefined || ids === null) return library.map((s) => ({ ...s }));
+/**
+ * Snapshot persisted on a cycle so reruns and restarts use the same skill text.
+ * By default every general skill is on, plus the skill written for the chosen type of testing.
+ */
+function selectSkills(library, ids, testingType = null) {
+  const types = [].concat(testingType || []);
+  if (ids === undefined || ids === null) return library.filter((s) => !s.testingType || types.includes(s.testingType)).map((s) => ({ ...s }));
   if (!Array.isArray(ids)) throw new Error('skills must be a list of skill ids');
   const unknown = ids.filter((id) => !library.some((s) => s.id === id));
   if (unknown.length) throw new Error(`Unknown skill id(s): ${unknown.join(', ')}`);

@@ -7,12 +7,20 @@ const { Pipeline } = require('./pipeline');
 const { renderReportHtml, APP_TITLE } = require('./report');
 const { compareCycles, renderCompareHtml } = require('./compare');
 const { testCasesWorkbook, reportWorkbook, compareWorkbook } = require('./excel');
+const { buildLeadReport, renderLeadHtml, renderLeadPage, renderLeadMarkdown } = require('./lead-report');
 const { jiraLiveConfig, EXPORT } = require('./connectors/jira');
 const { listFixtureBranches, loadCodebaseFixture, DEFAULT_BRANCH, SOURCE } = require('./connectors/codebase');
 const { modelConfig } = require('./llm');
 const { PW_VERSION } = require('./execution');
+const { dataSetFile } = require('./agents/testdata');
 const { loadSkills } = require('./skills');
-const { SEVEN_AGENTS, INTAKE_STAGES, INPUT_TYPES, DEMO } = require('./platform');
+const { PLATFORM_AGENTS, REVIEW_AGENT, INTAKE_STAGES, INPUT_TYPES, DEMO } = require('./platform');
+const { TESTING_TYPES, DEFAULT_TESTING_TYPE } = require('./testing-types');
+const { FLOWS: DEMO_INPUT_FLOWS } = require('../scripts/make-demo-inputs');
+const { DEMOS: LAB_DEMOS, EXAMPLES: LAB_EXAMPLES, FIELDS: LAB_FIELDS, generateData, runLabCase } = require('./lab');
+const { BUILDS } = require('../sut/server');
+
+const META_DICTIONARY = require('../samples/commission-engine/baseline/data-dictionary/reservation-attributes.json');
 
 const XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 
@@ -25,6 +33,7 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
   const app = express();
   app.use(express.json({ limit: '2mb' }));
   app.use('/fonts/inter', express.static(path.join(__dirname, '..', 'node_modules', '@fontsource', 'inter'), { maxAge: '7d' }));
+  app.use('/demo-inputs', express.static(path.join(__dirname, '..', 'demo-inputs'), { setHeaders: (res, file) => res.setHeader('Content-Disposition', `attachment; filename="${path.basename(file)}"`) }));
   app.use(express.static(path.join(__dirname, '..', 'public'), { setHeaders: (res) => res.setHeader('Cache-Control', 'no-cache') }));
 
   const wrap = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
@@ -49,10 +58,33 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
       playwright: PW_VERSION,
       skills: skillLib.skills.map(({ body, ...s }) => s),
       skillWarnings: skillLib.warnings,
-      platform: { agents: SEVEN_AGENTS, intakeStages: INTAKE_STAGES, inputTypes: INPUT_TYPES, demo: DEMO },
+      platform: { agents: PLATFORM_AGENTS, reviewAgent: REVIEW_AGENT, intakeStages: INTAKE_STAGES, inputTypes: INPUT_TYPES, demo: DEMO },
+      testingTypes: TESTING_TYPES,
+      defaultTestingType: DEFAULT_TESTING_TYPE,
       samples: { initiative: 'COM-1', epic: 'COM-10', incrementalEpic: 'COM-20', baselineBranch: 'demo/commission-engine', incrementalBranch: 'demo/commission-engine-v2' },
     });
   });
+
+  app.get('/api/demo-inputs', (req, res) => res.json(DEMO_INPUT_FLOWS.map((f) => ({
+    flow: f.dir, files: f.files.map(([name, slot]) => ({ name, slot, url: `/demo-inputs/${f.dir}/${name}` })),
+  }))));
+
+  app.post('/api/reset', (req, res) => {
+    if (pipeline.running.size) return res.status(409).json({ error: 'A cycle is still running. Wait for it to finish, then reset.' });
+    store.reset();
+    res.json({ cycles: 0, baselines: 0 });
+  });
+
+  app.get('/api/lab', (req, res) => {
+    const values = (attr) => (META_DICTIONARY.attributes.find((a) => a.name === attr) || {}).values || [];
+    res.json({ demos: LAB_DEMOS, examples: LAB_EXAMPLES, fields: LAB_FIELDS, builds: Object.keys(BUILDS), values: { status: values(LAB_FIELDS.status), channel: values(LAB_FIELDS.channel), ratePlan: values(LAB_FIELDS.ratePlan) } });
+  });
+  app.post('/api/lab/data', (req, res) => res.json(generateData(req.body || {})));
+  let labSeq = 0;
+  app.post('/api/lab/run', wrap(async (req, res) => {
+    labSeq += 1;
+    res.json(await runLabCase(req.body || {}, store.runDir(`LAB-${Date.now()}-${labSeq}`)));
+  }));
 
   app.get('/api/skills', (req, res) => res.json({ dir: 'skills/', skills: skillLib.skills, warnings: skillLib.warnings }));
 
@@ -68,7 +100,7 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
   });
 
   app.get('/api/cycles', (req, res) => res.json(store.listCycles().map((c) => ({
-    id: c.id, name: c.name, type: c.type, status: c.status, createdAt: c.createdAt, baselineId: c.baselineId,
+    id: c.id, name: c.name, type: c.type, testingType: c.testingType || DEFAULT_TESTING_TYPE, testingTypeName: c.testingTypeName || null, status: c.status, createdAt: c.createdAt, completedAt: c.completedAt || null, baselineId: c.baselineId,
     summary: c.artifacts?.execution?.summary || null, delta: c.delta?.summary || c.deltaPreview?.summary || null,
   }))));
   app.get('/api/cycles/:id', (req, res) => res.json(cycle(req)));
@@ -93,6 +125,12 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
     if (req.query.download) res.setHeader('Content-Disposition', `attachment; filename="${s.file}"`);
     res.type('text/javascript').send(s.code);
   });
+  app.get('/api/cycles/:id/testdata/:key.json', (req, res) => {
+    const c = cycle(req);
+    const d = (c.artifacts?.testData || []).find((x) => x.testCaseKey === req.params.key);
+    if (!d) return res.status(404).json({ error: 'No test data for that test case' });
+    res.json(dataSetFile(d, pipeline.dictionaryOf(c).dictionary));
+  });
   app.get('/api/cycles/:id/evidence/:file', (req, res) => {
     if (!/^[A-Z]+-(?:[A-Z]-)?[A-Z]?\d+-\d+\.(json|png|txt)$/.test(req.params.file)) return res.status(400).json({ error: 'bad name' });
     const f = path.join(store.runDir(cycle(req).id), 'evidence', req.params.file);
@@ -110,6 +148,23 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
     const html = renderReportHtml(needReport(c));
     if (req.query.download) res.setHeader('Content-Disposition', `attachment; filename="${c.id}-cycle-report.html"`);
     res.type('html').send(html);
+  });
+  app.get('/api/cycles/:id/lead-report', (req, res) => {
+    const c = cycle(req);
+    needReport(c);
+    const lead = buildLeadReport(c);
+    res.json({ lead, html: renderLeadHtml(lead, { cycleLink: (tab) => (tab === 'report' ? `#/reporting?cycle=${c.id}&view=cycle` : `#/cycle/${c.id}?tab=${tab}`) }) });
+  });
+  app.get('/api/cycles/:id/lead-report.html', (req, res) => {
+    const c = cycle(req);
+    needReport(c);
+    if (req.query.download) res.setHeader('Content-Disposition', `attachment; filename="${c.id}-qe-lead-report.html"`);
+    res.type('html').send(renderLeadPage(buildLeadReport(c)));
+  });
+  app.get('/api/cycles/:id/lead-report.md', (req, res) => {
+    const c = cycle(req);
+    needReport(c);
+    download(res, `${c.id}-qe-lead-report.md`, 'text/markdown', renderLeadMarkdown(buildLeadReport(c)));
   });
   app.get('/api/cycles/:id/report.xlsx', wrap(async (req, res) => {
     const c = cycle(req);
@@ -145,7 +200,7 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
   });
 
   app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
-    res.status(err.status || 500).json({ error: err.message });
+    res.status(err.status || 500).json({ error: err.message, ...(err.details ? { details: err.details } : {}) });
   });
   return { app, store, pipeline, skills: skillLib };
 }

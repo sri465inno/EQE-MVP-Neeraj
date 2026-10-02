@@ -1,0 +1,63 @@
+[
+  {
+    "id": "DEF-001",
+    "title": "A stay of exactly 7 nights earns the 1.5% long-stay bonus: returns 80 instead of 92",
+    "severity": "Critical",
+    "impact": "money moved wrongly",
+    "blocksRelease": true,
+    "releaseDecision": "Blocks the release: money moved wrongly (BR-007).",
+    "status": "Open",
+    "movement": "new",
+    "firstSeenCycle": "CYC-1",
+    "cycleId": "CYC-1",
+    "testCaseKey": "TC-F-006",
+    "ruleId": "BR-007",
+    "requirementId": "REQ-007",
+    "requirementText": "Stays of 7 nights or more earn a long-stay bonus of 1.5%.",
+    "jiraKeys": [
+      "COM-10"
+    ],
+    "sourceRefs": [
+      "COM-10"
+    ],
+    "suspectedCodeArea": "src/rules.js:12",
+    "scriptFile": "br-007-long-stay-bonus.spec.js",
+    "expected": "92",
+    "actual": "80",
+    "assertion": "expect(r.body.commission).toBe(92);",
+    "location": "br-007-long-stay-bonus.spec.js:58:29",
+    "errorMessage": "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: 92\nReceived: 80",
+    "evidence": [
+      {
+        "name": "POST /api/commission/quote",
+        "file": "TC-F-006-1.json",
+        "contentType": "application/json"
+      },
+      {
+        "name": "error-context",
+        "file": "TC-F-006-2.txt",
+        "contentType": "text/markdown"
+      }
+    ],
+    "executedAt": "2026-09-29T19:40:14.688Z",
+    "occurrences": [
+      {
+        "cycleId": "CYC-1",
+        "executedAt": "2026-09-29T19:40:14.688Z",
+        "actual": "80",
+        "evidence": [
+          {
+            "name": "POST /api/commission/quote",
+            "file": "TC-F-006-1.json",
+            "contentType": "application/json"
+          },
+          {
+            "name": "error-context",
+            "file": "TC-F-006-2.txt",
+            "contentType": "text/markdown"
+          }
+        ]
+      }
+    ]
+  }
+]
