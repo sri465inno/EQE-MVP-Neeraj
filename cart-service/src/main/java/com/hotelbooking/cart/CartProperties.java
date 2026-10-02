@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("platform.cart")
 public class CartProperties {
 
-    private Duration ttl = Duration.ofMinutes(30);
+    private Duration ttl = Duration.ofMinutes(20);
     private BigDecimal materialChangePercent = new BigDecimal("1.0");
 
     public Duration getTtl() {

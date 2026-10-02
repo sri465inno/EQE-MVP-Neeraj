@@ -167,16 +167,66 @@ class ReservationServiceTest {
         assertThat(id).startsWith("R-");
     }
 
+    @Test
+    @DisplayName("AQPI-36 10.4: a refundable booking cancelled more than 48 hours before check-in is free, voided and released")
+    void freeCancellation() {
+        ReservationService early = service(at(CHECK_IN, 49));
+        when(downstream.checkout(anyString())).thenReturn(Mono.just(cart("PAY_AT_HOTEL", true)));
+        when(downstream.commit(any())).thenReturn(Mono.empty());
+        String id = early.submit("key-cxl-00001", request("tok_visa_ok")).block().outcome().reservationId();
+        Outcome cancelled = early.cancel(id).block();
+        assertThat(cancelled.status()).isEqualTo(Status.CANCELLED);
+        assertThat(cancelled.paymentStatus()).isEqualTo(PaymentStatus.VOIDED);
+        assertThat(cancelled.confirmationNumber()).isNull();
+        verify(downstream).release(id);
+        assertThat(gateway.ledger().get(0).voided()).isTrue();
+        assertThat(early.reconciliation().get(0).consistent()).isTrue();
+        assertThat(early.cancel(id).block().status()).isEqualTo(Status.CANCELLED);
+    }
+
+    @Test
+    @DisplayName("AQPI-36 10.4: a cancellation within 48 hours of check-in is refused and the booking stays confirmed")
+    void lateCancellationRefused() {
+        ReservationService late = service(at(CHECK_IN, 47));
+        when(downstream.checkout(anyString())).thenReturn(Mono.just(cart("PAY_AT_HOTEL", true)));
+        when(downstream.commit(any())).thenReturn(Mono.empty());
+        String id = late.submit("key-cxl-00002", request("tok_visa_ok")).block().outcome().reservationId();
+        assertThatThrownBy(() -> late.cancel(id).block()).isInstanceOfSatisfying(ApiException.class, e -> {
+            assertThat(e.status()).isEqualTo(HttpStatus.CONFLICT);
+            assertThat(e.code()).isEqualTo("FREE_CANCELLATION_CLOSED");
+        });
+        assertThat(late.view(id).block().status()).isEqualTo(Status.CONFIRMED);
+        verify(downstream, never()).release(anyString());
+    }
+
+    @Test
+    @DisplayName("AQPI-36 10.4: a non-refundable booking cannot be cancelled free of charge")
+    void nonRefundableNotCancelled() {
+        when(downstream.commit(any())).thenReturn(Mono.empty());
+        String id = service.submit("key-cxl-00003", request("tok_visa_ok")).block().outcome().reservationId();
+        assertThatThrownBy(() -> service.cancel(id).block()).isInstanceOfSatisfying(ApiException.class,
+                e -> assertThat(e.code()).isEqualTo("NON_REFUNDABLE_RATE"));
+        assertThat(service.view(id).block().status()).isEqualTo(Status.CONFIRMED);
+    }
+
+    private static Clock at(LocalDate checkIn, int hoursBefore) {
+        return Clock.fixed(checkIn.atStartOfDay().toInstant(ZoneOffset.UTC).minusSeconds(hoursBefore * 3600L), ZoneOffset.UTC);
+    }
+
     private static ReservationRequest request(String token) {
         return new ReservationRequest("C-1", new Guest("Jane", "Doe", "jane.doe@example.com", "+1 212 555 0100", "18:00",
                 null), token, true, false, "en");
     }
 
     private static CartSnapshot cart(String paymentRule) {
+        return cart(paymentRule, false);
+    }
+
+    private static CartSnapshot cart(String paymentRule, boolean refundable) {
         Money total = Money.of("500.00", "USD");
         CartRoom room = new CartRoom("H-NYC-001", "Harbor View Hotel", "New York", "12 Pier Street", "15:00", "11:00",
                 "STD-K", "Standard King", "SAVER", "Advance saver", CHECK_IN, CHECK_IN.plusDays(3), 3, 1, 2, 0, "USD",
-                total, paymentRule, false, "Non-refundable");
+                total, paymentRule, refundable, refundable ? "Free cancellation until 48 hours before check-in" : "Non-refundable");
         return new CartSnapshot("C-1", "ACTIVE", room, List.of(new CartLine("ROOM", "Standard King", 1, total)),
                 new CartTotals(total), "USD", "v1");
     }

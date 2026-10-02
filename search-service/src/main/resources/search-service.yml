@@ -9,7 +9,7 @@ platform:
       timeout: 2s
       retries: 1
   search:
-    # @rule A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights.
+    # @rule A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.
     # @rule Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.
     # @rule Check-in can be at most 500 days ahead.
     defaults:
@@ -20,7 +20,7 @@ platform:
       max-children-per-room: 3
     markets:
       PAR:
-        max-stay-nights: 21
+        max-stay-nights: 15
 management:
   endpoints:
     web:

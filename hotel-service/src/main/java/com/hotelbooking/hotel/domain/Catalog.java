@@ -99,7 +99,7 @@ public class Catalog {
             double distanceKm, String currency, String taxRate, String fee, Hotel.Policies policies, List<String> amenities,
             String baseNightly) {
         BigDecimal base = new BigDecimal(baseNightly);
-        String terms = "Free cancellation until 48 hours before check-in; after that the first night is charged.";
+        String terms = "Free cancellation until 48 hours before check-in; after that the booking can no longer be cancelled.";
         List<RatePlan> standardPlans = List.of(
                 new RatePlan("FLEX", "Flexible – pay at hotel", base, true, false, PaymentRule.PAY_AT_HOTEL, terms,
                         "Card guarantee required"),

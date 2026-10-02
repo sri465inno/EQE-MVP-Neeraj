@@ -25,6 +25,7 @@ public final class EventNames {
     public static final String CONFIRMATION_GENERATED = "confirmation.generated";
     public static final String EMAIL_STATUS = "email.status";
     public static final String RESEND_REQUESTED = "confirmation.resend";
+    public static final String CANCELLATION_REQUESTED = "reservation.cancellation";
     public static final String AUDIT_ACCESS = "audit.access";
 
     private EventNames() {

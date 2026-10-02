@@ -19,6 +19,9 @@ platform:
   reservation:
     # @rule Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.
     idempotency-ttl: 24h
+    # @rule A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.
+    # @rule A cancelled reservation shows status CANCELLED, its payment authorisation is voided and its rooms are released.
+    free-cancellation-window: 48h
     retention-days: 365
 management:
   endpoints:

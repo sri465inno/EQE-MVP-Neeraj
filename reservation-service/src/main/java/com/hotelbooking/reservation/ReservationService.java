@@ -4,6 +4,7 @@ import java.security.SecureRandom;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -45,7 +46,7 @@ import com.hotelbooking.reservation.ReservationApi.Status;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-/** Stories 7.1-7.4 (AQPI-19..22) and the reservation side of 9.1 (AQPI-28). */
+/** Stories 7.1-7.4 (AQPI-19..22), free cancellation 10.4 (AQPI-36) and the reservation side of 9.1 (AQPI-28). */
 @Service
 public class ReservationService {
 
@@ -160,6 +161,46 @@ public class ReservationService {
         return Mono.just(outcome(r));
     }
 
+    /** Story 10.4 (AQPI-36): a refundable booking is cancelled free of charge until the window before check-in closes. */
+    public Mono<Outcome> cancel(String reservationId) {
+        Reservation r = find(reservationId);
+        synchronized (r) {
+            if (r.status == Status.CANCELLED) {
+                return Mono.just(outcome(r));
+            }
+            if (r.status != Status.CONFIRMED) {
+                return refuseCancellation(r, "RESERVATION_NOT_CANCELLABLE", "Only a confirmed booking can be cancelled.");
+            }
+            if (!r.cart.room().refundable()) {
+                return refuseCancellation(r, "NON_REFUNDABLE_RATE",
+                        "This rate is non-refundable, so it can't be cancelled free of charge. Your booking is still confirmed.");
+            }
+            Instant deadline = r.cart.room().checkIn().atStartOfDay(ZoneOffset.UTC).toInstant()
+                    .minus(properties.getFreeCancellationWindow());
+            if (clock.instant().isAfter(deadline)) {
+                return refuseCancellation(r, "FREE_CANCELLATION_CLOSED", "Free cancellation closed "
+                        + properties.getFreeCancellationWindow().toHours()
+                        + " hours before check-in. Your booking is still confirmed.");
+            }
+        }
+        return downstream.release(r.id).then(Mono.defer(() -> {
+            r.inventoryStatus = InventoryStatus.RELEASED;
+            note(r, "rooms released for cancellation");
+            if (gateway.voidAuthorization(r.idempotencyKey)) {
+                r.paymentStatus = PaymentStatus.VOIDED;
+                return finish(r, Status.CANCELLED, null);
+            }
+            return finish(r, Status.MANUAL_REVIEW, "VOID_FAILED");
+        })).then(events.event(EventNames.CANCELLATION_REQUESTED).outcome("cancelled").attr("reservationId", r.id)
+                .publish()).then(Mono.fromSupplier(() -> outcome(r)));
+    }
+
+    private Mono<Outcome> refuseCancellation(Reservation r, String code, String message) {
+        return events.event(EventNames.CANCELLATION_REQUESTED).outcome(code.toLowerCase(Locale.ROOT))
+                .attr("reservationId", r.id).publish()
+                .then(Mono.error(new ApiException(HttpStatus.CONFLICT, code, message)));
+    }
+
     public Mono<Outcome> view(String reservationId) {
         Reservation r = find(reservationId);
         return events.event(EventNames.OUTCOME_VIEWED).attr("reservationId", r.id).attr("status", r.status.name())
@@ -175,7 +216,7 @@ public class ReservationService {
             boolean consistent = switch (r.status) {
                 case CONFIRMED -> heldAtProvider && r.paymentStatus == PaymentStatus.AUTHORIZED
                         && r.inventoryStatus == InventoryStatus.COMMITTED;
-                case PAYMENT_DECLINED, FAILED -> !heldAtProvider && r.inventoryStatus != InventoryStatus.COMMITTED;
+                case PAYMENT_DECLINED, FAILED, CANCELLED -> !heldAtProvider && r.inventoryStatus != InventoryStatus.COMMITTED;
                 default -> false;
             };
             String note = consistent ? "Booking, payment and inventory agree"
@@ -381,6 +422,12 @@ public class ReservationService {
                     doNotResubmit = false;
                     next = "ROOM_UNAVAILABLE".equals(r.failureCode) ? List.of("Search again for other rooms or dates")
                             : List.of("Try again in a few minutes");
+                }
+                case CANCELLED -> {
+                    headline = "Your booking is cancelled";
+                    message = "Your booking was cancelled free of charge. Any payment hold has been released.";
+                    doNotResubmit = false;
+                    next = List.of("Search again to book new dates");
                 }
                 case PENDING_UNKNOWN -> {
                     headline = "We're confirming your booking";

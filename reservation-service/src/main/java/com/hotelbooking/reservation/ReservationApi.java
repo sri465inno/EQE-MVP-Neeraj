@@ -18,7 +18,8 @@ public final class ReservationApi {
         PAYMENT_DECLINED,
         FAILED,
         PENDING_UNKNOWN,
-        MANUAL_REVIEW
+        MANUAL_REVIEW,
+        CANCELLED
     }
 
     public enum PaymentStatus {

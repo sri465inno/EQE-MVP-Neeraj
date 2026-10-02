@@ -10,7 +10,7 @@ public class NotificationProperties {
 
     private int maxSendAttempts = 3;
     private int maxManualRetries = 2;
-    private int resendLimitPerBooking = 3;
+    private int resendLimitPerBooking = 5;
     private Duration resendBookingWindow = Duration.ofHours(24);
     private int resendLimitPerClient = 10;
     private Duration resendClientWindow = Duration.ofHours(1);

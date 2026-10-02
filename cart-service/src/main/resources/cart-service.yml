@@ -13,9 +13,9 @@ platform:
       timeout: 800ms
       retries: 0
   cart:
-    # @rule A cart expires 30 minutes after it is created and never creates a reservation itself.
+    # @rule A cart expires 20 minutes after it is created and never creates a reservation itself.
     # @rule A price change of more than 1% must be acknowledged by the guest before checkout.
-    ttl: 30m
+    ttl: 20m
     material-change-percent: 1.0
 management:
   endpoints:

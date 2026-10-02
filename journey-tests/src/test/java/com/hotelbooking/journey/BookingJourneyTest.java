@@ -235,7 +235,7 @@ class BookingJourneyTest {
     }
 
     @Test
-    @DisplayName("AQPI-26: resend answers generically and is rate limited per booking")
+    @DisplayName("AQPI-26 AQPI-35: resend answers generically and is limited to 5 per booking")
     void resendConfirmation() {
         String cartId = createCart("H-NYC-001", "STD-K", "FLEX").path("cartId").asText();
         JsonNode booked = reserve("journey-" + UUID.randomUUID(), cartId, "tok_visa_ok", "jane@example.com", null,
@@ -244,8 +244,9 @@ class BookingJourneyTest {
         String good = resend(number, "Doe", HttpStatus.ACCEPTED).path("message").asText();
         String wrong = resend(number, "Smith", HttpStatus.ACCEPTED).path("message").asText();
         assertThat(wrong).isEqualTo(good);
-        resend(number, "Doe", HttpStatus.ACCEPTED);
-        resend(number, "Doe", HttpStatus.ACCEPTED);
+        for (int i = 2; i <= 5; i++) {
+            resend(number, "Doe", HttpStatus.ACCEPTED);
+        }
         resend(number, "Doe", HttpStatus.TOO_MANY_REQUESTS);
     }
 
@@ -272,6 +273,34 @@ class BookingJourneyTest {
         assertThat(error.path("code").asText()).isEqualTo("EXTRA_NOT_AVAILABLE");
         assertThat(reserve("journey-" + UUID.randomUUID(), cartId, "tok_visa_ok", "jane@example.com", null,
                 HttpStatus.CREATED).path("status").asText()).isEqualTo("CONFIRMED");
+    }
+
+    @Test
+    @DisplayName("AQPI-36: a flexible booking is cancelled free of charge, its payment hold voided and its room released")
+    void freeCancellation() {
+        String cartId = createCart("H-NYC-001", "STD-K", "FLEX").path("cartId").asText();
+        String id = reserve("journey-" + UUID.randomUUID(), cartId, "tok_visa_ok", "jane@example.com", null,
+                HttpStatus.CREATED).path("reservationId").asText();
+        JsonNode cancelled = post("reservation-service", "/api/reservations/" + id + "/cancel", Map.of(), HttpStatus.OK);
+        assertThat(cancelled.path("status").asText()).isEqualTo("CANCELLED");
+        assertThat(cancelled.path("paymentStatus").asText()).isEqualTo("VOIDED");
+        assertThat(get("reservation-service", "/api/ops/payments").get(0).path("voided").asBoolean()).isTrue();
+        assertThat(get("hotel-service", "/api/inventory/commitments").size()).isZero();
+        assertThat(reconciliationConsistent()).isTrue();
+    }
+
+    @Test
+    @DisplayName("AQPI-36: a cancellation inside 48 hours of check-in is refused and the booking stays confirmed")
+    void lateCancellationRefused() {
+        LocalDate tomorrow = LocalDate.now(java.time.ZoneOffset.UTC).plusDays(1);
+        String cartId = post("cart-service", "/api/carts", Map.of("hotelId", "H-NYC-001", "roomCode", "STD-K",
+                "ratePlanCode", "FLEX", "checkIn", tomorrow, "checkOut", tomorrow.plusDays(2), "rooms", 1, "adults", 2,
+                "children", 0), HttpStatus.CREATED).path("cartId").asText();
+        String id = reserve("journey-" + UUID.randomUUID(), cartId, "tok_visa_ok", "jane@example.com", null,
+                HttpStatus.CREATED).path("reservationId").asText();
+        JsonNode refused = post("reservation-service", "/api/reservations/" + id + "/cancel", Map.of(), HttpStatus.CONFLICT);
+        assertThat(refused.path("code").asText()).isEqualTo("FREE_CANCELLATION_CLOSED");
+        assertThat(get("reservation-service", "/api/reservations/" + id).path("status").asText()).isEqualTo("CONFIRMED");
     }
 
     private JsonNode createCart(String hotelId, String room, String rate) {

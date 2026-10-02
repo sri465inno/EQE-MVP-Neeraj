@@ -52,11 +52,11 @@ class CartServiceTest {
     }
 
     @Test
-    @DisplayName("AQPI-15 6.1: a cart itemises room, taxes, fees and extras and expires after 30 minutes")
+    @DisplayName("AQPI-15 6.1: a cart itemises room, taxes, fees and extras and expires after 20 minutes (AQPI-33)")
     void cartTotalsAndExpiry() {
         when(downstream.validateOffers(any(), any())).thenReturn(Mono.just(List.of(breakfast(true))));
         CartView cart = create();
-        assertThat(Duration.between(cart.createdAt(), cart.expiresAt())).isEqualTo(Duration.ofMinutes(30));
+        assertThat(Duration.between(cart.createdAt(), cart.expiresAt())).isEqualTo(Duration.ofMinutes(20));
         assertThat(cart.totals().total().amount()).isEqualByComparingTo("500.00");
 
         CartView withExtra = service.addAncillary(cart.cartId(), "BREAKFAST", 1).block();
@@ -65,7 +65,7 @@ class CartServiceTest {
         CartView removed = service.removeAncillary(cart.cartId(), "BREAKFAST").block();
         assertThat(removed.totals().total().amount()).isEqualByComparingTo("500.00");
 
-        clock.advance(Duration.ofMinutes(31));
+        clock.advance(Duration.ofMinutes(21));
         assertThatThrownBy(() -> service.addAncillary(cart.cartId(), "BREAKFAST", 1).block())
                 .isInstanceOfSatisfying(ApiException.class, e -> assertThat(e.status()).isEqualTo(HttpStatus.GONE));
     }

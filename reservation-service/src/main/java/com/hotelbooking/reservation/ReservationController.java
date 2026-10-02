@@ -61,6 +61,12 @@ public class ReservationController {
         return reservations.view(id);
     }
 
+    /** Story 10.4 (AQPI-36): free cancellation; 409 once the window has closed or the rate is non-refundable. */
+    @PostMapping("/reservations/{id}/cancel")
+    public Mono<Outcome> cancel(@PathVariable String id) {
+        return reservations.cancel(id);
+    }
+
     @PostMapping("/reservations/{id}/reconcile")
     public Mono<Outcome> reconcile(@PathVariable String id) {
         return reservations.reconcile(id);
