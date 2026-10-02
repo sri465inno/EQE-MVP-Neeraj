@@ -39,11 +39,11 @@
         "contentType": "text/markdown"
       }
     ],
-    "executedAt": "2026-10-02T19:28:14.301Z",
+    "executedAt": "2026-10-02T19:44:35.147Z",
     "occurrences": [
       {
         "cycleId": "CYC-4",
-        "executedAt": "2026-10-02T19:28:14.301Z",
+        "executedAt": "2026-10-02T19:44:35.147Z",
         "actual": "200",
         "evidence": [
           {
@@ -84,7 +84,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Raised by the Agentic QE Platform from a real failure in cycle CYC-4 (Hotel booking release 2.0 (AQPI-32))."
+                    "text": "Raised by the Agentic QE Platform from a real failure in cycle CYC-4 (Hotel booking release 2.0 (AQPI-32 + AQPI-23))."
                   }
                 ]
               },
@@ -138,7 +138,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Suspected code area: search-service/src/main/resources/search-service.yml:12. Executed at 2026-10-02T19:28:14.301Z."
+                    "text": "Suspected code area: search-service/src/main/resources/search-service.yml:12. Executed at 2026-10-02T19:44:35.147Z."
                   }
                 ]
               }

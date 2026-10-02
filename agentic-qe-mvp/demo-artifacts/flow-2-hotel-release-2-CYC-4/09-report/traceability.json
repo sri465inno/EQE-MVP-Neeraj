@@ -50,7 +50,7 @@
         "AQPI-23",
         "AQPI-27"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "issue, epic",
       "requirementId": "REQ-009",
       "requirement": "All child user stories meet their acceptance criteria and the Definition of Done.",
       "requirementStatus": "unchanged",
@@ -76,10 +76,10 @@
         "AQPI-23",
         "AQPI-27"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "issue, epic",
       "requirementId": "REQ-010",
       "requirement": "Negative and error paths for each story are tested and evidenced.",
-      "requirementStatus": "carried over",
+      "requirementStatus": "unchanged",
       "ruleId": "BR-010",
       "testCaseKey": "TC-F-004",
       "testCase": "Verify: Negative and error paths for each story are tested and evidenced",
@@ -102,7 +102,7 @@
         "AQPI-23",
         "AQPI-27"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "issue, epic",
       "requirementId": "REQ-011",
       "requirement": "Required logging is in place and verified free of sensitive data.",
       "requirementStatus": "unchanged",
@@ -128,10 +128,10 @@
         "AQPI-23",
         "AQPI-27"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "issue, epic",
       "requirementId": "REQ-012",
       "requirement": "The Product Owner has accepted the capability end to end.",
-      "requirementStatus": "carried over",
+      "requirementStatus": "unchanged",
       "ruleId": "BR-012",
       "testCaseKey": "TC-F-006",
       "testCase": "Verify: The Product Owner has accepted the capability end to end",
@@ -1768,10 +1768,10 @@
       "jiraKeys": [
         "AQPI-24"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-090",
       "requirement": "The message contains guest-safe confirmation details, hotel information, stay dates, booked items, pricing summary, and applicable policy information.",
-      "requirementStatus": "carried over",
+      "requirementStatus": "unchanged",
       "ruleId": "BR-090",
       "testCaseKey": "TC-F-085",
       "testCase": "The confirmation e-mail matches the booking and contains no payment token",
@@ -1788,10 +1788,10 @@
       "jiraKeys": [
         "AQPI-24"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-091",
       "requirement": "The message content matches the confirmed reservation state.",
-      "requirementStatus": "carried over",
+      "requirementStatus": "unchanged",
       "ruleId": "BR-091",
       "testCaseKey": "TC-F-086",
       "testCase": "The confirmation e-mail matches the booking and contains no payment token",
@@ -1808,10 +1808,10 @@
       "jiraKeys": [
         "AQPI-24"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-093",
       "requirement": "Only necessary personal data may be included.",
-      "requirementStatus": "carried over",
+      "requirementStatus": "unchanged",
       "ruleId": "BR-093",
       "testCaseKey": "TC-F-087",
       "testCase": "Verify: Only necessary personal data may be included",
@@ -1828,10 +1828,10 @@
       "jiraKeys": [
         "AQPI-24"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-094",
       "requirement": "Sensitive payment details must not appear.",
-      "requirementStatus": "carried over",
+      "requirementStatus": "unchanged",
       "ruleId": "BR-094",
       "testCaseKey": "TC-F-088",
       "testCase": "The confirmation e-mail matches the booking and contains no payment token",
@@ -1848,10 +1848,10 @@
       "jiraKeys": [
         "AQPI-25"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-095",
       "requirement": "A successful reservation creates one confirmation-email request.",
-      "requirementStatus": "carried over",
+      "requirementStatus": "unchanged",
       "ruleId": "BR-095",
       "testCaseKey": "TC-F-089",
       "testCase": "Verify: A successful reservation creates one confirmation-email request",
@@ -1868,10 +1868,10 @@
       "jiraKeys": [
         "AQPI-25"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-096",
       "requirement": "Send failure does not reverse a valid reservation.",
-      "requirementStatus": "carried over",
+      "requirementStatus": "unchanged",
       "ruleId": "BR-096",
       "testCaseKey": "TC-F-090",
       "testCase": "When the e-mail cannot be sent the booking stays confirmed",
@@ -1888,7 +1888,7 @@
       "jiraKeys": [
         "AQPI-25"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-097",
       "requirement": "Permitted retries avoid duplicate or excessive messages.",
       "requirementStatus": "carried over",
@@ -1908,10 +1908,10 @@
       "jiraKeys": [
         "AQPI-25"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-098",
       "requirement": "Operational users can distinguish queued, sent, delivered, bounced, and failed states when supported by the provider.",
-      "requirementStatus": "carried over",
+      "requirementStatus": "unchanged",
       "ruleId": "BR-098",
       "testCaseKey": "TC-F-092",
       "testCase": "Verify: Operational users can distinguish queued, sent, delivered, bounced, and failed states when supported by the provider",
@@ -1928,10 +1928,10 @@
       "jiraKeys": [
         "AQPI-25"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-099",
       "requirement": "Email addresses must be masked outside authorized operational views.",
-      "requirementStatus": "carried over",
+      "requirementStatus": "unchanged",
       "ruleId": "BR-099",
       "testCaseKey": "TC-F-093",
       "testCase": "Verify: Email addresses must be masked outside authorized operational views",
@@ -1948,10 +1948,10 @@
       "jiraKeys": [
         "AQPI-26"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-100",
       "requirement": "The request verifies sufficient reservation information without exposing data.",
-      "requirementStatus": "carried over",
+      "requirementStatus": "unchanged",
       "ruleId": "BR-100",
       "testCaseKey": "TC-F-094",
       "testCase": "A resend with the wrong last name gets the same answer as a correct one",
@@ -1968,10 +1968,10 @@
       "jiraKeys": [
         "AQPI-26"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-101",
       "requirement": "Rate limits and abuse controls apply.",
-      "requirementStatus": "carried over",
+      "requirementStatus": "unchanged",
       "ruleId": "BR-101",
       "testCaseKey": "TC-F-095",
       "testCase": "Verify: Rate limits and abuse controls apply",
@@ -1988,10 +1988,10 @@
       "jiraKeys": [
         "AQPI-26"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-102",
       "requirement": "The resend creates a new message event without creating a new reservation.",
-      "requirementStatus": "carried over",
+      "requirementStatus": "unchanged",
       "ruleId": "BR-102",
       "testCaseKey": "TC-F-096",
       "testCase": "Verify: The resend creates a new message event without creating a new reservation",
@@ -2712,7 +2712,7 @@
       ],
       "jiraLevel": "story",
       "requirementId": "REQ-131",
-      "requirement": "A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
+      "requirement": "A confirmed reservation on a refundable rate can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
       "requirementStatus": "new",
       "ruleId": "BR-131",
       "testCaseKey": "TC-F-131",
@@ -2732,7 +2732,7 @@
       ],
       "jiraLevel": "story",
       "requirementId": "REQ-131",
-      "requirement": "A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
+      "requirement": "A confirmed reservation on a refundable rate can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
       "requirementStatus": "new",
       "ruleId": "BR-131",
       "testCaseKey": "TC-F-132",
@@ -2763,6 +2763,146 @@
       "testDataId": "TD-F-133",
       "scriptFile": "br-132-cancellation-outcome.spec.js",
       "result": "passed",
+      "defects": [],
+      "jiraDefects": []
+    },
+    {
+      "jiraKeys": [
+        "AQPI-36"
+      ],
+      "jiraLevel": "story",
+      "requirementId": "REQ-133",
+      "requirement": "A reservation on a non-refundable rate cannot be cancelled free of charge and stays confirmed.",
+      "requirementStatus": "new",
+      "ruleId": "BR-133",
+      "testCaseKey": "TC-F-134",
+      "testCase": "A non-refundable booking cannot be cancelled free of charge",
+      "testType": "functional",
+      "automation": "Automated",
+      "caseStatus": "new",
+      "testDataId": "TD-F-134",
+      "scriptFile": "br-133-non-refundable-cancellation.spec.js",
+      "result": "passed",
+      "defects": [],
+      "jiraDefects": []
+    },
+    {
+      "jiraKeys": [
+        "AQPI-24"
+      ],
+      "jiraLevel": "story",
+      "requirementId": "REQ-134",
+      "requirement": "The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.",
+      "requirementStatus": "new",
+      "ruleId": "BR-134",
+      "testCaseKey": "TC-F-135",
+      "testCase": "The confirmation of a flexible booking states free cancellation until 48 hours before check-in",
+      "testType": "functional",
+      "automation": "Automated",
+      "caseStatus": "new",
+      "testDataId": "TD-F-135",
+      "scriptFile": "br-134-cancellation-deadline-email.spec.js",
+      "result": "passed",
+      "defects": [],
+      "jiraDefects": []
+    },
+    {
+      "jiraKeys": [
+        "AQPI-24"
+      ],
+      "jiraLevel": "story",
+      "requirementId": "REQ-134",
+      "requirement": "The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.",
+      "requirementStatus": "new",
+      "ruleId": "BR-134",
+      "testCaseKey": "TC-F-136",
+      "testCase": "The confirmation of a non-refundable booking states no free-cancellation deadline",
+      "testType": "functional",
+      "automation": "Automated",
+      "caseStatus": "new",
+      "testDataId": "TD-F-136",
+      "scriptFile": "br-134-cancellation-deadline-email.spec.js",
+      "result": "passed",
+      "defects": [],
+      "jiraDefects": []
+    },
+    {
+      "jiraKeys": [
+        "AQPI-25"
+      ],
+      "jiraLevel": "story",
+      "requirementId": "REQ-135",
+      "requirement": "Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.",
+      "requirementStatus": "new",
+      "ruleId": "BR-135",
+      "testCaseKey": "TC-F-137",
+      "testCase": "Operations can retry a failed confirmation e-mail 3 times; retry 4 is refused",
+      "testType": "functional",
+      "automation": "Automated",
+      "caseStatus": "new",
+      "testDataId": "TD-F-137",
+      "scriptFile": "br-135-ops-retry-limit.spec.js",
+      "result": "passed",
+      "defects": [],
+      "jiraDefects": []
+    },
+    {
+      "jiraKeys": [
+        "AQPI-37"
+      ],
+      "jiraLevel": "story",
+      "requirementId": "REQ-136",
+      "requirement": "A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.",
+      "requirementStatus": "new",
+      "ruleId": "BR-136",
+      "testCaseKey": "TC-F-138",
+      "testCase": "A cancelled booking gets one cancellation e-mail, even when cancelled twice",
+      "testType": "functional",
+      "automation": "Automated",
+      "caseStatus": "new",
+      "testDataId": "TD-F-138",
+      "scriptFile": "br-136-cancellation-email.spec.js",
+      "result": "passed",
+      "defects": [],
+      "jiraDefects": []
+    },
+    {
+      "jiraKeys": [
+        "AQPI-37"
+      ],
+      "jiraLevel": "story",
+      "requirementId": "REQ-137",
+      "requirement": "A cancellation e-mail that cannot be sent does not undo the cancellation.",
+      "requirementStatus": "new",
+      "ruleId": "BR-137",
+      "testCaseKey": "TC-F-139",
+      "testCase": "When the cancellation e-mail cannot be sent the booking stays cancelled",
+      "testType": "functional",
+      "automation": "Automated",
+      "caseStatus": "new",
+      "testDataId": "TD-F-139",
+      "scriptFile": "br-137-cancellation-email-failure.spec.js",
+      "result": "passed",
+      "defects": [],
+      "jiraDefects": []
+    },
+    {
+      "jiraKeys": [
+        "AQPI-37"
+      ],
+      "jiraLevel": "story",
+      "requirementId": "REQ-138",
+      "requirement": "Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation.",
+      "requirementStatus": "new",
+      "ruleId": "BR-138",
+      "testCaseKey": "TC-F-140",
+      "testCase": "Verify: Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation",
+      "testType": "functional",
+      "automation": "Not automated",
+      "caseStatus": "new",
+      "testDataId": "TD-F-140",
+      "scriptFile": null,
+      "result": "not-run",
       "defects": [],
       "jiraDefects": []
     }
@@ -2827,23 +2967,88 @@
       "level": "story",
       "parent": "AQPI-32",
       "summary": "10.4 Cancel a reservation free of charge",
-      "requirements": 2,
+      "requirements": 3,
+      "testCases": 4,
+      "automated": 4,
+      "passed": 4,
+      "failed": 0,
+      "defects": [],
+      "status": "verified"
+    },
+    {
+      "key": "AQPI-23",
+      "level": "epic",
+      "parent": null,
+      "summary": "[Epic 6] Confirmation and Notifications",
+      "requirements": 4,
+      "testCases": 4,
+      "automated": 0,
+      "passed": 0,
+      "failed": 0,
+      "defects": [],
+      "status": "designed, not executed"
+    },
+    {
+      "key": "AQPI-24",
+      "level": "story",
+      "parent": "AQPI-23",
+      "summary": "8.1 Generate confirmation message",
+      "requirements": 5,
+      "testCases": 6,
+      "automated": 5,
+      "passed": 5,
+      "failed": 0,
+      "defects": [],
+      "status": "verified"
+    },
+    {
+      "key": "AQPI-25",
+      "level": "story",
+      "parent": "AQPI-23",
+      "summary": "8.2 Send and track confirmation email",
+      "requirements": 6,
+      "testCases": 6,
+      "automated": 2,
+      "passed": 2,
+      "failed": 0,
+      "defects": [],
+      "status": "verified"
+    },
+    {
+      "key": "AQPI-26",
+      "level": "story",
+      "parent": "AQPI-23",
+      "summary": "8.3 Resend confirmation safely",
+      "requirements": 3,
       "testCases": 3,
-      "automated": 3,
-      "passed": 3,
+      "automated": 1,
+      "passed": 1,
+      "failed": 0,
+      "defects": [],
+      "status": "verified"
+    },
+    {
+      "key": "AQPI-37",
+      "level": "story",
+      "parent": "AQPI-23",
+      "summary": "8.4 Send a cancellation e-mail",
+      "requirements": 3,
+      "testCases": 3,
+      "automated": 2,
+      "passed": 2,
       "failed": 0,
       "defects": [],
       "status": "verified"
     }
   ],
   "totals": {
-    "jiraItems": 5,
-    "covered": 5,
-    "verified": 3,
+    "jiraItems": 10,
+    "covered": 10,
+    "verified": 7,
     "failing": 1,
-    "testCases": 137,
-    "withData": 137,
-    "withScript": 77,
-    "executed": 77
+    "testCases": 144,
+    "withData": 144,
+    "withScript": 83,
+    "executed": 83
   }
 }

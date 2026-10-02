@@ -1,12 +1,12 @@
 {
   "request": {
     "method": "POST",
-    "url": "http://127.0.0.1:41001/api/reservations",
+    "url": "http://127.0.0.1:39187/api/reservations",
     "headers": {
       "Idempotency-Key": "kkkkkkk"
     },
     "data": {
-      "cartId": "C-d34d5aeb",
+      "cartId": "C-5aa18195",
       "guest": {
         "firstName": "Jane",
         "lastName": "Doe",
@@ -22,12 +22,12 @@
   },
   "response": {
     "status": 400,
-    "correlationId": "166c0ba5-b4ee-45cc-82ad-c0f4c2cbcc23",
+    "correlationId": "2d57e4b6-ea89-4a68-90cb-462ee53daed0",
     "body": {
       "status": 400,
       "code": "IDEMPOTENCY_KEY_REQUIRED",
       "message": "An Idempotency-Key header of 8-64 letters, digits, dots, dashes or underscores is required.",
-      "correlationId": "166c0ba5-b4ee-45cc-82ad-c0f4c2cbcc23",
+      "correlationId": "2d57e4b6-ea89-4a68-90cb-462ee53daed0",
       "retryable": false,
       "fieldIssues": []
     }

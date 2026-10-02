@@ -30,7 +30,7 @@
     "sourceRefs": [
       "AQPI-1"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -77,7 +77,7 @@
     "sourceRefs": [
       "AQPI-1"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -136,7 +136,7 @@
       "AQPI-23",
       "AQPI-27"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -195,7 +195,7 @@
       "AQPI-23",
       "AQPI-27"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -254,7 +254,7 @@
       "AQPI-23",
       "AQPI-27"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -313,7 +313,7 @@
       "AQPI-23",
       "AQPI-27"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -360,7 +360,7 @@
     "sourceRefs": [
       "AQPI-3"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -411,7 +411,7 @@
     "sourceRefs": [
       "AQPI-3"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -458,7 +458,7 @@
     "sourceRefs": [
       "AQPI-3"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -507,7 +507,7 @@
     "sourceRefs": [
       "AQPI-3"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -556,7 +556,7 @@
     "sourceRefs": [
       "AQPI-3"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -606,7 +606,7 @@
     "sourceRefs": [
       "AQPI-3"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -653,7 +653,7 @@
     "sourceRefs": [
       "AQPI-3"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -700,7 +700,7 @@
     "sourceRefs": [
       "AQPI-3"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -747,7 +747,7 @@
     "sourceRefs": [
       "AQPI-3"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -794,7 +794,7 @@
     "sourceRefs": [
       "AQPI-4"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -841,7 +841,7 @@
     "sourceRefs": [
       "AQPI-4"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -891,7 +891,7 @@
     "sourceRefs": [
       "AQPI-4"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -938,7 +938,7 @@
     "sourceRefs": [
       "AQPI-4"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -986,7 +986,7 @@
     "sourceRefs": [
       "AQPI-5"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1033,7 +1033,7 @@
     "sourceRefs": [
       "AQPI-5"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1080,7 +1080,7 @@
     "sourceRefs": [
       "AQPI-5"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1127,7 +1127,7 @@
     "sourceRefs": [
       "AQPI-7"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1174,7 +1174,7 @@
     "sourceRefs": [
       "AQPI-7"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1222,7 +1222,7 @@
     "sourceRefs": [
       "AQPI-7"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1272,7 +1272,7 @@
     "sourceRefs": [
       "AQPI-7"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1320,7 +1320,7 @@
     "sourceRefs": [
       "AQPI-7"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1370,7 +1370,7 @@
     "sourceRefs": [
       "AQPI-8"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1418,7 +1418,7 @@
     "sourceRefs": [
       "AQPI-8"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1466,7 +1466,7 @@
     "sourceRefs": [
       "AQPI-8"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1513,7 +1513,7 @@
     "sourceRefs": [
       "AQPI-8"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1561,7 +1561,7 @@
     "sourceRefs": [
       "AQPI-8"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1608,7 +1608,7 @@
     "sourceRefs": [
       "AQPI-9"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1657,7 +1657,7 @@
     "sourceRefs": [
       "AQPI-9"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1704,7 +1704,7 @@
     "sourceRefs": [
       "AQPI-9"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1751,7 +1751,7 @@
     "sourceRefs": [
       "AQPI-9"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1798,7 +1798,7 @@
     "sourceRefs": [
       "AQPI-11"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1845,7 +1845,7 @@
     "sourceRefs": [
       "AQPI-11"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1894,7 +1894,7 @@
     "sourceRefs": [
       "AQPI-11"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1941,7 +1941,7 @@
     "sourceRefs": [
       "AQPI-11"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -1988,7 +1988,7 @@
     "sourceRefs": [
       "AQPI-11"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2035,7 +2035,7 @@
     "sourceRefs": [
       "AQPI-11"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2082,7 +2082,7 @@
     "sourceRefs": [
       "AQPI-11"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2129,7 +2129,7 @@
     "sourceRefs": [
       "AQPI-12"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2176,7 +2176,7 @@
     "sourceRefs": [
       "AQPI-12"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2223,7 +2223,7 @@
     "sourceRefs": [
       "AQPI-12"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2270,7 +2270,7 @@
     "sourceRefs": [
       "AQPI-13"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2318,7 +2318,7 @@
     "sourceRefs": [
       "AQPI-13"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2368,7 +2368,7 @@
     "sourceRefs": [
       "AQPI-13"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2415,7 +2415,7 @@
     "sourceRefs": [
       "AQPI-15"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2462,7 +2462,7 @@
     "sourceRefs": [
       "AQPI-15"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2509,7 +2509,7 @@
     "sourceRefs": [
       "AQPI-15"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2556,7 +2556,7 @@
     "sourceRefs": [
       "AQPI-15"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2603,7 +2603,7 @@
     "sourceRefs": [
       "AQPI-15"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2650,7 +2650,7 @@
     "sourceRefs": [
       "AQPI-16"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2699,7 +2699,7 @@
     "sourceRefs": [
       "AQPI-16"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2751,7 +2751,7 @@
     "sourceRefs": [
       "AQPI-16"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2800,7 +2800,7 @@
     "sourceRefs": [
       "AQPI-16"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2848,7 +2848,7 @@
     "sourceRefs": [
       "AQPI-17"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2897,7 +2897,7 @@
     "sourceRefs": [
       "AQPI-17"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2944,7 +2944,7 @@
     "sourceRefs": [
       "AQPI-17"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -2991,7 +2991,7 @@
     "sourceRefs": [
       "AQPI-17"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -3038,7 +3038,7 @@
     "sourceRefs": [
       "AQPI-17"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -3086,7 +3086,7 @@
     "sourceRefs": [
       "AQPI-19"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -3134,7 +3134,7 @@
     "sourceRefs": [
       "AQPI-19"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -3184,7 +3184,7 @@
     "sourceRefs": [
       "AQPI-19"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -3233,7 +3233,7 @@
     "sourceRefs": [
       "AQPI-19"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -3280,7 +3280,7 @@
     "sourceRefs": [
       "AQPI-19"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -3329,7 +3329,7 @@
     "sourceRefs": [
       "AQPI-19"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -3377,7 +3377,7 @@
     "sourceRefs": [
       "AQPI-20"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -3427,7 +3427,7 @@
     "sourceRefs": [
       "AQPI-20"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -3476,7 +3476,7 @@
     "sourceRefs": [
       "AQPI-20"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -3524,7 +3524,7 @@
     "sourceRefs": [
       "AQPI-20"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -3575,7 +3575,7 @@
     "sourceRefs": [
       "AQPI-20"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -3625,7 +3625,7 @@
     "sourceRefs": [
       "AQPI-20"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -3675,7 +3675,7 @@
     "sourceRefs": [
       "AQPI-20"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -3724,7 +3724,7 @@
     "sourceRefs": [
       "AQPI-20"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -3771,7 +3771,7 @@
     "sourceRefs": [
       "AQPI-20"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -3819,7 +3819,7 @@
     "sourceRefs": [
       "AQPI-21"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -3868,7 +3868,7 @@
     "sourceRefs": [
       "AQPI-21"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -3917,7 +3917,7 @@
     "sourceRefs": [
       "AQPI-21"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -3964,7 +3964,7 @@
     "sourceRefs": [
       "AQPI-21"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4011,7 +4011,7 @@
     "sourceRefs": [
       "AQPI-21"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4058,7 +4058,7 @@
     "sourceRefs": [
       "AQPI-21"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4106,7 +4106,7 @@
     "sourceRefs": [
       "AQPI-22"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4156,7 +4156,7 @@
     "sourceRefs": [
       "AQPI-22"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4206,7 +4206,7 @@
     "sourceRefs": [
       "AQPI-22"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4256,7 +4256,7 @@
     "sourceRefs": [
       "AQPI-24"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4304,7 +4304,7 @@
     "sourceRefs": [
       "AQPI-24"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4351,7 +4351,7 @@
     "sourceRefs": [
       "AQPI-24"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4399,7 +4399,7 @@
     "sourceRefs": [
       "AQPI-24"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4446,7 +4446,7 @@
     "sourceRefs": [
       "AQPI-25"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4493,7 +4493,7 @@
     "sourceRefs": [
       "AQPI-25"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4542,7 +4542,7 @@
     "sourceRefs": [
       "AQPI-25"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4589,7 +4589,7 @@
     "sourceRefs": [
       "AQPI-25"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4636,7 +4636,7 @@
     "sourceRefs": [
       "AQPI-25"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4685,7 +4685,7 @@
     "sourceRefs": [
       "AQPI-26"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4732,7 +4732,7 @@
     "sourceRefs": [
       "AQPI-26"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4779,7 +4779,7 @@
     "sourceRefs": [
       "AQPI-26"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4826,7 +4826,7 @@
     "sourceRefs": [
       "AQPI-28"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4873,7 +4873,7 @@
     "sourceRefs": [
       "AQPI-28"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4920,7 +4920,7 @@
     "sourceRefs": [
       "AQPI-28"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -4969,7 +4969,7 @@
     "sourceRefs": [
       "AQPI-28"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5016,7 +5016,7 @@
     "sourceRefs": [
       "AQPI-28"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5063,7 +5063,7 @@
     "sourceRefs": [
       "AQPI-29"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5110,7 +5110,7 @@
     "sourceRefs": [
       "AQPI-29"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5157,7 +5157,7 @@
     "sourceRefs": [
       "AQPI-29"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5204,7 +5204,7 @@
     "sourceRefs": [
       "AQPI-29"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5251,7 +5251,7 @@
     "sourceRefs": [
       "AQPI-29"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5298,7 +5298,7 @@
     "sourceRefs": [
       "AQPI-30"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5345,7 +5345,7 @@
     "sourceRefs": [
       "AQPI-30"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5393,7 +5393,7 @@
     "sourceRefs": [
       "AQPI-30"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5440,7 +5440,7 @@
     "sourceRefs": [
       "AQPI-31"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5487,7 +5487,7 @@
     "sourceRefs": [
       "AQPI-31"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5534,7 +5534,7 @@
     "sourceRefs": [
       "AQPI-31"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5581,7 +5581,7 @@
     "sourceRefs": [
       "AQPI-33"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5636,7 +5636,7 @@
     "sourceRefs": [
       "cart-service/src/main/resources/cart-service.yml"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5685,7 +5685,7 @@
     "sourceRefs": [
       "cart-service/src/main/resources/cart-service.yml"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5734,7 +5734,7 @@
     "sourceRefs": [
       "AQPI-35"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5785,7 +5785,7 @@
     "sourceRefs": [
       "reservation-service/src/main/resources/reservation-service.yml"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5831,7 +5831,7 @@
     "sourceRefs": [
       "reservation-service/src/main/resources/reservation-service.yml"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5877,7 +5877,7 @@
     "sourceRefs": [
       "reservation-service/src/main/resources/reservation-service.yml"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5923,7 +5923,7 @@
     "sourceRefs": [
       "AQPI-34"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -5976,7 +5976,7 @@
     "sourceRefs": [
       "AQPI-34"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -6029,7 +6029,7 @@
     "sourceRefs": [
       "AQPI-34"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -6083,7 +6083,7 @@
     "sourceRefs": [
       "AQPI-34"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -6136,7 +6136,7 @@
     "sourceRefs": [
       "search-service/src/main/resources/search-service.yml"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -6183,7 +6183,7 @@
     "sourceRefs": [
       "search-service/src/main/resources/search-service.yml"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -6230,7 +6230,7 @@
     "sourceRefs": [
       "search-service/src/main/resources/search-service.yml"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -6277,7 +6277,7 @@
     "sourceRefs": [
       "search-service/src/main/resources/search-service.yml"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -6325,7 +6325,7 @@
     "sourceRefs": [
       "search-service/src/main/resources/search-service.yml"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -6372,7 +6372,7 @@
     "sourceRefs": [
       "search-service/src/main/resources/search-service.yml"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -6420,7 +6420,7 @@
     "sourceRefs": [
       "AQPI-32"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -6466,7 +6466,7 @@
     "sourceRefs": [
       "AQPI-32"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -6513,7 +6513,7 @@
     "sourceRefs": [
       "AQPI-36"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -6563,7 +6563,7 @@
     "sourceRefs": [
       "AQPI-36"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -6614,7 +6614,7 @@
     "sourceRefs": [
       "AQPI-36"
     ],
-    "cycle": "Hotel booking release 2.0 (AQPI-32)",
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
       "incremental-merge",
       "test-case-authoring",
@@ -6632,5 +6632,349 @@
       "selection.ratePlanCode"
     ],
     "dataSet": "TD-F-133"
+  },
+  {
+    "key": "TC-F-134",
+    "requirementId": "REQ-133",
+    "ruleId": "BR-133",
+    "slot": "saver-refused",
+    "kind": "non-refundable-cancellation",
+    "suite": "api",
+    "name": "A non-refundable booking cannot be cancelled free of charge",
+    "objective": "Verify a SAVER (prepaid, non-refundable) booking is refused and stays confirmed.",
+    "precondition": "The six hotel services are running with their seeded catalogue (reset before the case).",
+    "steps": [
+      "Book a SAVER rate",
+      "Cancel the reservation"
+    ],
+    "testData": "selection.ratePlanCode=SAVER; every other booking attribute from the hotel data dictionary examples",
+    "expected": "Cancel returns HTTP 409 NON_REFUNDABLE_RATE; the reservation is still CONFIRMED",
+    "priority": "High",
+    "type": "functional",
+    "labels": [
+      "functional",
+      "automation"
+    ],
+    "automation": "Automated",
+    "scriptFile": "br-133-non-refundable-cancellation.spec.js",
+    "issueLinks": [
+      "AQPI-36"
+    ],
+    "sourceRefs": [
+      "AQPI-36"
+    ],
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
+    "designedWith": [
+      "incremental-merge",
+      "test-case-authoring",
+      "testing-regression",
+      "traceability-handover"
+    ],
+    "designedFor": "regression",
+    "inRun": true,
+    "status": "new",
+    "version": 1,
+    "previous": null,
+    "revisionNote": null,
+    "ui": false,
+    "varies": [
+      "selection.ratePlanCode"
+    ],
+    "dataSet": "TD-F-134"
+  },
+  {
+    "key": "TC-F-135",
+    "requirementId": "REQ-134",
+    "ruleId": "BR-134",
+    "slot": "refundable",
+    "kind": "cancellation-deadline-email",
+    "suite": "api",
+    "name": "The confirmation of a flexible booking states free cancellation until 48 hours before check-in",
+    "objective": "Verify the confirmation e-mail of a refundable booking tells the guest when free cancellation closes.",
+    "precondition": "The six hotel services are running with their seeded catalogue (reset before the case).",
+    "steps": [
+      "Book a FLEX rate",
+      "Open the confirmation e-mail"
+    ],
+    "testData": "selection.ratePlanCode=FLEX; every other booking attribute from the hotel data dictionary examples",
+    "expected": "HTML and text parts say \"Free cancellation until <check-in minus 48 hours> UTC (48 hours before check-in).\"",
+    "priority": "Medium",
+    "type": "functional",
+    "labels": [
+      "functional",
+      "automation"
+    ],
+    "automation": "Automated",
+    "scriptFile": "br-134-cancellation-deadline-email.spec.js",
+    "issueLinks": [
+      "AQPI-24"
+    ],
+    "sourceRefs": [
+      "AQPI-24"
+    ],
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
+    "designedWith": [
+      "incremental-merge",
+      "test-case-authoring",
+      "testing-regression",
+      "traceability-handover"
+    ],
+    "designedFor": "regression",
+    "inRun": true,
+    "status": "new",
+    "version": 1,
+    "previous": null,
+    "revisionNote": null,
+    "ui": false,
+    "varies": [
+      "selection.ratePlanCode"
+    ],
+    "dataSet": "TD-F-135"
+  },
+  {
+    "key": "TC-F-136",
+    "requirementId": "REQ-134",
+    "ruleId": "BR-134",
+    "slot": "non-refundable",
+    "kind": "cancellation-deadline-email",
+    "suite": "api",
+    "name": "The confirmation of a non-refundable booking states no free-cancellation deadline",
+    "objective": "Verify a SAVER booking is not promised free cancellation.",
+    "precondition": "The six hotel services are running with their seeded catalogue (reset before the case).",
+    "steps": [
+      "Book a SAVER rate",
+      "Open the confirmation e-mail"
+    ],
+    "testData": "selection.ratePlanCode=SAVER; every other booking attribute from the hotel data dictionary examples",
+    "expected": "The confirmation e-mail carries no free-cancellation deadline",
+    "priority": "Medium",
+    "type": "functional",
+    "labels": [
+      "functional",
+      "automation"
+    ],
+    "automation": "Automated",
+    "scriptFile": "br-134-cancellation-deadline-email.spec.js",
+    "issueLinks": [
+      "AQPI-24"
+    ],
+    "sourceRefs": [
+      "AQPI-24"
+    ],
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
+    "designedWith": [
+      "incremental-merge",
+      "test-case-authoring",
+      "testing-regression",
+      "traceability-handover"
+    ],
+    "designedFor": "regression",
+    "inRun": true,
+    "status": "new",
+    "version": 1,
+    "previous": null,
+    "revisionNote": null,
+    "ui": false,
+    "varies": [
+      "selection.ratePlanCode"
+    ],
+    "dataSet": "TD-F-136"
+  },
+  {
+    "key": "TC-F-137",
+    "requirementId": "REQ-135",
+    "ruleId": "BR-135",
+    "slot": "limit",
+    "kind": "ops-retry-limit",
+    "suite": "api",
+    "name": "Operations can retry a failed confirmation e-mail 3 times; retry 4 is refused",
+    "objective": "Verify at most 3 manual retries per failed message, so guests are not spammed.",
+    "precondition": "The six hotel services are running with their seeded catalogue (reset before the case).",
+    "steps": [
+      "Book with an address the provider rejects",
+      "Retry the failed e-mail 4 times"
+    ],
+    "testData": "guest.email=jane@fail.test; every other booking attribute from the hotel data dictionary examples",
+    "expected": "First 3 retries HTTP 200, the next HTTP 409 RETRY_LIMIT_REACHED; the booking stays CONFIRMED",
+    "priority": "Medium",
+    "type": "functional",
+    "labels": [
+      "functional",
+      "automation"
+    ],
+    "automation": "Automated",
+    "scriptFile": "br-135-ops-retry-limit.spec.js",
+    "issueLinks": [
+      "AQPI-25"
+    ],
+    "sourceRefs": [
+      "AQPI-25"
+    ],
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
+    "designedWith": [
+      "incremental-merge",
+      "test-case-authoring",
+      "testing-regression",
+      "traceability-handover"
+    ],
+    "designedFor": "regression",
+    "inRun": true,
+    "status": "new",
+    "version": 1,
+    "previous": null,
+    "revisionNote": null,
+    "ui": false,
+    "varies": [
+      "guest.email"
+    ],
+    "dataSet": "TD-F-137"
+  },
+  {
+    "key": "TC-F-138",
+    "requirementId": "REQ-136",
+    "ruleId": "BR-136",
+    "slot": "once",
+    "kind": "cancellation-email",
+    "suite": "api",
+    "name": "A cancelled booking gets one cancellation e-mail, even when cancelled twice",
+    "objective": "Verify the guest is told about the cancellation exactly once, with a masked recipient for support.",
+    "precondition": "The six hotel services are running with their seeded catalogue (reset before the case).",
+    "steps": [
+      "Book a FLEX rate",
+      "Cancel the reservation",
+      "Cancel it again",
+      "List its messages as support"
+    ],
+    "testData": "selection.ratePlanCode=FLEX; every other booking attribute from the hotel data dictionary examples",
+    "expected": "Both cancels HTTP 200 CANCELLED; exactly one CANCELLATION message, DELIVERED, recipient masked; the CONFIRMATION message is separate",
+    "priority": "Medium",
+    "type": "functional",
+    "labels": [
+      "functional",
+      "automation"
+    ],
+    "automation": "Automated",
+    "scriptFile": "br-136-cancellation-email.spec.js",
+    "issueLinks": [
+      "AQPI-37"
+    ],
+    "sourceRefs": [
+      "AQPI-37"
+    ],
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
+    "designedWith": [
+      "incremental-merge",
+      "test-case-authoring",
+      "testing-regression",
+      "traceability-handover"
+    ],
+    "designedFor": "regression",
+    "inRun": true,
+    "status": "new",
+    "version": 1,
+    "previous": null,
+    "revisionNote": null,
+    "ui": false,
+    "varies": [
+      "selection.ratePlanCode"
+    ],
+    "dataSet": "TD-F-138"
+  },
+  {
+    "key": "TC-F-139",
+    "requirementId": "REQ-137",
+    "ruleId": "BR-137",
+    "slot": "fail",
+    "kind": "cancellation-email-failure",
+    "suite": "api",
+    "name": "When the cancellation e-mail cannot be sent the booking stays cancelled",
+    "objective": "Verify e-mail failure is isolated from the cancellation.",
+    "precondition": "The six hotel services are running with their seeded catalogue (reset before the case).",
+    "steps": [
+      "Book a FLEX rate with an address the provider rejects",
+      "Cancel the reservation",
+      "View the reservation and its messages"
+    ],
+    "testData": "selection.ratePlanCode=FLEX; guest.email=jane@fail.test; every other booking attribute from the hotel data dictionary examples",
+    "expected": "Cancel HTTP 200 CANCELLED; the reservation stays CANCELLED; the cancellation e-mail is recorded as FAILED",
+    "priority": "Medium",
+    "type": "functional",
+    "labels": [
+      "functional",
+      "automation"
+    ],
+    "automation": "Automated",
+    "scriptFile": "br-137-cancellation-email-failure.spec.js",
+    "issueLinks": [
+      "AQPI-37"
+    ],
+    "sourceRefs": [
+      "AQPI-37"
+    ],
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
+    "designedWith": [
+      "incremental-merge",
+      "test-case-authoring",
+      "testing-regression",
+      "traceability-handover"
+    ],
+    "designedFor": "regression",
+    "inRun": true,
+    "status": "new",
+    "version": 1,
+    "previous": null,
+    "revisionNote": null,
+    "ui": false,
+    "varies": [
+      "selection.ratePlanCode",
+      "guest.email"
+    ],
+    "dataSet": "TD-F-139"
+  },
+  {
+    "key": "TC-F-140",
+    "requirementId": "REQ-138",
+    "ruleId": "BR-138",
+    "slot": "manual",
+    "kind": "unclassified",
+    "suite": "api",
+    "name": "Verify: Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation",
+    "objective": "Confirm the behaviour \"Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation.\" (no executable template in the catalogue - manual verification).",
+    "precondition": "Access to the system under test and its operational logs.",
+    "steps": [
+      "Perform the action described by the requirement",
+      "Observe the outcome in the system or its logs"
+    ],
+    "testData": "n/a",
+    "expected": "Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation.",
+    "priority": "Low",
+    "type": "functional",
+    "labels": [
+      "functional"
+    ],
+    "automation": "Not automated",
+    "scriptFile": null,
+    "issueLinks": [
+      "AQPI-37"
+    ],
+    "sourceRefs": [
+      "AQPI-37"
+    ],
+    "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
+    "designedWith": [
+      "incremental-merge",
+      "test-case-authoring",
+      "testing-regression",
+      "traceability-handover"
+    ],
+    "designedFor": "regression",
+    "inRun": true,
+    "status": "new",
+    "version": 1,
+    "previous": null,
+    "revisionNote": null,
+    "ui": false,
+    "varies": [],
+    "dataSet": "TD-F-140"
   }
 ]

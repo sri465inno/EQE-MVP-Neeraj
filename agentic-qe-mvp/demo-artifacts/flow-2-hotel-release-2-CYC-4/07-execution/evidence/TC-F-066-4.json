@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "http://127.0.0.1:36959/api/ops/reservations/R-8cc829ee",
+    "url": "http://127.0.0.1:40871/api/ops/reservations/R-0ee53624",
     "headers": {
       "X-Operator-Role": "SUPPORT"
     },
@@ -9,11 +9,11 @@
   },
   "response": {
     "status": 200,
-    "correlationId": "27f0cf3b-d367-4d99-b770-2cc159b499d3",
+    "correlationId": "c5f693ae-c5c4-4770-8c31-2da78b1e376a",
     "body": {
-      "reservationId": "R-8cc829ee",
+      "reservationId": "R-0ee53624",
       "status": "CONFIRMED",
-      "confirmationNumber": "HBDX2CD4Q9",
+      "confirmationNumber": "HBJDB3LT28",
       "guestName": "J. D***",
       "email": "j***@e***.com",
       "phone": "***00",
@@ -22,10 +22,10 @@
       "paymentStatus": "AUTHORIZED",
       "inventoryStatus": "COMMITTED",
       "history": [
-        "2026-10-02T19:28:09.639360236Z cart C-35a7626f revalidated at 770.42",
-        "2026-10-02T19:28:09.640151073Z payment authorised (GUARANTEE)",
-        "2026-10-02T19:28:09.645033645Z status CONFIRMED",
-        "2026-10-02T19:28:09.656892871Z confirmation M-94f30e76 DELIVERED"
+        "2026-10-02T19:44:30.108042769Z cart C-aa2700dd revalidated at 770.42",
+        "2026-10-02T19:44:30.108660445Z payment authorised (GUARANTEE)",
+        "2026-10-02T19:44:30.113207217Z status CONFIRMED",
+        "2026-10-02T19:44:30.125658987Z confirmation M-906c5b53 DELIVERED"
       ]
     }
   }

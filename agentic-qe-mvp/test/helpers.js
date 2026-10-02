@@ -9,7 +9,7 @@ const INCREMENT_INPUTS = { epic: { mode: 'jira', key: 'COM-20' }, codebase: { mo
 
 const HOTEL_EPICS = 'AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27';
 const HOTEL_INPUTS = { initiative: { mode: 'jira', key: 'AQPI-1' }, epic: { mode: 'jira', key: HOTEL_EPICS }, codebase: { mode: 'sample', branch: 'demo/hotel-booking-platform' } };
-const HOTEL_V2_INPUTS = { epic: { mode: 'jira', key: 'AQPI-32' }, codebase: { mode: 'sample', branch: 'demo/hotel-booking-platform-v2' } };
+const HOTEL_V2_INPUTS = { epic: { mode: 'jira', key: 'AQPI-32, AQPI-23', snapshot: 'release-2.0' }, codebase: { mode: 'sample', branch: 'demo/hotel-booking-platform-v2' } };
 
 const tmpDir = (label) => fs.mkdtempSync(path.join(os.tmpdir(), `aqe-${label}-`));
 

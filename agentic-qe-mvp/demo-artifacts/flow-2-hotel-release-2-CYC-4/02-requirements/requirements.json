@@ -446,7 +446,7 @@
     ],
     "resolution": null,
     "version": 1,
-    "status": "carried over",
+    "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
     "changedInCycle": "CYC-1"
@@ -642,7 +642,7 @@
     ],
     "resolution": null,
     "version": 1,
-    "status": "carried over",
+    "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
     "changedInCycle": "CYC-1"
@@ -3138,7 +3138,7 @@
     ],
     "resolution": null,
     "version": 1,
-    "status": "carried over",
+    "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
     "changedInCycle": "CYC-1"
@@ -3170,7 +3170,7 @@
     ],
     "resolution": null,
     "version": 1,
-    "status": "carried over",
+    "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
     "changedInCycle": "CYC-1"
@@ -3202,7 +3202,7 @@
     ],
     "resolution": null,
     "version": 1,
-    "status": "carried over",
+    "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
     "changedInCycle": "CYC-1"
@@ -3234,7 +3234,7 @@
     ],
     "resolution": null,
     "version": 1,
-    "status": "carried over",
+    "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
     "changedInCycle": "CYC-1"
@@ -3266,7 +3266,7 @@
     ],
     "resolution": null,
     "version": 1,
-    "status": "carried over",
+    "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
     "changedInCycle": "CYC-1"
@@ -3298,7 +3298,7 @@
     ],
     "resolution": null,
     "version": 1,
-    "status": "carried over",
+    "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
     "changedInCycle": "CYC-1"
@@ -3330,7 +3330,7 @@
     ],
     "resolution": null,
     "version": 1,
-    "status": "carried over",
+    "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
     "changedInCycle": "CYC-1"
@@ -3394,7 +3394,7 @@
     ],
     "resolution": null,
     "version": 1,
-    "status": "carried over",
+    "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
     "changedInCycle": "CYC-1"
@@ -3426,7 +3426,7 @@
     ],
     "resolution": null,
     "version": 1,
-    "status": "carried over",
+    "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
     "changedInCycle": "CYC-1"
@@ -3458,7 +3458,7 @@
     ],
     "resolution": null,
     "version": 1,
-    "status": "carried over",
+    "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
     "changedInCycle": "CYC-1"
@@ -3490,7 +3490,7 @@
     ],
     "resolution": null,
     "version": 1,
-    "status": "carried over",
+    "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
     "changedInCycle": "CYC-1"
@@ -3522,7 +3522,7 @@
     ],
     "resolution": null,
     "version": 1,
-    "status": "carried over",
+    "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
     "changedInCycle": "CYC-1"
@@ -4170,7 +4170,7 @@
         "kind": "code-source",
         "ref": "cart-service/src/main/resources/cart-service.yml",
         "line": 16,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/cart-service/src/main/resources/cart-service.yml",
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/cart-service/src/main/resources/cart-service.yml",
         "quote": "# @rule A cart expires 20 minutes after it is created and never creates a reservation itself."
       }
     ],
@@ -4282,7 +4282,7 @@
         "kind": "code-source",
         "ref": "notification-service/src/main/resources/notification-service.yml",
         "line": 7,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/notification-service/src/main/resources/notification-service.yml",
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/notification-service/src/main/resources/notification-service.yml",
         "quote": "# @rule A confirmation can be resent at most 5 times per booking in 24 hours."
       }
     ],
@@ -4403,13 +4403,13 @@
         "quote": "A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights."
       },
       {
-        "statementId": "C7",
+        "statementId": "C11",
         "source": "code",
         "input": "codebase",
         "kind": "code-source",
         "ref": "search-service/src/main/resources/search-service.yml",
         "line": 12,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/search-service/src/main/resources/search-service.yml",
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/search-service/src/main/resources/search-service.yml",
         "quote": "# @rule A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights."
       }
     ],
@@ -4616,7 +4616,7 @@
   {
     "id": "REQ-131",
     "title": "Free cancellation window",
-    "text": "A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
+    "text": "A confirmed reservation on a refundable rate can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
     "values": [
       {
         "num": 48,
@@ -4639,16 +4639,16 @@
         "ref": "AQPI-36",
         "summary": "10.4 Cancel a reservation free of charge",
         "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-36",
-        "quote": "A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed."
+        "quote": "A confirmed reservation on a refundable rate can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed."
       },
       {
-        "statementId": "C5",
+        "statementId": "C9",
         "source": "code",
         "input": "codebase",
         "kind": "code-source",
         "ref": "reservation-service/src/main/resources/reservation-service.yml",
         "line": 22,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/reservation-service/src/main/resources/reservation-service.yml",
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/reservation-service/src/main/resources/reservation-service.yml",
         "quote": "# @rule A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed."
       }
     ],
@@ -4685,18 +4685,266 @@
         "quote": "A cancelled reservation shows status CANCELLED, its payment authorisation is voided and its rooms are released."
       },
       {
-        "statementId": "C6",
+        "statementId": "C10",
         "source": "code",
         "input": "codebase",
         "kind": "code-source",
         "ref": "reservation-service/src/main/resources/reservation-service.yml",
         "line": 23,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/reservation-service/src/main/resources/reservation-service.yml",
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/reservation-service/src/main/resources/reservation-service.yml",
         "quote": "# @rule A cancelled reservation shows status CANCELLED, its payment authorisation is voided and its rooms are released."
       }
     ],
     "jiraKeys": [
       "AQPI-36"
+    ],
+    "resolution": null,
+    "version": 1,
+    "status": "new",
+    "previous": null,
+    "introducedInCycle": "CYC-4",
+    "changedInCycle": "CYC-4"
+  },
+  {
+    "id": "REQ-133",
+    "title": "Non-refundable rates are not cancelled free of charge",
+    "text": "A reservation on a non-refundable rate cannot be cancelled free of charge and stays confirmed.",
+    "values": [],
+    "type": "functional",
+    "sources": [
+      "jira"
+    ],
+    "bucket": "jira-only",
+    "origins": [
+      {
+        "statementId": "J10",
+        "source": "jira",
+        "input": "epic",
+        "kind": "jira-story",
+        "ref": "AQPI-36",
+        "summary": "10.4 Cancel a reservation free of charge",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-36",
+        "quote": "A reservation on a non-refundable rate cannot be cancelled free of charge and stays confirmed."
+      }
+    ],
+    "jiraKeys": [
+      "AQPI-36"
+    ],
+    "resolution": null,
+    "version": 1,
+    "status": "new",
+    "previous": null,
+    "introducedInCycle": "CYC-4",
+    "changedInCycle": "CYC-4"
+  },
+  {
+    "id": "REQ-134",
+    "title": "Confirmation states the free-cancellation deadline",
+    "text": "The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.",
+    "values": [
+      {
+        "num": 48,
+        "unit": "hours",
+        "raw": "48 hours"
+      }
+    ],
+    "type": "functional",
+    "sources": [
+      "code",
+      "jira"
+    ],
+    "bucket": "agreed",
+    "origins": [
+      {
+        "statementId": "J18",
+        "source": "jira",
+        "input": "epic",
+        "kind": "jira-story",
+        "ref": "AQPI-24",
+        "summary": "8.1 Generate confirmation message",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24",
+        "quote": "The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in."
+      },
+      {
+        "statementId": "C5",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-source",
+        "ref": "notification-service/src/main/resources/notification-service.yml",
+        "line": 16,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/notification-service/src/main/resources/notification-service.yml",
+        "quote": "# @rule The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in."
+      }
+    ],
+    "jiraKeys": [
+      "AQPI-24"
+    ],
+    "resolution": null,
+    "version": 1,
+    "status": "new",
+    "previous": null,
+    "introducedInCycle": "CYC-4",
+    "changedInCycle": "CYC-4"
+  },
+  {
+    "id": "REQ-135",
+    "title": "Operational e-mail retry limit",
+    "text": "Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.",
+    "values": [
+      {
+        "num": 3,
+        "unit": "",
+        "raw": "3"
+      }
+    ],
+    "type": "functional",
+    "sources": [
+      "code",
+      "jira"
+    ],
+    "bucket": "agreed",
+    "origins": [
+      {
+        "statementId": "J23",
+        "source": "jira",
+        "input": "epic",
+        "kind": "jira-story",
+        "ref": "AQPI-25",
+        "summary": "8.2 Send and track confirmation email",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25",
+        "quote": "Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused."
+      },
+      {
+        "statementId": "C4",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-source",
+        "ref": "notification-service/src/main/resources/notification-service.yml",
+        "line": 14,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/notification-service/src/main/resources/notification-service.yml",
+        "quote": "# @rule Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused."
+      }
+    ],
+    "jiraKeys": [
+      "AQPI-25"
+    ],
+    "resolution": null,
+    "version": 1,
+    "status": "new",
+    "previous": null,
+    "introducedInCycle": "CYC-4",
+    "changedInCycle": "CYC-4"
+  },
+  {
+    "id": "REQ-136",
+    "title": "One cancellation e-mail per cancelled booking",
+    "text": "A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.",
+    "values": [],
+    "type": "functional",
+    "sources": [
+      "code",
+      "jira"
+    ],
+    "bucket": "agreed",
+    "origins": [
+      {
+        "statementId": "J29",
+        "source": "jira",
+        "input": "epic",
+        "kind": "jira-story",
+        "ref": "AQPI-37",
+        "summary": "8.4 Send a cancellation e-mail",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37",
+        "quote": "A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another."
+      },
+      {
+        "statementId": "C6",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-source",
+        "ref": "notification-service/src/main/resources/notification-service.yml",
+        "line": 18,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/notification-service/src/main/resources/notification-service.yml",
+        "quote": "# @rule A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another."
+      }
+    ],
+    "jiraKeys": [
+      "AQPI-37"
+    ],
+    "resolution": null,
+    "version": 1,
+    "status": "new",
+    "previous": null,
+    "introducedInCycle": "CYC-4",
+    "changedInCycle": "CYC-4"
+  },
+  {
+    "id": "REQ-137",
+    "title": "Cancellation e-mail failure does not undo the cancellation",
+    "text": "A cancellation e-mail that cannot be sent does not undo the cancellation.",
+    "values": [],
+    "type": "functional",
+    "sources": [
+      "code",
+      "jira"
+    ],
+    "bucket": "agreed",
+    "origins": [
+      {
+        "statementId": "J30",
+        "source": "jira",
+        "input": "epic",
+        "kind": "jira-story",
+        "ref": "AQPI-37",
+        "summary": "8.4 Send a cancellation e-mail",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37",
+        "quote": "A cancellation e-mail that cannot be sent does not undo the cancellation."
+      },
+      {
+        "statementId": "C7",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-source",
+        "ref": "notification-service/src/main/resources/notification-service.yml",
+        "line": 19,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/notification-service/src/main/resources/notification-service.yml",
+        "quote": "# @rule A cancellation e-mail that cannot be sent does not undo the cancellation."
+      }
+    ],
+    "jiraKeys": [
+      "AQPI-37"
+    ],
+    "resolution": null,
+    "version": 1,
+    "status": "new",
+    "previous": null,
+    "introducedInCycle": "CYC-4",
+    "changedInCycle": "CYC-4"
+  },
+  {
+    "id": "REQ-138",
+    "title": "Operational users see the cancellation e-mail with",
+    "text": "Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation.",
+    "values": [],
+    "type": "functional",
+    "sources": [
+      "jira"
+    ],
+    "bucket": "jira-only",
+    "origins": [
+      {
+        "statementId": "J31",
+        "source": "jira",
+        "input": "epic",
+        "kind": "jira-story",
+        "ref": "AQPI-37",
+        "summary": "8.4 Send a cancellation e-mail",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37",
+        "quote": "Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation."
+      }
+    ],
+    "jiraKeys": [
+      "AQPI-37"
     ],
     "resolution": null,
     "version": 1,

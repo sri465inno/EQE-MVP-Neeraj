@@ -1,15 +1,15 @@
 {
   "title": "Agentic QE Platform - MVP - Cycle report",
-  "generatedAt": "2026-10-02T19:28:14.397Z",
+  "generatedAt": "2026-10-02T19:44:35.246Z",
   "cycle": {
     "id": "CYC-4",
-    "name": "Hotel booking release 2.0 (AQPI-32)",
+    "name": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "type": "incremental",
     "testingType": "regression",
     "testingTypeName": "Regression testing",
     "status": "completed",
-    "createdAt": "2026-10-02T19:28:01.161Z",
-    "completedAt": "2026-10-02T19:28:14.333Z",
+    "createdAt": "2026-10-02T19:44:22.397Z",
+    "completedAt": "2026-10-02T19:44:35.177Z",
     "baselineId": "BL-1",
     "baselineVersionAtStart": 1,
     "baselineVersionAfter": 2,
@@ -106,15 +106,15 @@
       "name": "Regression testing",
       "focus": "The full pack: every functional case plus the privacy, security, observability and resilience cases, so nothing that worked before has broken.",
       "approach": "Re-runs every case carried over from the baseline alongside the new and re-designed ones.",
-      "designed": 137,
-      "inRun": 137,
-      "automatedInRun": 77,
+      "designed": 144,
+      "inRun": 144,
+      "automatedInRun": 83,
       "reused": 126,
       "redesigned": 6,
-      "added": 5,
+      "added": 12,
       "notInRun": 0,
       "bySuite": {
-        "api": 137,
+        "api": 144,
         "ui": 0,
         "journey": 0,
         "nfr": 0,
@@ -139,10 +139,10 @@
   },
   "reviewAgent": {
     "counts": {
-      "added": 11,
-      "missing": 7,
+      "added": 17,
+      "missing": 33,
       "conflicts": 0,
-      "high": 1
+      "high": 2
     },
     "note": "Suggestions only. The human reviewer decides every conflict and approves the requirement set.",
     "findings": [
@@ -150,7 +150,7 @@
         "id": "RA-01",
         "category": "added",
         "severity": "high",
-        "groupId": "G10",
+        "groupId": "G30",
         "title": "In the code but in no Jira story",
         "detail": "A price change of more than 1% must be acknowledged by the guest before checkout.",
         "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
@@ -159,7 +159,7 @@
             "source": "code",
             "ref": "cart-service/src/main/resources/cart-service.yml",
             "line": 17,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/cart-service/src/main/resources/cart-service.yml",
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/cart-service/src/main/resources/cart-service.yml",
             "quote": "# @rule A price change of more than 1% must be acknowledged by the guest before checkout."
           }
         ]
@@ -168,7 +168,7 @@
         "id": "RA-02",
         "category": "added",
         "severity": "medium",
-        "groupId": "G11",
+        "groupId": "G31",
         "title": "In the code but in no Jira story",
         "detail": "Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.",
         "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
@@ -177,7 +177,7 @@
             "source": "code",
             "ref": "reservation-service/src/main/resources/reservation-service.yml",
             "line": 20,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/reservation-service/src/main/resources/reservation-service.yml",
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/reservation-service/src/main/resources/reservation-service.yml",
             "quote": "# @rule Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome."
           }
         ]
@@ -186,7 +186,7 @@
         "id": "RA-03",
         "category": "added",
         "severity": "medium",
-        "groupId": "G12",
+        "groupId": "G32",
         "title": "In the code but in no Jira story",
         "detail": "Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.",
         "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
@@ -195,7 +195,7 @@
             "source": "code",
             "ref": "search-service/src/main/resources/search-service.yml",
             "line": 13,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/search-service/src/main/resources/search-service.yml",
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/search-service/src/main/resources/search-service.yml",
             "quote": "# @rule Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms."
           }
         ]
@@ -204,7 +204,7 @@
         "id": "RA-04",
         "category": "added",
         "severity": "medium",
-        "groupId": "G13",
+        "groupId": "G33",
         "title": "In the code but in no Jira story",
         "detail": "Check-in can be at most 500 days ahead.",
         "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
@@ -213,7 +213,7 @@
             "source": "code",
             "ref": "search-service/src/main/resources/search-service.yml",
             "line": 14,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/search-service/src/main/resources/search-service.yml",
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/search-service/src/main/resources/search-service.yml",
             "quote": "# @rule Check-in can be at most 500 days ahead."
           }
         ]
@@ -232,6 +232,13 @@
             "ref": "AQPI-32",
             "line": null,
             "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-32",
+            "quote": "All child user stories meet their acceptance criteria and the Definition of Done."
+          },
+          {
+            "source": "jira",
+            "ref": "AQPI-23",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-23",
             "quote": "All child user stories meet their acceptance criteria and the Definition of Done."
           }
         ]
@@ -269,6 +276,13 @@
             "line": null,
             "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-32",
             "quote": "Required logging is in place and verified free of sensitive data."
+          },
+          {
+            "source": "jira",
+            "ref": "AQPI-23",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-23",
+            "quote": "Required logging is in place and verified free of sensitive data."
           }
         ]
       },
@@ -293,6 +307,308 @@
       {
         "id": "RA-09",
         "category": "missing",
+        "severity": "high",
+        "groupId": "G10",
+        "title": "Asked for in Jira but not mentioned in the code",
+        "detail": "A reservation on a non-refundable rate cannot be cancelled free of charge and stays confirmed.",
+        "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-36",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-36",
+            "quote": "A reservation on a non-refundable rate cannot be cancelled free of charge and stays confirmed."
+          }
+        ]
+      },
+      {
+        "id": "RA-10",
+        "category": "missing",
+        "severity": "medium",
+        "groupId": "G11",
+        "title": "Asked for in Jira but not mentioned in the code",
+        "detail": "Negative and error paths for each story are tested and evidenced.",
+        "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-23",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-23",
+            "quote": "Negative and error paths for each story are tested and evidenced."
+          }
+        ]
+      },
+      {
+        "id": "RA-11",
+        "category": "missing",
+        "severity": "medium",
+        "groupId": "G12",
+        "title": "Asked for in Jira but not mentioned in the code",
+        "detail": "The Product Owner has accepted the capability end to end.",
+        "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-23",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-23",
+            "quote": "The Product Owner has accepted the capability end to end."
+          }
+        ]
+      },
+      {
+        "id": "RA-12",
+        "category": "missing",
+        "severity": "medium",
+        "groupId": "G13",
+        "title": "Asked for in Jira but not mentioned in the code",
+        "detail": "The message contains guest-safe confirmation details, hotel information, stay dates, booked items, pricing summary, and applicable policy information.",
+        "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-24",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24",
+            "quote": "The message contains guest-safe confirmation details, hotel information, stay dates, booked items, pricing summary, and applicable policy information."
+          }
+        ]
+      },
+      {
+        "id": "RA-13",
+        "category": "missing",
+        "severity": "medium",
+        "groupId": "G14",
+        "title": "Asked for in Jira but not mentioned in the code",
+        "detail": "The message content matches the confirmed reservation state.",
+        "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-24",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24",
+            "quote": "The message content matches the confirmed reservation state."
+          }
+        ]
+      },
+      {
+        "id": "RA-14",
+        "category": "missing",
+        "severity": "medium",
+        "groupId": "G15",
+        "title": "Asked for in Jira but not mentioned in the code",
+        "detail": "Templates support required locale and accessibility standards.",
+        "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-24",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24",
+            "quote": "Templates support required locale and accessibility standards."
+          }
+        ]
+      },
+      {
+        "id": "RA-15",
+        "category": "missing",
+        "severity": "medium",
+        "groupId": "G17",
+        "title": "Asked for in Jira but not mentioned in the code",
+        "detail": "Only necessary personal data may be included.",
+        "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-24",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24",
+            "quote": "Only necessary personal data may be included."
+          }
+        ]
+      },
+      {
+        "id": "RA-16",
+        "category": "missing",
+        "severity": "medium",
+        "groupId": "G18",
+        "title": "Asked for in Jira but not mentioned in the code",
+        "detail": "Sensitive payment details must not appear.",
+        "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-24",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24",
+            "quote": "Sensitive payment details must not appear."
+          },
+          {
+            "source": "jira",
+            "ref": "AQPI-37",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37",
+            "quote": "Sensitive payment details must not appear."
+          }
+        ]
+      },
+      {
+        "id": "RA-17",
+        "category": "missing",
+        "severity": "medium",
+        "groupId": "G19",
+        "title": "Asked for in Jira but not mentioned in the code",
+        "detail": "A successful reservation creates one confirmation-email request.",
+        "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-25",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25",
+            "quote": "A successful reservation creates one confirmation-email request."
+          }
+        ]
+      },
+      {
+        "id": "RA-18",
+        "category": "missing",
+        "severity": "medium",
+        "groupId": "G20",
+        "title": "Asked for in Jira but not mentioned in the code",
+        "detail": "Send failure does not reverse a valid reservation.",
+        "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-25",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25",
+            "quote": "Send failure does not reverse a valid reservation."
+          }
+        ]
+      },
+      {
+        "id": "RA-19",
+        "category": "missing",
+        "severity": "medium",
+        "groupId": "G22",
+        "title": "Asked for in Jira but not mentioned in the code",
+        "detail": "Operational users can distinguish queued, sent, delivered, bounced, and failed states when supported by the provider.",
+        "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-25",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25",
+            "quote": "Operational users can distinguish queued, sent, delivered, bounced, and failed states when supported by the provider."
+          }
+        ]
+      },
+      {
+        "id": "RA-20",
+        "category": "missing",
+        "severity": "medium",
+        "groupId": "G23",
+        "title": "Asked for in Jira but not mentioned in the code",
+        "detail": "Email addresses must be masked outside authorized operational views.",
+        "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-25",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25",
+            "quote": "Email addresses must be masked outside authorized operational views."
+          },
+          {
+            "source": "jira",
+            "ref": "AQPI-37",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37",
+            "quote": "Email addresses must be masked outside authorized operational views."
+          }
+        ]
+      },
+      {
+        "id": "RA-21",
+        "category": "missing",
+        "severity": "medium",
+        "groupId": "G24",
+        "title": "Asked for in Jira but not mentioned in the code",
+        "detail": "The request verifies sufficient reservation information without exposing data.",
+        "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-26",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-26",
+            "quote": "The request verifies sufficient reservation information without exposing data."
+          }
+        ]
+      },
+      {
+        "id": "RA-22",
+        "category": "missing",
+        "severity": "medium",
+        "groupId": "G25",
+        "title": "Asked for in Jira but not mentioned in the code",
+        "detail": "Rate limits and abuse controls apply.",
+        "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-26",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-26",
+            "quote": "Rate limits and abuse controls apply."
+          }
+        ]
+      },
+      {
+        "id": "RA-23",
+        "category": "missing",
+        "severity": "medium",
+        "groupId": "G26",
+        "title": "Asked for in Jira but not mentioned in the code",
+        "detail": "The resend creates a new message event without creating a new reservation.",
+        "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-26",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-26",
+            "quote": "The resend creates a new message event without creating a new reservation."
+          }
+        ]
+      },
+      {
+        "id": "RA-24",
+        "category": "missing",
+        "severity": "medium",
+        "groupId": "G29",
+        "title": "Asked for in Jira but not mentioned in the code",
+        "detail": "Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation.",
+        "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-37",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37",
+            "quote": "Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation."
+          }
+        ]
+      },
+      {
+        "id": "RA-25",
+        "category": "missing",
         "severity": "low",
         "groupId": "G1",
         "title": "No testable expected value",
@@ -305,11 +621,18 @@
             "line": null,
             "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-32",
             "quote": "All child user stories meet their acceptance criteria and the Definition of Done."
+          },
+          {
+            "source": "jira",
+            "ref": "AQPI-23",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-23",
+            "quote": "All child user stories meet their acceptance criteria and the Definition of Done."
           }
         ]
       },
       {
-        "id": "RA-10",
+        "id": "RA-26",
         "category": "missing",
         "severity": "low",
         "groupId": "G3",
@@ -323,29 +646,223 @@
             "line": null,
             "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-32",
             "quote": "Required logging is in place and verified free of sensitive data."
+          },
+          {
+            "source": "jira",
+            "ref": "AQPI-23",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-23",
+            "quote": "Required logging is in place and verified free of sensitive data."
           }
         ]
       },
       {
-        "id": "RA-11",
+        "id": "RA-27",
+        "category": "missing",
+        "severity": "low",
+        "groupId": "G11",
+        "title": "No testable expected value",
+        "detail": "Negative and error paths for each story are tested and evidenced.",
+        "suggestion": "Add an example with an exact expected result (amount, status or error code); until then it can only become a manual case.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-23",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-23",
+            "quote": "Negative and error paths for each story are tested and evidenced."
+          }
+        ]
+      },
+      {
+        "id": "RA-28",
+        "category": "missing",
+        "severity": "low",
+        "groupId": "G12",
+        "title": "No testable expected value",
+        "detail": "The Product Owner has accepted the capability end to end.",
+        "suggestion": "Add an example with an exact expected result (amount, status or error code); until then it can only become a manual case.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-23",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-23",
+            "quote": "The Product Owner has accepted the capability end to end."
+          }
+        ]
+      },
+      {
+        "id": "RA-29",
+        "category": "missing",
+        "severity": "low",
+        "groupId": "G15",
+        "title": "No testable expected value",
+        "detail": "Templates support required locale and accessibility standards.",
+        "suggestion": "Add an example with an exact expected result (amount, status or error code); until then it can only become a manual case.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-24",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24",
+            "quote": "Templates support required locale and accessibility standards."
+          }
+        ]
+      },
+      {
+        "id": "RA-30",
+        "category": "missing",
+        "severity": "low",
+        "groupId": "G17",
+        "title": "No testable expected value",
+        "detail": "Only necessary personal data may be included.",
+        "suggestion": "Add an example with an exact expected result (amount, status or error code); until then it can only become a manual case.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-24",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24",
+            "quote": "Only necessary personal data may be included."
+          }
+        ]
+      },
+      {
+        "id": "RA-31",
+        "category": "missing",
+        "severity": "low",
+        "groupId": "G19",
+        "title": "No testable expected value",
+        "detail": "A successful reservation creates one confirmation-email request.",
+        "suggestion": "Add an example with an exact expected result (amount, status or error code); until then it can only become a manual case.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-25",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25",
+            "quote": "A successful reservation creates one confirmation-email request."
+          }
+        ]
+      },
+      {
+        "id": "RA-32",
+        "category": "missing",
+        "severity": "low",
+        "groupId": "G22",
+        "title": "No testable expected value",
+        "detail": "Operational users can distinguish queued, sent, delivered, bounced, and failed states when supported by the provider.",
+        "suggestion": "Add an example with an exact expected result (amount, status or error code); until then it can only become a manual case.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-25",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25",
+            "quote": "Operational users can distinguish queued, sent, delivered, bounced, and failed states when supported by the provider."
+          }
+        ]
+      },
+      {
+        "id": "RA-33",
+        "category": "missing",
+        "severity": "low",
+        "groupId": "G23",
+        "title": "No testable expected value",
+        "detail": "Email addresses must be masked outside authorized operational views.",
+        "suggestion": "Add an example with an exact expected result (amount, status or error code); until then it can only become a manual case.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-25",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25",
+            "quote": "Email addresses must be masked outside authorized operational views."
+          },
+          {
+            "source": "jira",
+            "ref": "AQPI-37",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37",
+            "quote": "Email addresses must be masked outside authorized operational views."
+          }
+        ]
+      },
+      {
+        "id": "RA-34",
+        "category": "missing",
+        "severity": "low",
+        "groupId": "G25",
+        "title": "No testable expected value",
+        "detail": "Rate limits and abuse controls apply.",
+        "suggestion": "Add an example with an exact expected result (amount, status or error code); until then it can only become a manual case.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-26",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-26",
+            "quote": "Rate limits and abuse controls apply."
+          }
+        ]
+      },
+      {
+        "id": "RA-35",
+        "category": "missing",
+        "severity": "low",
+        "groupId": "G26",
+        "title": "No testable expected value",
+        "detail": "The resend creates a new message event without creating a new reservation.",
+        "suggestion": "Add an example with an exact expected result (amount, status or error code); until then it can only become a manual case.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-26",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-26",
+            "quote": "The resend creates a new message event without creating a new reservation."
+          }
+        ]
+      },
+      {
+        "id": "RA-36",
+        "category": "missing",
+        "severity": "low",
+        "groupId": "G29",
+        "title": "No testable expected value",
+        "detail": "Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation.",
+        "suggestion": "Add an example with an exact expected result (amount, status or error code); until then it can only become a manual case.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-37",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37",
+            "quote": "Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation."
+          }
+        ]
+      },
+      {
+        "id": "RA-37",
         "category": "missing",
         "severity": "medium",
         "groupId": null,
-        "title": "8 of 15 booking-driving attributes have no rule that varies them",
-        "detail": "selection.hotelId (Hotel chosen from the results); selection.roomCode (Room type chosen on the hotel details page); extras.code (Optional ancillary added to the cart (empty = none)); extras.quantity (Quantity of the ancillary); guest.email (Where the confirmation e-mail goes); payment.token (Token from the secure payment component; raw card numbers are never accepted); consent.privacyNoticeAccepted (Guest confirmed the privacy notice); request.idempotencyKeyPrefix (Prefix of the Idempotency-Key sent with a reservation (the full key is 8 to 64 characters))",
+        "title": "7 of 15 booking-driving attributes have no rule that varies them",
+        "detail": "selection.hotelId (Hotel chosen from the results); selection.roomCode (Room type chosen on the hotel details page); extras.code (Optional ancillary added to the cart (empty = none)); extras.quantity (Quantity of the ancillary); payment.token (Token from the secure payment component; raw card numbers are never accepted); consent.privacyNoticeAccepted (Guest confirmed the privacy notice); request.idempotencyKeyPrefix (Prefix of the Idempotency-Key sent with a reservation (the full key is 8 to 64 characters))",
         "suggestion": "Ask for a rule or an example per attribute in the epic; until then no test changes these attributes.",
         "sources": [
           {
             "source": "code",
             "ref": "data-dictionary/booking-attributes.json",
             "line": null,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/data-dictionary/booking-attributes.json",
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/data-dictionary/booking-attributes.json",
             "quote": null
           }
         ]
       },
       {
-        "id": "RA-12",
+        "id": "RA-38",
         "category": "added",
         "severity": "medium",
         "groupId": "G2",
@@ -363,7 +880,7 @@
         ]
       },
       {
-        "id": "RA-13",
+        "id": "RA-39",
         "category": "added",
         "severity": "medium",
         "groupId": "G4",
@@ -381,7 +898,7 @@
         ]
       },
       {
-        "id": "RA-14",
+        "id": "RA-40",
         "category": "added",
         "severity": "medium",
         "groupId": "G5",
@@ -400,13 +917,13 @@
             "source": "code",
             "ref": "cart-service/src/main/resources/cart-service.yml",
             "line": 16,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/cart-service/src/main/resources/cart-service.yml",
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/cart-service/src/main/resources/cart-service.yml",
             "quote": "# @rule A cart expires 20 minutes after it is created and never creates a reservation itself."
           }
         ]
       },
       {
-        "id": "RA-15",
+        "id": "RA-41",
         "category": "added",
         "severity": "medium",
         "groupId": "G6",
@@ -425,13 +942,13 @@
             "source": "code",
             "ref": "search-service/src/main/resources/search-service.yml",
             "line": 12,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/search-service/src/main/resources/search-service.yml",
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/search-service/src/main/resources/search-service.yml",
             "quote": "# @rule A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights."
           }
         ]
       },
       {
-        "id": "RA-16",
+        "id": "RA-42",
         "category": "added",
         "severity": "medium",
         "groupId": "G7",
@@ -450,18 +967,18 @@
             "source": "code",
             "ref": "notification-service/src/main/resources/notification-service.yml",
             "line": 7,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/notification-service/src/main/resources/notification-service.yml",
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/notification-service/src/main/resources/notification-service.yml",
             "quote": "# @rule A confirmation can be resent at most 5 times per booking in 24 hours."
           }
         ]
       },
       {
-        "id": "RA-17",
+        "id": "RA-43",
         "category": "added",
         "severity": "medium",
         "groupId": "G8",
         "title": "New for baseline BL-1",
-        "detail": "A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
+        "detail": "A confirmed reservation on a refundable rate can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
         "suggestion": "Confirm it belongs in this increment; new cases will be designed for it.",
         "sources": [
           {
@@ -469,19 +986,19 @@
             "ref": "AQPI-36",
             "line": null,
             "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-36",
-            "quote": "A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed."
+            "quote": "A confirmed reservation on a refundable rate can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed."
           },
           {
             "source": "code",
             "ref": "reservation-service/src/main/resources/reservation-service.yml",
             "line": 22,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/reservation-service/src/main/resources/reservation-service.yml",
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/reservation-service/src/main/resources/reservation-service.yml",
             "quote": "# @rule A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed."
           }
         ]
       },
       {
-        "id": "RA-18",
+        "id": "RA-44",
         "category": "added",
         "severity": "medium",
         "groupId": "G9",
@@ -500,8 +1017,144 @@
             "source": "code",
             "ref": "reservation-service/src/main/resources/reservation-service.yml",
             "line": 23,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/reservation-service/src/main/resources/reservation-service.yml",
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/reservation-service/src/main/resources/reservation-service.yml",
             "quote": "# @rule A cancelled reservation shows status CANCELLED, its payment authorisation is voided and its rooms are released."
+          }
+        ]
+      },
+      {
+        "id": "RA-45",
+        "category": "added",
+        "severity": "medium",
+        "groupId": "G10",
+        "title": "New for baseline BL-1",
+        "detail": "A reservation on a non-refundable rate cannot be cancelled free of charge and stays confirmed.",
+        "suggestion": "Confirm it belongs in this increment; new cases will be designed for it.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-36",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-36",
+            "quote": "A reservation on a non-refundable rate cannot be cancelled free of charge and stays confirmed."
+          }
+        ]
+      },
+      {
+        "id": "RA-46",
+        "category": "added",
+        "severity": "medium",
+        "groupId": "G16",
+        "title": "New for baseline BL-1",
+        "detail": "The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.",
+        "suggestion": "Confirm it belongs in this increment; new cases will be designed for it.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-24",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24",
+            "quote": "The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in."
+          },
+          {
+            "source": "code",
+            "ref": "notification-service/src/main/resources/notification-service.yml",
+            "line": 16,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/notification-service/src/main/resources/notification-service.yml",
+            "quote": "# @rule The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in."
+          }
+        ]
+      },
+      {
+        "id": "RA-47",
+        "category": "added",
+        "severity": "medium",
+        "groupId": "G21",
+        "title": "New for baseline BL-1",
+        "detail": "Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.",
+        "suggestion": "Confirm it belongs in this increment; new cases will be designed for it.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-25",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25",
+            "quote": "Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused."
+          },
+          {
+            "source": "code",
+            "ref": "notification-service/src/main/resources/notification-service.yml",
+            "line": 14,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/notification-service/src/main/resources/notification-service.yml",
+            "quote": "# @rule Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused."
+          }
+        ]
+      },
+      {
+        "id": "RA-48",
+        "category": "added",
+        "severity": "medium",
+        "groupId": "G27",
+        "title": "New for baseline BL-1",
+        "detail": "A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.",
+        "suggestion": "Confirm it belongs in this increment; new cases will be designed for it.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-37",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37",
+            "quote": "A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another."
+          },
+          {
+            "source": "code",
+            "ref": "notification-service/src/main/resources/notification-service.yml",
+            "line": 18,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/notification-service/src/main/resources/notification-service.yml",
+            "quote": "# @rule A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another."
+          }
+        ]
+      },
+      {
+        "id": "RA-49",
+        "category": "added",
+        "severity": "medium",
+        "groupId": "G28",
+        "title": "New for baseline BL-1",
+        "detail": "A cancellation e-mail that cannot be sent does not undo the cancellation.",
+        "suggestion": "Confirm it belongs in this increment; new cases will be designed for it.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-37",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37",
+            "quote": "A cancellation e-mail that cannot be sent does not undo the cancellation."
+          },
+          {
+            "source": "code",
+            "ref": "notification-service/src/main/resources/notification-service.yml",
+            "line": 19,
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/notification-service/src/main/resources/notification-service.yml",
+            "quote": "# @rule A cancellation e-mail that cannot be sent does not undo the cancellation."
+          }
+        ]
+      },
+      {
+        "id": "RA-50",
+        "category": "added",
+        "severity": "medium",
+        "groupId": "G29",
+        "title": "New for baseline BL-1",
+        "detail": "Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation.",
+        "suggestion": "Confirm it belongs in this increment; new cases will be designed for it.",
+        "sources": [
+          {
+            "source": "jira",
+            "ref": "AQPI-37",
+            "line": null,
+            "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37",
+            "quote": "Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation."
           }
         ]
       }
@@ -509,7 +1162,7 @@
   },
   "dataModel": {
     "file": "data-dictionary/booking-attributes.json",
-    "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/data-dictionary/booking-attributes.json",
+    "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/data-dictionary/booking-attributes.json",
     "name": "Hotel booking attributes",
     "version": "1.0",
     "attributeCount": 21,
@@ -822,7 +1475,7 @@
         {
           "key": "statements",
           "status": "delivered",
-          "count": 18,
+          "count": 46,
           "skills": [
             "input-normalisation",
             "traceability-handover"
@@ -832,7 +1485,7 @@
         {
           "key": "gaps",
           "status": "delivered",
-          "count": 8,
+          "count": 24,
           "skills": [
             "input-normalisation"
           ],
@@ -860,7 +1513,7 @@
         {
           "key": "suggestions",
           "status": "delivered",
-          "count": 18,
+          "count": 50,
           "skills": [
             "input-review"
           ],
@@ -880,7 +1533,7 @@
         {
           "key": "delta",
           "status": "delivered",
-          "count": 13,
+          "count": 33,
           "skills": [
             "incremental-merge"
           ],
@@ -900,7 +1553,7 @@
         {
           "key": "requirements",
           "status": "delivered",
-          "count": 132,
+          "count": 138,
           "skills": [
             "traceability-handover"
           ],
@@ -922,7 +1575,7 @@
         {
           "key": "businessRules",
           "status": "delivered",
-          "count": 132,
+          "count": 138,
           "skills": [
             "incremental-merge",
             "input-normalisation",
@@ -947,7 +1600,7 @@
         {
           "key": "functional",
           "status": "delivered",
-          "count": 133,
+          "count": 140,
           "skills": [
             "incremental-merge",
             "test-case-authoring",
@@ -969,7 +1622,7 @@
         {
           "key": "regressionPack",
           "status": "delivered",
-          "count": 137,
+          "count": 144,
           "skills": [
             "testing-regression"
           ],
@@ -990,7 +1643,7 @@
         {
           "key": "dataSets",
           "status": "delivered",
-          "count": 137,
+          "count": 144,
           "skills": [
             "test-data-generation",
             "traceability-handover"
@@ -1000,7 +1653,7 @@
         {
           "key": "specConformance",
           "status": "delivered",
-          "count": 137,
+          "count": 144,
           "skills": [
             "test-data-generation"
           ],
@@ -1023,7 +1676,7 @@
         {
           "key": "specs",
           "status": "delivered",
-          "count": 60,
+          "count": 65,
           "skills": [
             "automation-script-conventions",
             "incremental-merge",
@@ -1046,12 +1699,12 @@
         {
           "key": "results",
           "status": "delivered",
-          "count": 77,
+          "count": 83,
           "skills": [
             "testing-regression",
             "traceability-handover"
           ],
-          "note": "60 manual case(s) handed over as not run"
+          "note": "61 manual case(s) handed over as not run"
         }
       ]
     },
@@ -1124,31 +1777,35 @@
     {
       "slot": "epic",
       "label": "Jira epic",
-      "ref": "AQPI-32",
-      "summary": "[Epic 8] Release 2.0 – Booking Rule Changes and Free Cancellation",
+      "ref": "AQPI-32, AQPI-23",
+      "summary": "2 epics: [Epic 8] Release 2.0 – Booking Rule Changes and Free Cancellation; [Epic 6] Confirmation and Notifications",
       "children": [
         "AQPI-33",
         "AQPI-34",
         "AQPI-35",
-        "AQPI-36"
+        "AQPI-36",
+        "AQPI-24",
+        "AQPI-25",
+        "AQPI-26",
+        "AQPI-37"
       ],
-      "statements": 9,
+      "statements": 33,
       "provenance": "jira-export",
-      "provenanceLabel": "Jira export on GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export): Jira REST API v3 JSON of AQPI-32, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
+      "provenanceLabel": "Jira export on GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export, release-2.0 snapshot): Jira REST API v3 JSON of AQPI-32, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
       "files": [
-        "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/AQPI-32.json",
-        "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/AQPI-32.children.json"
+        "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/release-2.0/AQPI-32.json",
+        "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/release-2.0/AQPI-32.children.json"
       ]
     },
     {
       "slot": "codebase",
       "label": "Codebase",
-      "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (5bd7164)",
+      "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (24215dc)",
       "summary": "AQPI-1 Intelligent Hotel Shopping and Reservation Experience: reactive Spring Boot microservices",
       "children": [],
-      "statements": 9,
+      "statements": 13,
       "provenance": "github",
-      "provenanceLabel": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (5bd7164) at 2026-10-02T19:27:56.968Z",
+      "provenanceLabel": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (24215dc) at 2026-10-02T19:44:12.281Z",
       "files": [
         "README.md",
         "TRACEABILITY.md",
@@ -1242,35 +1899,35 @@
     }
   ],
   "normalisation": {
-    "statements": 18,
-    "groups": 13,
-    "agreed": 5,
-    "jira-only": 4,
+    "statements": 46,
+    "groups": 33,
+    "agreed": 9,
+    "jira-only": 20,
     "code-only": 4,
     "conflict": 0
   },
   "delta": {
-    "unchanged": 6,
+    "unchanged": 20,
     "enhanced": 3,
-    "new": 4,
-    "summary": "6 unchanged · 3 enhanced · 4 new"
+    "new": 10,
+    "summary": "20 unchanged · 3 enhanced · 10 new"
   },
   "requirements": {
-    "total": 132,
+    "total": 138,
     "byType": {
-      "functional": 123,
+      "functional": 129,
       "non-functional": 9
     },
     "byStatus": {
-      "carried over": 119,
-      "unchanged": 6,
+      "carried over": 105,
+      "unchanged": 20,
       "enhanced": 3,
-      "new": 4
+      "new": 10
     },
     "bySource": {
-      "jira-only": 123,
+      "jira-only": 125,
       "code-only": 7,
-      "agreed": 2
+      "agreed": 6
     },
     "list": [
       {
@@ -1382,7 +2039,7 @@
         "id": "REQ-010",
         "text": "Negative and error paths for each story are tested and evidenced.",
         "type": "functional",
-        "status": "carried over",
+        "status": "unchanged",
         "version": 1,
         "previous": null,
         "jiraKeys": [
@@ -1416,7 +2073,7 @@
         "id": "REQ-012",
         "text": "The Product Owner has accepted the capability end to end.",
         "type": "functional",
-        "status": "carried over",
+        "status": "unchanged",
         "version": 1,
         "previous": null,
         "jiraKeys": [
@@ -2280,7 +2937,7 @@
         "id": "REQ-090",
         "text": "The message contains guest-safe confirmation details, hotel information, stay dates, booked items, pricing summary, and applicable policy information.",
         "type": "functional",
-        "status": "carried over",
+        "status": "unchanged",
         "version": 1,
         "previous": null,
         "jiraKeys": [
@@ -2291,7 +2948,7 @@
         "id": "REQ-091",
         "text": "The message content matches the confirmed reservation state.",
         "type": "functional",
-        "status": "carried over",
+        "status": "unchanged",
         "version": 1,
         "previous": null,
         "jiraKeys": [
@@ -2302,7 +2959,7 @@
         "id": "REQ-092",
         "text": "Templates support required locale and accessibility standards.",
         "type": "non-functional",
-        "status": "carried over",
+        "status": "unchanged",
         "version": 1,
         "previous": null,
         "jiraKeys": [
@@ -2313,7 +2970,7 @@
         "id": "REQ-093",
         "text": "Only necessary personal data may be included.",
         "type": "functional",
-        "status": "carried over",
+        "status": "unchanged",
         "version": 1,
         "previous": null,
         "jiraKeys": [
@@ -2324,7 +2981,7 @@
         "id": "REQ-094",
         "text": "Sensitive payment details must not appear.",
         "type": "functional",
-        "status": "carried over",
+        "status": "unchanged",
         "version": 1,
         "previous": null,
         "jiraKeys": [
@@ -2335,7 +2992,7 @@
         "id": "REQ-095",
         "text": "A successful reservation creates one confirmation-email request.",
         "type": "functional",
-        "status": "carried over",
+        "status": "unchanged",
         "version": 1,
         "previous": null,
         "jiraKeys": [
@@ -2346,7 +3003,7 @@
         "id": "REQ-096",
         "text": "Send failure does not reverse a valid reservation.",
         "type": "functional",
-        "status": "carried over",
+        "status": "unchanged",
         "version": 1,
         "previous": null,
         "jiraKeys": [
@@ -2368,7 +3025,7 @@
         "id": "REQ-098",
         "text": "Operational users can distinguish queued, sent, delivered, bounced, and failed states when supported by the provider.",
         "type": "functional",
-        "status": "carried over",
+        "status": "unchanged",
         "version": 1,
         "previous": null,
         "jiraKeys": [
@@ -2379,7 +3036,7 @@
         "id": "REQ-099",
         "text": "Email addresses must be masked outside authorized operational views.",
         "type": "functional",
-        "status": "carried over",
+        "status": "unchanged",
         "version": 1,
         "previous": null,
         "jiraKeys": [
@@ -2390,7 +3047,7 @@
         "id": "REQ-100",
         "text": "The request verifies sufficient reservation information without exposing data.",
         "type": "functional",
-        "status": "carried over",
+        "status": "unchanged",
         "version": 1,
         "previous": null,
         "jiraKeys": [
@@ -2401,7 +3058,7 @@
         "id": "REQ-101",
         "text": "Rate limits and abuse controls apply.",
         "type": "functional",
-        "status": "carried over",
+        "status": "unchanged",
         "version": 1,
         "previous": null,
         "jiraKeys": [
@@ -2412,7 +3069,7 @@
         "id": "REQ-102",
         "text": "The resend creates a new message event without creating a new reservation.",
         "type": "functional",
-        "status": "carried over",
+        "status": "unchanged",
         "version": 1,
         "previous": null,
         "jiraKeys": [
@@ -2721,7 +3378,7 @@
       },
       {
         "id": "REQ-131",
-        "text": "A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
+        "text": "A confirmed reservation on a refundable rate can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
         "type": "functional",
         "status": "new",
         "version": 1,
@@ -2740,40 +3397,106 @@
         "jiraKeys": [
           "AQPI-36"
         ]
+      },
+      {
+        "id": "REQ-133",
+        "text": "A reservation on a non-refundable rate cannot be cancelled free of charge and stays confirmed.",
+        "type": "functional",
+        "status": "new",
+        "version": 1,
+        "previous": null,
+        "jiraKeys": [
+          "AQPI-36"
+        ]
+      },
+      {
+        "id": "REQ-134",
+        "text": "The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.",
+        "type": "functional",
+        "status": "new",
+        "version": 1,
+        "previous": null,
+        "jiraKeys": [
+          "AQPI-24"
+        ]
+      },
+      {
+        "id": "REQ-135",
+        "text": "Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.",
+        "type": "functional",
+        "status": "new",
+        "version": 1,
+        "previous": null,
+        "jiraKeys": [
+          "AQPI-25"
+        ]
+      },
+      {
+        "id": "REQ-136",
+        "text": "A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.",
+        "type": "functional",
+        "status": "new",
+        "version": 1,
+        "previous": null,
+        "jiraKeys": [
+          "AQPI-37"
+        ]
+      },
+      {
+        "id": "REQ-137",
+        "text": "A cancellation e-mail that cannot be sent does not undo the cancellation.",
+        "type": "functional",
+        "status": "new",
+        "version": 1,
+        "previous": null,
+        "jiraKeys": [
+          "AQPI-37"
+        ]
+      },
+      {
+        "id": "REQ-138",
+        "text": "Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation.",
+        "type": "functional",
+        "status": "new",
+        "version": 1,
+        "previous": null,
+        "jiraKeys": [
+          "AQPI-37"
+        ]
       }
     ]
   },
   "rules": {
-    "total": 132,
-    "executable": 67
+    "total": 138,
+    "executable": 72
   },
   "testCases": {
-    "total": 137,
+    "total": 144,
     "byType": {
-      "functional": 133,
+      "functional": 140,
       "non-functional": 4
     },
     "byLabel": {
-      "functional": 133,
-      "automation": 77,
+      "functional": 140,
+      "automation": 83,
       "regression": 126,
       "non-functional": 4
     },
     "byStatus": {
       "carried over": 126,
       "re-designed": 6,
-      "new": 5
+      "new": 12
     },
     "byAutomation": {
-      "Automated": 77,
-      "Not automated": 60
+      "Automated": 83,
+      "Not automated": 61
     }
   },
   "automation": {
-    "specs": 60,
+    "specs": 65,
     "specsChanged": 3,
-    "specsNew": 2,
-    "casesCovered": 77,
+    "specsNew": 7,
+    "casesCovered": 83,
     "notAutomated": [
       {
         "key": "TC-F-002",
@@ -3074,13 +3797,18 @@
         "key": "TC-F-130",
         "name": "Verify: The Product Owner has accepted the release 2.0 changes end to end",
         "why": "Manual: no deterministic, observable check against the SUT API"
+      },
+      {
+        "key": "TC-F-140",
+        "name": "Verify: Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation",
+        "why": "Manual: no deterministic, observable check against the SUT API"
       }
     ]
   },
   "reuse": {
     "carriedOver": 126,
-    "total": 137,
-    "percent": 92,
+    "total": 144,
+    "percent": 87.5,
     "note": "Reuse means these artefacts were not re-designed, not that they were not executed."
   },
   "testData": {
@@ -3088,16 +3816,16 @@
       "name": "Hotel booking attributes",
       "version": "1.0",
       "attributeCount": 21,
-      "source": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/data-dictionary/booking-attributes.json"
+      "source": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/data-dictionary/booking-attributes.json"
     },
-    "total": 137,
-    "conforming": 129,
+    "total": 144,
+    "conforming": 136,
     "negative": 8,
     "nonConforming": 0,
     "byStatus": {
       "carried over": 130,
       "re-generated": 2,
-      "new": 5
+      "new": 12
     },
     "method": "Booking drivers come from the test case; every other attribute takes the example value the hotel data dictionary specifies, so each data set is a complete, valid booking unless the case deliberately breaks one value.",
     "sets": [
@@ -4212,15 +4940,71 @@
         "conformance": "conforms",
         "problems": [],
         "status": "new"
+      },
+      {
+        "id": "TD-F-134",
+        "testCaseKey": "TC-F-134",
+        "drivers": "selection.ratePlanCode=SAVER",
+        "conformance": "conforms",
+        "problems": [],
+        "status": "new"
+      },
+      {
+        "id": "TD-F-135",
+        "testCaseKey": "TC-F-135",
+        "drivers": "selection.ratePlanCode=FLEX",
+        "conformance": "conforms",
+        "problems": [],
+        "status": "new"
+      },
+      {
+        "id": "TD-F-136",
+        "testCaseKey": "TC-F-136",
+        "drivers": "selection.ratePlanCode=SAVER",
+        "conformance": "conforms",
+        "problems": [],
+        "status": "new"
+      },
+      {
+        "id": "TD-F-137",
+        "testCaseKey": "TC-F-137",
+        "drivers": "guest.email=jane@fail.test",
+        "conformance": "conforms",
+        "problems": [],
+        "status": "new"
+      },
+      {
+        "id": "TD-F-138",
+        "testCaseKey": "TC-F-138",
+        "drivers": "selection.ratePlanCode=FLEX",
+        "conformance": "conforms",
+        "problems": [],
+        "status": "new"
+      },
+      {
+        "id": "TD-F-139",
+        "testCaseKey": "TC-F-139",
+        "drivers": "selection.ratePlanCode=FLEX; guest.email=jane@fail.test",
+        "conformance": "conforms",
+        "problems": [],
+        "status": "new"
+      },
+      {
+        "id": "TD-F-140",
+        "testCaseKey": "TC-F-140",
+        "drivers": "",
+        "conformance": "conforms",
+        "problems": [],
+        "status": "new"
       }
     ]
   },
   "scripts": {
-    "total": 60,
+    "total": 65,
     "byStatus": {
       "carried over": 55,
       "re-designed": 3,
-      "new": 2
+      "new": 7
     },
     "files": [
       {
@@ -4719,39 +5503,80 @@
         ],
         "status": "new",
         "version": 1
+      },
+      {
+        "file": "br-133-non-refundable-cancellation.spec.js",
+        "covers": [
+          "TC-F-134"
+        ],
+        "status": "new",
+        "version": 1
+      },
+      {
+        "file": "br-134-cancellation-deadline-email.spec.js",
+        "covers": [
+          "TC-F-135",
+          "TC-F-136"
+        ],
+        "status": "new",
+        "version": 1
+      },
+      {
+        "file": "br-135-ops-retry-limit.spec.js",
+        "covers": [
+          "TC-F-137"
+        ],
+        "status": "new",
+        "version": 1
+      },
+      {
+        "file": "br-136-cancellation-email.spec.js",
+        "covers": [
+          "TC-F-138"
+        ],
+        "status": "new",
+        "version": 1
+      },
+      {
+        "file": "br-137-cancellation-email-failure.spec.js",
+        "covers": [
+          "TC-F-139"
+        ],
+        "status": "new",
+        "version": 1
       }
     ]
   },
   "execution": {
     "executed": true,
     "quarantined": "not measured",
-    "durationMs": 8941,
+    "durationMs": 8768,
     "tool": "Playwright 1.63.0 (headless Chromium, JSON reporter)",
-    "command": "npx playwright test --config ../../../../../tmp/aqe-demo-cZGet0/runs/CYC-4/playwright.config.js",
+    "command": "npx playwright test --config ../../../../../tmp/aqe-demo-b6HW6M/runs/CYC-4/playwright.config.js",
     "sut": {
       "build": "demo/hotel-booking-platform-v2",
-      "url": "http://127.0.0.1:38295",
+      "url": "http://127.0.0.1:37759",
       "services": {
-        "hotel-service": "http://127.0.0.1:41227",
-        "offer-service": "http://127.0.0.1:38881",
-        "notification-service": "http://127.0.0.1:33273",
-        "search-service": "http://127.0.0.1:38295",
-        "cart-service": "http://127.0.0.1:42917",
-        "reservation-service": "http://127.0.0.1:36959"
+        "hotel-service": "http://127.0.0.1:35017",
+        "offer-service": "http://127.0.0.1:37623",
+        "notification-service": "http://127.0.0.1:43065",
+        "search-service": "http://127.0.0.1:37759",
+        "cart-service": "http://127.0.0.1:45787",
+        "reservation-service": "http://127.0.0.1:40871"
       },
       "name": "Hotel booking platform release 2.0, six Spring Boot services built from branch demo/hotel-booking-platform-v2"
     },
-    "startedAt": "2026-10-02T19:28:05.360Z",
-    "finishedAt": "2026-10-02T19:28:14.301Z",
+    "startedAt": "2026-10-02T19:44:26.379Z",
+    "finishedAt": "2026-10-02T19:44:35.147Z",
     "summary": {
-      "total": 137,
-      "executed": 77,
-      "passed": 76,
+      "total": 144,
+      "executed": 83,
+      "passed": 82,
       "failed": 1,
       "skipped": 0,
-      "notRun": 60,
-      "durationMs": 4526,
-      "passRate": 98.7
+      "notRun": 61,
+      "durationMs": 4558,
+      "passRate": 98.8
     },
     "results": [
       {
@@ -4759,7 +5584,7 @@
         "requirementId": "REQ-003",
         "name": "The payment summary shows taxes, mandatory fees and the total before booking",
         "status": "passed",
-        "duration": 670,
+        "duration": 524,
         "reason": null
       },
       {
@@ -4807,7 +5632,7 @@
         "requirementId": "REQ-013",
         "name": "A valid search returns available hotels for the destination",
         "status": "passed",
-        "duration": 255,
+        "duration": 211,
         "reason": null
       },
       {
@@ -4815,7 +5640,7 @@
         "requirementId": "REQ-014",
         "name": "The results page returns the criteria the guest submitted",
         "status": "passed",
-        "duration": 77,
+        "duration": 60,
         "reason": null
       },
       {
@@ -4823,7 +5648,7 @@
         "requirementId": "REQ-015",
         "name": "A check-in date in the past is rejected",
         "status": "passed",
-        "duration": 61,
+        "duration": 45,
         "reason": null
       },
       {
@@ -4831,7 +5656,7 @@
         "requirementId": "REQ-015",
         "name": "A check-out on the check-in day is rejected",
         "status": "passed",
-        "duration": 47,
+        "duration": 32,
         "reason": null
       },
       {
@@ -4839,7 +5664,7 @@
         "requirementId": "REQ-015",
         "name": "A search without a destination is rejected",
         "status": "passed",
-        "duration": 43,
+        "duration": 31,
         "reason": null
       },
       {
@@ -4847,7 +5672,7 @@
         "requirementId": "REQ-016",
         "name": "When every hotel is sold out the guest is told and offered other dates, guests or destination",
         "status": "passed",
-        "duration": 59,
+        "duration": 46,
         "reason": null
       },
       {
@@ -4879,7 +5704,7 @@
         "requirementId": "REQ-020",
         "name": "The search form marks destination, dates, rooms and adults as required",
         "status": "passed",
-        "duration": 31,
+        "duration": 22,
         "reason": null
       },
       {
@@ -4887,7 +5712,7 @@
         "requirementId": "REQ-021",
         "name": "Two rooms for one adult return a message on the adults field",
         "status": "passed",
-        "duration": 26,
+        "duration": 19,
         "reason": null
       },
       {
@@ -4911,7 +5736,7 @@
         "requirementId": "REQ-025",
         "name": "When every hotel is sold out the guest is told and offered other dates, guests or destination",
         "status": "passed",
-        "duration": 46,
+        "duration": 37,
         "reason": null
       },
       {
@@ -4927,7 +5752,7 @@
         "requirementId": "REQ-027",
         "name": "Submitting the same search twice in one session returns the same search",
         "status": "passed",
-        "duration": 44,
+        "duration": 35,
         "reason": null
       },
       {
@@ -4935,7 +5760,7 @@
         "requirementId": "REQ-028",
         "name": "Every result has a name, location, image, availability and, when bookable, a starting price in a currency",
         "status": "passed",
-        "duration": 35,
+        "duration": 25,
         "reason": null
       },
       {
@@ -4943,7 +5768,7 @@
         "requirementId": "REQ-029",
         "name": "Every bookable result states what its price includes",
         "status": "passed",
-        "duration": 32,
+        "duration": 25,
         "reason": null
       },
       {
@@ -4951,7 +5776,7 @@
         "requirementId": "REQ-030",
         "name": "A sold-out hotel is listed as SOLD_OUT without a price",
         "status": "passed",
-        "duration": 37,
+        "duration": 27,
         "reason": null
       },
       {
@@ -4959,7 +5784,7 @@
         "requirementId": "REQ-031",
         "name": "Results can be read two at a time",
         "status": "passed",
-        "duration": 38,
+        "duration": 37,
         "reason": null
       },
       {
@@ -4967,7 +5792,7 @@
         "requirementId": "REQ-032",
         "name": "The starting price equals the cheapest rate on the hotel page",
         "status": "passed",
-        "duration": 50,
+        "duration": 36,
         "reason": null
       },
       {
@@ -4975,7 +5800,7 @@
         "requirementId": "REQ-033",
         "name": "Filtering by the spa amenity returns only hotels with a spa",
         "status": "passed",
-        "duration": 33,
+        "duration": 31,
         "reason": null
       },
       {
@@ -4983,7 +5808,7 @@
         "requirementId": "REQ-034",
         "name": "Sorting by lowest price orders bookable hotels by starting price",
         "status": "passed",
-        "duration": 29,
+        "duration": 36,
         "reason": null
       },
       {
@@ -4991,7 +5816,7 @@
         "requirementId": "REQ-034",
         "name": "An unapproved sort option is refused with a clear message",
         "status": "passed",
-        "duration": 59,
+        "duration": 53,
         "reason": null
       },
       {
@@ -5007,7 +5832,7 @@
         "requirementId": "REQ-036",
         "name": "A filter that leaves no hotels offers a reset",
         "status": "passed",
-        "duration": 31,
+        "duration": 36,
         "reason": null
       },
       {
@@ -5039,7 +5864,7 @@
         "requirementId": "REQ-040",
         "name": "Every rate plan states its cancellation terms and payment rule",
         "status": "passed",
-        "duration": 22,
+        "duration": 20,
         "reason": null
       },
       {
@@ -5055,7 +5880,7 @@
         "requirementId": "REQ-042",
         "name": "Spa access is not offered at a hotel without a spa",
         "status": "passed",
-        "duration": 173,
+        "duration": 154,
         "reason": null
       },
       {
@@ -5063,7 +5888,7 @@
         "requirementId": "REQ-043",
         "name": "Every recommended extra carries at least one reason code",
         "status": "passed",
-        "duration": 24,
+        "duration": 23,
         "reason": null
       },
       {
@@ -5103,7 +5928,7 @@
         "requirementId": "REQ-048",
         "name": "Each offer shows name, description, price and currency and is labelled an optional extra",
         "status": "passed",
-        "duration": 23,
+        "duration": 22,
         "reason": null
       },
       {
@@ -5111,7 +5936,7 @@
         "requirementId": "REQ-049",
         "name": "The guest can record add, skip and dismiss on an offer",
         "status": "passed",
-        "duration": 30,
+        "duration": 31,
         "reason": null
       },
       {
@@ -5135,7 +5960,7 @@
         "requirementId": "REQ-053",
         "name": "A room books without any extra",
         "status": "passed",
-        "duration": 276,
+        "duration": 264,
         "reason": null
       },
       {
@@ -5143,7 +5968,7 @@
         "requirementId": "REQ-054",
         "name": "Withdrawing consent stops personalized offers",
         "status": "passed",
-        "duration": 38,
+        "duration": 39,
         "reason": null
       },
       {
@@ -5151,7 +5976,7 @@
         "requirementId": "REQ-055",
         "name": "The cart holds the selected hotel, room, rate, dates, occupancy and price components",
         "status": "passed",
-        "duration": 33,
+        "duration": 29,
         "reason": null
       },
       {
@@ -5199,7 +6024,7 @@
         "requirementId": "REQ-061",
         "name": "Breakfast can go to 2 but not above its limit of 4",
         "status": "passed",
-        "duration": 91,
+        "duration": 83,
         "reason": null
       },
       {
@@ -5207,7 +6032,7 @@
         "requirementId": "REQ-062",
         "name": "Removing breakfast returns the total to the room-only amount",
         "status": "passed",
-        "duration": 36,
+        "duration": 30,
         "reason": null
       },
       {
@@ -5223,7 +6048,7 @@
         "requirementId": "REQ-064",
         "name": "The cart itemises room, taxes, fees, extras and discounts and they add up to the total",
         "status": "passed",
-        "duration": 32,
+        "duration": 28,
         "reason": null
       },
       {
@@ -5263,7 +6088,7 @@
         "requirementId": "REQ-069",
         "name": "Checkout lists name, e-mail, payment and privacy notice as required and phone as optional",
         "status": "passed",
-        "duration": 38,
+        "duration": 31,
         "reason": null
       },
       {
@@ -5271,7 +6096,7 @@
         "requirementId": "REQ-070",
         "name": "An invalid e-mail address is rejected on the e-mail field",
         "status": "passed",
-        "duration": 37,
+        "duration": 32,
         "reason": null
       },
       {
@@ -5279,7 +6104,7 @@
         "requirementId": "REQ-071",
         "name": "Booking without accepting the privacy notice is refused",
         "status": "passed",
-        "duration": 28,
+        "duration": 23,
         "reason": null
       },
       {
@@ -5303,7 +6128,7 @@
         "requirementId": "REQ-074",
         "name": "Support staff see a masked e-mail and other callers are refused",
         "status": "passed",
-        "duration": 68,
+        "duration": 61,
         "reason": null
       },
       {
@@ -5311,7 +6136,7 @@
         "requirementId": "REQ-075",
         "name": "A pay-at-hotel rate shows nothing to pay now and the total due at the hotel",
         "status": "passed",
-        "duration": 33,
+        "duration": 31,
         "reason": null
       },
       {
@@ -5319,7 +6144,7 @@
         "requirementId": "REQ-075",
         "name": "A prepaid rate shows the full total to pay now",
         "status": "passed",
-        "duration": 43,
+        "duration": 27,
         "reason": null
       },
       {
@@ -5335,7 +6160,7 @@
         "requirementId": "REQ-077",
         "name": "A declined card returns a decline without a booking",
         "status": "passed",
-        "duration": 46,
+        "duration": 36,
         "reason": null
       },
       {
@@ -5343,7 +6168,7 @@
         "requirementId": "REQ-077",
         "name": "A lost payment response leaves the booking pending and tells the guest not to resubmit",
         "status": "passed",
-        "duration": 55,
+        "duration": 51,
         "reason": null
       },
       {
@@ -5351,7 +6176,7 @@
         "requirementId": "REQ-077",
         "name": "A payment provider failure returns a failure without a booking",
         "status": "passed",
-        "duration": 37,
+        "duration": 30,
         "reason": null
       },
       {
@@ -5359,7 +6184,7 @@
         "requirementId": "REQ-078",
         "name": "A raw card number is refused and never echoed back",
         "status": "passed",
-        "duration": 29,
+        "duration": 23,
         "reason": null
       },
       {
@@ -5383,7 +6208,7 @@
         "requirementId": "REQ-081",
         "name": "A successful booking creates one reservation with a confirmation number",
         "status": "passed",
-        "duration": 48,
+        "duration": 43,
         "reason": null
       },
       {
@@ -5391,7 +6216,7 @@
         "requirementId": "REQ-082",
         "name": "Resubmitting with the same key returns the original reservation",
         "status": "passed",
-        "duration": 55,
+        "duration": 47,
         "reason": null
       },
       {
@@ -5399,7 +6224,7 @@
         "requirementId": "REQ-083",
         "name": "After a booking and a decline the reconciliation report is consistent",
         "status": "passed",
-        "duration": 74,
+        "duration": 58,
         "reason": null
       },
       {
@@ -5431,7 +6256,7 @@
         "requirementId": "REQ-087",
         "name": "The success outcome shows confirmation number, hotel, stay, extras and total",
         "status": "passed",
-        "duration": 61,
+        "duration": 52,
         "reason": null
       },
       {
@@ -5439,7 +6264,7 @@
         "requirementId": "REQ-088",
         "name": "A declined payment does not say the booking is confirmed",
         "status": "passed",
-        "duration": 33,
+        "duration": 28,
         "reason": null
       },
       {
@@ -5447,7 +6272,7 @@
         "requirementId": "REQ-089",
         "name": "A pending outcome tells the guest not to resubmit and how to check later",
         "status": "passed",
-        "duration": 33,
+        "duration": 32,
         "reason": null
       },
       {
@@ -5455,7 +6280,7 @@
         "requirementId": "REQ-090",
         "name": "The confirmation e-mail matches the booking and contains no payment token",
         "status": "passed",
-        "duration": 55,
+        "duration": 41,
         "reason": null
       },
       {
@@ -5463,7 +6288,7 @@
         "requirementId": "REQ-091",
         "name": "The confirmation e-mail matches the booking and contains no payment token",
         "status": "passed",
-        "duration": 49,
+        "duration": 39,
         "reason": null
       },
       {
@@ -5479,7 +6304,7 @@
         "requirementId": "REQ-094",
         "name": "The confirmation e-mail matches the booking and contains no payment token",
         "status": "passed",
-        "duration": 49,
+        "duration": 45,
         "reason": null
       },
       {
@@ -5495,7 +6320,7 @@
         "requirementId": "REQ-096",
         "name": "When the e-mail cannot be sent the booking stays confirmed",
         "status": "passed",
-        "duration": 121,
+        "duration": 106,
         "reason": null
       },
       {
@@ -5527,7 +6352,7 @@
         "requirementId": "REQ-100",
         "name": "A resend with the wrong last name gets the same answer as a correct one",
         "status": "passed",
-        "duration": 77,
+        "duration": 58,
         "reason": null
       },
       {
@@ -5575,7 +6400,7 @@
         "requirementId": "REQ-106",
         "name": "Support staff see a masked e-mail and other callers are refused",
         "status": "passed",
-        "duration": 52,
+        "duration": 42,
         "reason": null
       },
       {
@@ -5591,7 +6416,7 @@
         "requirementId": "REQ-108",
         "name": "A correlation ID sent by the client is returned by search, cart and reservation",
         "status": "passed",
-        "duration": 61,
+        "duration": 51,
         "reason": null
       },
       {
@@ -5679,7 +6504,7 @@
         "requirementId": "REQ-122",
         "name": "A new cart expires 20 minutes after creation and reserves nothing",
         "status": "passed",
-        "duration": 24,
+        "duration": 20,
         "reason": null
       },
       {
@@ -5687,7 +6512,7 @@
         "requirementId": "REQ-123",
         "name": "A price rise above 1% blocks booking until the guest acknowledges it",
         "status": "passed",
-        "duration": 87,
+        "duration": 79,
         "reason": null
       },
       {
@@ -5695,7 +6520,7 @@
         "requirementId": "REQ-123",
         "name": "A price change within 1% does not need acknowledgement",
         "status": "passed",
-        "duration": 26,
+        "duration": 32,
         "reason": null
       },
       {
@@ -5703,7 +6528,7 @@
         "requirementId": "REQ-124",
         "name": "The 6th resend within 24 hours is refused",
         "status": "passed",
-        "duration": 80,
+        "duration": 76,
         "reason": null
       },
       {
@@ -5711,7 +6536,7 @@
         "requirementId": "REQ-125",
         "name": "A reservation without an Idempotency-Key is refused",
         "status": "passed",
-        "duration": 25,
+        "duration": 22,
         "reason": null
       },
       {
@@ -5719,7 +6544,7 @@
         "requirementId": "REQ-125",
         "name": "A key shorter than 8 characters is refused",
         "status": "passed",
-        "duration": 23,
+        "duration": 19,
         "reason": null
       },
       {
@@ -5727,7 +6552,7 @@
         "requirementId": "REQ-125",
         "name": "Reusing a key for a different cart is refused",
         "status": "passed",
-        "duration": 49,
+        "duration": 43,
         "reason": null
       },
       {
@@ -5735,7 +6560,7 @@
         "requirementId": "REQ-126",
         "name": "A 30-night stay is accepted",
         "status": "passed",
-        "duration": 25,
+        "duration": 23,
         "reason": null
       },
       {
@@ -5743,7 +6568,7 @@
         "requirementId": "REQ-126",
         "name": "A 31-night stay is rejected",
         "status": "passed",
-        "duration": 23,
+        "duration": 16,
         "reason": null
       },
       {
@@ -5751,7 +6576,7 @@
         "requirementId": "REQ-126",
         "name": "A 14-night stay in Paris is accepted",
         "status": "passed",
-        "duration": 24,
+        "duration": 17,
         "reason": null
       },
       {
@@ -5759,7 +6584,7 @@
         "requirementId": "REQ-126",
         "name": "A 15-night stay in Paris is rejected",
         "status": "failed",
-        "duration": 22,
+        "duration": 18,
         "reason": null
       },
       {
@@ -5767,7 +6592,7 @@
         "requirementId": "REQ-127",
         "name": "4 adults in one room are accepted",
         "status": "passed",
-        "duration": 56,
+        "duration": 42,
         "reason": null
       },
       {
@@ -5775,7 +6600,7 @@
         "requirementId": "REQ-127",
         "name": "5 adults in one room are rejected",
         "status": "passed",
-        "duration": 30,
+        "duration": 20,
         "reason": null
       },
       {
@@ -5783,7 +6608,7 @@
         "requirementId": "REQ-127",
         "name": "4 children in one room are rejected",
         "status": "passed",
-        "duration": 25,
+        "duration": 21,
         "reason": null
       },
       {
@@ -5791,7 +6616,7 @@
         "requirementId": "REQ-127",
         "name": "9 rooms in one search are rejected",
         "status": "passed",
-        "duration": 23,
+        "duration": 16,
         "reason": null
       },
       {
@@ -5799,7 +6624,7 @@
         "requirementId": "REQ-128",
         "name": "A check-in 500 days ahead is accepted",
         "status": "passed",
-        "duration": 36,
+        "duration": 26,
         "reason": null
       },
       {
@@ -5807,7 +6632,7 @@
         "requirementId": "REQ-128",
         "name": "A check-in 501 days ahead is rejected",
         "status": "passed",
-        "duration": 20,
+        "duration": 16,
         "reason": null
       },
       {
@@ -5831,7 +6656,7 @@
         "requirementId": "REQ-131",
         "name": "A flexible booking cancelled more than 48 hours before check-in is cancelled free of charge",
         "status": "passed",
-        "duration": 60,
+        "duration": 58,
         "reason": null
       },
       {
@@ -5839,7 +6664,7 @@
         "requirementId": "REQ-131",
         "name": "A cancellation within 48 hours of check-in is refused and the booking stays confirmed",
         "status": "passed",
-        "duration": 56,
+        "duration": 45,
         "reason": null
       },
       {
@@ -5847,8 +6672,64 @@
         "requirementId": "REQ-132",
         "name": "A cancelled booking shows CANCELLED, its payment hold is voided and its room is released",
         "status": "passed",
-        "duration": 61,
+        "duration": 59,
         "reason": null
+      },
+      {
+        "key": "TC-F-134",
+        "requirementId": "REQ-133",
+        "name": "A non-refundable booking cannot be cancelled free of charge",
+        "status": "passed",
+        "duration": 46,
+        "reason": null
+      },
+      {
+        "key": "TC-F-135",
+        "requirementId": "REQ-134",
+        "name": "The confirmation of a flexible booking states free cancellation until 48 hours before check-in",
+        "status": "passed",
+        "duration": 41,
+        "reason": null
+      },
+      {
+        "key": "TC-F-136",
+        "requirementId": "REQ-134",
+        "name": "The confirmation of a non-refundable booking states no free-cancellation deadline",
+        "status": "passed",
+        "duration": 44,
+        "reason": null
+      },
+      {
+        "key": "TC-F-137",
+        "requirementId": "REQ-135",
+        "name": "Operations can retry a failed confirmation e-mail 3 times; retry 4 is refused",
+        "status": "passed",
+        "duration": 338,
+        "reason": null
+      },
+      {
+        "key": "TC-F-138",
+        "requirementId": "REQ-136",
+        "name": "A cancelled booking gets one cancellation e-mail, even when cancelled twice",
+        "status": "passed",
+        "duration": 63,
+        "reason": null
+      },
+      {
+        "key": "TC-F-139",
+        "requirementId": "REQ-137",
+        "name": "When the cancellation e-mail cannot be sent the booking stays cancelled",
+        "status": "passed",
+        "duration": 192,
+        "reason": null
+      },
+      {
+        "key": "TC-F-140",
+        "requirementId": "REQ-138",
+        "name": "Verify: Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation",
+        "status": "not-run",
+        "duration": 0,
+        "reason": "Manual test case - not automated, not executed"
       }
     ]
   },
@@ -7052,7 +7933,7 @@
       },
       {
         "requirementId": "REQ-131",
-        "text": "A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
+        "text": "A confirmed reservation on a refundable rate can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
         "cases": 2,
         "automated": 2,
         "executed": 2,
@@ -7067,6 +7948,60 @@
         "executed": 1,
         "failed": 0,
         "status": "executed - passing"
+      },
+      {
+        "requirementId": "REQ-133",
+        "text": "A reservation on a non-refundable rate cannot be cancelled free of charge and stays confirmed.",
+        "cases": 1,
+        "automated": 1,
+        "executed": 1,
+        "failed": 0,
+        "status": "executed - passing"
+      },
+      {
+        "requirementId": "REQ-134",
+        "text": "The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.",
+        "cases": 2,
+        "automated": 2,
+        "executed": 2,
+        "failed": 0,
+        "status": "executed - passing"
+      },
+      {
+        "requirementId": "REQ-135",
+        "text": "Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.",
+        "cases": 1,
+        "automated": 1,
+        "executed": 1,
+        "failed": 0,
+        "status": "executed - passing"
+      },
+      {
+        "requirementId": "REQ-136",
+        "text": "A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.",
+        "cases": 1,
+        "automated": 1,
+        "executed": 1,
+        "failed": 0,
+        "status": "executed - passing"
+      },
+      {
+        "requirementId": "REQ-137",
+        "text": "A cancellation e-mail that cannot be sent does not undo the cancellation.",
+        "cases": 1,
+        "automated": 1,
+        "executed": 1,
+        "failed": 0,
+        "status": "executed - passing"
+      },
+      {
+        "requirementId": "REQ-138",
+        "text": "Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation.",
+        "cases": 1,
+        "automated": 0,
+        "executed": 0,
+        "failed": 0,
+        "status": "designed only (manual)"
       }
     ],
     "attributes": {
@@ -7167,7 +8102,12 @@
             "TC-F-114",
             "TC-F-131",
             "TC-F-132",
-            "TC-F-133"
+            "TC-F-133",
+            "TC-F-134",
+            "TC-F-135",
+            "TC-F-136",
+            "TC-F-138",
+            "TC-F-139"
           ],
           "status": "exercised - passing"
         },
@@ -7195,7 +8135,9 @@
           "description": "Where the confirmation e-mail goes",
           "cases": [
             "TC-N-003",
-            "TC-F-090"
+            "TC-F-090",
+            "TC-F-137",
+            "TC-F-139"
           ],
           "status": "exercised - passing"
         },
@@ -7229,17 +8171,17 @@
       ]
     },
     "totals": {
-      "requirements": 132,
-      "designed": 120,
-      "automated": 60,
-      "executed": 60,
-      "passing": 59
+      "requirements": 138,
+      "designed": 126,
+      "automated": 65,
+      "executed": 65,
+      "passing": 64
     },
     "percent": {
-      "designed": 90.9,
-      "automated": 45.5,
-      "executed": 45.5,
-      "passing": 44.7
+      "designed": 91.3,
+      "automated": 47.1,
+      "executed": 47.1,
+      "passing": 46.4
     }
   },
   "traceability": {
@@ -7294,7 +8236,7 @@
           "AQPI-23",
           "AQPI-27"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "issue, epic",
         "requirementId": "REQ-009",
         "requirement": "All child user stories meet their acceptance criteria and the Definition of Done.",
         "requirementStatus": "unchanged",
@@ -7320,10 +8262,10 @@
           "AQPI-23",
           "AQPI-27"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "issue, epic",
         "requirementId": "REQ-010",
         "requirement": "Negative and error paths for each story are tested and evidenced.",
-        "requirementStatus": "carried over",
+        "requirementStatus": "unchanged",
         "ruleId": "BR-010",
         "testCaseKey": "TC-F-004",
         "testCase": "Verify: Negative and error paths for each story are tested and evidenced",
@@ -7346,7 +8288,7 @@
           "AQPI-23",
           "AQPI-27"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "issue, epic",
         "requirementId": "REQ-011",
         "requirement": "Required logging is in place and verified free of sensitive data.",
         "requirementStatus": "unchanged",
@@ -7372,10 +8314,10 @@
           "AQPI-23",
           "AQPI-27"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "issue, epic",
         "requirementId": "REQ-012",
         "requirement": "The Product Owner has accepted the capability end to end.",
-        "requirementStatus": "carried over",
+        "requirementStatus": "unchanged",
         "ruleId": "BR-012",
         "testCaseKey": "TC-F-006",
         "testCase": "Verify: The Product Owner has accepted the capability end to end",
@@ -9012,10 +9954,10 @@
         "jiraKeys": [
           "AQPI-24"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-090",
         "requirement": "The message contains guest-safe confirmation details, hotel information, stay dates, booked items, pricing summary, and applicable policy information.",
-        "requirementStatus": "carried over",
+        "requirementStatus": "unchanged",
         "ruleId": "BR-090",
         "testCaseKey": "TC-F-085",
         "testCase": "The confirmation e-mail matches the booking and contains no payment token",
@@ -9032,10 +9974,10 @@
         "jiraKeys": [
           "AQPI-24"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-091",
         "requirement": "The message content matches the confirmed reservation state.",
-        "requirementStatus": "carried over",
+        "requirementStatus": "unchanged",
         "ruleId": "BR-091",
         "testCaseKey": "TC-F-086",
         "testCase": "The confirmation e-mail matches the booking and contains no payment token",
@@ -9052,10 +9994,10 @@
         "jiraKeys": [
           "AQPI-24"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-093",
         "requirement": "Only necessary personal data may be included.",
-        "requirementStatus": "carried over",
+        "requirementStatus": "unchanged",
         "ruleId": "BR-093",
         "testCaseKey": "TC-F-087",
         "testCase": "Verify: Only necessary personal data may be included",
@@ -9072,10 +10014,10 @@
         "jiraKeys": [
           "AQPI-24"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-094",
         "requirement": "Sensitive payment details must not appear.",
-        "requirementStatus": "carried over",
+        "requirementStatus": "unchanged",
         "ruleId": "BR-094",
         "testCaseKey": "TC-F-088",
         "testCase": "The confirmation e-mail matches the booking and contains no payment token",
@@ -9092,10 +10034,10 @@
         "jiraKeys": [
           "AQPI-25"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-095",
         "requirement": "A successful reservation creates one confirmation-email request.",
-        "requirementStatus": "carried over",
+        "requirementStatus": "unchanged",
         "ruleId": "BR-095",
         "testCaseKey": "TC-F-089",
         "testCase": "Verify: A successful reservation creates one confirmation-email request",
@@ -9112,10 +10054,10 @@
         "jiraKeys": [
           "AQPI-25"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-096",
         "requirement": "Send failure does not reverse a valid reservation.",
-        "requirementStatus": "carried over",
+        "requirementStatus": "unchanged",
         "ruleId": "BR-096",
         "testCaseKey": "TC-F-090",
         "testCase": "When the e-mail cannot be sent the booking stays confirmed",
@@ -9132,7 +10074,7 @@
         "jiraKeys": [
           "AQPI-25"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-097",
         "requirement": "Permitted retries avoid duplicate or excessive messages.",
         "requirementStatus": "carried over",
@@ -9152,10 +10094,10 @@
         "jiraKeys": [
           "AQPI-25"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-098",
         "requirement": "Operational users can distinguish queued, sent, delivered, bounced, and failed states when supported by the provider.",
-        "requirementStatus": "carried over",
+        "requirementStatus": "unchanged",
         "ruleId": "BR-098",
         "testCaseKey": "TC-F-092",
         "testCase": "Verify: Operational users can distinguish queued, sent, delivered, bounced, and failed states when supported by the provider",
@@ -9172,10 +10114,10 @@
         "jiraKeys": [
           "AQPI-25"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-099",
         "requirement": "Email addresses must be masked outside authorized operational views.",
-        "requirementStatus": "carried over",
+        "requirementStatus": "unchanged",
         "ruleId": "BR-099",
         "testCaseKey": "TC-F-093",
         "testCase": "Verify: Email addresses must be masked outside authorized operational views",
@@ -9192,10 +10134,10 @@
         "jiraKeys": [
           "AQPI-26"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-100",
         "requirement": "The request verifies sufficient reservation information without exposing data.",
-        "requirementStatus": "carried over",
+        "requirementStatus": "unchanged",
         "ruleId": "BR-100",
         "testCaseKey": "TC-F-094",
         "testCase": "A resend with the wrong last name gets the same answer as a correct one",
@@ -9212,10 +10154,10 @@
         "jiraKeys": [
           "AQPI-26"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-101",
         "requirement": "Rate limits and abuse controls apply.",
-        "requirementStatus": "carried over",
+        "requirementStatus": "unchanged",
         "ruleId": "BR-101",
         "testCaseKey": "TC-F-095",
         "testCase": "Verify: Rate limits and abuse controls apply",
@@ -9232,10 +10174,10 @@
         "jiraKeys": [
           "AQPI-26"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-102",
         "requirement": "The resend creates a new message event without creating a new reservation.",
-        "requirementStatus": "carried over",
+        "requirementStatus": "unchanged",
         "ruleId": "BR-102",
         "testCaseKey": "TC-F-096",
         "testCase": "Verify: The resend creates a new message event without creating a new reservation",
@@ -9956,7 +10898,7 @@
         ],
         "jiraLevel": "story",
         "requirementId": "REQ-131",
-        "requirement": "A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
+        "requirement": "A confirmed reservation on a refundable rate can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
         "requirementStatus": "new",
         "ruleId": "BR-131",
         "testCaseKey": "TC-F-131",
@@ -9976,7 +10918,7 @@
         ],
         "jiraLevel": "story",
         "requirementId": "REQ-131",
-        "requirement": "A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
+        "requirement": "A confirmed reservation on a refundable rate can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
         "requirementStatus": "new",
         "ruleId": "BR-131",
         "testCaseKey": "TC-F-132",
@@ -10007,6 +10949,146 @@
         "testDataId": "TD-F-133",
         "scriptFile": "br-132-cancellation-outcome.spec.js",
         "result": "passed",
+        "defects": [],
+        "jiraDefects": []
+      },
+      {
+        "jiraKeys": [
+          "AQPI-36"
+        ],
+        "jiraLevel": "story",
+        "requirementId": "REQ-133",
+        "requirement": "A reservation on a non-refundable rate cannot be cancelled free of charge and stays confirmed.",
+        "requirementStatus": "new",
+        "ruleId": "BR-133",
+        "testCaseKey": "TC-F-134",
+        "testCase": "A non-refundable booking cannot be cancelled free of charge",
+        "testType": "functional",
+        "automation": "Automated",
+        "caseStatus": "new",
+        "testDataId": "TD-F-134",
+        "scriptFile": "br-133-non-refundable-cancellation.spec.js",
+        "result": "passed",
+        "defects": [],
+        "jiraDefects": []
+      },
+      {
+        "jiraKeys": [
+          "AQPI-24"
+        ],
+        "jiraLevel": "story",
+        "requirementId": "REQ-134",
+        "requirement": "The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.",
+        "requirementStatus": "new",
+        "ruleId": "BR-134",
+        "testCaseKey": "TC-F-135",
+        "testCase": "The confirmation of a flexible booking states free cancellation until 48 hours before check-in",
+        "testType": "functional",
+        "automation": "Automated",
+        "caseStatus": "new",
+        "testDataId": "TD-F-135",
+        "scriptFile": "br-134-cancellation-deadline-email.spec.js",
+        "result": "passed",
+        "defects": [],
+        "jiraDefects": []
+      },
+      {
+        "jiraKeys": [
+          "AQPI-24"
+        ],
+        "jiraLevel": "story",
+        "requirementId": "REQ-134",
+        "requirement": "The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.",
+        "requirementStatus": "new",
+        "ruleId": "BR-134",
+        "testCaseKey": "TC-F-136",
+        "testCase": "The confirmation of a non-refundable booking states no free-cancellation deadline",
+        "testType": "functional",
+        "automation": "Automated",
+        "caseStatus": "new",
+        "testDataId": "TD-F-136",
+        "scriptFile": "br-134-cancellation-deadline-email.spec.js",
+        "result": "passed",
+        "defects": [],
+        "jiraDefects": []
+      },
+      {
+        "jiraKeys": [
+          "AQPI-25"
+        ],
+        "jiraLevel": "story",
+        "requirementId": "REQ-135",
+        "requirement": "Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.",
+        "requirementStatus": "new",
+        "ruleId": "BR-135",
+        "testCaseKey": "TC-F-137",
+        "testCase": "Operations can retry a failed confirmation e-mail 3 times; retry 4 is refused",
+        "testType": "functional",
+        "automation": "Automated",
+        "caseStatus": "new",
+        "testDataId": "TD-F-137",
+        "scriptFile": "br-135-ops-retry-limit.spec.js",
+        "result": "passed",
+        "defects": [],
+        "jiraDefects": []
+      },
+      {
+        "jiraKeys": [
+          "AQPI-37"
+        ],
+        "jiraLevel": "story",
+        "requirementId": "REQ-136",
+        "requirement": "A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.",
+        "requirementStatus": "new",
+        "ruleId": "BR-136",
+        "testCaseKey": "TC-F-138",
+        "testCase": "A cancelled booking gets one cancellation e-mail, even when cancelled twice",
+        "testType": "functional",
+        "automation": "Automated",
+        "caseStatus": "new",
+        "testDataId": "TD-F-138",
+        "scriptFile": "br-136-cancellation-email.spec.js",
+        "result": "passed",
+        "defects": [],
+        "jiraDefects": []
+      },
+      {
+        "jiraKeys": [
+          "AQPI-37"
+        ],
+        "jiraLevel": "story",
+        "requirementId": "REQ-137",
+        "requirement": "A cancellation e-mail that cannot be sent does not undo the cancellation.",
+        "requirementStatus": "new",
+        "ruleId": "BR-137",
+        "testCaseKey": "TC-F-139",
+        "testCase": "When the cancellation e-mail cannot be sent the booking stays cancelled",
+        "testType": "functional",
+        "automation": "Automated",
+        "caseStatus": "new",
+        "testDataId": "TD-F-139",
+        "scriptFile": "br-137-cancellation-email-failure.spec.js",
+        "result": "passed",
+        "defects": [],
+        "jiraDefects": []
+      },
+      {
+        "jiraKeys": [
+          "AQPI-37"
+        ],
+        "jiraLevel": "story",
+        "requirementId": "REQ-138",
+        "requirement": "Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation.",
+        "requirementStatus": "new",
+        "ruleId": "BR-138",
+        "testCaseKey": "TC-F-140",
+        "testCase": "Verify: Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation",
+        "testType": "functional",
+        "automation": "Not automated",
+        "caseStatus": "new",
+        "testDataId": "TD-F-140",
+        "scriptFile": null,
+        "result": "not-run",
         "defects": [],
         "jiraDefects": []
       }
@@ -10071,52 +11153,117 @@
         "level": "story",
         "parent": "AQPI-32",
         "summary": "10.4 Cancel a reservation free of charge",
-        "requirements": 2,
+        "requirements": 3,
+        "testCases": 4,
+        "automated": 4,
+        "passed": 4,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-23",
+        "level": "epic",
+        "parent": null,
+        "summary": "[Epic 6] Confirmation and Notifications",
+        "requirements": 4,
+        "testCases": 4,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "designed, not executed"
+      },
+      {
+        "key": "AQPI-24",
+        "level": "story",
+        "parent": "AQPI-23",
+        "summary": "8.1 Generate confirmation message",
+        "requirements": 5,
+        "testCases": 6,
+        "automated": 5,
+        "passed": 5,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-25",
+        "level": "story",
+        "parent": "AQPI-23",
+        "summary": "8.2 Send and track confirmation email",
+        "requirements": 6,
+        "testCases": 6,
+        "automated": 2,
+        "passed": 2,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-26",
+        "level": "story",
+        "parent": "AQPI-23",
+        "summary": "8.3 Resend confirmation safely",
+        "requirements": 3,
         "testCases": 3,
-        "automated": 3,
-        "passed": 3,
+        "automated": 1,
+        "passed": 1,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-37",
+        "level": "story",
+        "parent": "AQPI-23",
+        "summary": "8.4 Send a cancellation e-mail",
+        "requirements": 3,
+        "testCases": 3,
+        "automated": 2,
+        "passed": 2,
         "failed": 0,
         "defects": [],
         "status": "verified"
       }
     ],
     "totals": {
-      "jiraItems": 5,
-      "covered": 5,
-      "verified": 3,
+      "jiraItems": 10,
+      "covered": 10,
+      "verified": 7,
       "failing": 1,
-      "testCases": 137,
-      "withData": 137,
-      "withScript": 77,
-      "executed": 77
+      "testCases": 144,
+      "withData": 144,
+      "withScript": 83,
+      "executed": 83
     }
   },
   "approvals": [
     {
       "gate": "Requirement set review",
       "by": "Priya Shah",
-      "at": "2026-10-02T19:28:01.166Z",
+      "at": "2026-10-02T19:44:22.405Z",
       "decision": "approved",
       "comment": "",
-      "detail": "13 requirements approved; 0 excluded; 0 conflict(s) resolved"
+      "detail": "33 requirements approved; 0 excluded; 0 conflict(s) resolved"
     },
     {
       "gate": "Merge into baseline",
       "by": "Sam Lee",
-      "at": "2026-10-02T19:28:01.200Z",
+      "at": "2026-10-02T19:44:22.445Z",
       "decision": "approved",
       "comment": "",
-      "detail": "7 requirements, 11 test cases, 5 scripts merged: BL-1 v1 -> v2"
+      "detail": "13 requirements, 18 test cases, 10 scripts merged: BL-1 v1 -> v2"
     }
   ],
   "narrative": {
-    "text": "Hotel booking release 2.0 (AQPI-32) (incremental) worked from Jira epic AQPI-32 (Jira export on GitHub), Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (5bd7164) (pulled live from GitHub). The reviewed requirement set holds 132 requirements (6 unchanged · 3 enhanced · 4 new). 137 test cases are designed, 77 of them automated in 60 Playwright scripts. Execution ran 77 automated cases for real: 76 passed and 1 failed (pass rate 98.7%). 1 defect(s) were raised from real failures: DEF-001 A 15-night stay in Paris is rejected: returns 200 instead of 400.",
+    "text": "Hotel booking release 2.0 (AQPI-32 + AQPI-23) (incremental) worked from Jira epic AQPI-32, AQPI-23 (Jira export on GitHub), Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (24215dc) (pulled live from GitHub). The reviewed requirement set holds 138 requirements (20 unchanged · 3 enhanced · 10 new). 144 test cases are designed, 83 of them automated in 65 Playwright scripts. Execution ran 83 automated cases for real: 82 passed and 1 failed (pass rate 98.8%). 1 defect(s) were raised from real failures: DEF-001 A 15-night stay in Paris is rejected: returns 200 instead of 400.",
     "draftedBy": "Deterministic template (demo mode - no model API key set)"
   },
   "honesty": [
-    "Jira epic AQPI-32: Jira export on GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export): Jira REST API v3 JSON of AQPI-32, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
-    "Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (5bd7164): Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (5bd7164) at 2026-10-02T19:27:56.968Z",
-    "Execution: 77 automated cases really executed by Playwright 1.63.0 (headless Chromium, JSON reporter) against Hotel booking platform release 2.0, six Spring Boot services built from branch demo/hotel-booking-platform-v2 (demo/hotel-booking-platform-v2); 60 manual case(s) designed but not executed.",
+    "Jira epic AQPI-32, AQPI-23: Jira export on GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export, release-2.0 snapshot): Jira REST API v3 JSON of AQPI-32, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
+    "Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (24215dc): Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (24215dc) at 2026-10-02T19:44:12.281Z",
+    "Execution: 83 automated cases really executed by Playwright 1.63.0 (headless Chromium, JSON reporter) against Hotel booking platform release 2.0, six Spring Boot services built from branch demo/hotel-booking-platform-v2 (demo/hotel-booking-platform-v2); 61 manual case(s) designed but not executed.",
     "Normalisation, delta classification, coverage, pass/fail and defect raising are computed in code, not by a model."
   ]
 }

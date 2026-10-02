@@ -9,6 +9,7 @@ const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, 'demo-inputs');
 const jira = (f) => JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures', 'jira', f), 'utf8'));
 const epicWithStories = (...keys) => ({ issues: keys.flatMap((key) => [jira(`${key}.json`), ...jira(`${key}.children.json`).issues]) });
+const RELEASE_2 = (...keys) => epicWithStories(...keys.map((k) => `release-2.0/${k}`));
 const HOTEL_EPICS = ['AQPI-2', 'AQPI-6', 'AQPI-10', 'AQPI-14', 'AQPI-18', 'AQPI-23', 'AQPI-27'];
 const codebaseNotes = (branch) => loadCodebaseFixture(branch).files.map((f) => `# ${f.path}\n${f.text}`).join('\n\n');
 
@@ -19,7 +20,7 @@ const FLOWS = [
     ['03-codebase-hotel-booking-platform.md', 'codebase', () => codebaseNotes('demo/hotel-booking-platform')],
   ] },
   { dir: 'flow-2-hotel-release-2', branch: 'demo/hotel-booking-platform-v2', files: [
-    ['01-jira-epic-AQPI-32.json', 'epic', () => epicWithStories('AQPI-32')],
+    ['01-jira-epics-AQPI-32-AQPI-23.json', 'epic', () => RELEASE_2('AQPI-32', 'AQPI-23')],
     ['02-codebase-hotel-booking-platform-v2.md', 'codebase', () => codebaseNotes('demo/hotel-booking-platform-v2')],
   ] },
 ];

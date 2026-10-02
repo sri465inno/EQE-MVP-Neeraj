@@ -1,6 +1,6 @@
 # Agentic QE Platform - demo artifacts
 
-Generated 2026-10-02T19:28:14.811Z by `node scripts/export-demo-artifacts.js`. Every cycle was run end to end; the Playwright results are real runs against the system under test.
+Generated 2026-10-02T19:44:35.604Z by `node scripts/export-demo-artifacts.js`. Every cycle was run end to end; the Playwright results are real runs against the system under test.
 
 ## Flow 1: hotel booking platform (AQPI)
 
@@ -12,13 +12,13 @@ Inputs: the AQPI-1 initiative, its 7 epics and 23 stories (Jira REST v3 export o
 | CYC-2 | baseline · regression | 128 | 137 | 58 | 74/74 | 100% | 0 |
 | CYC-3 | baseline · e2e | 128 | 8 | 7 | 8/8 | 100% | 0 |
 
-## Flow 2: hotel booking release 2.0 (AQPI-32)
+## Flow 2: hotel booking release 2.0 (AQPI-32 + AQPI-23)
 
-Inputs: the AQPI-32 "Release 2.0" epic and its stories AQPI-33 to AQPI-36 and the release 2.0 codebase on branch `demo/hotel-booking-platform-v2`, added on top of the functional baseline CYC-1. Changed: cart hold 30 -> 20 minutes, Paris stay 21 -> 14 nights, resends 3 -> 5. New: free cancellation up to 48 hours before check-in. The merge was approved before execution; the cases ran against the six release 2.0 services. The one real defect: release 2.0 still accepts a 15-night Paris stay.
+Inputs: Epic 8 AQPI-32 "Release 2.0" with stories AQPI-33 to AQPI-36, Epic 6 AQPI-23 "Confirmation and Notifications" as revised for release 2.0 (AQPI-24 and AQPI-25 changed, AQPI-26 unchanged, AQPI-37 new; Jira export snapshot `release-2.0`) and the release 2.0 codebase on branch `demo/hotel-booking-platform-v2`, added on top of the functional baseline CYC-1. Changed: cart hold 30 -> 20 minutes, Paris stay 21 -> 14 nights, resends 3 -> 5, ops e-mail retries 2 -> 3, the confirmation of a refundable booking states its free-cancellation deadline. New: free cancellation up to 48 hours before check-in and a cancellation e-mail. The merge was approved before execution; the cases ran against the six release 2.0 services. The one real defect: release 2.0 still accepts a 15-night Paris stay.
 
 | Cycle | Mode · testing | Requirements | Test cases | Scripts | Passed | Pass rate | Defects |
 |---|---|---|---|---|---|---|---|
-| CYC-4 | incremental · regression | 132 | 137 | 60 | 76/77 | 98.7% | 1 |
+| CYC-4 | incremental · regression | 138 | 144 | 65 | 82/83 | 98.8% | 1 |
 
 Each cycle folder's README is its QE lead report: inputs taken, how the cycle was run, artifacts produced, risks, a go/no-go recommendation and sign-off.
 

@@ -1,16 +1,16 @@
 {
   "request": {
     "method": "GET",
-    "url": "http://127.0.0.1:44017/api/searches/S-fbb5ce6b/results?size=2",
+    "url": "http://127.0.0.1:33597/api/searches/S-1b426ee7/results?size=2",
     "headers": {},
     "data": null
   },
   "response": {
     "status": 200,
-    "correlationId": "36f773de-d519-4c40-80d5-9d53a6f1fae2",
+    "correlationId": "adc7191d-4bab-472f-bb9c-5db5104777ea",
     "body": {
-      "searchId": "S-fbb5ce6b",
-      "sessionId": "06910791-cd72-4d5b-99d0-1d2885ba9a2a",
+      "searchId": "S-1b426ee7",
+      "sessionId": "47fca1ad-6dc1-40df-86c2-2efe24eb5733",
       "status": "RESULTS",
       "criteria": {
         "destination": "NYC",

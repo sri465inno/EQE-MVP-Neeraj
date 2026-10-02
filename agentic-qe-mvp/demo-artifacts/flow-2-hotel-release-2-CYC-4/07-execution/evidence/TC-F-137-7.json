@@ -1,0 +1,20 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "http://127.0.0.1:43065/api/ops/messages/M-1926640c/retry",
+    "headers": {},
+    "data": {}
+  },
+  "response": {
+    "status": 409,
+    "correlationId": "84853ddd-eeb2-48fd-aec1-81a8af118314",
+    "body": {
+      "status": 409,
+      "code": "RETRY_LIMIT_REACHED",
+      "message": "This message has reached its retry limit.",
+      "correlationId": "84853ddd-eeb2-48fd-aec1-81a8af118314",
+      "retryable": false,
+      "fieldIssues": []
+    }
+  }
+}

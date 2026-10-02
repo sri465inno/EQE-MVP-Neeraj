@@ -24,7 +24,7 @@ const INTAKE_STAGES = ['ingest', 'normalise', 'review-agent', 'review', 'delta',
 
 const INPUT_TYPES = [
   { id: 'jira-initiative', name: 'Jira initiative', mvp: 'implemented', note: 'Business capability scope (AQPI-1)', about: 'The business capability and its goals, as written in Jira.', reads: 'Scope, objectives and the business rules stated at initiative level.', usedBy: ['requirements', 'rules'] },
-  { id: 'jira-epic', name: 'Jira epic (+ child stories)', mvp: 'implemented', note: 'Acceptance criteria per epic (AQPI-2 to AQPI-27; AQPI-32 for release 2.0)', about: 'A slice of that capability with its stories and acceptance criteria.', reads: 'Acceptance criteria and expected values for each story.', usedBy: ['requirements', 'rules', 'testcases'] },
+  { id: 'jira-epic', name: 'Jira epic (+ child stories)', mvp: 'implemented', note: 'Acceptance criteria per epic (AQPI-2 to AQPI-27; AQPI-32 + revised AQPI-23 for release 2.0)', about: 'A slice of that capability with its stories and acceptance criteria.', reads: 'Acceptance criteria and expected values for each story.', usedBy: ['requirements', 'rules', 'testcases'] },
   { id: 'codebase', name: 'Codebase (GitHub branch)', mvp: 'implemented', note: 'README, TRACEABILITY, @rule config notes and the booking data dictionary', about: 'The application source for the capability.', reads: 'The rules as actually implemented, source comments and README notes.', usedBy: ['requirements', 'rules', 'testdata', 'scripts'] },
   { id: 'data-model', name: 'Data model / data dictionary', mvp: 'via codebase', note: 'Read from data-dictionary/ in the codebase input; not a separate input', about: 'The fields a record carries, with types and allowed values.', reads: 'Attributes, allowed values and example data for test data.', usedBy: ['testcases', 'scripts'] },
   { id: 'confluence', name: 'Confluence / BRD / FRD documents', mvp: 'platform only', about: 'Business and functional requirement documents.', reads: 'Narrative rules, definitions and worked examples.', usedBy: ['requirements', 'rules'] },
@@ -39,7 +39,7 @@ const DEMO = {
   capability: 'Guest hotel booking from search to confirmation (AQPI-1)',
   system: 'Hotel booking platform: six Java 21 Spring Boot WebFlux services (search, hotel, offer, cart, reservation, notification)',
   flow1: 'AQPI-1 initiative + 7 epics (AQPI-2 to AQPI-27) with 23 stories + codebase branch demo/hotel-booking-platform (release 1.0). Functional, Regression and End-to-end cycles build the hotel baseline.',
-  flow2: 'AQPI-32 epic (stories AQPI-33 to AQPI-36) + codebase branch demo/hotel-booking-platform-v2 (release 2.0). Changed: cart hold 30 -> 20 minutes, Paris stay 21 -> 14 nights, resends 3 -> 5. New: free cancellation up to 48 hours before check-in. Real defect: release 2.0 still accepts a 15-night Paris stay.',
+  flow2: 'Epic 8 AQPI-32 (stories AQPI-33 to AQPI-36) + Epic 6 AQPI-23 as revised for release 2.0 (AQPI-24 to AQPI-26, new AQPI-37) + codebase branch demo/hotel-booking-platform-v2 (release 2.0). Changed: cart hold 30 -> 20 minutes, Paris stay 21 -> 14 nights, resends 3 -> 5, ops e-mail retries 2 -> 3, confirmation states the free-cancellation deadline. New: free cancellation up to 48 hours before check-in, cancellation e-mail. Real defect: release 2.0 still accepts a 15-night Paris stay.',
 };
 
 // Demo examples a presenter can run. The example decides the inputs; the cycle mode (baseline or
@@ -48,10 +48,10 @@ const DEMO_EXAMPLES = [
   {
     id: 'hotel', flow: 1, name: 'Hotel booking platform (AQPI)', short: 'Hotel booking',
     system: DEMO.system,
-    about: 'Flow 1: AQPI-1 initiative + its 7 epics and 23 stories + the Java codebase on demo/hotel-booking-platform (release 1.0). Flow 2: AQPI-32 "Release 2.0" epic and its 4 stories + demo/hotel-booking-platform-v2, added on top of the hotel baseline. Functional runs the API cases, Regression adds the privacy, security and resilience cases, End-to-end runs the guest journeys from search to the confirmation e-mail.',
+    about: 'Flow 1: AQPI-1 initiative + its 7 epics and 23 stories + the Java codebase on demo/hotel-booking-platform (release 1.0). Flow 2: Epic 8 AQPI-32 "Release 2.0" and its 4 stories + Epic 6 AQPI-23 "Confirmation and Notifications" as revised for release 2.0 (AQPI-24, AQPI-25 changed, AQPI-37 new) + demo/hotel-booking-platform-v2, added on top of the hotel baseline. Functional runs the API cases, Regression adds the privacy, security and resilience cases, End-to-end runs the guest journeys from search to the confirmation e-mail.',
     modes: ['baseline', 'incremental'],
     testingTypes: ['functional', 'regression', 'e2e'],
-    samples: { initiative: 'AQPI-1', epic: 'AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27', incrementalEpic: 'AQPI-32', baselineBranch: 'demo/hotel-booking-platform', incrementalBranch: 'demo/hotel-booking-platform-v2' },
+    samples: { initiative: 'AQPI-1', epic: 'AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27', incrementalEpic: 'AQPI-32, AQPI-23', incrementalSnapshot: 'release-2.0', baselineBranch: 'demo/hotel-booking-platform', incrementalBranch: 'demo/hotel-booking-platform-v2' },
   },
 ];
 

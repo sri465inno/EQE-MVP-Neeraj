@@ -18,7 +18,7 @@
       "system": "jira",
       "label": "Jira export on GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export): Jira REST API v3 JSON of AQPI-1, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
       "ref": "AQPI-1",
-      "fetchedAt": "2026-10-02T19:27:06.443Z",
+      "fetchedAt": "2026-10-02T19:43:33.037Z",
       "files": [
         "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/AQPI-1.json"
       ]
@@ -197,7 +197,7 @@
       "system": "jira",
       "label": "Jira export on GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export): Jira REST API v3 JSON of AQPI-2, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
       "ref": "AQPI-2",
-      "fetchedAt": "2026-10-02T19:27:06.721Z",
+      "fetchedAt": "2026-10-02T19:43:33.314Z",
       "files": [
         "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/AQPI-2.json",
         "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/AQPI-2.children.json"
@@ -212,9 +212,9 @@
     "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef)",
     "provenance": {
       "kind": "github",
-      "label": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef) at 2026-10-02T19:27:08.844Z",
+      "label": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef) at 2026-10-02T19:43:34.707Z",
       "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef)",
-      "fetchedAt": "2026-10-02T19:27:08.844Z",
+      "fetchedAt": "2026-10-02T19:43:34.707Z",
       "files": [
         "README.md",
         "TRACEABILITY.md",

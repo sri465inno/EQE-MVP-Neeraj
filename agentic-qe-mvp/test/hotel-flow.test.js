@@ -87,20 +87,22 @@ test('meta lists only the hotel booking example: release 1.0 for Flow 1 and rele
     assert.equal(meta.platform.examples.length, 1);
     const [hotel] = meta.platform.examples;
     assert.deepEqual([hotel.id, hotel.flow, hotel.modes], ['hotel', 1, ['baseline', 'incremental']]);
-    assert.deepEqual(hotel.samples, { initiative: 'AQPI-1', epic: EPICS, incrementalEpic: 'AQPI-32', baselineBranch: HOTEL, incrementalBranch: HOTEL_V2 });
+    assert.deepEqual(hotel.samples, { initiative: 'AQPI-1', epic: EPICS, incrementalEpic: 'AQPI-32, AQPI-23', incrementalSnapshot: 'release-2.0', baselineBranch: HOTEL, incrementalBranch: HOTEL_V2 });
     assert.deepEqual(hotel.testingTypes, ['functional', 'regression', 'e2e']);
     assert.deepEqual(meta.samples, hotel.samples);
     assert.doesNotMatch(JSON.stringify(meta), /commission|COM-\d/i);
   } finally { server.close(); }
 });
 
-test('Flow 2 reads AQPI-32 and its four stories against the release 2.0 codebase and its own data dictionary', async () => {
+test('Flow 2 reads AQPI-32, the revised AQPI-23 and their stories against the release 2.0 codebase and its own data dictionary', async () => {
   const { pipeline } = createApp({ dataDir: tmpDir('hotel-v2'), env: {} });
   const c1 = await pipeline.startCycle({ type: 'baseline', inputs: HOTEL_INPUTS });
   const v2 = loadCodebaseFixture(HOTEL_V2);
   assert.equal(v2.compare.baseBranch, HOTEL);
   assert.equal(domainOf(HOTEL_V2).id, 'hotel');
   assert.deepEqual(jira('AQPI-32.children').issues.map((i) => i.key).sort(), ['AQPI-33', 'AQPI-34', 'AQPI-35', 'AQPI-36']);
+  assert.deepEqual(jira('release-2.0/AQPI-23.children').issues.map((i) => i.key).sort(), ['AQPI-24', 'AQPI-25', 'AQPI-26', 'AQPI-37']);
+  assert.deepEqual(jira('AQPI-23.children').issues.map((i) => i.key).sort(), ['AQPI-24', 'AQPI-25', 'AQPI-26']);
   const dict = pipeline.dictionaryOf({ id: 'CYC-V2', sutBuild: HOTEL_V2 });
   assert.match(dict.source, /build demo\/hotel-booking-platform-v2/);
   assert.match(dict.dictionary.attributes.find((a) => a.name === 'stay.nights').description, /PAR allows at most 14/);
@@ -127,6 +129,14 @@ test('Flow 2: release 2.0 adds to the hotel baseline, waits for merge approval, 
   const done = store.getCycle(c2.id);
   assert.equal(done.status, 'completed');
   assert.match(done.artifacts.execution.sut.name, /release 2\.0.*demo\/hotel-booking-platform-v2/);
+  const epic = done.inputs.find((i) => i.slot === 'epic');
+  assert.deepEqual(epic.hierarchy.map((h) => h.key), ['AQPI-32', 'AQPI-23']);
+  assert.ok(epic.hierarchy[1].children.some((c) => c.key === 'AQPI-37'));
+  const epic6 = ['The confirmation of a flexible booking states free cancellation until 48 hours before check-in',
+    'Operations can retry a failed confirmation e-mail 3 times; retry 4 is refused',
+    'A cancelled booking gets one cancellation e-mail, even when cancelled twice',
+    'When the cancellation e-mail cannot be sent the booking stays cancelled'];
+  for (const name of epic6) assert.equal(done.artifacts.execution.results.find((r) => r.name === name)?.status, 'passed', name);
   const failed = done.artifacts.execution.results.filter((r) => r.status === 'failed');
   assert.deepEqual(failed.map((r) => r.name), ['A 15-night stay in Paris is rejected']);
   assert.deepEqual(done.artifacts.defects.map((d) => d.title), ['A 15-night stay in Paris is rejected: returns 200 instead of 400']);

@@ -207,7 +207,7 @@
       "signature": "24 hours | 5"
     },
     {
-      "text": "A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
+      "text": "A confirmed reservation on a refundable rate can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
       "source": "jira",
       "input": "epic",
       "origin": {
@@ -216,7 +216,7 @@
         "summary": "10.4 Cancel a reservation free of charge",
         "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-36"
       },
-      "quote": "A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
+      "quote": "A confirmed reservation on a refundable rate can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
       "id": "J8",
       "tokens": [
         "before",
@@ -227,6 +227,8 @@
         "confirmed",
         "free",
         "later",
+        "rate",
+        "refundable",
         "refused",
         "reservation",
         "stay",
@@ -268,6 +270,614 @@
       "signature": ""
     },
     {
+      "text": "A reservation on a non-refundable rate cannot be cancelled free of charge and stays confirmed.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-story",
+        "ref": "AQPI-36",
+        "summary": "10.4 Cancel a reservation free of charge",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-36"
+      },
+      "quote": "A reservation on a non-refundable rate cannot be cancelled free of charge and stays confirmed.",
+      "id": "J10",
+      "tokens": [
+        "cancelled",
+        "cannot",
+        "charge",
+        "confirmed",
+        "free",
+        "non",
+        "rate",
+        "refundable",
+        "reservation",
+        "stay"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "All child user stories meet their acceptance criteria and the Definition of Done.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-epic",
+        "ref": "AQPI-23",
+        "summary": "[Epic 6] Confirmation and Notifications",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-23"
+      },
+      "quote": "All child user stories meet their acceptance criteria and the Definition of Done.",
+      "id": "J11",
+      "tokens": [
+        "acceptance",
+        "child",
+        "criteria",
+        "definition",
+        "done",
+        "meet",
+        "story",
+        "user"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "Negative and error paths for each story are tested and evidenced.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-epic",
+        "ref": "AQPI-23",
+        "summary": "[Epic 6] Confirmation and Notifications",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-23"
+      },
+      "quote": "Negative and error paths for each story are tested and evidenced.",
+      "id": "J12",
+      "tokens": [
+        "error",
+        "evidenced",
+        "negative",
+        "path",
+        "story",
+        "tested"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "Required logging is in place and verified free of sensitive data.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-epic",
+        "ref": "AQPI-23",
+        "summary": "[Epic 6] Confirmation and Notifications",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-23"
+      },
+      "quote": "Required logging is in place and verified free of sensitive data.",
+      "id": "J13",
+      "tokens": [
+        "data",
+        "free",
+        "logging",
+        "required",
+        "sensitive",
+        "verified"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "The Product Owner has accepted the capability end to end.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-epic",
+        "ref": "AQPI-23",
+        "summary": "[Epic 6] Confirmation and Notifications",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-23"
+      },
+      "quote": "The Product Owner has accepted the capability end to end.",
+      "id": "J14",
+      "tokens": [
+        "accepted",
+        "capability",
+        "end",
+        "owner",
+        "product"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "The message contains guest-safe confirmation details, hotel information, stay dates, booked items, pricing summary, and applicable policy information.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-story",
+        "ref": "AQPI-24",
+        "summary": "8.1 Generate confirmation message",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24"
+      },
+      "quote": "The message contains guest-safe confirmation details, hotel information, stay dates, booked items, pricing summary, and applicable policy information.",
+      "id": "J15",
+      "tokens": [
+        "applicable",
+        "booked",
+        "confirmation",
+        "contain",
+        "date",
+        "detail",
+        "guest",
+        "hotel",
+        "information",
+        "item",
+        "message",
+        "policy",
+        "pricing",
+        "safe",
+        "stay",
+        "summary"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "The message content matches the confirmed reservation state.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-story",
+        "ref": "AQPI-24",
+        "summary": "8.1 Generate confirmation message",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24"
+      },
+      "quote": "The message content matches the confirmed reservation state.",
+      "id": "J16",
+      "tokens": [
+        "confirmed",
+        "content",
+        "matche",
+        "message",
+        "reservation",
+        "state"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "Templates support required locale and accessibility standards.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-story",
+        "ref": "AQPI-24",
+        "summary": "8.1 Generate confirmation message",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24"
+      },
+      "quote": "Templates support required locale and accessibility standards.",
+      "id": "J17",
+      "tokens": [
+        "accessibility",
+        "locale",
+        "required",
+        "standard",
+        "support",
+        "template"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-story",
+        "ref": "AQPI-24",
+        "summary": "8.1 Generate confirmation message",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24"
+      },
+      "quote": "The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.",
+      "id": "J18",
+      "tokens": [
+        "before",
+        "booking",
+        "cancellation",
+        "check",
+        "confirmation",
+        "deadline",
+        "e",
+        "free",
+        "mail",
+        "refundable",
+        "state"
+      ],
+      "values": [
+        {
+          "num": 48,
+          "unit": "hours",
+          "raw": "48 hours"
+        }
+      ],
+      "signature": "48 hours"
+    },
+    {
+      "text": "Only necessary personal data may be included.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-story",
+        "ref": "AQPI-24",
+        "summary": "8.1 Generate confirmation message",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24"
+      },
+      "quote": "Only necessary personal data may be included.",
+      "id": "J19",
+      "tokens": [
+        "data",
+        "included",
+        "necessary",
+        "only",
+        "personal"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "Sensitive payment details must not appear.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-story",
+        "ref": "AQPI-24",
+        "summary": "8.1 Generate confirmation message",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24"
+      },
+      "quote": "Sensitive payment details must not appear.",
+      "id": "J20",
+      "tokens": [
+        "appear",
+        "detail",
+        "not",
+        "payment",
+        "sensitive"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "A successful reservation creates one confirmation-email request.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-story",
+        "ref": "AQPI-25",
+        "summary": "8.2 Send and track confirmation email",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25"
+      },
+      "quote": "A successful reservation creates one confirmation-email request.",
+      "id": "J21",
+      "tokens": [
+        "confirmation",
+        "create",
+        "email",
+        "one",
+        "request",
+        "reservation",
+        "successful"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "Send failure does not reverse a valid reservation.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-story",
+        "ref": "AQPI-25",
+        "summary": "8.2 Send and track confirmation email",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25"
+      },
+      "quote": "Send failure does not reverse a valid reservation.",
+      "id": "J22",
+      "tokens": [
+        "failure",
+        "not",
+        "reservation",
+        "reverse",
+        "send",
+        "valid"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-story",
+        "ref": "AQPI-25",
+        "summary": "8.2 Send and track confirmation email",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25"
+      },
+      "quote": "Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.",
+      "id": "J23",
+      "tokens": [
+        "confirmation",
+        "e",
+        "failed",
+        "further",
+        "mail",
+        "most",
+        "operation",
+        "refused",
+        "retry",
+        "time"
+      ],
+      "values": [
+        {
+          "num": 3,
+          "unit": "",
+          "raw": "3"
+        }
+      ],
+      "signature": "3"
+    },
+    {
+      "text": "Operational users can distinguish queued, sent, delivered, bounced, and failed states when supported by the provider.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-story",
+        "ref": "AQPI-25",
+        "summary": "8.2 Send and track confirmation email",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25"
+      },
+      "quote": "Operational users can distinguish queued, sent, delivered, bounced, and failed states when supported by the provider.",
+      "id": "J24",
+      "tokens": [
+        "bounced",
+        "delivered",
+        "distinguish",
+        "failed",
+        "operational",
+        "provider",
+        "queued",
+        "sent",
+        "state",
+        "supported",
+        "user"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "Email addresses must be masked outside authorized operational views.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-story",
+        "ref": "AQPI-25",
+        "summary": "8.2 Send and track confirmation email",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25"
+      },
+      "quote": "Email addresses must be masked outside authorized operational views.",
+      "id": "J25",
+      "tokens": [
+        "addresse",
+        "authorized",
+        "email",
+        "masked",
+        "operational",
+        "outside",
+        "view"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "The request verifies sufficient reservation information without exposing data.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-story",
+        "ref": "AQPI-26",
+        "summary": "8.3 Resend confirmation safely",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-26"
+      },
+      "quote": "The request verifies sufficient reservation information without exposing data.",
+      "id": "J26",
+      "tokens": [
+        "data",
+        "exposing",
+        "information",
+        "request",
+        "reservation",
+        "sufficient",
+        "verify",
+        "without"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "Rate limits and abuse controls apply.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-story",
+        "ref": "AQPI-26",
+        "summary": "8.3 Resend confirmation safely",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-26"
+      },
+      "quote": "Rate limits and abuse controls apply.",
+      "id": "J27",
+      "tokens": [
+        "abuse",
+        "apply",
+        "control",
+        "limit",
+        "rate"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "The resend creates a new message event without creating a new reservation.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-story",
+        "ref": "AQPI-26",
+        "summary": "8.3 Resend confirmation safely",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-26"
+      },
+      "quote": "The resend creates a new message event without creating a new reservation.",
+      "id": "J28",
+      "tokens": [
+        "create",
+        "creating",
+        "event",
+        "message",
+        "new",
+        "resend",
+        "reservation",
+        "without"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-story",
+        "ref": "AQPI-37",
+        "summary": "8.4 Send a cancellation e-mail",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37"
+      },
+      "quote": "A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.",
+      "id": "J29",
+      "tokens": [
+        "again",
+        "another",
+        "cancellation",
+        "cancelled",
+        "cancelling",
+        "e",
+        "get",
+        "mail",
+        "not",
+        "one",
+        "reservation",
+        "send"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "A cancellation e-mail that cannot be sent does not undo the cancellation.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-story",
+        "ref": "AQPI-37",
+        "summary": "8.4 Send a cancellation e-mail",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37"
+      },
+      "quote": "A cancellation e-mail that cannot be sent does not undo the cancellation.",
+      "id": "J30",
+      "tokens": [
+        "cancellation",
+        "cannot",
+        "e",
+        "mail",
+        "not",
+        "sent",
+        "undo"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-story",
+        "ref": "AQPI-37",
+        "summary": "8.4 Send a cancellation e-mail",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37"
+      },
+      "quote": "Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation.",
+      "id": "J31",
+      "tokens": [
+        "cancellation",
+        "confirmation",
+        "delivery",
+        "e",
+        "mail",
+        "operational",
+        "own",
+        "see",
+        "separate",
+        "state",
+        "user"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "Email addresses must be masked outside authorized operational views.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-story",
+        "ref": "AQPI-37",
+        "summary": "8.4 Send a cancellation e-mail",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37"
+      },
+      "quote": "Email addresses must be masked outside authorized operational views.",
+      "id": "J32",
+      "tokens": [
+        "addresse",
+        "authorized",
+        "email",
+        "masked",
+        "operational",
+        "outside",
+        "view"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "Sensitive payment details must not appear.",
+      "source": "jira",
+      "input": "epic",
+      "origin": {
+        "kind": "jira-story",
+        "ref": "AQPI-37",
+        "summary": "8.4 Send a cancellation e-mail",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37"
+      },
+      "quote": "Sensitive payment details must not appear.",
+      "id": "J33",
+      "tokens": [
+        "appear",
+        "detail",
+        "not",
+        "payment",
+        "sensitive"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
       "text": "A cart expires 20 minutes after it is created and never creates a reservation itself.",
       "source": "code",
       "input": "codebase",
@@ -275,7 +885,7 @@
         "kind": "code-source",
         "ref": "cart-service/src/main/resources/cart-service.yml",
         "line": 16,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/cart-service/src/main/resources/cart-service.yml"
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/cart-service/src/main/resources/cart-service.yml"
       },
       "quote": "# @rule A cart expires 20 minutes after it is created and never creates a reservation itself.",
       "id": "C1",
@@ -307,7 +917,7 @@
         "kind": "code-source",
         "ref": "cart-service/src/main/resources/cart-service.yml",
         "line": 17,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/cart-service/src/main/resources/cart-service.yml"
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/cart-service/src/main/resources/cart-service.yml"
       },
       "quote": "# @rule A price change of more than 1% must be acknowledged by the guest before checkout.",
       "id": "C2",
@@ -336,7 +946,7 @@
         "kind": "code-source",
         "ref": "notification-service/src/main/resources/notification-service.yml",
         "line": 7,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/notification-service/src/main/resources/notification-service.yml"
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/notification-service/src/main/resources/notification-service.yml"
       },
       "quote": "# @rule A confirmation can be resent at most 5 times per booking in 24 hours.",
       "id": "C3",
@@ -362,6 +972,126 @@
       "signature": "24 hours | 5"
     },
     {
+      "text": "Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.",
+      "source": "code",
+      "input": "codebase",
+      "origin": {
+        "kind": "code-source",
+        "ref": "notification-service/src/main/resources/notification-service.yml",
+        "line": 14,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/notification-service/src/main/resources/notification-service.yml"
+      },
+      "quote": "# @rule Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.",
+      "id": "C4",
+      "tokens": [
+        "confirmation",
+        "e",
+        "failed",
+        "further",
+        "mail",
+        "most",
+        "operation",
+        "refused",
+        "retry",
+        "time"
+      ],
+      "values": [
+        {
+          "num": 3,
+          "unit": "",
+          "raw": "3"
+        }
+      ],
+      "signature": "3"
+    },
+    {
+      "text": "The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.",
+      "source": "code",
+      "input": "codebase",
+      "origin": {
+        "kind": "code-source",
+        "ref": "notification-service/src/main/resources/notification-service.yml",
+        "line": 16,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/notification-service/src/main/resources/notification-service.yml"
+      },
+      "quote": "# @rule The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.",
+      "id": "C5",
+      "tokens": [
+        "before",
+        "booking",
+        "cancellation",
+        "check",
+        "confirmation",
+        "deadline",
+        "e",
+        "free",
+        "mail",
+        "refundable",
+        "state"
+      ],
+      "values": [
+        {
+          "num": 48,
+          "unit": "hours",
+          "raw": "48 hours"
+        }
+      ],
+      "signature": "48 hours"
+    },
+    {
+      "text": "A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.",
+      "source": "code",
+      "input": "codebase",
+      "origin": {
+        "kind": "code-source",
+        "ref": "notification-service/src/main/resources/notification-service.yml",
+        "line": 18,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/notification-service/src/main/resources/notification-service.yml"
+      },
+      "quote": "# @rule A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.",
+      "id": "C6",
+      "tokens": [
+        "again",
+        "another",
+        "cancellation",
+        "cancelled",
+        "cancelling",
+        "e",
+        "get",
+        "mail",
+        "not",
+        "one",
+        "reservation",
+        "send"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
+      "text": "A cancellation e-mail that cannot be sent does not undo the cancellation.",
+      "source": "code",
+      "input": "codebase",
+      "origin": {
+        "kind": "code-source",
+        "ref": "notification-service/src/main/resources/notification-service.yml",
+        "line": 19,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/notification-service/src/main/resources/notification-service.yml"
+      },
+      "quote": "# @rule A cancellation e-mail that cannot be sent does not undo the cancellation.",
+      "id": "C7",
+      "tokens": [
+        "cancellation",
+        "cannot",
+        "e",
+        "mail",
+        "not",
+        "sent",
+        "undo"
+      ],
+      "values": [],
+      "signature": ""
+    },
+    {
       "text": "Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.",
       "source": "code",
       "input": "codebase",
@@ -369,10 +1099,10 @@
         "kind": "code-source",
         "ref": "reservation-service/src/main/resources/reservation-service.yml",
         "line": 20,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/reservation-service/src/main/resources/reservation-service.yml"
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/reservation-service/src/main/resources/reservation-service.yml"
       },
       "quote": "# @rule Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.",
-      "id": "C4",
+      "id": "C8",
       "tokens": [
         "character",
         "idempotency",
@@ -412,10 +1142,10 @@
         "kind": "code-source",
         "ref": "reservation-service/src/main/resources/reservation-service.yml",
         "line": 22,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/reservation-service/src/main/resources/reservation-service.yml"
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/reservation-service/src/main/resources/reservation-service.yml"
       },
       "quote": "# @rule A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
-      "id": "C5",
+      "id": "C9",
       "tokens": [
         "before",
         "cancellation",
@@ -447,10 +1177,10 @@
         "kind": "code-source",
         "ref": "reservation-service/src/main/resources/reservation-service.yml",
         "line": 23,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/reservation-service/src/main/resources/reservation-service.yml"
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/reservation-service/src/main/resources/reservation-service.yml"
       },
       "quote": "# @rule A cancelled reservation shows status CANCELLED, its payment authorisation is voided and its rooms are released.",
-      "id": "C6",
+      "id": "C10",
       "tokens": [
         "authorisation",
         "cancelled",
@@ -473,10 +1203,10 @@
         "kind": "code-source",
         "ref": "search-service/src/main/resources/search-service.yml",
         "line": 12,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/search-service/src/main/resources/search-service.yml"
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/search-service/src/main/resources/search-service.yml"
       },
       "quote": "# @rule A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.",
-      "id": "C7",
+      "id": "C11",
       "tokens": [
         "allow",
         "most",
@@ -506,10 +1236,10 @@
         "kind": "code-source",
         "ref": "search-service/src/main/resources/search-service.yml",
         "line": 13,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/search-service/src/main/resources/search-service.yml"
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/search-service/src/main/resources/search-service.yml"
       },
       "quote": "# @rule Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.",
-      "id": "C8",
+      "id": "C12",
       "tokens": [
         "adult",
         "book",
@@ -552,10 +1282,10 @@
         "kind": "code-source",
         "ref": "search-service/src/main/resources/search-service.yml",
         "line": 14,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/search-service/src/main/resources/search-service.yml"
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/search-service/src/main/resources/search-service.yml"
       },
       "quote": "# @rule Check-in can be at most 500 days ahead.",
-      "id": "C9",
+      "id": "C13",
       "tokens": [
         "ahead",
         "check",
@@ -590,12 +1320,14 @@
             "jira"
           ],
           "members": [
-            "J1"
+            "J1",
+            "J11"
           ]
         }
       ],
       "members": [
-        "J1"
+        "J1",
+        "J11"
       ]
     },
     {
@@ -648,12 +1380,14 @@
             "jira"
           ],
           "members": [
-            "J3"
+            "J3",
+            "J13"
           ]
         }
       ],
       "members": [
-        "J3"
+        "J3",
+        "J13"
       ]
     },
     {
@@ -756,13 +1490,13 @@
           ],
           "members": [
             "J6",
-            "C7"
+            "C11"
           ]
         }
       ],
       "members": [
         "J6",
-        "C7"
+        "C11"
       ]
     },
     {
@@ -809,8 +1543,8 @@
     {
       "id": "G8",
       "bucket": "agreed",
-      "subject": "before cancellation cancelled charge check confirmed free later refused reservation stay up",
-      "text": "A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
+      "subject": "before cancellation cancelled charge check confirmed free later rate refundable refused reservation stay up",
+      "text": "A confirmed reservation on a refundable rate can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
       "sources": [
         "code",
         "jira"
@@ -826,20 +1560,20 @@
               "raw": "48 hours"
             }
           ],
-          "text": "A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
+          "text": "A confirmed reservation on a refundable rate can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
           "sources": [
             "jira",
             "code"
           ],
           "members": [
             "J8",
-            "C5"
+            "C9"
           ]
         }
       ],
       "members": [
         "J8",
-        "C5"
+        "C9"
       ]
     },
     {
@@ -863,17 +1597,569 @@
           ],
           "members": [
             "J9",
-            "C6"
+            "C10"
           ]
         }
       ],
       "members": [
         "J9",
-        "C6"
+        "C10"
       ]
     },
     {
       "id": "G10",
+      "bucket": "jira-only",
+      "subject": "cancelled cannot charge confirmed free non rate refundable reservation stay",
+      "text": "A reservation on a non-refundable rate cannot be cancelled free of charge and stays confirmed.",
+      "sources": [
+        "jira"
+      ],
+      "options": [
+        {
+          "optionId": "O1",
+          "signature": "",
+          "values": [],
+          "text": "A reservation on a non-refundable rate cannot be cancelled free of charge and stays confirmed.",
+          "sources": [
+            "jira"
+          ],
+          "members": [
+            "J10"
+          ]
+        }
+      ],
+      "members": [
+        "J10"
+      ]
+    },
+    {
+      "id": "G11",
+      "bucket": "jira-only",
+      "subject": "error evidenced negative path story tested",
+      "text": "Negative and error paths for each story are tested and evidenced.",
+      "sources": [
+        "jira"
+      ],
+      "options": [
+        {
+          "optionId": "O1",
+          "signature": "",
+          "values": [],
+          "text": "Negative and error paths for each story are tested and evidenced.",
+          "sources": [
+            "jira"
+          ],
+          "members": [
+            "J12"
+          ]
+        }
+      ],
+      "members": [
+        "J12"
+      ]
+    },
+    {
+      "id": "G12",
+      "bucket": "jira-only",
+      "subject": "accepted capability end owner product",
+      "text": "The Product Owner has accepted the capability end to end.",
+      "sources": [
+        "jira"
+      ],
+      "options": [
+        {
+          "optionId": "O1",
+          "signature": "",
+          "values": [],
+          "text": "The Product Owner has accepted the capability end to end.",
+          "sources": [
+            "jira"
+          ],
+          "members": [
+            "J14"
+          ]
+        }
+      ],
+      "members": [
+        "J14"
+      ]
+    },
+    {
+      "id": "G13",
+      "bucket": "jira-only",
+      "subject": "applicable booked confirmation contain date detail guest hotel information item message policy pricing safe stay summary",
+      "text": "The message contains guest-safe confirmation details, hotel information, stay dates, booked items, pricing summary, and applicable policy information.",
+      "sources": [
+        "jira"
+      ],
+      "options": [
+        {
+          "optionId": "O1",
+          "signature": "",
+          "values": [],
+          "text": "The message contains guest-safe confirmation details, hotel information, stay dates, booked items, pricing summary, and applicable policy information.",
+          "sources": [
+            "jira"
+          ],
+          "members": [
+            "J15"
+          ]
+        }
+      ],
+      "members": [
+        "J15"
+      ]
+    },
+    {
+      "id": "G14",
+      "bucket": "jira-only",
+      "subject": "confirmed content matche message reservation state",
+      "text": "The message content matches the confirmed reservation state.",
+      "sources": [
+        "jira"
+      ],
+      "options": [
+        {
+          "optionId": "O1",
+          "signature": "",
+          "values": [],
+          "text": "The message content matches the confirmed reservation state.",
+          "sources": [
+            "jira"
+          ],
+          "members": [
+            "J16"
+          ]
+        }
+      ],
+      "members": [
+        "J16"
+      ]
+    },
+    {
+      "id": "G15",
+      "bucket": "jira-only",
+      "subject": "accessibility locale required standard support template",
+      "text": "Templates support required locale and accessibility standards.",
+      "sources": [
+        "jira"
+      ],
+      "options": [
+        {
+          "optionId": "O1",
+          "signature": "",
+          "values": [],
+          "text": "Templates support required locale and accessibility standards.",
+          "sources": [
+            "jira"
+          ],
+          "members": [
+            "J17"
+          ]
+        }
+      ],
+      "members": [
+        "J17"
+      ]
+    },
+    {
+      "id": "G16",
+      "bucket": "agreed",
+      "subject": "before booking cancellation check confirmation deadline e free mail refundable state",
+      "text": "The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.",
+      "sources": [
+        "code",
+        "jira"
+      ],
+      "options": [
+        {
+          "optionId": "O1",
+          "signature": "48 hours",
+          "values": [
+            {
+              "num": 48,
+              "unit": "hours",
+              "raw": "48 hours"
+            }
+          ],
+          "text": "The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.",
+          "sources": [
+            "jira",
+            "code"
+          ],
+          "members": [
+            "J18",
+            "C5"
+          ]
+        }
+      ],
+      "members": [
+        "J18",
+        "C5"
+      ]
+    },
+    {
+      "id": "G17",
+      "bucket": "jira-only",
+      "subject": "data included necessary only personal",
+      "text": "Only necessary personal data may be included.",
+      "sources": [
+        "jira"
+      ],
+      "options": [
+        {
+          "optionId": "O1",
+          "signature": "",
+          "values": [],
+          "text": "Only necessary personal data may be included.",
+          "sources": [
+            "jira"
+          ],
+          "members": [
+            "J19"
+          ]
+        }
+      ],
+      "members": [
+        "J19"
+      ]
+    },
+    {
+      "id": "G18",
+      "bucket": "jira-only",
+      "subject": "appear detail not payment sensitive",
+      "text": "Sensitive payment details must not appear.",
+      "sources": [
+        "jira"
+      ],
+      "options": [
+        {
+          "optionId": "O1",
+          "signature": "",
+          "values": [],
+          "text": "Sensitive payment details must not appear.",
+          "sources": [
+            "jira"
+          ],
+          "members": [
+            "J20",
+            "J33"
+          ]
+        }
+      ],
+      "members": [
+        "J20",
+        "J33"
+      ]
+    },
+    {
+      "id": "G19",
+      "bucket": "jira-only",
+      "subject": "confirmation create email one request reservation successful",
+      "text": "A successful reservation creates one confirmation-email request.",
+      "sources": [
+        "jira"
+      ],
+      "options": [
+        {
+          "optionId": "O1",
+          "signature": "",
+          "values": [],
+          "text": "A successful reservation creates one confirmation-email request.",
+          "sources": [
+            "jira"
+          ],
+          "members": [
+            "J21"
+          ]
+        }
+      ],
+      "members": [
+        "J21"
+      ]
+    },
+    {
+      "id": "G20",
+      "bucket": "jira-only",
+      "subject": "failure not reservation reverse send valid",
+      "text": "Send failure does not reverse a valid reservation.",
+      "sources": [
+        "jira"
+      ],
+      "options": [
+        {
+          "optionId": "O1",
+          "signature": "",
+          "values": [],
+          "text": "Send failure does not reverse a valid reservation.",
+          "sources": [
+            "jira"
+          ],
+          "members": [
+            "J22"
+          ]
+        }
+      ],
+      "members": [
+        "J22"
+      ]
+    },
+    {
+      "id": "G21",
+      "bucket": "agreed",
+      "subject": "confirmation e failed further mail most operation refused retry time",
+      "text": "Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.",
+      "sources": [
+        "code",
+        "jira"
+      ],
+      "options": [
+        {
+          "optionId": "O1",
+          "signature": "3",
+          "values": [
+            {
+              "num": 3,
+              "unit": "",
+              "raw": "3"
+            }
+          ],
+          "text": "Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.",
+          "sources": [
+            "jira",
+            "code"
+          ],
+          "members": [
+            "J23",
+            "C4"
+          ]
+        }
+      ],
+      "members": [
+        "J23",
+        "C4"
+      ]
+    },
+    {
+      "id": "G22",
+      "bucket": "jira-only",
+      "subject": "bounced delivered distinguish failed operational provider queued sent state supported user",
+      "text": "Operational users can distinguish queued, sent, delivered, bounced, and failed states when supported by the provider.",
+      "sources": [
+        "jira"
+      ],
+      "options": [
+        {
+          "optionId": "O1",
+          "signature": "",
+          "values": [],
+          "text": "Operational users can distinguish queued, sent, delivered, bounced, and failed states when supported by the provider.",
+          "sources": [
+            "jira"
+          ],
+          "members": [
+            "J24"
+          ]
+        }
+      ],
+      "members": [
+        "J24"
+      ]
+    },
+    {
+      "id": "G23",
+      "bucket": "jira-only",
+      "subject": "addresse authorized email masked operational outside view",
+      "text": "Email addresses must be masked outside authorized operational views.",
+      "sources": [
+        "jira"
+      ],
+      "options": [
+        {
+          "optionId": "O1",
+          "signature": "",
+          "values": [],
+          "text": "Email addresses must be masked outside authorized operational views.",
+          "sources": [
+            "jira"
+          ],
+          "members": [
+            "J25",
+            "J32"
+          ]
+        }
+      ],
+      "members": [
+        "J25",
+        "J32"
+      ]
+    },
+    {
+      "id": "G24",
+      "bucket": "jira-only",
+      "subject": "data exposing information request reservation sufficient verify without",
+      "text": "The request verifies sufficient reservation information without exposing data.",
+      "sources": [
+        "jira"
+      ],
+      "options": [
+        {
+          "optionId": "O1",
+          "signature": "",
+          "values": [],
+          "text": "The request verifies sufficient reservation information without exposing data.",
+          "sources": [
+            "jira"
+          ],
+          "members": [
+            "J26"
+          ]
+        }
+      ],
+      "members": [
+        "J26"
+      ]
+    },
+    {
+      "id": "G25",
+      "bucket": "jira-only",
+      "subject": "abuse apply control limit rate",
+      "text": "Rate limits and abuse controls apply.",
+      "sources": [
+        "jira"
+      ],
+      "options": [
+        {
+          "optionId": "O1",
+          "signature": "",
+          "values": [],
+          "text": "Rate limits and abuse controls apply.",
+          "sources": [
+            "jira"
+          ],
+          "members": [
+            "J27"
+          ]
+        }
+      ],
+      "members": [
+        "J27"
+      ]
+    },
+    {
+      "id": "G26",
+      "bucket": "jira-only",
+      "subject": "create creating event message new resend reservation without",
+      "text": "The resend creates a new message event without creating a new reservation.",
+      "sources": [
+        "jira"
+      ],
+      "options": [
+        {
+          "optionId": "O1",
+          "signature": "",
+          "values": [],
+          "text": "The resend creates a new message event without creating a new reservation.",
+          "sources": [
+            "jira"
+          ],
+          "members": [
+            "J28"
+          ]
+        }
+      ],
+      "members": [
+        "J28"
+      ]
+    },
+    {
+      "id": "G27",
+      "bucket": "agreed",
+      "subject": "again another cancellation cancelled cancelling e get mail not one reservation send",
+      "text": "A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.",
+      "sources": [
+        "code",
+        "jira"
+      ],
+      "options": [
+        {
+          "optionId": "O1",
+          "signature": "",
+          "values": [],
+          "text": "A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.",
+          "sources": [
+            "jira",
+            "code"
+          ],
+          "members": [
+            "J29",
+            "C6"
+          ]
+        }
+      ],
+      "members": [
+        "J29",
+        "C6"
+      ]
+    },
+    {
+      "id": "G28",
+      "bucket": "agreed",
+      "subject": "cancellation cannot e mail not sent undo",
+      "text": "A cancellation e-mail that cannot be sent does not undo the cancellation.",
+      "sources": [
+        "code",
+        "jira"
+      ],
+      "options": [
+        {
+          "optionId": "O1",
+          "signature": "",
+          "values": [],
+          "text": "A cancellation e-mail that cannot be sent does not undo the cancellation.",
+          "sources": [
+            "jira",
+            "code"
+          ],
+          "members": [
+            "J30",
+            "C7"
+          ]
+        }
+      ],
+      "members": [
+        "J30",
+        "C7"
+      ]
+    },
+    {
+      "id": "G29",
+      "bucket": "jira-only",
+      "subject": "cancellation confirmation delivery e mail operational own see separate state user",
+      "text": "Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation.",
+      "sources": [
+        "jira"
+      ],
+      "options": [
+        {
+          "optionId": "O1",
+          "signature": "",
+          "values": [],
+          "text": "Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation.",
+          "sources": [
+            "jira"
+          ],
+          "members": [
+            "J31"
+          ]
+        }
+      ],
+      "members": [
+        "J31"
+      ]
+    },
+    {
+      "id": "G30",
       "bucket": "code-only",
       "subject": "acknowledged before change checkout guest price",
       "text": "A price change of more than 1% must be acknowledged by the guest before checkout.",
@@ -905,7 +2191,7 @@
       ]
     },
     {
-      "id": "G11",
+      "id": "G31",
       "bucket": "code-only",
       "subject": "character idempotency key need original outcome replay request reservation return",
       "text": "Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.",
@@ -938,16 +2224,16 @@
             "code"
           ],
           "members": [
-            "C4"
+            "C8"
           ]
         }
       ],
       "members": [
-        "C4"
+        "C8"
       ]
     },
     {
-      "id": "G12",
+      "id": "G32",
       "bucket": "code-only",
       "subject": "adult book children hold most one room search",
       "text": "Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.",
@@ -985,16 +2271,16 @@
             "code"
           ],
           "members": [
-            "C8"
+            "C12"
           ]
         }
       ],
       "members": [
-        "C8"
+        "C12"
       ]
     },
     {
-      "id": "G13",
+      "id": "G33",
       "bucket": "code-only",
       "subject": "ahead check most",
       "text": "Check-in can be at most 500 days ahead.",
@@ -1017,20 +2303,20 @@
             "code"
           ],
           "members": [
-            "C9"
+            "C13"
           ]
         }
       ],
       "members": [
-        "C9"
+        "C13"
       ]
     }
   ],
   "counts": {
-    "statements": 18,
-    "groups": 13,
-    "agreed": 5,
-    "jira-only": 4,
+    "statements": 46,
+    "groups": 33,
+    "agreed": 9,
+    "jira-only": 20,
     "code-only": 4,
     "conflict": 0
   }

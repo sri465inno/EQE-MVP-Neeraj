@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "http://127.0.0.1:35545/api/ops/reconciliation",
+    "url": "http://127.0.0.1:46617/api/ops/reconciliation",
     "headers": {
       "X-Operator-Role": "SUPPORT"
     },
@@ -9,10 +9,10 @@
   },
   "response": {
     "status": 200,
-    "correlationId": "434c126e-8930-443b-8622-ad97828ac86d",
+    "correlationId": "c381a03e-6b9c-48c5-a38e-36fd9e56161e",
     "body": [
       {
-        "reservationId": "R-215f7c73",
+        "reservationId": "R-06f5b287",
         "status": "CONFIRMED",
         "paymentStatus": "AUTHORIZED",
         "inventoryStatus": "COMMITTED",
@@ -28,7 +28,7 @@
         "note": "Booking, payment and inventory agree"
       },
       {
-        "reservationId": "R-0965be9d",
+        "reservationId": "R-e86161a9",
         "status": "PAYMENT_DECLINED",
         "paymentStatus": "DECLINED",
         "inventoryStatus": "NOT_COMMITTED",

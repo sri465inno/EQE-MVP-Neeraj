@@ -362,7 +362,7 @@ function testingTypesDropdown(type, domainId) {
 
 function readSummary(slot, label, st) {
   const where = st.mode === 'paste' ? (st.fileName ? `uploaded file ${st.fileName}` : st.text ? 'pasted text' : 'nothing pasted yet')
-    : slot === 'codebase' ? `${META.codebase.repo} @ ${st.branch}` : st.key;
+    : slot === 'codebase' ? `${META.codebase.repo} @ ${st.branch}` : `${st.key}${st.snapshot && st.mode !== 'jira' ? ` (${st.snapshot} snapshot)` : ''}`;
   const prov = st.mode === 'paste' ? pill('pasted', 'pasted') : st.mode === 'github' ? pill(slot === 'codebase' ? 'pulled live from GitHub' : 'Jira export on GitHub', 'github')
     : st.mode === 'jira' && META.jira.mode === 'live' ? pill('live Jira call', 'live') : pill('recorded fixture', 'fixture');
   return `<li><b>${esc(label)}</b><span class="muted small">${esc(where)}</span>${prov}</li>`;
@@ -401,7 +401,7 @@ async function viewRun(params) {
   for (const [slot, , , sampleKey] of slots) {
     const def = ex.samples[sampleKey];
     const cur = runState.inputs[slot];
-    if (!cur || cur.forType !== forType) runState.inputs[slot] = slot === 'codebase' ? { forType, mode: 'github', branch: def, text: '' } : { forType, mode: META.jira.mode === 'live' ? 'jira' : 'github', key: def, text: '' };
+    if (!cur || cur.forType !== forType) runState.inputs[slot] = slot === 'codebase' ? { forType, mode: 'github', branch: def, text: '' } : { forType, mode: META.jira.mode === 'live' ? 'jira' : 'github', key: def, text: '', snapshot: type === 'incremental' ? ex.samples.incrementalSnapshot : undefined };
   }
   const exampleOption = (e) => `<label class="mode-option"><input type="radio" name="run-example" value="${esc(e.id)}" ${e.id === ex.id ? 'checked' : ''}><span><b>${esc(e.name)}</b><span class="muted">${esc(e.about)}</span></span></label>`;
   const active = slots.filter(([slot]) => !runState.inputsOff.has(`${type}:${slot}`));
@@ -423,7 +423,7 @@ async function viewRun(params) {
     ? `<label class="field">Baseline to add to<select id="baseline">${baselines.map((b) => `<option value="${esc(b.id)}" ${b.id === runState.baselineId ? 'selected' : ''}>${esc(b.id)} v${b.version} - ${esc(b.name)} (${b.counts.requirements} requirements)</option>`).join('')}</select></label>`
     : '<div class="banner">No approved baseline yet. Run Flow 1 first.</div>') : ''}
     ${type === 'baseline'
-    ? `<p class="hint"><b>Demo example.</b> Pick the project whose inputs fill the slots below. Flow 2 adds hotel release 2.0 (AQPI-32) on top of the hotel baseline, so run Flow 1 first.</p>${(META.platform.examples || []).map(exampleOption).join('')}`
+    ? `<p class="hint"><b>Demo example.</b> Pick the project whose inputs fill the slots below. Flow 2 adds hotel release 2.0 (Epic 8 AQPI-32 + revised Epic 6 AQPI-23) on top of the hotel baseline, so run Flow 1 first.</p>${(META.platform.examples || []).map(exampleOption).join('')}`
     : `<p class="hint"><b>Demo example:</b> ${esc(ex.name)}. ${esc(ex.about)}</p>`}
   </div>
   <div class="step-block">

@@ -27,7 +27,7 @@ async function loadInput(slot, spec, opts = {}) {
   const keys = String(spec.key || '').split(/[\s,]+/).filter(Boolean);
   const all = [];
   for (const key of keys.length ? keys : [spec.key]) {
-    all.push(await loadJiraIssue(key, { withChildren: slot === 'epic', source: spec.mode === 'github' ? 'github' : 'jira', ...opts }));
+    all.push(await loadJiraIssue(key, { withChildren: slot === 'epic', source: spec.mode === 'github' ? 'github' : 'jira', snapshot: spec.snapshot || undefined, ...opts }));
   }
   const statements = all.flatMap((loaded) => [loaded.issue, ...loaded.children].flatMap((iss) => x.statementsFromIssue(iss, { baseUrl: loaded.baseUrl, input: slot })));
   const [first] = all;

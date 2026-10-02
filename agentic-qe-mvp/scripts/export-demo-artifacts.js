@@ -1,6 +1,6 @@
 'use strict';
 /* Runs the hotel booking Flow 1 cycles (release 1.0: functional, regression, end-to-end), then the Flow 2 increment
-   (release 2.0, AQPI-32) on the functional baseline, end to end, and writes every artifact to a folder for demos.
+   (release 2.0: Epic 8 AQPI-32 + revised Epic 6 AQPI-23) on the functional baseline, end to end, and writes every artifact to a folder for demos.
    Usage: node scripts/export-demo-artifacts.js [outDir]   (default: demo-artifacts/) */
 const fs = require('fs');
 const os = require('os');
@@ -17,7 +17,7 @@ const REVIEWER = 'Priya Shah';
 const APPROVER = 'Sam Lee';
 const HOTEL_INPUTS = { initiative: { mode: 'github', key: 'AQPI-1' }, epic: { mode: 'github', key: 'AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27' }, codebase: { mode: 'github', branch: 'demo/hotel-booking-platform' } };
 const HOTEL_TESTING_TYPES = [['functional', 'Functional'], ['regression', 'Regression'], ['e2e', 'End-to-end']];
-const INCREMENT_INPUTS = { epic: { mode: 'github', key: 'AQPI-32' }, codebase: { mode: 'github', branch: 'demo/hotel-booking-platform-v2' } };
+const INCREMENT_INPUTS = { epic: { mode: 'github', key: 'AQPI-32, AQPI-23', snapshot: 'release-2.0' }, codebase: { mode: 'github', branch: 'demo/hotel-booking-platform-v2' } };
 
 const json = (f, v) => write(f, `${JSON.stringify(v, null, 2)}\n`);
 function write(f, body) { fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, body); }
@@ -75,7 +75,7 @@ async function main() {
   }
 
   const c1 = hotel.find((h) => h.testingType === 'functional');
-  let c2 = await pipeline.startCycle({ type: 'incremental', name: 'Hotel booking release 2.0 (AQPI-32)', baselineId: c1.baselineId, inputs: INCREMENT_INPUTS, reviewer: REVIEWER });
+  let c2 = await pipeline.startCycle({ type: 'incremental', name: 'Hotel booking release 2.0 (AQPI-32 + AQPI-23)', baselineId: c1.baselineId, inputs: INCREMENT_INPUTS, reviewer: REVIEWER });
   await pipeline.review(c2.id, { reviewer: REVIEWER }).done;
   await pipeline.decideMerge(c2.id, { decision: 'approve', approver: APPROVER }).done;
   c2 = store.getCycle(c2.id);
@@ -97,8 +97,8 @@ async function main() {
     '## Flow 1: hotel booking platform (AQPI)', '',
     'Inputs: the AQPI-1 initiative, its 7 epics and 23 stories (Jira REST v3 export of the AQPI space on GitHub branch `demo/jira-export`) and the Java 21 Spring Boot WebFlux codebase on branch `demo/hotel-booking-platform`. The cases ran against the six real hotel services (search, hotel, offer, cart, reservation, notification) started from their built jars on free local ports. Cases the platform cannot automate against these APIs (for example browser accessibility and measured load targets) are reported as manual, not run.', '',
     mdTable(['Cycle', 'Mode · testing', 'Requirements', 'Test cases', 'Scripts', 'Passed', 'Pass rate', 'Defects'], hotel.map((h, i) => row(h, eh[i]))), '',
-    '## Flow 2: hotel booking release 2.0 (AQPI-32)', '',
-    `Inputs: the AQPI-32 "Release 2.0" epic and its stories AQPI-33 to AQPI-36 and the release 2.0 codebase on branch \`demo/hotel-booking-platform-v2\`, added on top of the functional baseline ${c1.id}. Changed: cart hold 30 -> 20 minutes, Paris stay 21 -> 14 nights, resends 3 -> 5. New: free cancellation up to 48 hours before check-in. The merge was approved before execution; the cases ran against the six release 2.0 services. The one real defect: release 2.0 still accepts a 15-night Paris stay.`, '',
+    '## Flow 2: hotel booking release 2.0 (AQPI-32 + AQPI-23)', '',
+    `Inputs: Epic 8 AQPI-32 "Release 2.0" with stories AQPI-33 to AQPI-36, Epic 6 AQPI-23 "Confirmation and Notifications" as revised for release 2.0 (AQPI-24 and AQPI-25 changed, AQPI-26 unchanged, AQPI-37 new; Jira export snapshot \`release-2.0\`) and the release 2.0 codebase on branch \`demo/hotel-booking-platform-v2\`, added on top of the functional baseline ${c1.id}. Changed: cart hold 30 -> 20 minutes, Paris stay 21 -> 14 nights, resends 3 -> 5, ops e-mail retries 2 -> 3, the confirmation of a refundable booking states its free-cancellation deadline. New: free cancellation up to 48 hours before check-in and a cancellation e-mail. The merge was approved before execution; the cases ran against the six release 2.0 services. The one real defect: release 2.0 still accepts a 15-night Paris stay.`, '',
     mdTable(['Cycle', 'Mode · testing', 'Requirements', 'Test cases', 'Scripts', 'Passed', 'Pass rate', 'Defects'], [row(c2, e2)]), '',
     'Each cycle folder\'s README is its QE lead report: inputs taken, how the cycle was run, artifacts produced, risks, a go/no-go recommendation and sign-off.', '',
     '## Folder layout (per cycle)',
