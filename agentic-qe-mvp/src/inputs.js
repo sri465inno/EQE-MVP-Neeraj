@@ -1,7 +1,7 @@
 'use strict';
 // Loads the inputs of a run into statements with honest provenance.
 const { loadJiraIssue } = require('./connectors/jira');
-const { loadCodebaseFixture, loadCodebaseLive, DEFAULT_BRANCH } = require('./connectors/codebase');
+const { loadCodebaseFixture, loadCodebaseLive, DEFAULT_BRANCH, BRANCHES } = require('./connectors/codebase');
 const x = require('./extract');
 
 const SLOT_LABEL = { initiative: 'Jira initiative', epic: 'Jira epic', codebase: 'Codebase' };
@@ -12,7 +12,7 @@ async function loadInput(slot, spec, opts = {}) {
     if (spec.mode === 'paste') {
       const statements = x.statementsFromPastedCodebase(spec.text, { input: slot });
       return { slot, label: SLOT_LABEL[slot], mode: 'paste', ref: 'pasted README / source notes', statements,
-        provenance: { kind: 'pasted', label: 'Pasted by the user (not fetched from any system)' }, branch: null };
+        provenance: { kind: 'pasted', label: 'Pasted by the user (not fetched from any system)' }, branch: BRANCHES[spec.branch] ? spec.branch : null };
     }
     const branch = spec.branch || DEFAULT_BRANCH;
     const cb = spec.mode === 'github' ? await loadCodebaseLive(branch, { cloneUrl: opts.cloneUrl }) : loadCodebaseFixture(branch);
@@ -24,11 +24,16 @@ async function loadInput(slot, spec, opts = {}) {
     return { slot, label: SLOT_LABEL[slot], mode: 'paste', ref: `pasted ${SLOT_LABEL[slot]}`, statements,
       provenance: { kind: 'pasted', label: 'Pasted by the user (not fetched from any system)' } };
   }
-  const loaded = await loadJiraIssue(spec.key, { withChildren: slot === 'epic', source: spec.mode === 'github' ? 'github' : 'jira', ...opts });
-  const issues = [loaded.issue, ...loaded.children];
-  const statements = issues.flatMap((iss) => x.statementsFromIssue(iss, { baseUrl: loaded.baseUrl, input: slot }));
-  return { slot, label: SLOT_LABEL[slot], mode: spec.mode === 'github' ? 'github' : 'jira', ref: loaded.issue.key, summary: loaded.issue.fields.summary,
-    children: loaded.children.map((c) => c.key), statements, provenance: loaded.provenance };
+  const keys = String(spec.key || '').split(/[\s,]+/).filter(Boolean);
+  const all = [];
+  for (const key of keys.length ? keys : [spec.key]) {
+    all.push(await loadJiraIssue(key, { withChildren: slot === 'epic', source: spec.mode === 'github' ? 'github' : 'jira', ...opts }));
+  }
+  const statements = all.flatMap((loaded) => [loaded.issue, ...loaded.children].flatMap((iss) => x.statementsFromIssue(iss, { baseUrl: loaded.baseUrl, input: slot })));
+  const [first] = all;
+  return { slot, label: SLOT_LABEL[slot], mode: spec.mode === 'github' ? 'github' : 'jira', ref: all.map((l) => l.issue.key).join(', '),
+    summary: all.length > 1 ? `${all.length} epics: ${all.map((l) => l.issue.fields.summary).join('; ')}` : first.issue.fields.summary,
+    children: all.flatMap((l) => l.children.map((c) => c.key)), statements, provenance: first.provenance };
 }
 
 async function loadInputs(specs, slots, opts) {

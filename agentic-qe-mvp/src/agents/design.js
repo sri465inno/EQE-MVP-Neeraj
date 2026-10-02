@@ -2,31 +2,32 @@
 // Design agents, run in a fixed order:
 //   requirements repository -> business rules -> test cases -> automation scripts
 // All structure and decisions are deterministic; the optional model only drafts prose elsewhere.
-const { classify, CATALOGUE, MONEY_KINDS, SPEC_PRELUDE } = require('./catalogue');
+const { DOMAINS, domainOf } = require('./domains');
 const { getTestingType, inRun, suiteOf, SMOKE_SLOTS } = require('../testing-types');
 
 const pad = (n, w = 3) => String(n).padStart(w, '0');
 const clone = (x) => JSON.parse(JSON.stringify(x));
 
-function requirementType(text) {
-  const c = classify(text);
+function requirementType(text, dom) {
+  const c = dom.classify(text);
   if (c?.entry.type) return c.entry.type;
   return /performance|latency|response time|availability|uptime|security|accessib/i.test(text) ? 'non-functional' : 'functional';
 }
 
-function requirementTitle(text) {
-  const c = classify(text);
+function requirementTitle(text, dom) {
+  const c = dom.classify(text);
   if (c) return c.entry.title;
   return text.replace(/[.]$/, '').split(/\s+/).slice(0, 7).join(' ');
 }
 
 function newRequirement(item, id, cycle) {
+  const dom = domainOf(cycle);
   return {
     id,
-    title: requirementTitle(item.text),
+    title: requirementTitle(item.text, dom),
     text: item.text,
     values: item.values,
-    type: requirementType(item.text),
+    type: requirementType(item.text, dom),
     sources: item.sources,
     bucket: item.bucket,
     origins: item.origins,
@@ -50,6 +51,7 @@ function requirementsAgentBaseline(reviewed, { cycle, counters }) {
 
 /** Agent 1 (incremental): baseline requirements carried over, enhanced ones updated, new ones added. */
 function requirementsAgentIncremental(baselineReqs, delta, { cycle, counters }) {
+  const dom = domainOf(cycle);
   const byId = new Map(baselineReqs.map((r) => [r.id, { ...clone(r), status: 'carried over' }]));
   const added = [];
   for (const d of delta.items) {
@@ -60,10 +62,10 @@ function requirementsAgentIncremental(baselineReqs, delta, { cycle, counters }) 
       const old = byId.get(d.baselineRequirementId);
       byId.set(old.id, {
         ...old,
-        title: requirementTitle(d.incoming.text),
+        title: requirementTitle(d.incoming.text, dom),
         text: d.incoming.text,
         values: d.incoming.values,
-        type: requirementType(d.incoming.text),
+        type: requirementType(d.incoming.text, dom),
         sources: d.incoming.sources,
         origins: d.incoming.origins,
         jiraKeys: [...new Set([...old.jiraKeys, ...d.incoming.origins.filter((o) => o.source === 'jira' && /^[A-Z]+-\d+$/.test(o.ref || '')).map((o) => o.ref)])],
@@ -86,13 +88,13 @@ function requirementsAgentIncremental(baselineReqs, delta, { cycle, counters }) 
 const CHANGED = new Set(['new', 'enhanced']);
 
 /** Which requirements need (re-)design: new, enhanced, or depending on the rule of one that changed. */
-function affectedRequirementIds(requirements) {
-  const kindOf = new Map(requirements.map((r) => [r.id, classify(r.text)?.entry.kind || null]));
+function affectedRequirementIds(requirements, dom = DOMAINS.commission) {
+  const kindOf = new Map(requirements.map((r) => [r.id, dom.classify(r.text)?.entry.kind || null]));
   const changedKinds = new Set(requirements.filter((r) => CHANGED.has(r.status)).map((r) => kindOf.get(r.id)).filter(Boolean));
   const out = new Set();
   for (const r of requirements) {
     if (CHANGED.has(r.status)) { out.add(r.id); continue; }
-    const entry = CATALOGUE.find((e) => e.kind === kindOf.get(r.id));
+    const entry = dom.CATALOGUE.find((e) => e.kind === kindOf.get(r.id));
     if (entry?.dependsOn?.some((k) => changedKinds.has(k))) out.add(r.id);
   }
   return out;
@@ -110,12 +112,13 @@ function sourceRefs(req) {
 }
 
 function buildRule(req, id, cycle) {
-  const c = classify(req.text);
+  const dom = domainOf(cycle);
+  const c = dom.classify(req.text);
   return {
     id,
     requirementId: req.id,
     kind: c ? c.entry.kind : 'unclassified',
-    title: c ? c.entry.title : requirementTitle(req.text),
+    title: c ? c.entry.title : requirementTitle(req.text, dom),
     statement: req.text,
     parameters: c ? c.params : Object.fromEntries(req.values.map((v, i) => [`value${i + 1}`, `${v.num}${v.unit ? ' ' + v.unit : ''}`])),
     executable: Boolean(c),
@@ -160,10 +163,12 @@ function caseLabels(type, suite, kind, slot, automated, tt) {
  */
 function designAgents(requirements, { cycle, counters, previous = null, skills = {}, testingType = cycle.testingType }) {
   const tt = getTestingType(testingType);
+  const dom = domainOf(cycle);
+  const { classify, MONEY_KINDS } = dom;
   const used = (agent) => (skills[agent]?.skills || []).map((x) => x.id);
   counters.caseF = counters.caseF || 0;
   counters.caseN = counters.caseN || 0;
-  const affected = previous ? affectedRequirementIds(requirements) : new Set(requirements.map((r) => r.id));
+  const affected = previous ? affectedRequirementIds(requirements, dom) : new Set(requirements.map((r) => r.id));
   const paramsByKind = new Map();
   for (const r of requirements) {
     const c = classify(r.text);
@@ -206,7 +211,7 @@ function designAgents(requirements, { cycle, counters, previous = null, skills =
   };
 
   const writeScript = (req, rule, scriptFile, reqCases, prevScript) => {
-    const code = renderSpec(req, reqCases, { rule, skills: used('scripts'), testingType: tt });
+    const code = renderSpec(req, reqCases, { rule, skills: used('scripts'), testingType: tt, dom });
     const changed = !prevScript || prevScript.code !== code;
     scripts.push({
       file: scriptFile, requirementId: req.id, ruleId: rule.id, designedWith: used('scripts'), covers: reqCases.map((t) => t.key), code,
@@ -300,7 +305,7 @@ function revision(prev, s) {
   return changed.map((f) => `${f} was "${prev[f]}"`).join('; ');
 }
 
-function renderSpec(req, cases, { rule, skills = [], testingType = null } = {}) {
+function renderSpec(req, cases, { rule, skills = [], testingType = null, dom = DOMAINS.commission } = {}) {
   const tests = cases.map((tc) => `test(${JSON.stringify(`${tc.key} ${tc.name}`)}, async ({ ${tc.ui ? 'page, request' : 'request'} }, testInfo) => {
 ${tc.code}
 });`).join('\n\n');
@@ -315,10 +320,10 @@ ${tc.code}
     ...(skills.length ? [`Skills applied: ${skills.join(', ')}`] : []),
   ];
   return `${block.map((l) => `// ${l}`).join('\n')}
-// Self-contained: needs only @playwright/test and a baseURL pointing at the system under test.
+// Self-contained: needs only @playwright/test and ${dom.id === 'hotel' ? 'the hotel service URLs (config metadata.services)' : 'a baseURL pointing at the system under test'}.
 const { test, expect } = require('@playwright/test');
 
-${SPEC_PRELUDE}
+${dom.SPEC_PRELUDE}
 
 ${tests}
 `;

@@ -5,11 +5,14 @@
 // Every candidate case has a suite:
 //   api      functional rule checks through the service API
 //   ui       a browser check of a screen described in the inputs
-//   journey  an end-to-end advisor journey in the browser (store reservation -> statement -> total)
+//   journey  an end-to-end user journey (commission: store reservation -> statement -> total;
+//            hotel: search -> details -> offers -> cart -> payment -> reservation -> confirmation e-mail)
 //   nfr      a non-functional check stated in the inputs (e.g. quote latency)
 //   load     the same non-functional target under concurrent users
 
-const SMOKE_SLOTS = new Set(['base-commission-rate|base', 'reservation-data-dictionary|dictionary', 'commission-statement-ui|ui']);
+const { HOTEL_SMOKE_SLOTS } = require('./agents/hotel-catalogue');
+
+const SMOKE_SLOTS = new Set(['base-commission-rate|base', 'reservation-data-dictionary|dictionary', 'commission-statement-ui|ui', ...HOTEL_SMOKE_SLOTS]);
 
 const TESTING_TYPES = [
   {

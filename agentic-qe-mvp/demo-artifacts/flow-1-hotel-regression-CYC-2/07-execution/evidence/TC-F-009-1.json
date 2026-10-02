@@ -1,0 +1,33 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "http://127.0.0.1:34427/api/searches",
+    "headers": {},
+    "data": {
+      "destination": "NYC",
+      "checkIn": "2026-10-01",
+      "checkOut": "2026-10-04",
+      "rooms": 1,
+      "adults": 2,
+      "children": 0
+    }
+  },
+  "response": {
+    "status": 400,
+    "correlationId": "d74bd287-e4f0-467d-bbce-6139317d0585",
+    "body": {
+      "status": 400,
+      "code": "VALIDATION_FAILED",
+      "message": "Please correct the highlighted search details.",
+      "correlationId": "d74bd287-e4f0-467d-bbce-6139317d0585",
+      "retryable": false,
+      "fieldIssues": [
+        {
+          "field": "checkIn",
+          "ruleId": "checkIn.past",
+          "message": "Check-in date cannot be in the past. Choose today or a later date."
+        }
+      ]
+    }
+  }
+}

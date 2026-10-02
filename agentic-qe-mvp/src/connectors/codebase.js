@@ -1,5 +1,5 @@
 'use strict';
-// Codebase connector. Two sources, same result shape:
+// Codebase connector (Node demo branches and the Maven/Java hotel platform). Two sources, same result shape:
 //  - live: `git clone` of the demo branch from GitHub (sri465inno/uc-agentic-quality-engineering);
 //  - recorded: a snapshot of the same branch stored in GitHub REST API shapes under fixtures/github/<dir>.
 const fs = require('fs');
@@ -13,13 +13,19 @@ const SOURCE = {
   htmlUrl: 'https://github.com/sri465inno/uc-agentic-quality-engineering',
   cloneUrl: 'https://github.com/sri465inno/uc-agentic-quality-engineering.git',
 };
-const BRANCHES = {
-  'demo/commission-engine': { dir: 'commission-engine', compareWith: null },
-  'demo/commission-engine-v2': { dir: 'commission-engine-v2', compareWith: 'demo/commission-engine' },
-};
-const DEFAULT_BRANCH = 'demo/commission-engine';
 const DICTIONARY_FILE = /^data-dictionary\/.+\.json$/;
 const SNAPSHOT_FILE = (p) => p === 'README.md' || p === 'package.json' || /^src\/.+\.js$/.test(p) || DICTIONARY_FILE.test(p);
+// Maven multi-module Java services: build files, main sources and configuration, journey tests and traceability notes.
+const JAVA_SNAPSHOT_FILE = (p) => ['README.md', 'TRACEABILITY.md', 'pom.xml'].includes(p) || DICTIONARY_FILE.test(p)
+  || /^[\w-]+\/pom\.xml$/.test(p) || /^[\w-]+\/src\/main\/java\/.+\.java$/.test(p)
+  || /^[\w-]+\/src\/main\/resources\/[^/]+\.ya?ml$/.test(p) || /^journey-tests\/src\/test\/java\/.+\.java$/.test(p);
+const BRANCHES = {
+  'demo/commission-engine': { dir: 'commission-engine', compareWith: null, snapshot: SNAPSHOT_FILE },
+  'demo/commission-engine-v2': { dir: 'commission-engine-v2', compareWith: 'demo/commission-engine', snapshot: SNAPSHOT_FILE },
+  'demo/hotel-booking-platform': { dir: 'hotel-booking-platform', compareWith: null, snapshot: JAVA_SNAPSHOT_FILE },
+};
+const DEFAULT_BRANCH = 'demo/commission-engine';
+const BUILD_FILES = new Set(['package.json', 'pom.xml']);
 const STATUS = { A: 'added', M: 'modified', D: 'removed', R: 'renamed' };
 
 const decode = (contents) => Buffer.from(contents.content.replace(/\n/g, ''), contents.encoding || 'base64').toString('utf8');
@@ -42,18 +48,37 @@ function summariseDictionary(file) {
   return {
     file: file.path, url: file.url, name: d.name, version: d.version,
     attributeCount: attrs.length, groupCount: (d.groups || []).length,
-    drivers: attrs.filter((a) => a.commissionDriver).map((a) => ({ name: a.name, type: a.type, description: a.description })),
+    drivers: attrs.filter((a) => a.commissionDriver || a.driver).map((a) => ({ name: a.name, type: a.type, description: a.description })),
+  };
+}
+
+const xmlTag = (xml, tag) => (String(xml).replace(/<parent>[\s\S]*?<\/parent>/, '').match(new RegExp(`<${tag}>([^<]*)</${tag}>`)) || [])[1]?.trim() || null;
+
+function mavenDescription(pom) {
+  return xmlTag(pom, 'description') || xmlTag(pom, 'name');
+}
+
+/** Maven coordinates, Java release and modules of a multi-module build. */
+function mavenBuild(pom, files) {
+  const modules = [...String(pom).matchAll(/<module>([^<]+)<\/module>/g)].map((m) => m[1].trim());
+  return {
+    tool: 'maven', groupId: xmlTag(pom, 'groupId'), artifactId: xmlTag(pom, 'artifactId'), version: xmlTag(pom, 'version'),
+    java: xmlTag(pom, 'java.version') || xmlTag(pom, 'maven.compiler.release'),
+    springBoot: (String(pom).match(/<artifactId>spring-boot-starter-parent<\/artifactId>\s*<version>([^<]+)<\/version>/) || [])[1] || null,
+    modules: modules.map((m) => ({ name: m, sources: files.filter((f) => f.path.startsWith(`${m}/`) && f.path.endsWith('.java')).length })),
   };
 }
 
 /** Shared shaping of a snapshot (live or recorded) into what the pipeline consumes. */
 function shapeCodebase({ branch, commit, commitMessage, files, compare, provenance }) {
   const pkg = files.find((f) => f.path === 'package.json');
+  const pom = files.find((f) => f.path === 'pom.xml');
   const dict = files.find((f) => DICTIONARY_FILE.test(f.path));
   return {
     repo: SOURCE.fullName, branch, commit, commitMessage,
-    description: pkg ? JSON.parse(pkg.text).description : null,
-    files: files.filter((f) => f.path !== 'package.json' && !DICTIONARY_FILE.test(f.path)).map(({ path: p, url, text }) => ({ path: p, url, text })),
+    description: pkg ? JSON.parse(pkg.text).description : pom ? mavenDescription(pom.text) : null,
+    build: pom ? mavenBuild(pom.text, files) : pkg ? { tool: 'npm', name: JSON.parse(pkg.text).name } : null,
+    files: files.filter((f) => !BUILD_FILES.has(path.basename(f.path)) && !DICTIONARY_FILE.test(f.path)).map(({ path: p, url, text }) => ({ path: p, url, text })),
     dataModel: dict ? summariseDictionary(dict) : null,
     dictionary: dict ? JSON.parse(dict.text) : null,
     compare, provenance,
@@ -113,7 +138,7 @@ async function pullSnapshot(branchName = DEFAULT_BRANCH, { cloneUrl = SOURCE.clo
     const tree = (await git(['ls-tree', '-r', 'HEAD'], tmp)).trim().split('\n').map((l) => {
       const [meta, p] = l.split('\t');
       return { sha: meta.split(' ')[2], path: p };
-    }).filter((f) => SNAPSHOT_FILE(f.path));
+    }).filter((f) => cfg.snapshot(f.path));
     const files = tree.map((f) => ({ ...f, url: blobUrl(commit, f.path), text: fs.readFileSync(path.join(tmp, f.path), 'utf8') }));
     let compare = null;
     if (cfg.compareWith) {
@@ -144,4 +169,4 @@ async function loadCodebaseLive(branchName = DEFAULT_BRANCH, opts = {}) {
   });
 }
 
-module.exports = { loadCodebaseFixture, loadCodebaseLive, pullSnapshot, listFixtureBranches, shapeCodebase, summariseDictionary, SOURCE, BRANCHES, DEFAULT_BRANCH, SNAPSHOT_FILE };
+module.exports = { loadCodebaseFixture, loadCodebaseLive, pullSnapshot, listFixtureBranches, shapeCodebase, summariseDictionary, SOURCE, BRANCHES, DEFAULT_BRANCH, SNAPSHOT_FILE, JAVA_SNAPSHOT_FILE };

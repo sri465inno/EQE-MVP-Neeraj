@@ -20,11 +20,12 @@ test('the downloadable Flow 1 / Flow 2 inputs in demo-inputs/ match the fixtures
   }
 });
 
-test('Flow 1 run from the downloaded files reads the same statements and conflict as the GitHub pull', async () => {
+test('the commission baseline run from the downloaded files reads the same statements and conflict as the GitHub pull', async () => {
   const { pipeline } = createApp({ dataDir: tmpDir('paste'), env: {} });
   const file = (slot) => {
-    const [name] = FLOWS[0].files.find((f) => f[1] === slot);
-    return { mode: 'paste', text: fs.readFileSync(path.join(DIR, FLOWS[0].dir, name), 'utf8') };
+    const flow = FLOWS.find((f) => f.dir === 'flow-1-baseline');
+    const [name] = flow.files.find((f) => f[1] === slot);
+    return { mode: 'paste', text: fs.readFileSync(path.join(DIR, flow.dir, name), 'utf8') };
   };
   const pasted = await pipeline.startCycle({ type: 'baseline', inputs: { initiative: file('initiative'), epic: file('epic'), codebase: file('codebase') } });
   const pulled = await pipeline.startCycle({ type: 'baseline', inputs: BASELINE_INPUTS });
@@ -41,8 +42,8 @@ test('reset clears every cycle and baseline, restarts ids, and serves the demo i
   const base = `http://127.0.0.1:${server.address().port}`;
   try {
     const list = await (await fetch(`${base}/api/demo-inputs`)).json();
-    assert.deepEqual(list.map((f) => f.flow), ['flow-1-baseline', 'flow-2-incremental']);
-    const dl = await fetch(`${base}${list[0].files[0].url}`);
+    assert.deepEqual(list.map((f) => [f.flow, f.branch]), [['flow-1-hotel-booking', 'demo/hotel-booking-platform'], ['flow-1-baseline', 'demo/commission-engine'], ['flow-2-incremental', 'demo/commission-engine-v2']]);
+    const dl = await fetch(`${base}${list[1].files[0].url}`);
     assert.equal(dl.status, 200);
     assert.match(dl.headers.get('content-disposition'), /attachment/);
     assert.equal((await dl.json()).key, 'COM-1');

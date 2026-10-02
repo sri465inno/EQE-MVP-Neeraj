@@ -1,7 +1,7 @@
 'use strict';
 // Review agent: reads the normalised inputs before the human review and suggests what was added, what is
 // missing and what conflicts. Advisory only - it never approves, excludes or edits anything.
-const { classify, CATALOGUE, MONEY_KINDS } = require('./catalogue');
+const { domainOf } = require('./domains');
 const { getTestingType } = require('../testing-types');
 
 const SOURCE = { jira: 'Jira', code: 'the codebase' };
@@ -14,7 +14,7 @@ function refsOf(group, byId) {
 const groupText = (g) => g.text || g.options[0].text;
 
 /** Attributes the catalogue would vary for the stated rules, so untouched dictionary drivers can be named. */
-function variedAttributes(groups) {
+function variedAttributes(groups, classify) {
   const classified = groups.map((g) => classify(groupText(g))).filter(Boolean);
   const params = new Map();
   for (const c of classified) if (!params.has(c.entry.kind)) params.set(c.entry.kind, c.params);
@@ -29,6 +29,8 @@ function variedAttributes(groups) {
 
 function reviewInputs({ normalisation, inputs = [], testingType, deltaPreview = null, baseline = null }) {
   const tt = getTestingType(testingType);
+  const dom = domainOf(inputs);
+  const { classify, CATALOGUE, MONEY_KINDS } = dom;
   const byId = new Map(normalisation.statements.map((s) => [s.id, s]));
   const groups = normalisation.groups;
   const findings = [];
@@ -76,12 +78,12 @@ function reviewInputs({ normalisation, inputs = [], testingType, deltaPreview = 
 
   const dataModel = inputs.find((i) => i.slot === 'codebase')?.dataModel;
   if (dataModel) {
-    const varied = variedAttributes(groups);
+    const varied = variedAttributes(groups, classify);
     const untouched = dataModel.drivers.filter((d) => !varied.has(d.name));
     if (untouched.length) {
       add({
         category: 'missing', severity: 'medium', groupId: null,
-        title: `${untouched.length} of ${dataModel.drivers.length} commission-driving attributes have no rule that varies them`,
+        title: `${untouched.length} of ${dataModel.drivers.length} ${dom.driversLabel} have no rule that varies them`,
         detail: untouched.map((d) => `${d.name} (${d.description})`).join('; '),
         suggestion: 'Ask for a rule or an example per attribute in the epic; until then no test changes these attributes.',
         sources: [{ source: 'code', ref: dataModel.file, line: null, url: dataModel.url || null, quote: null }],
@@ -91,10 +93,10 @@ function reviewInputs({ normalisation, inputs = [], testingType, deltaPreview = 
 
   const kinds = new Set(groups.map(kindOf).filter(Boolean));
   const missingFor = {
-    performance: !kinds.has('quote-latency') && { title: 'Performance testing was chosen but no input states a response-time target', suggestion: 'Add a target such as "Commission quotes return within 300 ms at the 95th percentile" to the epic or the codebase README.' },
-    e2e: !CATALOGUE.some((e) => e.ui && kinds.has(e.kind)) && { title: 'End-to-end testing was chosen but no input describes the advisor screen', suggestion: 'Add a story for the commission statement screen, so the journeys test a stated requirement.' },
-    smoke: !kinds.has('base-commission-rate') && { title: 'Smoke testing was chosen but no input states the base commission rate', suggestion: 'Add the base rate; the smoke run checks it first.' },
-    functional: !groups.some((g) => classify(groupText(g)) && MONEY_KINDS.has(kindOf(g))) && { title: 'Functional testing was chosen but no input states a commission rule', suggestion: 'Add the commission rules with their values to the epic.' },
+    performance: !kinds.has(dom.gaps.performanceKind) && dom.gaps.performance,
+    e2e: !CATALOGUE.some((e) => (e.ui || e.journey) && kinds.has(e.kind)) && dom.gaps.e2e,
+    smoke: !kinds.has(dom.gaps.smokeKind) && dom.gaps.smoke,
+    functional: !groups.some((g) => classify(groupText(g)) && MONEY_KINDS.has(kindOf(g))) && dom.gaps.functional,
     regression: false,
   };
   for (const id of tt.ids) {

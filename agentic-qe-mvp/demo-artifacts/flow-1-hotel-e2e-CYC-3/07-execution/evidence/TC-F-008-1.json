@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "PUT",
+    "url": "http://127.0.0.1:41549/api/admin/offers/LATE_CHECKOUT/availability",
+    "headers": {},
+    "data": {
+      "available": false
+    }
+  },
+  "response": {
+    "status": 204,
+    "correlationId": "913b9b6e-7939-4cb8-b54b-0eb312cc2895",
+    "body": null
+  }
+}

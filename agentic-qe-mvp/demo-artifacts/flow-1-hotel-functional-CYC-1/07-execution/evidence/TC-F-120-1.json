@@ -1,0 +1,33 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "http://127.0.0.1:45353/api/searches",
+    "headers": {},
+    "data": {
+      "destination": "NYC",
+      "checkIn": "2026-11-01",
+      "checkOut": "2026-12-02",
+      "rooms": 1,
+      "adults": 2,
+      "children": 0
+    }
+  },
+  "response": {
+    "status": 400,
+    "correlationId": "597e5c0b-5c74-417f-95cf-13e6708c98f6",
+    "body": {
+      "status": 400,
+      "code": "VALIDATION_FAILED",
+      "message": "Please correct the highlighted search details.",
+      "correlationId": "597e5c0b-5c74-417f-95cf-13e6708c98f6",
+      "retryable": false,
+      "fieldIssues": [
+        {
+          "field": "checkOut",
+          "ruleId": "stay.tooLong",
+          "message": "Stays can be up to 30 nights. Shorten your stay."
+        }
+      ]
+    }
+  }
+}

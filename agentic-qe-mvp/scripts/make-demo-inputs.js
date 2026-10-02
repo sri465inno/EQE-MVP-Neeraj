@@ -8,16 +8,22 @@ const { loadCodebaseFixture } = require('../src/connectors/codebase');
 const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, 'demo-inputs');
 const jira = (f) => JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures', 'jira', f), 'utf8'));
-const epicWithStories = (key) => ({ issues: [jira(`${key}.json`), ...jira(`${key}.children.json`).issues] });
+const epicWithStories = (...keys) => ({ issues: keys.flatMap((key) => [jira(`${key}.json`), ...jira(`${key}.children.json`).issues]) });
+const HOTEL_EPICS = ['AQPI-2', 'AQPI-6', 'AQPI-10', 'AQPI-14', 'AQPI-18', 'AQPI-23', 'AQPI-27'];
 const codebaseNotes = (branch) => loadCodebaseFixture(branch).files.map((f) => `# ${f.path}\n${f.text}`).join('\n\n');
 
 const FLOWS = [
-  { dir: 'flow-1-baseline', files: [
+  { dir: 'flow-1-hotel-booking', branch: 'demo/hotel-booking-platform', files: [
+    ['01-jira-initiative-AQPI-1.json', 'initiative', () => jira('AQPI-1.json')],
+    ['02-jira-epics-AQPI-2-to-AQPI-27.json', 'epic', () => epicWithStories(...HOTEL_EPICS)],
+    ['03-codebase-hotel-booking-platform.md', 'codebase', () => codebaseNotes('demo/hotel-booking-platform')],
+  ] },
+  { dir: 'flow-1-baseline', branch: 'demo/commission-engine', files: [
     ['01-jira-initiative-COM-1.json', 'initiative', () => jira('COM-1.json')],
     ['02-jira-epic-COM-10.json', 'epic', () => epicWithStories('COM-10')],
     ['03-codebase-commission-engine.md', 'codebase', () => codebaseNotes('demo/commission-engine')],
   ] },
-  { dir: 'flow-2-incremental', files: [
+  { dir: 'flow-2-incremental', branch: 'demo/commission-engine-v2', files: [
     ['01-jira-epic-COM-20.json', 'epic', () => epicWithStories('COM-20')],
     ['02-codebase-commission-engine-v2.md', 'codebase', () => codebaseNotes('demo/commission-engine-v2')],
   ] },

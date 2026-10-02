@@ -1,6 +1,6 @@
 'use strict';
 // Test data agent: one data set per test case, generated from the data dictionary in the codebase input.
-// The case fixes its commission drivers; every other attribute takes its dictionary example.
+// The case fixes its drivers (commission or booking); every other attribute takes its dictionary example.
 // Each value is checked against the spec; a case that deliberately breaks it (an HTTP 4xx case) is a negative test.
 
 const clone = (x) => JSON.parse(JSON.stringify(x));
@@ -36,9 +36,12 @@ function checkValue(attr, v) {
   if (attr.required && (v === '' || v === null || v === undefined)) return `${attr.name} is required but empty`;
   if (v === '' && !attr.required) return null;
   if (attr.values && !attr.values.includes(v)) return `${attr.name} = ${v} is not an allowed value (${attr.values.join(', ')})`;
-  if (attr.type === 'integer' && !(Number.isInteger(v) && v >= 0)) return `${attr.name} = ${v} is not a whole number of 0 or more`;
-  if (attr.type === 'decimal' && !(Number.isFinite(v) && v >= 0)) return `${attr.name} = ${v} is not an amount of 0 or more`;
+  const min = attr.min ?? 0;
+  if (attr.type === 'integer' && !(Number.isInteger(v) && v >= min)) return `${attr.name} = ${v} is not a whole number of ${min} or more`;
+  if (attr.type === 'decimal' && !(Number.isFinite(v) && v >= min)) return `${attr.name} = ${v} is not an amount of ${min} or more`;
+  if (attr.max !== undefined && Number(v) > attr.max) return `${attr.name} = ${v} is above the maximum of ${attr.max}`;
   if (attr.type === 'boolean' && typeof v !== 'boolean') return `${attr.name} = ${v} is not true or false`;
+  if (attr.pattern && v !== '' && !new RegExp(attr.pattern).test(String(v))) return `${attr.name} = ${v} does not match the format the data dictionary specifies`;
   return null;
 }
 
@@ -98,7 +101,7 @@ function testDataAgent(testCases, dictionary, { previous = [], source = null } =
       negative: count((d) => d.conformance === 'negative test'),
       nonConforming: count((d) => d.conformance === 'does not conform'),
       byStatus: dataSets.reduce((m, d) => ({ ...m, [d.status]: (m[d.status] || 0) + 1 }), {}),
-      method: 'Commission drivers come from the test case; every other attribute takes the value the data dictionary specifies as its example.',
+      method: dictionary.generationMethod || 'Commission drivers come from the test case; every other attribute takes the value the data dictionary specifies as its example.',
     },
   };
 }

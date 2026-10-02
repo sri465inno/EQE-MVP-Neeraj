@@ -1,0 +1,33 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "http://127.0.0.1:45353/api/searches",
+    "headers": {},
+    "data": {
+      "destination": "NYC",
+      "checkIn": "2026-11-01",
+      "checkOut": "2026-11-01",
+      "rooms": 1,
+      "adults": 2,
+      "children": 0
+    }
+  },
+  "response": {
+    "status": 400,
+    "correlationId": "dc3fdd7b-9480-47d0-86eb-4ccd89c3f7f1",
+    "body": {
+      "status": 400,
+      "code": "VALIDATION_FAILED",
+      "message": "Please correct the highlighted search details.",
+      "correlationId": "dc3fdd7b-9480-47d0-86eb-4ccd89c3f7f1",
+      "retryable": false,
+      "fieldIssues": [
+        {
+          "field": "checkOut",
+          "ruleId": "checkOut.notAfterCheckIn",
+          "message": "Check-out date must be after the check-in date."
+        }
+      ]
+    }
+  }
+}

@@ -4,7 +4,7 @@ const TITLE = 'Agentic QE Platform - MVP';
 const $view = document.getElementById('view');
 let META = null;
 let pollTimer = null;
-const runState = { type: 'baseline', testingTypes: ['functional'], baselineId: '', inputs: {}, inputsOff: new Set(), skills: null, open: new Set() };
+const runState = { type: 'baseline', example: 'hotel', testingTypes: ['functional'], baselineId: '', inputs: {}, inputsOff: new Set(), skills: null, open: new Set() };
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const pill = (text, cls) => `<span class="pill ${esc(cls || String(text).replace(/\s+/g, '-'))}">${esc(text)}</span>`;
@@ -279,7 +279,7 @@ ${rail('flows', 'How it runs', 'click a flow for a short brief', flowTiles)}`;
 function cycleTile(c) {
   const ex = c.summary;
   return tile({ href: `#/cycle/${c.id}`, art: c.type === 'baseline' ? 'flow1' : 'flow2', tag: c.type === 'baseline' ? 'Flow 1' : 'Flow 2', big: c.id.replace('CYC-', '#'), corner: `<span class="status-dot ${esc(c.status)}"></span>${esc(c.status)}`, title: c.name,
-    lines: [c.delta ? esc(c.delta) : `baseline ${esc(c.baselineId || '(on completion)')}`, ex ? `${ex.passed}/${ex.executed} passed · ${ex.passRate}%` : '<span class="muted">not executed yet</span>'], progress: ex ? ex.passRate : 0 });
+    lines: [`${c.example ? `${esc(exampleShort(c.example))} · ` : ''}${c.delta ? esc(c.delta) : `baseline ${esc(c.baselineId || '(on completion)')}`}`, ex ? `${ex.passed}/${ex.executed} passed · ${ex.passRate}%` : '<span class="muted">not executed yet</span>'], progress: ex ? ex.passRate : 0 });
 }
 
 /* ---------------- Run ---------------- */
@@ -288,6 +288,13 @@ const RUN_SLOTS = {
   incremental: [['epic', 'New Jira epic', 'jira-epic', 'incrementalEpic'], ['codebase', 'Updated codebase', 'codebase', 'incrementalBranch']],
 };
 let DEMO_INPUTS = null;
+
+/** The demo example whose inputs fill the slots: picked for a baseline, the one with an increment otherwise. */
+function exampleFor(type) {
+  const xs = META.platform.examples || [];
+  return type === 'incremental' ? xs.find((e) => e.modes.includes('incremental')) : (xs.find((e) => e.id === runState.example) || xs[0]);
+}
+const exampleShort = (id) => (META.platform.examples || []).find((e) => e.id === id)?.short || '';
 
 function inputsDropdown(type, slots, active) {
   const inFlow = new Map(slots.map((sl) => [sl[2], sl[0]]));
@@ -325,8 +332,9 @@ function readSummary(slot, label, st) {
   return `<li><b>${esc(label)}</b><span class="muted small">${esc(where)}</span>${prov}</li>`;
 }
 
-function demoInputsHtml(type) {
-  const flow = (DEMO_INPUTS || []).find((f) => f.flow.startsWith(type === 'baseline' ? 'flow-1' : 'flow-2'));
+function demoInputsHtml(type, ex) {
+  const branch = ex.samples[type === 'baseline' ? 'baselineBranch' : 'incrementalBranch'];
+  const flow = (DEMO_INPUTS || []).find((f) => f.branch === branch);
   if (!flow) return '';
   return `<ul class="downloads">${flow.files.map((f) => `<li><a href="${esc(f.url)}" download>${esc(f.name)}</a></li>`).join('')}</ul>
 <p class="hint">The same Jira and codebase content the agents pull, to read or share. <a href="/demo-inputs/README.md" download>README</a></p>`;
@@ -352,11 +360,14 @@ async function viewRun(params) {
   if (runState.type === 'incremental' && !baselines.some((b) => b.id === runState.baselineId)) runState.baselineId = baselines.length ? baselines[baselines.length - 1].id : '';
   const type = runState.type;
   const slots = RUN_SLOTS[type];
+  const ex = exampleFor(type);
+  const forType = `${type}:${ex.id}`;
   for (const [slot, , , sampleKey] of slots) {
-    const def = META.samples[sampleKey];
+    const def = ex.samples[sampleKey];
     const cur = runState.inputs[slot];
-    if (!cur || cur.forType !== type) runState.inputs[slot] = slot === 'codebase' ? { forType: type, mode: 'github', branch: def, text: '' } : { forType: type, mode: META.jira.mode === 'live' ? 'jira' : 'github', key: def, text: '' };
+    if (!cur || cur.forType !== forType) runState.inputs[slot] = slot === 'codebase' ? { forType, mode: 'github', branch: def, text: '' } : { forType, mode: META.jira.mode === 'live' ? 'jira' : 'github', key: def, text: '' };
   }
+  const exampleOption = (e) => `<label class="mode-option"><input type="radio" name="run-example" value="${esc(e.id)}" ${e.id === ex.id ? 'checked' : ''}><span><b>${esc(e.name)}</b><span class="muted">${esc(e.about)}</span></span></label>`;
   const active = slots.filter(([slot]) => !runState.inputsOff.has(`${type}:${slot}`));
   const flowNo = type === 'baseline' ? 1 : 2;
   const modeOption = (v, title, text) => `<label class="mode-option"><input type="radio" name="run-type" value="${v}" ${type === v ? 'checked' : ''}><span><b>${title}</b><span class="muted">${text}</span></span></label>`;
@@ -375,6 +386,9 @@ async function viewRun(params) {
     ${type === 'incremental' ? (baselines.length
     ? `<label class="field">Baseline to add to<select id="baseline">${baselines.map((b) => `<option value="${esc(b.id)}" ${b.id === runState.baselineId ? 'selected' : ''}>${esc(b.id)} v${b.version} - ${esc(b.name)} (${b.counts.requirements} requirements)</option>`).join('')}</select></label>`
     : '<div class="banner">No approved baseline yet. Run Flow 1 first.</div>') : ''}
+    ${type === 'baseline'
+    ? `<p class="hint"><b>Demo example.</b> Pick the project whose inputs fill the slots below. Flow 2 adds the commission increment, so run the commission engine baseline first for it.</p>${(META.platform.examples || []).map(exampleOption).join('')}`
+    : `<p class="hint"><b>Demo example:</b> ${esc(ex.name)}. ${esc(ex.about)}</p>`}
   </div>
   <div class="step-block">
     <h3><span class="step-num">2</span>Type of testing</h3>
@@ -397,7 +411,7 @@ async function viewRun(params) {
     <h3><span class="step-num">5</span>Run the agents</h3>
     <p class="hint">The run reads and normalises the inputs, the review agent suggests what is added or missing, then it stops for your review. Nothing is designed until you approve.</p>
     <label class="field">Your name (recorded on approvals)<input type="text" id="who" value="${esc(localStorage.getItem('aqe-user') || '')}" placeholder="e.g. Priya Shah"></label>
-    <div class="row"><button class="btn" id="go" ${type === 'incremental' && !baselines.length ? 'disabled' : ''}>Start Flow ${flowNo} · ${esc(tt.short)}</button></div>
+    <div class="row"><button class="btn" id="go" ${type === 'incremental' && !baselines.length ? 'disabled' : ''}>Start Flow ${flowNo} · ${esc(ex.short)} · ${esc(tt.short)}</button></div>
     <div id="run-msg"></div>
   </div>
   <div class="step-block">
@@ -415,12 +429,13 @@ async function viewRun(params) {
   <h3 class="panel-title">What the agents will read</h3>
   <ul class="read-list">${active.map(([slot, label]) => readSummary(slot, label, runState.inputs[slot])).join('')}</ul>
   <h3 class="panel-title">Flow ${flowNo} test inputs</h3>
-  ${demoInputsHtml(type)}
+  ${demoInputsHtml(type, ex)}
 </div>
 </div>`;
 
   const rerender = () => viewRun(new URLSearchParams());
   $view.querySelectorAll('input[name=run-type]').forEach((el) => el.onchange = () => { location.hash = `#/run?type=${el.value}`; });
+  $view.querySelectorAll('input[name=run-example]').forEach((el) => el.onchange = () => { runState.example = el.value; rerender(); });
   $view.querySelectorAll('details.ms').forEach((d) => d.ontoggle = () => {
     if (d.open) closeDropdowns(d);
     else runState.open.delete(d.dataset.ms);

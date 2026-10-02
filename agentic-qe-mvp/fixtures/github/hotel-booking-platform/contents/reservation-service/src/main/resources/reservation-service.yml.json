@@ -1,0 +1,12 @@
+{
+  "type": "file",
+  "encoding": "base64",
+  "size": 673,
+  "name": "reservation-service.yml",
+  "path": "reservation-service/src/main/resources/reservation-service.yml",
+  "sha": "e9d543c7f73eaa81a0ce47e2b7088574c46694f4",
+  "url": "https://api.github.com/repos/sri465inno/uc-agentic-quality-engineering/contents/reservation-service/src/main/resources/reservation-service.yml?ref=demo%2Fhotel-booking-platform",
+  "html_url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/reservation-service/src/main/resources/reservation-service.yml",
+  "download_url": "https://raw.githubusercontent.com/sri465inno/uc-agentic-quality-engineering/35af1ef510e2b67f90d326d660ac1c886b194ecf/reservation-service/src/main/resources/reservation-service.yml",
+  "content": "c2VydmVyOgogIHBvcnQ6IDgwODUKcGxhdGZvcm06CiAgc2VydmljZTogcmVzZXJ2YXRpb24tc2Vy\ndmljZQogIGVudmlyb25tZW50OiBsb2NhbAogIGRlcGVuZGVuY2llczoKICAgIGNhcnQtc2Vydmlj\nZToKICAgICAgYmFzZS11cmw6IGh0dHA6Ly9sb2NhbGhvc3Q6ODA4NAogICAgICB0aW1lb3V0OiAz\ncwogICAgICByZXRyaWVzOiAxCiAgICBob3RlbC1zZXJ2aWNlOgogICAgICBiYXNlLXVybDogaHR0\ncDovL2xvY2FsaG9zdDo4MDgxCiAgICAgIHRpbWVvdXQ6IDJzCiAgICAgIHJldHJpZXM6IDEKICAg\nIG5vdGlmaWNhdGlvbi1zZXJ2aWNlOgogICAgICBiYXNlLXVybDogaHR0cDovL2xvY2FsaG9zdDo4\nMDg2CiAgICAgIHRpbWVvdXQ6IDJzCiAgICAgIHJldHJpZXM6IDEKICByZXNlcnZhdGlvbjoKICAg\nICMgQHJ1bGUgRXZlcnkgcmVzZXJ2YXRpb24gcmVxdWVzdCBuZWVkcyBhbiBJZGVtcG90ZW5jeS1L\nZXkgb2YgOCB0byA2NCBjaGFyYWN0ZXJzOyBhIHJlcGxheSB3aXRoaW4gMjQgaG91cnMgcmV0dXJu\ncyB0aGUgb3JpZ2luYWwgb3V0Y29tZS4KICAgIGlkZW1wb3RlbmN5LXR0bDogMjRoCiAgICByZXRl\nbnRpb24tZGF5czogMzY1Cm1hbmFnZW1lbnQ6CiAgZW5kcG9pbnRzOgogICAgd2ViOgogICAgICBl\neHBvc3VyZToKICAgICAgICBpbmNsdWRlOiBoZWFsdGgsaW5mbyxtZXRyaWNzCg==\n"
+}

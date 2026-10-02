@@ -1,13 +1,25 @@
 # Agentic QE Platform - demo artifacts
 
-Generated 2026-09-29T19:40:18.495Z by `node scripts/export-demo-artifacts.js`. Both cycles were run end to end; the Playwright results are real runs against the bundled sample service.
+Generated 2026-10-02T03:54:20.951Z by `node scripts/export-demo-artifacts.js`. Every cycle was run end to end; the Playwright results are real runs against the system under test.
 
-Inputs: Jira REST v3 exports (synthetic issues COM-1, COM-10/COM-11, COM-20) and the commission-engine codebase, pulled from GitHub branches `demo/jira-export`, `demo/commission-engine` and `demo/commission-engine-v2`. No live Jira call was made.
+## Flow 1: hotel booking platform (AQPI)
 
-| Cycle | Flow | Requirements | Test cases | Scripts | Passed | Pass rate | Defects |
+Inputs: the AQPI-1 initiative, its 7 epics and 23 stories (Jira REST v3 export of the AQPI space on GitHub branch `demo/jira-export`) and the Java 21 Spring Boot WebFlux codebase on branch `demo/hotel-booking-platform`. The cases ran against the six real hotel services (search, hotel, offer, cart, reservation, notification) started from their built jars on free local ports. Cases the platform cannot automate against these APIs (for example browser accessibility and measured load targets) are reported as manual, not run.
+
+| Cycle | Mode · testing | Requirements | Test cases | Scripts | Passed | Pass rate | Defects |
 |---|---|---|---|---|---|---|---|
-| CYC-1 | baseline | 14 | 15 | 13 | 13/14 | 92.9% | 1 |
-| CYC-2 | incremental | 17 | 19 | 16 | 17/18 | 94.4% | 1 |
+| CYC-1 | baseline · functional | 128 | 132 | 58 | 74/74 | 100% | 0 |
+| CYC-2 | baseline · regression | 128 | 137 | 58 | 74/74 | 100% | 0 |
+| CYC-3 | baseline · e2e | 128 | 8 | 7 | 8/8 | 100% | 0 |
+
+## Flow 2: commission engine (COM)
+
+Inputs: Jira REST v3 exports (synthetic issues COM-1, COM-10/COM-11, COM-20) and the commission-engine codebase, pulled from GitHub branches `demo/jira-export`, `demo/commission-engine` and `demo/commission-engine-v2`. The commission baseline is run first so Flow 2 has a baseline to add to. No live Jira call was made.
+
+| Cycle | Mode · testing | Requirements | Test cases | Scripts | Passed | Pass rate | Defects |
+|---|---|---|---|---|---|---|---|
+| CYC-4 | baseline · regression | 14 | 15 | 13 | 13/14 | 92.9% | 1 |
+| CYC-5 | incremental · regression | 17 | 19 | 16 | 17/18 | 94.4% | 1 |
 
 Each cycle folder's README is its QE lead report: inputs taken, how the cycle was run, artifacts produced, risks, a go/no-go recommendation and sign-off.
 
@@ -23,5 +35,5 @@ Each cycle folder's README is its QE lead report: inputs taken, how the cycle wa
 - `09-report/` QE lead report (HTML, Markdown) and full cycle report (HTML, Excel, JSON)
 - `10-merge-approval/` (Flow 2) merge proposal and approvals
 
-`comparison/` holds the cycle 1 vs cycle 2 comparison (HTML, Excel, JSON).
+`comparison/` holds the commission CYC-4 vs CYC-5 comparison (HTML, Excel, JSON).
 Open the `.html` files in a browser (download them or clone the repo; GitHub shows HTML as source).
