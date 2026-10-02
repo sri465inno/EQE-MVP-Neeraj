@@ -22,8 +22,8 @@ function table(headers, rows, rowClass) {
   if (!rows.length) return '<p class="muted">None.</p>';
   return `<table><thead><tr>${headers.map((h) => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map((r, i) => `<tr class="${rowClass ? esc(rowClass(i)) : ''}">${r.map((c) => `<td>${c ?? ''}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
 }
-const PROV_TEXT = { live: 'live Jira call', github: 'pulled live from GitHub', fixture: 'recorded fixture', pasted: 'pasted' };
-const provPill = (p) => pill(PROV_TEXT[p.kind] || p.kind, p.kind);
+const PROV_TEXT = { live: 'live Jira call', github: 'pulled live from GitHub', 'jira-export': 'Jira export on GitHub', fixture: 'recorded fixture', pasted: 'pasted' };
+const provPill = (p) => pill(PROV_TEXT[p.kind === 'github' && p.system === 'jira' ? 'jira-export' : p.kind] || p.kind, p.kind);
 const artPill = (s) => pill(s, s === 'carried over' ? 'carried' : s);
 
 /** Error box that names what is missing before an approval and links to each missing item. */
@@ -69,7 +69,7 @@ async function loadMeta() {
 
 function modesHtml() {
   return [
-    META.jira.mode === 'live' ? pill(`Jira: live (${META.jira.baseUrl})`, 'live') : `<span title="${esc(META.jira.note)}">${pill(`Jira: synthetic export on GitHub (${META.jiraExport.branch}) or recorded fixture; live Jira not configured`, 'github')}</span>`,
+    META.jira.mode === 'live' ? pill(`Jira: live (${META.jira.baseUrl})`, 'live') : `<span title="${esc(META.jira.note)}">${pill(`Jira: export on GitHub (${META.jiraExport.branch}) or recorded fixture; live Jira not configured`, 'github')}</span>`,
     pill(`Source: GitHub ${META.codebase.repo}`, 'github'),
     META.model.mode === 'model' ? pill(`Prose: ${META.model.model}`, 'live') : `<span title="${esc(META.model.note)}">${pill('Prose: deterministic demo mode', 'demo')}</span>`,
   ].join('');
@@ -329,7 +329,7 @@ function testingTypesDropdown(type, domainId) {
 function readSummary(slot, label, st) {
   const where = st.mode === 'paste' ? (st.fileName ? `uploaded file ${st.fileName}` : st.text ? 'pasted text' : 'nothing pasted yet')
     : slot === 'codebase' ? `${META.codebase.repo} @ ${st.branch}` : st.key;
-  const prov = st.mode === 'paste' ? pill('pasted', 'pasted') : st.mode === 'github' ? pill('pulled live from GitHub', 'github')
+  const prov = st.mode === 'paste' ? pill('pasted', 'pasted') : st.mode === 'github' ? pill(slot === 'codebase' ? 'pulled live from GitHub' : 'Jira export on GitHub', 'github')
     : st.mode === 'jira' && META.jira.mode === 'live' ? pill('live Jira call', 'live') : pill('recorded fixture', 'fixture');
   return `<li><b>${esc(label)}</b><span class="muted small">${esc(where)}</span>${prov}</li>`;
 }

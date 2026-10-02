@@ -8,7 +8,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-32",
         "summary": "[Epic 8] Release 2.0 – Booking Rule Changes and Free Cancellation",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-32"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-32"
       },
       "quote": "All child user stories meet their acceptance criteria and the Definition of Done.",
       "id": "J1",
@@ -33,7 +33,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-32",
         "summary": "[Epic 8] Release 2.0 – Booking Rule Changes and Free Cancellation",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-32"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-32"
       },
       "quote": "Release 1.0 behaviour not named in this epic is unchanged and passes regression.",
       "id": "J2",
@@ -64,7 +64,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-32",
         "summary": "[Epic 8] Release 2.0 – Booking Rule Changes and Free Cancellation",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-32"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-32"
       },
       "quote": "Required logging is in place and verified free of sensitive data.",
       "id": "J3",
@@ -87,7 +87,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-32",
         "summary": "[Epic 8] Release 2.0 – Booking Rule Changes and Free Cancellation",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-32"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-32"
       },
       "quote": "The Product Owner has accepted the release 2.0 changes end to end.",
       "id": "J4",
@@ -116,7 +116,7 @@
         "kind": "jira-story",
         "ref": "AQPI-33",
         "summary": "10.1 Shorten the cart hold to 20 minutes",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-33"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-33"
       },
       "quote": "A cart expires 20 minutes after it is created and never creates a reservation itself.",
       "id": "J5",
@@ -148,7 +148,7 @@
         "kind": "jira-story",
         "ref": "AQPI-34",
         "summary": "10.2 Limit Paris stays to 14 nights",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-34"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-34"
       },
       "quote": "A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.",
       "id": "J6",
@@ -181,7 +181,7 @@
         "kind": "jira-story",
         "ref": "AQPI-35",
         "summary": "10.3 Allow up to 5 confirmation resends",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-35"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-35"
       },
       "quote": "A confirmation can be resent at most 5 times per booking in 24 hours.",
       "id": "J7",
@@ -214,7 +214,7 @@
         "kind": "jira-story",
         "ref": "AQPI-36",
         "summary": "10.4 Cancel a reservation free of charge",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-36"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-36"
       },
       "quote": "A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
       "id": "J8",
@@ -249,7 +249,7 @@
         "kind": "jira-story",
         "ref": "AQPI-36",
         "summary": "10.4 Cancel a reservation free of charge",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-36"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-36"
       },
       "quote": "A cancelled reservation shows status CANCELLED, its payment authorisation is voided and its rooms are released.",
       "id": "J9",

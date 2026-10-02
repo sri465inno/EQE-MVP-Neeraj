@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "http://127.0.0.1:44557/api/ops/payments",
+    "url": "http://127.0.0.1:37255/api/ops/payments",
     "headers": {
       "X-Operator-Role": "SUPPORT"
     },
@@ -9,11 +9,11 @@
   },
   "response": {
     "status": 200,
-    "correlationId": "82451604-90ed-40dc-b929-b74400804955",
+    "correlationId": "43d961f2-a0e4-4209-b685-8fee2e2e4945",
     "body": [
       {
         "key": "aqe-double-49c6343e-1",
-        "authorizationId": "auth_89442773-0df",
+        "authorizationId": "auth_d024a332-22a",
         "result": "AUTHORIZED",
         "amount": {
           "amount": 0,

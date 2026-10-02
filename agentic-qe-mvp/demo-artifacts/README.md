@@ -1,6 +1,6 @@
 # Agentic QE Platform - demo artifacts
 
-Generated 2026-10-02T15:30:07.318Z by `node scripts/export-demo-artifacts.js`. Every cycle was run end to end; the Playwright results are real runs against the system under test.
+Generated 2026-10-02T16:18:52.357Z by `node scripts/export-demo-artifacts.js`. Every cycle was run end to end; the Playwright results are real runs against the system under test.
 
 ## Flow 1: hotel booking platform (AQPI)
 

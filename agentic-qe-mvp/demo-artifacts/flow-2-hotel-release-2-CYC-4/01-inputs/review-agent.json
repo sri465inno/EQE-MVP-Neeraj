@@ -2,7 +2,7 @@
   "agent": "Review agent",
   "advisory": true,
   "status": "suggestions",
-  "generatedAt": "2026-10-02T15:29:54.636Z",
+  "generatedAt": "2026-10-02T16:18:39.669Z",
   "testingType": "regression",
   "note": "Suggestions only. The human reviewer decides every conflict and approves the requirement set.",
   "counts": {
@@ -97,7 +97,7 @@
           "source": "jira",
           "ref": "AQPI-32",
           "line": null,
-          "url": "https://aurora-hotels.atlassian.net/browse/AQPI-32",
+          "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-32",
           "quote": "All child user stories meet their acceptance criteria and the Definition of Done."
         }
       ]
@@ -115,7 +115,7 @@
           "source": "jira",
           "ref": "AQPI-32",
           "line": null,
-          "url": "https://aurora-hotels.atlassian.net/browse/AQPI-32",
+          "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-32",
           "quote": "Release 1.0 behaviour not named in this epic is unchanged and passes regression."
         }
       ]
@@ -133,7 +133,7 @@
           "source": "jira",
           "ref": "AQPI-32",
           "line": null,
-          "url": "https://aurora-hotels.atlassian.net/browse/AQPI-32",
+          "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-32",
           "quote": "Required logging is in place and verified free of sensitive data."
         }
       ]
@@ -151,7 +151,7 @@
           "source": "jira",
           "ref": "AQPI-32",
           "line": null,
-          "url": "https://aurora-hotels.atlassian.net/browse/AQPI-32",
+          "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-32",
           "quote": "The Product Owner has accepted the release 2.0 changes end to end."
         }
       ]
@@ -169,7 +169,7 @@
           "source": "jira",
           "ref": "AQPI-32",
           "line": null,
-          "url": "https://aurora-hotels.atlassian.net/browse/AQPI-32",
+          "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-32",
           "quote": "All child user stories meet their acceptance criteria and the Definition of Done."
         }
       ]
@@ -187,7 +187,7 @@
           "source": "jira",
           "ref": "AQPI-32",
           "line": null,
-          "url": "https://aurora-hotels.atlassian.net/browse/AQPI-32",
+          "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-32",
           "quote": "Required logging is in place and verified free of sensitive data."
         }
       ]
@@ -223,7 +223,7 @@
           "source": "jira",
           "ref": "AQPI-32",
           "line": null,
-          "url": "https://aurora-hotels.atlassian.net/browse/AQPI-32",
+          "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-32",
           "quote": "Release 1.0 behaviour not named in this epic is unchanged and passes regression."
         }
       ]
@@ -241,7 +241,7 @@
           "source": "jira",
           "ref": "AQPI-32",
           "line": null,
-          "url": "https://aurora-hotels.atlassian.net/browse/AQPI-32",
+          "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-32",
           "quote": "The Product Owner has accepted the release 2.0 changes end to end."
         }
       ]
@@ -259,7 +259,7 @@
           "source": "jira",
           "ref": "AQPI-33",
           "line": null,
-          "url": "https://aurora-hotels.atlassian.net/browse/AQPI-33",
+          "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-33",
           "quote": "A cart expires 20 minutes after it is created and never creates a reservation itself."
         },
         {
@@ -284,7 +284,7 @@
           "source": "jira",
           "ref": "AQPI-34",
           "line": null,
-          "url": "https://aurora-hotels.atlassian.net/browse/AQPI-34",
+          "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-34",
           "quote": "A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights."
         },
         {
@@ -309,7 +309,7 @@
           "source": "jira",
           "ref": "AQPI-35",
           "line": null,
-          "url": "https://aurora-hotels.atlassian.net/browse/AQPI-35",
+          "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-35",
           "quote": "A confirmation can be resent at most 5 times per booking in 24 hours."
         },
         {
@@ -334,7 +334,7 @@
           "source": "jira",
           "ref": "AQPI-36",
           "line": null,
-          "url": "https://aurora-hotels.atlassian.net/browse/AQPI-36",
+          "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-36",
           "quote": "A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed."
         },
         {
@@ -359,7 +359,7 @@
           "source": "jira",
           "ref": "AQPI-36",
           "line": null,
-          "url": "https://aurora-hotels.atlassian.net/browse/AQPI-36",
+          "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-36",
           "quote": "A cancelled reservation shows status CANCELLED, its payment authorisation is voided and its rooms are released."
         },
         {

@@ -10,6 +10,8 @@ const EXPORT = {
   branch: 'demo/jira-export',
   rawBase: 'https://raw.githubusercontent.com/sri465inno/uc-agentic-quality-engineering/demo/jira-export/jira',
   htmlBase: 'https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira',
+  // Projects exported from a real Jira site; other keys in the export are synthetic test issues.
+  sites: { AQPI: 'https://tcs-team-ou6drgfr.atlassian.net' },
 };
 
 function jiraLiveConfig(env = process.env) {
@@ -47,17 +49,19 @@ async function pullExport(name, fetchImpl, rawBase) {
   return res.json();
 }
 
-/** Pulls an issue from the Jira REST v3 export published on GitHub (synthetic test issues, not a Jira call). */
+/** Pulls an issue from the Jira REST v3 export published on GitHub (not a Jira call). */
 async function loadJiraExport(cleanKey, { withChildren, fetchImpl, rawBase = EXPORT.rawBase }) {
   const issue = await pullExport(cleanKey, fetchImpl, rawBase);
   if (!issue) throw new Error(`${cleanKey} is not in the Jira export on ${EXPORT.repo}@${EXPORT.branch}`);
   const children = withChildren ? ((await pullExport(`${cleanKey}.children`, fetchImpl, rawBase)) || { issues: [] }).issues : [];
   const files = [`${cleanKey}.json`, ...(withChildren ? [`${cleanKey}.children.json`] : [])];
+  const site = EXPORT.sites[cleanKey.split('-')[0]];
   return {
-    issue, children, baseUrl: FIXTURE_BASE,
+    issue, children, baseUrl: site || FIXTURE_BASE,
     provenance: {
       kind: 'github',
-      label: `Jira REST API v3 export pulled live from GitHub (${EXPORT.repo}@${EXPORT.branch}) - synthetic test issues; no live Jira call was made`,
+      system: 'jira',
+      label: `Jira export on GitHub (${EXPORT.repo}@${EXPORT.branch}): Jira REST API v3 JSON of ${cleanKey}${site ? `, exported from ${site}` : ' - synthetic test issues'}; no live Jira call was made`,
       ref: cleanKey, fetchedAt: new Date().toISOString(),
       files: files.map((f) => `${EXPORT.htmlBase}/${f}`),
     },
