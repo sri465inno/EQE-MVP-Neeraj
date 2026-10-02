@@ -1,0 +1,26 @@
+server:
+  port: 8085
+platform:
+  service: reservation-service
+  environment: local
+  dependencies:
+    cart-service:
+      base-url: http://localhost:8084
+      timeout: 3s
+      retries: 1
+    hotel-service:
+      base-url: http://localhost:8081
+      timeout: 2s
+      retries: 1
+    notification-service:
+      base-url: http://localhost:8086
+      timeout: 2s
+      retries: 1
+  reservation:
+    idempotency-ttl: 24h
+    retention-days: 365
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

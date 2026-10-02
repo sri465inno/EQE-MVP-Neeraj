@@ -1,0 +1,10 @@
+server:
+  port: 8081
+platform:
+  service: hotel-service
+  environment: local
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

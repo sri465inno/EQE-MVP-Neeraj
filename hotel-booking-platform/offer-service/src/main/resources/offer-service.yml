@@ -1,0 +1,13 @@
+server:
+  port: 8083
+platform:
+  service: offer-service
+  environment: local
+  offers:
+    max-offers: 5
+    consent-retention-days: 365
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
