@@ -8,7 +8,7 @@
         "kind": "jira-initiative",
         "ref": "AQPI-1",
         "summary": "[Initiative] Intelligent Hotel Shopping and Reservation Experience",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-1"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-1"
       },
       "quote": "A guest can complete the complete search-to-confirmation flow using valid inputs.",
       "id": "J1",
@@ -33,7 +33,7 @@
         "kind": "jira-initiative",
         "ref": "AQPI-1",
         "summary": "[Initiative] Intelligent Hotel Shopping and Reservation Experience",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-1"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-1"
       },
       "quote": "Only bookable inventory and valid rates are presented as available.",
       "id": "J2",
@@ -57,7 +57,7 @@
         "kind": "jira-initiative",
         "ref": "AQPI-1",
         "summary": "[Initiative] Intelligent Hotel Shopping and Reservation Experience",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-1"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-1"
       },
       "quote": "Total price is disclosed before confirmation, including mandatory taxes and fees.",
       "id": "J3",
@@ -83,7 +83,7 @@
         "kind": "jira-initiative",
         "ref": "AQPI-1",
         "summary": "[Initiative] Intelligent Hotel Shopping and Reservation Experience",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-1"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-1"
       },
       "quote": "Ancillary offers do not block booking when declined or unavailable.",
       "id": "J4",
@@ -107,7 +107,7 @@
         "kind": "jira-initiative",
         "ref": "AQPI-1",
         "summary": "[Initiative] Intelligent Hotel Shopping and Reservation Experience",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-1"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-1"
       },
       "quote": "The platform prevents or safely handles duplicate reservation submissions.",
       "id": "J5",
@@ -131,7 +131,7 @@
         "kind": "jira-initiative",
         "ref": "AQPI-1",
         "summary": "[Initiative] Intelligent Hotel Shopping and Reservation Experience",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-1"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-1"
       },
       "quote": "A successful reservation produces a durable confirmation identifier.",
       "id": "J6",
@@ -154,7 +154,7 @@
         "kind": "jira-initiative",
         "ref": "AQPI-1",
         "summary": "[Initiative] Intelligent Hotel Shopping and Reservation Experience",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-1"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-1"
       },
       "quote": "Confirmation is displayed on screen and an email request is generated.",
       "id": "J7",
@@ -177,7 +177,7 @@
         "kind": "jira-initiative",
         "ref": "AQPI-1",
         "summary": "[Initiative] Intelligent Hotel Shopping and Reservation Experience",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-1"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-1"
       },
       "quote": "Required business and technical events are logged using approved identifiers and masking rules.",
       "id": "J8",
@@ -203,7 +203,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-2",
         "summary": "[Epic 1] Search and Availability",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-2"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-2"
       },
       "quote": "All child user stories meet their acceptance criteria and the Definition of Done.",
       "id": "J9",
@@ -228,7 +228,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-2",
         "summary": "[Epic 1] Search and Availability",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-2"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-2"
       },
       "quote": "Negative and error paths for each story are tested and evidenced.",
       "id": "J10",
@@ -251,7 +251,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-2",
         "summary": "[Epic 1] Search and Availability",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-2"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-2"
       },
       "quote": "Required logging is in place and verified free of sensitive data.",
       "id": "J11",
@@ -274,7 +274,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-2",
         "summary": "[Epic 1] Search and Availability",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-2"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-2"
       },
       "quote": "The Product Owner has accepted the capability end to end.",
       "id": "J12",
@@ -296,7 +296,7 @@
         "kind": "jira-story",
         "ref": "AQPI-3",
         "summary": "3.1 Search hotels by destination and date range",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-3"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-3"
       },
       "quote": "Given valid search criteria, when the guest submits the search, then a search request is created and matching available hotels are returned.",
       "id": "J13",
@@ -326,7 +326,7 @@
         "kind": "jira-story",
         "ref": "AQPI-3",
         "summary": "3.1 Search hotels by destination and date range",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-3"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-3"
       },
       "quote": "The submitted criteria remain visible and editable on the results page.",
       "id": "J14",
@@ -350,7 +350,7 @@
         "kind": "jira-story",
         "ref": "AQPI-3",
         "summary": "3.1 Search hotels by destination and date range",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-3"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-3"
       },
       "quote": "Past check-in dates, check-out dates not after check-in, and missing mandatory fields are rejected with actionable messages.",
       "id": "J15",
@@ -379,7 +379,7 @@
         "kind": "jira-story",
         "ref": "AQPI-3",
         "summary": "3.1 Search hotels by destination and date range",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-3"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-3"
       },
       "quote": "A no-availability result explains that no matching inventory was found and allows criteria changes.",
       "id": "J16",
@@ -407,7 +407,7 @@
         "kind": "jira-story",
         "ref": "AQPI-3",
         "summary": "3.1 Search hotels by destination and date range",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-3"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-3"
       },
       "quote": "Check-in must precede check-out.",
       "id": "J17",
@@ -427,7 +427,7 @@
         "kind": "jira-story",
         "ref": "AQPI-3",
         "summary": "3.1 Search hotels by destination and date range",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-3"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-3"
       },
       "quote": "Occupancy must comply with configured room limits.",
       "id": "J18",
@@ -449,7 +449,7 @@
         "kind": "jira-story",
         "ref": "AQPI-3",
         "summary": "3.1 Search hotels by destination and date range",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-3"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-3"
       },
       "quote": "Maximum stay length must be configurable.",
       "id": "J19",
@@ -470,7 +470,7 @@
         "kind": "jira-story",
         "ref": "AQPI-4",
         "summary": "3.2 Validate occupancy and stay criteria",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-4"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-4"
       },
       "quote": "Required fields are clearly identified.",
       "id": "J20",
@@ -491,7 +491,7 @@
         "kind": "jira-story",
         "ref": "AQPI-4",
         "summary": "3.2 Validate occupancy and stay criteria",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-4"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-4"
       },
       "quote": "Invalid combinations return field-level messages.",
       "id": "J21",
@@ -514,7 +514,7 @@
         "kind": "jira-story",
         "ref": "AQPI-4",
         "summary": "3.2 Validate occupancy and stay criteria",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-4"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-4"
       },
       "quote": "Server validation is authoritative when client and server results differ.",
       "id": "J22",
@@ -537,7 +537,7 @@
         "kind": "jira-story",
         "ref": "AQPI-4",
         "summary": "3.2 Validate occupancy and stay criteria",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-4"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-4"
       },
       "quote": "Validation messages are accessible to assistive technology.",
       "id": "J23",
@@ -559,7 +559,7 @@
         "kind": "jira-story",
         "ref": "AQPI-4",
         "summary": "3.2 Validate occupancy and stay criteria",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-4"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-4"
       },
       "quote": "Validation rules must be configurable where market or property rules vary.",
       "id": "J24",
@@ -583,7 +583,7 @@
         "kind": "jira-story",
         "ref": "AQPI-5",
         "summary": "3.3 Handle unavailable or failed searches",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-5"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-5"
       },
       "quote": "Zero results provide options to alter dates, occupancy, destination, or filters.",
       "id": "J25",
@@ -609,7 +609,7 @@
         "kind": "jira-story",
         "ref": "AQPI-5",
         "summary": "3.3 Handle unavailable or failed searches",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-5"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-5"
       },
       "quote": "Technical failures display a non-technical message and retry option.",
       "id": "J26",
@@ -633,7 +633,7 @@
         "kind": "jira-story",
         "ref": "AQPI-5",
         "summary": "3.3 Handle unavailable or failed searches",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-5"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-5"
       },
       "quote": "Repeated submission does not create inconsistent sessions.",
       "id": "J27",
@@ -656,7 +656,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-6",
         "summary": "[Epic 2] Hotel Results and Selection",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-6"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-6"
       },
       "quote": "All child user stories meet their acceptance criteria and the Definition of Done.",
       "id": "J28",
@@ -681,7 +681,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-6",
         "summary": "[Epic 2] Hotel Results and Selection",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-6"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-6"
       },
       "quote": "Negative and error paths for each story are tested and evidenced.",
       "id": "J29",
@@ -704,7 +704,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-6",
         "summary": "[Epic 2] Hotel Results and Selection",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-6"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-6"
       },
       "quote": "Required logging is in place and verified free of sensitive data.",
       "id": "J30",
@@ -727,7 +727,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-6",
         "summary": "[Epic 2] Hotel Results and Selection",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-6"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-6"
       },
       "quote": "The Product Owner has accepted the capability end to end.",
       "id": "J31",
@@ -749,7 +749,7 @@
         "kind": "jira-story",
         "ref": "AQPI-7",
         "summary": "4.1 Display available hotels",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-7"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-7"
       },
       "quote": "Each result shows hotel name, location, representative image, starting price, currency, and availability indicator.",
       "id": "J32",
@@ -778,7 +778,7 @@
         "kind": "jira-story",
         "ref": "AQPI-7",
         "summary": "4.1 Display available hotels",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-7"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-7"
       },
       "quote": "Mandatory fees or pricing qualifications are clearly disclosed.",
       "id": "J33",
@@ -801,7 +801,7 @@
         "kind": "jira-story",
         "ref": "AQPI-7",
         "summary": "4.1 Display available hotels",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-7"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-7"
       },
       "quote": "Unavailable hotels are not presented as immediately bookable.",
       "id": "J34",
@@ -824,7 +824,7 @@
         "kind": "jira-story",
         "ref": "AQPI-7",
         "summary": "4.1 Display available hotels",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-7"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-7"
       },
       "quote": "Results support pagination or progressive loading.",
       "id": "J35",
@@ -846,7 +846,7 @@
         "kind": "jira-story",
         "ref": "AQPI-7",
         "summary": "4.1 Display available hotels",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-7"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-7"
       },
       "quote": "Displayed starting price must correspond to a valid rate returned for the search criteria.",
       "id": "J36",
@@ -872,7 +872,7 @@
         "kind": "jira-story",
         "ref": "AQPI-8",
         "summary": "4.2 Sort and filter hotel results",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-8"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-8"
       },
       "quote": "The guest can apply supported filters such as price range, amenities, hotel category, and distance when data is available.",
       "id": "J37",
@@ -902,7 +902,7 @@
         "kind": "jira-story",
         "ref": "AQPI-8",
         "summary": "4.2 Sort and filter hotel results",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-8"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-8"
       },
       "quote": "The guest can sort using approved options.",
       "id": "J38",
@@ -924,7 +924,7 @@
         "kind": "jira-story",
         "ref": "AQPI-8",
         "summary": "4.2 Sort and filter hotel results",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-8"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-8"
       },
       "quote": "Selected criteria are visible and removable.",
       "id": "J39",
@@ -945,7 +945,7 @@
         "kind": "jira-story",
         "ref": "AQPI-8",
         "summary": "4.2 Sort and filter hotel results",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-8"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-8"
       },
       "quote": "Zero results after filtering offer a reset option.",
       "id": "J40",
@@ -969,7 +969,7 @@
         "kind": "jira-story",
         "ref": "AQPI-9",
         "summary": "4.3 View hotel and room details",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-9"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-9"
       },
       "quote": "Hotel description, images, location, amenities, room options, pricing, major policies, and relevant restrictions are displayed.",
       "id": "J41",
@@ -999,7 +999,7 @@
         "kind": "jira-story",
         "ref": "AQPI-9",
         "summary": "4.3 View hotel and room details",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-9"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-9"
       },
       "quote": "The guest can select a valid room and rate plan.",
       "id": "J42",
@@ -1022,7 +1022,7 @@
         "kind": "jira-story",
         "ref": "AQPI-9",
         "summary": "4.3 View hotel and room details",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-9"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-9"
       },
       "quote": "If inventory changes, the guest is informed before continuing.",
       "id": "J43",
@@ -1046,7 +1046,7 @@
         "kind": "jira-story",
         "ref": "AQPI-9",
         "summary": "4.3 View hotel and room details",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-9"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-9"
       },
       "quote": "Rate conditions and cancellation terms must be shown before selection.",
       "id": "J44",
@@ -1070,7 +1070,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-10",
         "summary": "[Epic 3] Personalized Ancillary Offers",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-10"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-10"
       },
       "quote": "All child user stories meet their acceptance criteria and the Definition of Done.",
       "id": "J45",
@@ -1095,7 +1095,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-10",
         "summary": "[Epic 3] Personalized Ancillary Offers",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-10"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-10"
       },
       "quote": "Negative and error paths for each story are tested and evidenced.",
       "id": "J46",
@@ -1118,7 +1118,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-10",
         "summary": "[Epic 3] Personalized Ancillary Offers",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-10"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-10"
       },
       "quote": "Required logging is in place and verified free of sensitive data.",
       "id": "J47",
@@ -1141,7 +1141,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-10",
         "summary": "[Epic 3] Personalized Ancillary Offers",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-10"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-10"
       },
       "quote": "The Product Owner has accepted the capability end to end.",
       "id": "J48",
@@ -1163,7 +1163,7 @@
         "kind": "jira-story",
         "ref": "AQPI-11",
         "summary": "5.1 Determine eligible ancillary offers",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-11"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-11"
       },
       "quote": "The service considers available context such as stay dates, season, destination, hotel, room, party composition, declared interests, and consented profile attributes.",
       "id": "J49",
@@ -1198,7 +1198,7 @@
         "kind": "jira-story",
         "ref": "AQPI-11",
         "summary": "5.1 Determine eligible ancillary offers",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-11"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-11"
       },
       "quote": "Unavailable or ineligible products are excluded.",
       "id": "J50",
@@ -1219,7 +1219,7 @@
         "kind": "jira-story",
         "ref": "AQPI-11",
         "summary": "5.1 Determine eligible ancillary offers",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-11"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-11"
       },
       "quote": "The service returns a reason code for each recommended item.",
       "id": "J51",
@@ -1242,7 +1242,7 @@
         "kind": "jira-story",
         "ref": "AQPI-11",
         "summary": "5.1 Determine eligible ancillary offers",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-11"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-11"
       },
       "quote": "When personalization data is unavailable, safe contextual defaults may be returned.",
       "id": "J52",
@@ -1266,7 +1266,7 @@
         "kind": "jira-story",
         "ref": "AQPI-11",
         "summary": "5.1 Determine eligible ancillary offers",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-11"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-11"
       },
       "quote": "Sensitive traits must not be inferred or used.",
       "id": "J53",
@@ -1288,7 +1288,7 @@
         "kind": "jira-story",
         "ref": "AQPI-11",
         "summary": "5.1 Determine eligible ancillary offers",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-11"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-11"
       },
       "quote": "Personalization must honor consent and data-retention rules.",
       "id": "J54",
@@ -1311,7 +1311,7 @@
         "kind": "jira-story",
         "ref": "AQPI-11",
         "summary": "5.1 Determine eligible ancillary offers",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-11"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-11"
       },
       "quote": "Business rules and model versions must be auditable.",
       "id": "J55",
@@ -1332,7 +1332,7 @@
         "kind": "jira-story",
         "ref": "AQPI-12",
         "summary": "5.2 Display ancillary offers",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-12"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-12"
       },
       "quote": "Each offer shows name, description, price, currency, applicability, and any restrictions.",
       "id": "J56",
@@ -1357,7 +1357,7 @@
         "kind": "jira-story",
         "ref": "AQPI-12",
         "summary": "5.2 Display ancillary offers",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-12"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-12"
       },
       "quote": "The guest can add, skip, or dismiss an offer.",
       "id": "J57",
@@ -1379,7 +1379,7 @@
         "kind": "jira-story",
         "ref": "AQPI-12",
         "summary": "5.2 Display ancillary offers",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-12"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-12"
       },
       "quote": "Offers are clearly distinguished from mandatory fees.",
       "id": "J58",
@@ -1401,7 +1401,7 @@
         "kind": "jira-story",
         "ref": "AQPI-12",
         "summary": "5.2 Display ancillary offers",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-12"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-12"
       },
       "quote": "Failure to load offers does not block room booking.",
       "id": "J59",
@@ -1425,7 +1425,7 @@
         "kind": "jira-story",
         "ref": "AQPI-13",
         "summary": "5.3 Explain and control personalization",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-13"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-13"
       },
       "quote": "The interface identifies when offers are personalized where required.",
       "id": "J60",
@@ -1448,7 +1448,7 @@
         "kind": "jira-story",
         "ref": "AQPI-13",
         "summary": "5.3 Explain and control personalization",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-13"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-13"
       },
       "quote": "The guest can proceed without selecting ancillary products.",
       "id": "J61",
@@ -1471,7 +1471,7 @@
         "kind": "jira-story",
         "ref": "AQPI-13",
         "summary": "5.3 Explain and control personalization",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-13"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-13"
       },
       "quote": "A consent or preference change affects future eligible recommendations according to policy.",
       "id": "J62",
@@ -1497,7 +1497,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-14",
         "summary": "[Epic 4] Cart Management",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-14"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-14"
       },
       "quote": "All child user stories meet their acceptance criteria and the Definition of Done.",
       "id": "J63",
@@ -1522,7 +1522,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-14",
         "summary": "[Epic 4] Cart Management",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-14"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-14"
       },
       "quote": "Negative and error paths for each story are tested and evidenced.",
       "id": "J64",
@@ -1545,7 +1545,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-14",
         "summary": "[Epic 4] Cart Management",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-14"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-14"
       },
       "quote": "Required logging is in place and verified free of sensitive data.",
       "id": "J65",
@@ -1568,7 +1568,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-14",
         "summary": "[Epic 4] Cart Management",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-14"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-14"
       },
       "quote": "The Product Owner has accepted the capability end to end.",
       "id": "J66",
@@ -1590,7 +1590,7 @@
         "kind": "jira-story",
         "ref": "AQPI-15",
         "summary": "6.1 Add room selection to cart",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-15"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-15"
       },
       "quote": "The cart contains hotel, room, rate plan, stay dates, occupancy, quantity, currency, and price components.",
       "id": "J67",
@@ -1620,7 +1620,7 @@
         "kind": "jira-story",
         "ref": "AQPI-15",
         "summary": "6.1 Add room selection to cart",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-15"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-15"
       },
       "quote": "Inventory and price are revalidated when required.",
       "id": "J68",
@@ -1641,7 +1641,7 @@
         "kind": "jira-story",
         "ref": "AQPI-15",
         "summary": "6.1 Add room selection to cart",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-15"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-15"
       },
       "quote": "The cart has a defined expiration and displays relevant timeout behavior.",
       "id": "J69",
@@ -1665,7 +1665,7 @@
         "kind": "jira-story",
         "ref": "AQPI-15",
         "summary": "6.1 Add room selection to cart",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-15"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-15"
       },
       "quote": "A cart must not itself create a reservation.",
       "id": "J70",
@@ -1687,7 +1687,7 @@
         "kind": "jira-story",
         "ref": "AQPI-15",
         "summary": "6.1 Add room selection to cart",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-15"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-15"
       },
       "quote": "Price-change handling must require guest acknowledgement when material.",
       "id": "J71",
@@ -1711,7 +1711,7 @@
         "kind": "jira-story",
         "ref": "AQPI-16",
         "summary": "6.2 Add, update, and remove ancillaries",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-16"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-16"
       },
       "quote": "The guest can add an available ancillary.",
       "id": "J72",
@@ -1732,7 +1732,7 @@
         "kind": "jira-story",
         "ref": "AQPI-16",
         "summary": "6.2 Add, update, and remove ancillaries",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-16"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-16"
       },
       "quote": "Supported quantities can be changed within product limits.",
       "id": "J73",
@@ -1754,7 +1754,7 @@
         "kind": "jira-story",
         "ref": "AQPI-16",
         "summary": "6.2 Add, update, and remove ancillaries",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-16"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-16"
       },
       "quote": "Removal updates totals immediately.",
       "id": "J74",
@@ -1775,7 +1775,7 @@
         "kind": "jira-story",
         "ref": "AQPI-16",
         "summary": "6.2 Add, update, and remove ancillaries",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-16"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-16"
       },
       "quote": "Ineligible or sold-out products cannot be retained silently.",
       "id": "J75",
@@ -1799,7 +1799,7 @@
         "kind": "jira-story",
         "ref": "AQPI-17",
         "summary": "6.3 Review cart and total price",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-17"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-17"
       },
       "quote": "Room charges, taxes, mandatory fees, optional products, discounts, and total are itemized.",
       "id": "J76",
@@ -1826,7 +1826,7 @@
         "kind": "jira-story",
         "ref": "AQPI-17",
         "summary": "6.3 Review cart and total price",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-17"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-17"
       },
       "quote": "Currency is consistently displayed.",
       "id": "J77",
@@ -1846,7 +1846,7 @@
         "kind": "jira-story",
         "ref": "AQPI-17",
         "summary": "6.3 Review cart and total price",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-17"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-17"
       },
       "quote": "Material changes are highlighted and require acknowledgement.",
       "id": "J78",
@@ -1868,7 +1868,7 @@
         "kind": "jira-story",
         "ref": "AQPI-17",
         "summary": "6.3 Review cart and total price",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-17"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-17"
       },
       "quote": "The guest can return to edit supported selections.",
       "id": "J79",
@@ -1890,7 +1890,7 @@
         "kind": "jira-story",
         "ref": "AQPI-17",
         "summary": "6.3 Review cart and total price",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-17"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-17"
       },
       "quote": "The final payable total must be revalidated before reservation submission.",
       "id": "J80",
@@ -1914,7 +1914,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-18",
         "summary": "[Epic 5] Checkout and Reservation",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-18"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-18"
       },
       "quote": "All child user stories meet their acceptance criteria and the Definition of Done.",
       "id": "J81",
@@ -1939,7 +1939,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-18",
         "summary": "[Epic 5] Checkout and Reservation",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-18"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-18"
       },
       "quote": "Negative and error paths for each story are tested and evidenced.",
       "id": "J82",
@@ -1962,7 +1962,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-18",
         "summary": "[Epic 5] Checkout and Reservation",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-18"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-18"
       },
       "quote": "Required logging is in place and verified free of sensitive data.",
       "id": "J83",
@@ -1985,7 +1985,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-18",
         "summary": "[Epic 5] Checkout and Reservation",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-18"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-18"
       },
       "quote": "The Product Owner has accepted the capability end to end.",
       "id": "J84",
@@ -2007,7 +2007,7 @@
         "kind": "jira-story",
         "ref": "AQPI-19",
         "summary": "7.1 Capture guest and contact information",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-19"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-19"
       },
       "quote": "Required and optional fields are clearly distinguished.",
       "id": "J85",
@@ -2029,7 +2029,7 @@
         "kind": "jira-story",
         "ref": "AQPI-19",
         "summary": "7.1 Capture guest and contact information",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-19"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-19"
       },
       "quote": "Inputs are validated and error messages are accessible.",
       "id": "J86",
@@ -2051,7 +2051,7 @@
         "kind": "jira-story",
         "ref": "AQPI-19",
         "summary": "7.1 Capture guest and contact information",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-19"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-19"
       },
       "quote": "The guest receives applicable privacy notice and consent controls.",
       "id": "J87",
@@ -2075,7 +2075,7 @@
         "kind": "jira-story",
         "ref": "AQPI-19",
         "summary": "7.1 Capture guest and contact information",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-19"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-19"
       },
       "quote": "Data is transmitted securely and is not exposed in client logs.",
       "id": "J88",
@@ -2099,7 +2099,7 @@
         "kind": "jira-story",
         "ref": "AQPI-19",
         "summary": "7.1 Capture guest and contact information",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-19"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-19"
       },
       "quote": "Data minimization applies.",
       "id": "J89",
@@ -2119,7 +2119,7 @@
         "kind": "jira-story",
         "ref": "AQPI-19",
         "summary": "7.1 Capture guest and contact information",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-19"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-19"
       },
       "quote": "Sensitive values must be masked in support tools and excluded from analytics logs.",
       "id": "J90",
@@ -2144,7 +2144,7 @@
         "kind": "jira-story",
         "ref": "AQPI-20",
         "summary": "7.2 Capture and authorize payment",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-20"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-20"
       },
       "quote": "The guest sees the final payable or guarantee amount before authorization.",
       "id": "J91",
@@ -2169,7 +2169,7 @@
         "kind": "jira-story",
         "ref": "AQPI-20",
         "summary": "7.2 Capture and authorize payment",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-20"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-20"
       },
       "quote": "Payment data is handled through approved secure components.",
       "id": "J92",
@@ -2193,7 +2193,7 @@
         "kind": "jira-story",
         "ref": "AQPI-20",
         "summary": "7.2 Capture and authorize payment",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-20"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-20"
       },
       "quote": "Authorization success, decline, timeout, and technical failure are handled distinctly.",
       "id": "J93",
@@ -2218,7 +2218,7 @@
         "kind": "jira-story",
         "ref": "AQPI-20",
         "summary": "7.2 Capture and authorize payment",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-20"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-20"
       },
       "quote": "The product does not store prohibited card data in application logs.",
       "id": "J94",
@@ -2243,7 +2243,7 @@
         "kind": "jira-story",
         "ref": "AQPI-20",
         "summary": "7.2 Capture and authorize payment",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-20"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-20"
       },
       "quote": "Payment requirements depend on rate conditions.",
       "id": "J95",
@@ -2265,7 +2265,7 @@
         "kind": "jira-story",
         "ref": "AQPI-20",
         "summary": "7.2 Capture and authorize payment",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-20"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-20"
       },
       "quote": "Retry behavior must avoid duplicate authorization.",
       "id": "J96",
@@ -2287,7 +2287,7 @@
         "kind": "jira-story",
         "ref": "AQPI-21",
         "summary": "7.3 Create reservation idempotently",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-21"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-21"
       },
       "quote": "A successful request creates one reservation and returns a confirmation identifier.",
       "id": "J97",
@@ -2312,7 +2312,7 @@
         "kind": "jira-story",
         "ref": "AQPI-21",
         "summary": "7.3 Create reservation idempotently",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-21"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-21"
       },
       "quote": "Repeated submissions with the same idempotency key do not create duplicate reservations.",
       "id": "J98",
@@ -2338,7 +2338,7 @@
         "kind": "jira-story",
         "ref": "AQPI-21",
         "summary": "7.3 Create reservation idempotently",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-21"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-21"
       },
       "quote": "Inventory, price, payment, and reservation outcomes remain reconcilable.",
       "id": "J99",
@@ -2362,7 +2362,7 @@
         "kind": "jira-story",
         "ref": "AQPI-21",
         "summary": "7.3 Create reservation idempotently",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-21"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-21"
       },
       "quote": "Partial failures trigger defined recovery or manual-review handling.",
       "id": "J100",
@@ -2387,7 +2387,7 @@
         "kind": "jira-story",
         "ref": "AQPI-21",
         "summary": "7.3 Create reservation idempotently",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-21"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-21"
       },
       "quote": "Reservation submission must use an idempotency mechanism.",
       "id": "J101",
@@ -2409,7 +2409,7 @@
         "kind": "jira-story",
         "ref": "AQPI-21",
         "summary": "7.3 Create reservation idempotently",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-21"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-21"
       },
       "quote": "The source of truth for confirmation status must be defined.",
       "id": "J102",
@@ -2431,7 +2431,7 @@
         "kind": "jira-story",
         "ref": "AQPI-22",
         "summary": "7.4 Show booking outcome",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-22"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-22"
       },
       "quote": "Success displays confirmation identifier, hotel, stay summary, selected products, and total.",
       "id": "J103",
@@ -2458,7 +2458,7 @@
         "kind": "jira-story",
         "ref": "AQPI-22",
         "summary": "7.4 Show booking outcome",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-22"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-22"
       },
       "quote": "A failure does not display a false confirmation.",
       "id": "J104",
@@ -2480,7 +2480,7 @@
         "kind": "jira-story",
         "ref": "AQPI-22",
         "summary": "7.4 Show booking outcome",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-22"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-22"
       },
       "quote": "Unknown or timeout states instruct the guest not to resubmit blindly and provide a safe recovery path.",
       "id": "J105",
@@ -2509,7 +2509,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-23",
         "summary": "[Epic 6] Confirmation and Notifications",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-23"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-23"
       },
       "quote": "All child user stories meet their acceptance criteria and the Definition of Done.",
       "id": "J106",
@@ -2534,7 +2534,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-23",
         "summary": "[Epic 6] Confirmation and Notifications",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-23"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-23"
       },
       "quote": "Negative and error paths for each story are tested and evidenced.",
       "id": "J107",
@@ -2557,7 +2557,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-23",
         "summary": "[Epic 6] Confirmation and Notifications",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-23"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-23"
       },
       "quote": "Required logging is in place and verified free of sensitive data.",
       "id": "J108",
@@ -2580,7 +2580,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-23",
         "summary": "[Epic 6] Confirmation and Notifications",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-23"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-23"
       },
       "quote": "The Product Owner has accepted the capability end to end.",
       "id": "J109",
@@ -2602,7 +2602,7 @@
         "kind": "jira-story",
         "ref": "AQPI-24",
         "summary": "8.1 Generate confirmation message",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-24"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24"
       },
       "quote": "The message contains guest-safe confirmation details, hotel information, stay dates, booked items, pricing summary, and applicable policy information.",
       "id": "J110",
@@ -2635,7 +2635,7 @@
         "kind": "jira-story",
         "ref": "AQPI-24",
         "summary": "8.1 Generate confirmation message",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-24"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24"
       },
       "quote": "The message content matches the confirmed reservation state.",
       "id": "J111",
@@ -2658,7 +2658,7 @@
         "kind": "jira-story",
         "ref": "AQPI-24",
         "summary": "8.1 Generate confirmation message",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-24"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24"
       },
       "quote": "Templates support required locale and accessibility standards.",
       "id": "J112",
@@ -2681,7 +2681,7 @@
         "kind": "jira-story",
         "ref": "AQPI-24",
         "summary": "8.1 Generate confirmation message",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-24"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24"
       },
       "quote": "Only necessary personal data may be included.",
       "id": "J113",
@@ -2703,7 +2703,7 @@
         "kind": "jira-story",
         "ref": "AQPI-24",
         "summary": "8.1 Generate confirmation message",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-24"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24"
       },
       "quote": "Sensitive payment details must not appear.",
       "id": "J114",
@@ -2725,7 +2725,7 @@
         "kind": "jira-story",
         "ref": "AQPI-25",
         "summary": "8.2 Send and track confirmation email",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-25"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25"
       },
       "quote": "A successful reservation creates one confirmation-email request.",
       "id": "J115",
@@ -2749,7 +2749,7 @@
         "kind": "jira-story",
         "ref": "AQPI-25",
         "summary": "8.2 Send and track confirmation email",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-25"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25"
       },
       "quote": "Send failure does not reverse a valid reservation.",
       "id": "J116",
@@ -2772,7 +2772,7 @@
         "kind": "jira-story",
         "ref": "AQPI-25",
         "summary": "8.2 Send and track confirmation email",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-25"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25"
       },
       "quote": "Permitted retries avoid duplicate or excessive messages.",
       "id": "J117",
@@ -2795,7 +2795,7 @@
         "kind": "jira-story",
         "ref": "AQPI-25",
         "summary": "8.2 Send and track confirmation email",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-25"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25"
       },
       "quote": "Operational users can distinguish queued, sent, delivered, bounced, and failed states when supported by the provider.",
       "id": "J118",
@@ -2823,7 +2823,7 @@
         "kind": "jira-story",
         "ref": "AQPI-25",
         "summary": "8.2 Send and track confirmation email",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-25"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25"
       },
       "quote": "Email addresses must be masked outside authorized operational views.",
       "id": "J119",
@@ -2847,7 +2847,7 @@
         "kind": "jira-story",
         "ref": "AQPI-26",
         "summary": "8.3 Resend confirmation safely",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-26"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-26"
       },
       "quote": "The request verifies sufficient reservation information without exposing data.",
       "id": "J120",
@@ -2872,7 +2872,7 @@
         "kind": "jira-story",
         "ref": "AQPI-26",
         "summary": "8.3 Resend confirmation safely",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-26"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-26"
       },
       "quote": "Rate limits and abuse controls apply.",
       "id": "J121",
@@ -2894,7 +2894,7 @@
         "kind": "jira-story",
         "ref": "AQPI-26",
         "summary": "8.3 Resend confirmation safely",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-26"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-26"
       },
       "quote": "The resend creates a new message event without creating a new reservation.",
       "id": "J122",
@@ -2919,7 +2919,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-27",
         "summary": "[Epic 7] Cross-Cutting Quality, Privacy and Observability",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-27"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-27"
       },
       "quote": "All child user stories meet their acceptance criteria and the Definition of Done.",
       "id": "J123",
@@ -2944,7 +2944,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-27",
         "summary": "[Epic 7] Cross-Cutting Quality, Privacy and Observability",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-27"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-27"
       },
       "quote": "Negative and error paths for each story are tested and evidenced.",
       "id": "J124",
@@ -2967,7 +2967,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-27",
         "summary": "[Epic 7] Cross-Cutting Quality, Privacy and Observability",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-27"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-27"
       },
       "quote": "Required logging is in place and verified free of sensitive data.",
       "id": "J125",
@@ -2990,7 +2990,7 @@
         "kind": "jira-epic",
         "ref": "AQPI-27",
         "summary": "[Epic 7] Cross-Cutting Quality, Privacy and Observability",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-27"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-27"
       },
       "quote": "The Product Owner has accepted the capability end to end.",
       "id": "J126",
@@ -3012,7 +3012,7 @@
         "kind": "jira-story",
         "ref": "AQPI-28",
         "summary": "9.1 Protect sensitive data",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-28"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-28"
       },
       "quote": "Sensitive data is classified and mapped to approved storage and processing locations.",
       "id": "J127",
@@ -3037,7 +3037,7 @@
         "kind": "jira-story",
         "ref": "AQPI-28",
         "summary": "9.1 Protect sensitive data",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-28"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-28"
       },
       "quote": "Data is encrypted in transit and at rest where required.",
       "id": "J128",
@@ -3060,7 +3060,7 @@
         "kind": "jira-story",
         "ref": "AQPI-28",
         "summary": "9.1 Protect sensitive data",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-28"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-28"
       },
       "quote": "Logs and analytics exclude or mask prohibited fields.",
       "id": "J129",
@@ -3083,7 +3083,7 @@
         "kind": "jira-story",
         "ref": "AQPI-28",
         "summary": "9.1 Protect sensitive data",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-28"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-28"
       },
       "quote": "Access to operational data is role-based and auditable.",
       "id": "J130",
@@ -3106,7 +3106,7 @@
         "kind": "jira-story",
         "ref": "AQPI-28",
         "summary": "9.1 Protect sensitive data",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-28"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-28"
       },
       "quote": "Retention and deletion follow approved policy.",
       "id": "J131",
@@ -3128,7 +3128,7 @@
         "kind": "jira-story",
         "ref": "AQPI-29",
         "summary": "9.2 Provide end-to-end observability",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-29"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-29"
       },
       "quote": "Events use a correlation ID across supported services.",
       "id": "J132",
@@ -3152,7 +3152,7 @@
         "kind": "jira-story",
         "ref": "AQPI-29",
         "summary": "9.2 Provide end-to-end observability",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-29"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-29"
       },
       "quote": "Business events and technical logs are distinguishable.",
       "id": "J133",
@@ -3173,7 +3173,7 @@
         "kind": "jira-story",
         "ref": "AQPI-29",
         "summary": "9.2 Provide end-to-end observability",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-29"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-29"
       },
       "quote": "Metrics and alerts exist for agreed critical failures and latency.",
       "id": "J134",
@@ -3197,7 +3197,7 @@
         "kind": "jira-story",
         "ref": "AQPI-29",
         "summary": "9.2 Provide end-to-end observability",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-29"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-29"
       },
       "quote": "Logging degradation does not expose sensitive payloads or silently block booking unless explicitly required.",
       "id": "J135",
@@ -3226,7 +3226,7 @@
         "kind": "jira-story",
         "ref": "AQPI-29",
         "summary": "9.2 Provide end-to-end observability",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-29"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-29"
       },
       "quote": "Event schemas must be versioned.",
       "id": "J136",
@@ -3246,7 +3246,7 @@
         "kind": "jira-story",
         "ref": "AQPI-29",
         "summary": "9.2 Provide end-to-end observability",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-29"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-29"
       },
       "quote": "Production log access must be controlled and retained according to policy.",
       "id": "J137",
@@ -3270,7 +3270,7 @@
         "kind": "jira-story",
         "ref": "AQPI-30",
         "summary": "9.3 Meet accessibility requirements",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-30"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-30"
       },
       "quote": "Keyboard navigation, focus order, labels, instructions, status messaging, and error handling are accessible.",
       "id": "J138",
@@ -3298,7 +3298,7 @@
         "kind": "jira-story",
         "ref": "AQPI-30",
         "summary": "9.3 Meet accessibility requirements",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-30"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-30"
       },
       "quote": "Visual information is not conveyed by color alone.",
       "id": "J139",
@@ -3321,7 +3321,7 @@
         "kind": "jira-story",
         "ref": "AQPI-30",
         "summary": "9.3 Meet accessibility requirements",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-30"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-30"
       },
       "quote": "Dynamic updates are announced appropriately.",
       "id": "J140",
@@ -3342,7 +3342,7 @@
         "kind": "jira-story",
         "ref": "AQPI-30",
         "summary": "9.3 Meet accessibility requirements",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-30"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-30"
       },
       "quote": "Email templates are readable and structurally accessible.",
       "id": "J141",
@@ -3364,7 +3364,7 @@
         "kind": "jira-story",
         "ref": "AQPI-31",
         "summary": "9.4 Meet performance and reliability objectives",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-31"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-31"
       },
       "quote": "Search, pricing, cart, checkout, reservation, and email dependencies have agreed performance targets.",
       "id": "J142",
@@ -3391,7 +3391,7 @@
         "kind": "jira-story",
         "ref": "AQPI-31",
         "summary": "9.4 Meet performance and reliability objectives",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-31"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-31"
       },
       "quote": "Timeout, retry, circuit-breaker, and fallback behavior are documented.",
       "id": "J143",
@@ -3415,7 +3415,7 @@
         "kind": "jira-story",
         "ref": "AQPI-31",
         "summary": "9.4 Meet performance and reliability objectives",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-31"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-31"
       },
       "quote": "Load, resilience, and recovery tests cover critical journeys.",
       "id": "J144",
@@ -3439,7 +3439,7 @@
         "kind": "jira-story",
         "ref": "AQPI-31",
         "summary": "9.4 Meet performance and reliability objectives",
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-31"
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-31"
       },
       "quote": "Reservation integrity is prioritized over non-critical personalization and analytics.",
       "id": "J145",

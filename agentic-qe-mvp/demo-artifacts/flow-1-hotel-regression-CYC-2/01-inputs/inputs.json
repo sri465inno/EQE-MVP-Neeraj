@@ -8,9 +8,10 @@
     "children": [],
     "provenance": {
       "kind": "github",
-      "label": "Jira REST API v3 export pulled live from GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export) - synthetic test issues; no live Jira call was made",
+      "system": "jira",
+      "label": "Jira export on GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export): Jira REST API v3 JSON of AQPI-1, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
       "ref": "AQPI-1",
-      "fetchedAt": "2026-10-02T15:29:27.893Z",
+      "fetchedAt": "2026-10-02T16:18:14.624Z",
       "files": [
         "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/AQPI-1.json"
       ]
@@ -50,9 +51,10 @@
     ],
     "provenance": {
       "kind": "github",
-      "label": "Jira REST API v3 export pulled live from GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export) - synthetic test issues; no live Jira call was made",
+      "system": "jira",
+      "label": "Jira export on GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export): Jira REST API v3 JSON of AQPI-2, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
       "ref": "AQPI-2",
-      "fetchedAt": "2026-10-02T15:29:28.143Z",
+      "fetchedAt": "2026-10-02T16:18:14.650Z",
       "files": [
         "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/AQPI-2.json",
         "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/AQPI-2.children.json"
@@ -67,9 +69,9 @@
     "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef)",
     "provenance": {
       "kind": "github",
-      "label": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef) at 2026-10-02T15:29:29.806Z",
+      "label": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef) at 2026-10-02T16:18:14.785Z",
       "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef)",
-      "fetchedAt": "2026-10-02T15:29:29.806Z",
+      "fetchedAt": "2026-10-02T16:18:14.785Z",
       "files": [
         "README.md",
         "TRACEABILITY.md",

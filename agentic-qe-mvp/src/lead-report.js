@@ -2,7 +2,7 @@
 // QE lead report: the cycle written up the way a senior QE lead would, computed from the persisted cycle and its report.
 const { esc, table } = require('./report');
 
-const SOURCE_TEXT = { live: 'Jira (live call)', github: 'pulled from GitHub', fixture: 'recorded fixture', pasted: 'pasted by the user' };
+const SOURCE_TEXT = { live: 'Jira (live call)', github: 'pulled from GitHub', 'jira-export': 'Jira export on GitHub', fixture: 'recorded fixture', pasted: 'pasted by the user' };
 const date = (iso) => (iso ? new Date(iso).toISOString().replace('T', ' ').slice(0, 16) + ' UTC' : '-');
 const plural = (n, one, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 

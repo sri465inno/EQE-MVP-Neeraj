@@ -12,7 +12,7 @@
         "source": "jira",
         "ref": "AQPI-1",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-1",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-1",
         "text": "A guest can complete the complete search-to-confirmation flow using valid inputs.",
         "provenance": "github"
       }
@@ -39,7 +39,7 @@
         "source": "jira",
         "ref": "AQPI-1",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-1",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-1",
         "text": "Only bookable inventory and valid rates are presented as available.",
         "provenance": "github"
       }
@@ -66,7 +66,7 @@
         "source": "jira",
         "ref": "AQPI-1",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-1",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-1",
         "text": "Total price is disclosed before confirmation, including mandatory taxes and fees.",
         "provenance": "github"
       }
@@ -93,7 +93,7 @@
         "source": "jira",
         "ref": "AQPI-1",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-1",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-1",
         "text": "Ancillary offers do not block booking when declined or unavailable.",
         "provenance": "github"
       }
@@ -120,7 +120,7 @@
         "source": "jira",
         "ref": "AQPI-1",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-1",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-1",
         "text": "The platform prevents or safely handles duplicate reservation submissions.",
         "provenance": "github"
       }
@@ -147,7 +147,7 @@
         "source": "jira",
         "ref": "AQPI-1",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-1",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-1",
         "text": "A successful reservation produces a durable confirmation identifier.",
         "provenance": "github"
       }
@@ -174,7 +174,7 @@
         "source": "jira",
         "ref": "AQPI-1",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-1",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-1",
         "text": "Confirmation is displayed on screen and an email request is generated.",
         "provenance": "github"
       }
@@ -201,7 +201,7 @@
         "source": "jira",
         "ref": "AQPI-1",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-1",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-1",
         "text": "Required business and technical events are logged using approved identifiers and masking rules.",
         "provenance": "github"
       }
@@ -228,7 +228,7 @@
         "source": "jira",
         "ref": "AQPI-2",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-2",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-2",
         "text": "All child user stories meet their acceptance criteria and the Definition of Done.",
         "provenance": "github"
       },
@@ -236,7 +236,7 @@
         "source": "jira",
         "ref": "AQPI-6",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-6",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-6",
         "text": "All child user stories meet their acceptance criteria and the Definition of Done.",
         "provenance": "github"
       },
@@ -244,7 +244,7 @@
         "source": "jira",
         "ref": "AQPI-10",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-10",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-10",
         "text": "All child user stories meet their acceptance criteria and the Definition of Done.",
         "provenance": "github"
       },
@@ -252,7 +252,7 @@
         "source": "jira",
         "ref": "AQPI-14",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-14",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-14",
         "text": "All child user stories meet their acceptance criteria and the Definition of Done.",
         "provenance": "github"
       },
@@ -260,7 +260,7 @@
         "source": "jira",
         "ref": "AQPI-18",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-18",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-18",
         "text": "All child user stories meet their acceptance criteria and the Definition of Done.",
         "provenance": "github"
       },
@@ -268,7 +268,7 @@
         "source": "jira",
         "ref": "AQPI-23",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-23",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-23",
         "text": "All child user stories meet their acceptance criteria and the Definition of Done.",
         "provenance": "github"
       },
@@ -276,7 +276,7 @@
         "source": "jira",
         "ref": "AQPI-27",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-27",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-27",
         "text": "All child user stories meet their acceptance criteria and the Definition of Done.",
         "provenance": "github"
       }
@@ -303,7 +303,7 @@
         "source": "jira",
         "ref": "AQPI-2",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-2",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-2",
         "text": "Negative and error paths for each story are tested and evidenced.",
         "provenance": "github"
       },
@@ -311,7 +311,7 @@
         "source": "jira",
         "ref": "AQPI-6",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-6",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-6",
         "text": "Negative and error paths for each story are tested and evidenced.",
         "provenance": "github"
       },
@@ -319,7 +319,7 @@
         "source": "jira",
         "ref": "AQPI-10",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-10",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-10",
         "text": "Negative and error paths for each story are tested and evidenced.",
         "provenance": "github"
       },
@@ -327,7 +327,7 @@
         "source": "jira",
         "ref": "AQPI-14",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-14",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-14",
         "text": "Negative and error paths for each story are tested and evidenced.",
         "provenance": "github"
       },
@@ -335,7 +335,7 @@
         "source": "jira",
         "ref": "AQPI-18",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-18",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-18",
         "text": "Negative and error paths for each story are tested and evidenced.",
         "provenance": "github"
       },
@@ -343,7 +343,7 @@
         "source": "jira",
         "ref": "AQPI-23",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-23",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-23",
         "text": "Negative and error paths for each story are tested and evidenced.",
         "provenance": "github"
       },
@@ -351,7 +351,7 @@
         "source": "jira",
         "ref": "AQPI-27",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-27",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-27",
         "text": "Negative and error paths for each story are tested and evidenced.",
         "provenance": "github"
       }
@@ -378,7 +378,7 @@
         "source": "jira",
         "ref": "AQPI-2",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-2",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-2",
         "text": "Required logging is in place and verified free of sensitive data.",
         "provenance": "github"
       },
@@ -386,7 +386,7 @@
         "source": "jira",
         "ref": "AQPI-6",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-6",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-6",
         "text": "Required logging is in place and verified free of sensitive data.",
         "provenance": "github"
       },
@@ -394,7 +394,7 @@
         "source": "jira",
         "ref": "AQPI-10",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-10",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-10",
         "text": "Required logging is in place and verified free of sensitive data.",
         "provenance": "github"
       },
@@ -402,7 +402,7 @@
         "source": "jira",
         "ref": "AQPI-14",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-14",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-14",
         "text": "Required logging is in place and verified free of sensitive data.",
         "provenance": "github"
       },
@@ -410,7 +410,7 @@
         "source": "jira",
         "ref": "AQPI-18",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-18",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-18",
         "text": "Required logging is in place and verified free of sensitive data.",
         "provenance": "github"
       },
@@ -418,7 +418,7 @@
         "source": "jira",
         "ref": "AQPI-23",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-23",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-23",
         "text": "Required logging is in place and verified free of sensitive data.",
         "provenance": "github"
       },
@@ -426,7 +426,7 @@
         "source": "jira",
         "ref": "AQPI-27",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-27",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-27",
         "text": "Required logging is in place and verified free of sensitive data.",
         "provenance": "github"
       }
@@ -453,7 +453,7 @@
         "source": "jira",
         "ref": "AQPI-2",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-2",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-2",
         "text": "The Product Owner has accepted the capability end to end.",
         "provenance": "github"
       },
@@ -461,7 +461,7 @@
         "source": "jira",
         "ref": "AQPI-6",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-6",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-6",
         "text": "The Product Owner has accepted the capability end to end.",
         "provenance": "github"
       },
@@ -469,7 +469,7 @@
         "source": "jira",
         "ref": "AQPI-10",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-10",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-10",
         "text": "The Product Owner has accepted the capability end to end.",
         "provenance": "github"
       },
@@ -477,7 +477,7 @@
         "source": "jira",
         "ref": "AQPI-14",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-14",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-14",
         "text": "The Product Owner has accepted the capability end to end.",
         "provenance": "github"
       },
@@ -485,7 +485,7 @@
         "source": "jira",
         "ref": "AQPI-18",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-18",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-18",
         "text": "The Product Owner has accepted the capability end to end.",
         "provenance": "github"
       },
@@ -493,7 +493,7 @@
         "source": "jira",
         "ref": "AQPI-23",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-23",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-23",
         "text": "The Product Owner has accepted the capability end to end.",
         "provenance": "github"
       },
@@ -501,7 +501,7 @@
         "source": "jira",
         "ref": "AQPI-27",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-27",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-27",
         "text": "The Product Owner has accepted the capability end to end.",
         "provenance": "github"
       }
@@ -528,7 +528,7 @@
         "source": "jira",
         "ref": "AQPI-3",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-3",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-3",
         "text": "Given valid search criteria, when the guest submits the search, then a search request is created and matching available hotels are returned.",
         "provenance": "github"
       }
@@ -555,7 +555,7 @@
         "source": "jira",
         "ref": "AQPI-3",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-3",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-3",
         "text": "The submitted criteria remain visible and editable on the results page.",
         "provenance": "github"
       }
@@ -582,7 +582,7 @@
         "source": "jira",
         "ref": "AQPI-3",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-3",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-3",
         "text": "Past check-in dates, check-out dates not after check-in, and missing mandatory fields are rejected with actionable messages.",
         "provenance": "github"
       }
@@ -609,7 +609,7 @@
         "source": "jira",
         "ref": "AQPI-3",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-3",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-3",
         "text": "A no-availability result explains that no matching inventory was found and allows criteria changes.",
         "provenance": "github"
       }
@@ -636,7 +636,7 @@
         "source": "jira",
         "ref": "AQPI-3",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-3",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-3",
         "text": "Check-in must precede check-out.",
         "provenance": "github"
       }
@@ -663,7 +663,7 @@
         "source": "jira",
         "ref": "AQPI-3",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-3",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-3",
         "text": "Occupancy must comply with configured room limits.",
         "provenance": "github"
       }
@@ -690,7 +690,7 @@
         "source": "jira",
         "ref": "AQPI-3",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-3",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-3",
         "text": "Maximum stay length must be configurable.",
         "provenance": "github"
       }
@@ -717,7 +717,7 @@
         "source": "jira",
         "ref": "AQPI-4",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-4",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-4",
         "text": "Required fields are clearly identified.",
         "provenance": "github"
       }
@@ -744,7 +744,7 @@
         "source": "jira",
         "ref": "AQPI-4",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-4",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-4",
         "text": "Invalid combinations return field-level messages.",
         "provenance": "github"
       }
@@ -771,7 +771,7 @@
         "source": "jira",
         "ref": "AQPI-4",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-4",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-4",
         "text": "Server validation is authoritative when client and server results differ.",
         "provenance": "github"
       }
@@ -798,7 +798,7 @@
         "source": "jira",
         "ref": "AQPI-4",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-4",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-4",
         "text": "Validation messages are accessible to assistive technology.",
         "provenance": "github"
       }
@@ -825,7 +825,7 @@
         "source": "jira",
         "ref": "AQPI-4",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-4",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-4",
         "text": "Validation rules must be configurable where market or property rules vary.",
         "provenance": "github"
       }
@@ -852,7 +852,7 @@
         "source": "jira",
         "ref": "AQPI-5",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-5",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-5",
         "text": "Zero results provide options to alter dates, occupancy, destination, or filters.",
         "provenance": "github"
       }
@@ -879,7 +879,7 @@
         "source": "jira",
         "ref": "AQPI-5",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-5",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-5",
         "text": "Technical failures display a non-technical message and retry option.",
         "provenance": "github"
       }
@@ -906,7 +906,7 @@
         "source": "jira",
         "ref": "AQPI-5",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-5",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-5",
         "text": "Repeated submission does not create inconsistent sessions.",
         "provenance": "github"
       }
@@ -933,7 +933,7 @@
         "source": "jira",
         "ref": "AQPI-7",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-7",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-7",
         "text": "Each result shows hotel name, location, representative image, starting price, currency, and availability indicator.",
         "provenance": "github"
       }
@@ -960,7 +960,7 @@
         "source": "jira",
         "ref": "AQPI-7",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-7",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-7",
         "text": "Mandatory fees or pricing qualifications are clearly disclosed.",
         "provenance": "github"
       }
@@ -987,7 +987,7 @@
         "source": "jira",
         "ref": "AQPI-7",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-7",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-7",
         "text": "Unavailable hotels are not presented as immediately bookable.",
         "provenance": "github"
       }
@@ -1014,7 +1014,7 @@
         "source": "jira",
         "ref": "AQPI-7",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-7",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-7",
         "text": "Results support pagination or progressive loading.",
         "provenance": "github"
       }
@@ -1041,7 +1041,7 @@
         "source": "jira",
         "ref": "AQPI-7",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-7",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-7",
         "text": "Displayed starting price must correspond to a valid rate returned for the search criteria.",
         "provenance": "github"
       }
@@ -1068,7 +1068,7 @@
         "source": "jira",
         "ref": "AQPI-8",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-8",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-8",
         "text": "The guest can apply supported filters such as price range, amenities, hotel category, and distance when data is available.",
         "provenance": "github"
       }
@@ -1095,7 +1095,7 @@
         "source": "jira",
         "ref": "AQPI-8",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-8",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-8",
         "text": "The guest can sort using approved options.",
         "provenance": "github"
       }
@@ -1122,7 +1122,7 @@
         "source": "jira",
         "ref": "AQPI-8",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-8",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-8",
         "text": "Selected criteria are visible and removable.",
         "provenance": "github"
       }
@@ -1149,7 +1149,7 @@
         "source": "jira",
         "ref": "AQPI-8",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-8",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-8",
         "text": "Zero results after filtering offer a reset option.",
         "provenance": "github"
       }
@@ -1176,7 +1176,7 @@
         "source": "jira",
         "ref": "AQPI-9",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-9",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-9",
         "text": "Hotel description, images, location, amenities, room options, pricing, major policies, and relevant restrictions are displayed.",
         "provenance": "github"
       }
@@ -1203,7 +1203,7 @@
         "source": "jira",
         "ref": "AQPI-9",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-9",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-9",
         "text": "The guest can select a valid room and rate plan.",
         "provenance": "github"
       }
@@ -1230,7 +1230,7 @@
         "source": "jira",
         "ref": "AQPI-9",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-9",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-9",
         "text": "If inventory changes, the guest is informed before continuing.",
         "provenance": "github"
       }
@@ -1257,7 +1257,7 @@
         "source": "jira",
         "ref": "AQPI-9",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-9",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-9",
         "text": "Rate conditions and cancellation terms must be shown before selection.",
         "provenance": "github"
       }
@@ -1284,7 +1284,7 @@
         "source": "jira",
         "ref": "AQPI-11",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-11",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-11",
         "text": "The service considers available context such as stay dates, season, destination, hotel, room, party composition, declared interests, and consented profile attributes.",
         "provenance": "github"
       }
@@ -1311,7 +1311,7 @@
         "source": "jira",
         "ref": "AQPI-11",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-11",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-11",
         "text": "Unavailable or ineligible products are excluded.",
         "provenance": "github"
       }
@@ -1338,7 +1338,7 @@
         "source": "jira",
         "ref": "AQPI-11",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-11",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-11",
         "text": "The service returns a reason code for each recommended item.",
         "provenance": "github"
       }
@@ -1365,7 +1365,7 @@
         "source": "jira",
         "ref": "AQPI-11",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-11",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-11",
         "text": "When personalization data is unavailable, safe contextual defaults may be returned.",
         "provenance": "github"
       }
@@ -1392,7 +1392,7 @@
         "source": "jira",
         "ref": "AQPI-11",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-11",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-11",
         "text": "Sensitive traits must not be inferred or used.",
         "provenance": "github"
       }
@@ -1419,7 +1419,7 @@
         "source": "jira",
         "ref": "AQPI-11",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-11",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-11",
         "text": "Personalization must honor consent and data-retention rules.",
         "provenance": "github"
       }
@@ -1446,7 +1446,7 @@
         "source": "jira",
         "ref": "AQPI-11",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-11",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-11",
         "text": "Business rules and model versions must be auditable.",
         "provenance": "github"
       }
@@ -1473,7 +1473,7 @@
         "source": "jira",
         "ref": "AQPI-12",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-12",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-12",
         "text": "Each offer shows name, description, price, currency, applicability, and any restrictions.",
         "provenance": "github"
       }
@@ -1500,7 +1500,7 @@
         "source": "jira",
         "ref": "AQPI-12",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-12",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-12",
         "text": "The guest can add, skip, or dismiss an offer.",
         "provenance": "github"
       }
@@ -1527,7 +1527,7 @@
         "source": "jira",
         "ref": "AQPI-12",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-12",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-12",
         "text": "Offers are clearly distinguished from mandatory fees.",
         "provenance": "github"
       }
@@ -1554,7 +1554,7 @@
         "source": "jira",
         "ref": "AQPI-12",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-12",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-12",
         "text": "Failure to load offers does not block room booking.",
         "provenance": "github"
       }
@@ -1581,7 +1581,7 @@
         "source": "jira",
         "ref": "AQPI-13",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-13",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-13",
         "text": "The interface identifies when offers are personalized where required.",
         "provenance": "github"
       }
@@ -1608,7 +1608,7 @@
         "source": "jira",
         "ref": "AQPI-13",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-13",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-13",
         "text": "The guest can proceed without selecting ancillary products.",
         "provenance": "github"
       }
@@ -1635,7 +1635,7 @@
         "source": "jira",
         "ref": "AQPI-13",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-13",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-13",
         "text": "A consent or preference change affects future eligible recommendations according to policy.",
         "provenance": "github"
       }
@@ -1662,7 +1662,7 @@
         "source": "jira",
         "ref": "AQPI-15",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-15",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-15",
         "text": "The cart contains hotel, room, rate plan, stay dates, occupancy, quantity, currency, and price components.",
         "provenance": "github"
       }
@@ -1689,7 +1689,7 @@
         "source": "jira",
         "ref": "AQPI-15",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-15",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-15",
         "text": "Inventory and price are revalidated when required.",
         "provenance": "github"
       }
@@ -1716,7 +1716,7 @@
         "source": "jira",
         "ref": "AQPI-15",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-15",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-15",
         "text": "The cart has a defined expiration and displays relevant timeout behavior.",
         "provenance": "github"
       }
@@ -1743,7 +1743,7 @@
         "source": "jira",
         "ref": "AQPI-15",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-15",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-15",
         "text": "A cart must not itself create a reservation.",
         "provenance": "github"
       }
@@ -1770,7 +1770,7 @@
         "source": "jira",
         "ref": "AQPI-15",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-15",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-15",
         "text": "Price-change handling must require guest acknowledgement when material.",
         "provenance": "github"
       }
@@ -1797,7 +1797,7 @@
         "source": "jira",
         "ref": "AQPI-16",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-16",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-16",
         "text": "The guest can add an available ancillary.",
         "provenance": "github"
       }
@@ -1824,7 +1824,7 @@
         "source": "jira",
         "ref": "AQPI-16",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-16",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-16",
         "text": "Supported quantities can be changed within product limits.",
         "provenance": "github"
       }
@@ -1851,7 +1851,7 @@
         "source": "jira",
         "ref": "AQPI-16",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-16",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-16",
         "text": "Removal updates totals immediately.",
         "provenance": "github"
       }
@@ -1878,7 +1878,7 @@
         "source": "jira",
         "ref": "AQPI-16",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-16",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-16",
         "text": "Ineligible or sold-out products cannot be retained silently.",
         "provenance": "github"
       }
@@ -1905,7 +1905,7 @@
         "source": "jira",
         "ref": "AQPI-17",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-17",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-17",
         "text": "Room charges, taxes, mandatory fees, optional products, discounts, and total are itemized.",
         "provenance": "github"
       }
@@ -1932,7 +1932,7 @@
         "source": "jira",
         "ref": "AQPI-17",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-17",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-17",
         "text": "Currency is consistently displayed.",
         "provenance": "github"
       }
@@ -1959,7 +1959,7 @@
         "source": "jira",
         "ref": "AQPI-17",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-17",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-17",
         "text": "Material changes are highlighted and require acknowledgement.",
         "provenance": "github"
       }
@@ -1986,7 +1986,7 @@
         "source": "jira",
         "ref": "AQPI-17",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-17",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-17",
         "text": "The guest can return to edit supported selections.",
         "provenance": "github"
       }
@@ -2013,7 +2013,7 @@
         "source": "jira",
         "ref": "AQPI-17",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-17",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-17",
         "text": "The final payable total must be revalidated before reservation submission.",
         "provenance": "github"
       }
@@ -2040,7 +2040,7 @@
         "source": "jira",
         "ref": "AQPI-19",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-19",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-19",
         "text": "Required and optional fields are clearly distinguished.",
         "provenance": "github"
       }
@@ -2067,7 +2067,7 @@
         "source": "jira",
         "ref": "AQPI-19",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-19",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-19",
         "text": "Inputs are validated and error messages are accessible.",
         "provenance": "github"
       }
@@ -2094,7 +2094,7 @@
         "source": "jira",
         "ref": "AQPI-19",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-19",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-19",
         "text": "The guest receives applicable privacy notice and consent controls.",
         "provenance": "github"
       }
@@ -2121,7 +2121,7 @@
         "source": "jira",
         "ref": "AQPI-19",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-19",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-19",
         "text": "Data is transmitted securely and is not exposed in client logs.",
         "provenance": "github"
       }
@@ -2148,7 +2148,7 @@
         "source": "jira",
         "ref": "AQPI-19",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-19",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-19",
         "text": "Data minimization applies.",
         "provenance": "github"
       }
@@ -2175,7 +2175,7 @@
         "source": "jira",
         "ref": "AQPI-19",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-19",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-19",
         "text": "Sensitive values must be masked in support tools and excluded from analytics logs.",
         "provenance": "github"
       }
@@ -2202,7 +2202,7 @@
         "source": "jira",
         "ref": "AQPI-20",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-20",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-20",
         "text": "The guest sees the final payable or guarantee amount before authorization.",
         "provenance": "github"
       }
@@ -2229,7 +2229,7 @@
         "source": "jira",
         "ref": "AQPI-20",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-20",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-20",
         "text": "Payment data is handled through approved secure components.",
         "provenance": "github"
       }
@@ -2256,7 +2256,7 @@
         "source": "jira",
         "ref": "AQPI-20",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-20",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-20",
         "text": "Authorization success, decline, timeout, and technical failure are handled distinctly.",
         "provenance": "github"
       }
@@ -2283,7 +2283,7 @@
         "source": "jira",
         "ref": "AQPI-20",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-20",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-20",
         "text": "The product does not store prohibited card data in application logs.",
         "provenance": "github"
       }
@@ -2310,7 +2310,7 @@
         "source": "jira",
         "ref": "AQPI-20",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-20",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-20",
         "text": "Payment requirements depend on rate conditions.",
         "provenance": "github"
       }
@@ -2337,7 +2337,7 @@
         "source": "jira",
         "ref": "AQPI-20",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-20",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-20",
         "text": "Retry behavior must avoid duplicate authorization.",
         "provenance": "github"
       }
@@ -2364,7 +2364,7 @@
         "source": "jira",
         "ref": "AQPI-21",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-21",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-21",
         "text": "A successful request creates one reservation and returns a confirmation identifier.",
         "provenance": "github"
       }
@@ -2391,7 +2391,7 @@
         "source": "jira",
         "ref": "AQPI-21",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-21",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-21",
         "text": "Repeated submissions with the same idempotency key do not create duplicate reservations.",
         "provenance": "github"
       }
@@ -2418,7 +2418,7 @@
         "source": "jira",
         "ref": "AQPI-21",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-21",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-21",
         "text": "Inventory, price, payment, and reservation outcomes remain reconcilable.",
         "provenance": "github"
       }
@@ -2445,7 +2445,7 @@
         "source": "jira",
         "ref": "AQPI-21",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-21",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-21",
         "text": "Partial failures trigger defined recovery or manual-review handling.",
         "provenance": "github"
       }
@@ -2472,7 +2472,7 @@
         "source": "jira",
         "ref": "AQPI-21",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-21",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-21",
         "text": "Reservation submission must use an idempotency mechanism.",
         "provenance": "github"
       }
@@ -2499,7 +2499,7 @@
         "source": "jira",
         "ref": "AQPI-21",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-21",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-21",
         "text": "The source of truth for confirmation status must be defined.",
         "provenance": "github"
       }
@@ -2526,7 +2526,7 @@
         "source": "jira",
         "ref": "AQPI-22",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-22",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-22",
         "text": "Success displays confirmation identifier, hotel, stay summary, selected products, and total.",
         "provenance": "github"
       }
@@ -2553,7 +2553,7 @@
         "source": "jira",
         "ref": "AQPI-22",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-22",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-22",
         "text": "A failure does not display a false confirmation.",
         "provenance": "github"
       }
@@ -2580,7 +2580,7 @@
         "source": "jira",
         "ref": "AQPI-22",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-22",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-22",
         "text": "Unknown or timeout states instruct the guest not to resubmit blindly and provide a safe recovery path.",
         "provenance": "github"
       }
@@ -2607,7 +2607,7 @@
         "source": "jira",
         "ref": "AQPI-24",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-24",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24",
         "text": "The message contains guest-safe confirmation details, hotel information, stay dates, booked items, pricing summary, and applicable policy information.",
         "provenance": "github"
       }
@@ -2634,7 +2634,7 @@
         "source": "jira",
         "ref": "AQPI-24",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-24",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24",
         "text": "The message content matches the confirmed reservation state.",
         "provenance": "github"
       }
@@ -2661,7 +2661,7 @@
         "source": "jira",
         "ref": "AQPI-24",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-24",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24",
         "text": "Templates support required locale and accessibility standards.",
         "provenance": "github"
       }
@@ -2688,7 +2688,7 @@
         "source": "jira",
         "ref": "AQPI-24",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-24",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24",
         "text": "Only necessary personal data may be included.",
         "provenance": "github"
       }
@@ -2715,7 +2715,7 @@
         "source": "jira",
         "ref": "AQPI-24",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-24",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24",
         "text": "Sensitive payment details must not appear.",
         "provenance": "github"
       }
@@ -2742,7 +2742,7 @@
         "source": "jira",
         "ref": "AQPI-25",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-25",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25",
         "text": "A successful reservation creates one confirmation-email request.",
         "provenance": "github"
       }
@@ -2769,7 +2769,7 @@
         "source": "jira",
         "ref": "AQPI-25",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-25",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25",
         "text": "Send failure does not reverse a valid reservation.",
         "provenance": "github"
       }
@@ -2796,7 +2796,7 @@
         "source": "jira",
         "ref": "AQPI-25",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-25",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25",
         "text": "Permitted retries avoid duplicate or excessive messages.",
         "provenance": "github"
       }
@@ -2823,7 +2823,7 @@
         "source": "jira",
         "ref": "AQPI-25",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-25",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25",
         "text": "Operational users can distinguish queued, sent, delivered, bounced, and failed states when supported by the provider.",
         "provenance": "github"
       }
@@ -2850,7 +2850,7 @@
         "source": "jira",
         "ref": "AQPI-25",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-25",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25",
         "text": "Email addresses must be masked outside authorized operational views.",
         "provenance": "github"
       }
@@ -2877,7 +2877,7 @@
         "source": "jira",
         "ref": "AQPI-26",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-26",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-26",
         "text": "The request verifies sufficient reservation information without exposing data.",
         "provenance": "github"
       }
@@ -2904,7 +2904,7 @@
         "source": "jira",
         "ref": "AQPI-26",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-26",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-26",
         "text": "Rate limits and abuse controls apply.",
         "provenance": "github"
       }
@@ -2931,7 +2931,7 @@
         "source": "jira",
         "ref": "AQPI-26",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-26",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-26",
         "text": "The resend creates a new message event without creating a new reservation.",
         "provenance": "github"
       }
@@ -2958,7 +2958,7 @@
         "source": "jira",
         "ref": "AQPI-28",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-28",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-28",
         "text": "Sensitive data is classified and mapped to approved storage and processing locations.",
         "provenance": "github"
       }
@@ -2985,7 +2985,7 @@
         "source": "jira",
         "ref": "AQPI-28",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-28",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-28",
         "text": "Data is encrypted in transit and at rest where required.",
         "provenance": "github"
       }
@@ -3012,7 +3012,7 @@
         "source": "jira",
         "ref": "AQPI-28",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-28",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-28",
         "text": "Logs and analytics exclude or mask prohibited fields.",
         "provenance": "github"
       }
@@ -3039,7 +3039,7 @@
         "source": "jira",
         "ref": "AQPI-28",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-28",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-28",
         "text": "Access to operational data is role-based and auditable.",
         "provenance": "github"
       }
@@ -3066,7 +3066,7 @@
         "source": "jira",
         "ref": "AQPI-28",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-28",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-28",
         "text": "Retention and deletion follow approved policy.",
         "provenance": "github"
       }
@@ -3093,7 +3093,7 @@
         "source": "jira",
         "ref": "AQPI-29",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-29",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-29",
         "text": "Events use a correlation ID across supported services.",
         "provenance": "github"
       }
@@ -3120,7 +3120,7 @@
         "source": "jira",
         "ref": "AQPI-29",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-29",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-29",
         "text": "Business events and technical logs are distinguishable.",
         "provenance": "github"
       }
@@ -3147,7 +3147,7 @@
         "source": "jira",
         "ref": "AQPI-29",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-29",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-29",
         "text": "Metrics and alerts exist for agreed critical failures and latency.",
         "provenance": "github"
       }
@@ -3174,7 +3174,7 @@
         "source": "jira",
         "ref": "AQPI-29",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-29",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-29",
         "text": "Logging degradation does not expose sensitive payloads or silently block booking unless explicitly required.",
         "provenance": "github"
       }
@@ -3201,7 +3201,7 @@
         "source": "jira",
         "ref": "AQPI-29",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-29",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-29",
         "text": "Event schemas must be versioned.",
         "provenance": "github"
       }
@@ -3228,7 +3228,7 @@
         "source": "jira",
         "ref": "AQPI-29",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-29",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-29",
         "text": "Production log access must be controlled and retained according to policy.",
         "provenance": "github"
       }
@@ -3255,7 +3255,7 @@
         "source": "jira",
         "ref": "AQPI-30",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-30",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-30",
         "text": "Keyboard navigation, focus order, labels, instructions, status messaging, and error handling are accessible.",
         "provenance": "github"
       }
@@ -3282,7 +3282,7 @@
         "source": "jira",
         "ref": "AQPI-30",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-30",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-30",
         "text": "Visual information is not conveyed by color alone.",
         "provenance": "github"
       }
@@ -3309,7 +3309,7 @@
         "source": "jira",
         "ref": "AQPI-30",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-30",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-30",
         "text": "Dynamic updates are announced appropriately.",
         "provenance": "github"
       }
@@ -3336,7 +3336,7 @@
         "source": "jira",
         "ref": "AQPI-30",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-30",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-30",
         "text": "Email templates are readable and structurally accessible.",
         "provenance": "github"
       }
@@ -3363,7 +3363,7 @@
         "source": "jira",
         "ref": "AQPI-31",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-31",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-31",
         "text": "Search, pricing, cart, checkout, reservation, and email dependencies have agreed performance targets.",
         "provenance": "github"
       }
@@ -3390,7 +3390,7 @@
         "source": "jira",
         "ref": "AQPI-31",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-31",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-31",
         "text": "Timeout, retry, circuit-breaker, and fallback behavior are documented.",
         "provenance": "github"
       }
@@ -3417,7 +3417,7 @@
         "source": "jira",
         "ref": "AQPI-31",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-31",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-31",
         "text": "Load, resilience, and recovery tests cover critical journeys.",
         "provenance": "github"
       }
@@ -3444,7 +3444,7 @@
         "source": "jira",
         "ref": "AQPI-31",
         "line": null,
-        "url": "https://aurora-hotels.atlassian.net/browse/AQPI-31",
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-31",
         "text": "Reservation integrity is prioritized over non-critical personalization and analytics.",
         "provenance": "github"
       }

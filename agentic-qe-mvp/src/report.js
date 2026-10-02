@@ -21,7 +21,8 @@ function collectHandovers(cycle) {
   }));
 }
 
-const PROVENANCE = { live: 'live Jira call', github: 'pulled live from GitHub', fixture: 'recorded fixture', pasted: 'pasted' };
+const PROVENANCE = { live: 'live Jira call', github: 'pulled live from GitHub', 'jira-export': 'Jira export on GitHub', fixture: 'recorded fixture', pasted: 'pasted' };
+const provKind = (p) => (p.kind === 'github' && p.system === 'jira' ? 'jira-export' : p.kind);
 
 async function buildCycleReport(cycle, { env = process.env, fetchImpl, guidance = '' } = {}) {
   const a = cycle.artifacts;
@@ -33,7 +34,7 @@ async function buildCycleReport(cycle, { env = process.env, fetchImpl, guidance 
     cycleName: cycle.name,
     cycleType: cycle.type,
   testingType: tt.name,
-    inputs: cycle.inputs.map((i) => `${i.label} ${i.ref} (${PROVENANCE[i.provenance.kind] || i.provenance.kind})`).join(', '),
+    inputs: cycle.inputs.map((i) => `${i.label} ${i.ref} (${PROVENANCE[provKind(i.provenance)] || i.provenance.kind})`).join(', '),
     requirements: a.requirements.length,
     delta: cycle.delta ? cycle.delta.summary : null,
     testCases: a.testCases.length,
@@ -74,7 +75,7 @@ async function buildCycleReport(cycle, { env = process.env, fetchImpl, guidance 
     handovers,
     handoverStatus: handovers.some((h) => h.status === 'incomplete') ? 'incomplete' : 'complete',
     inputs: cycle.inputs.map((i) => ({ slot: i.slot, label: i.label, ref: i.ref, summary: i.summary || i.description || null, children: i.children || [], statements: i.statementCount,
-      provenance: i.provenance.kind, provenanceLabel: i.provenance.label, files: i.provenance.files || [] })),
+      provenance: provKind(i.provenance), provenanceLabel: i.provenance.label, files: i.provenance.files || [] })),
     normalisation: cycle.normalisation.counts,
     delta: cycle.delta ? { ...cycle.delta.counts, summary: cycle.delta.summary } : null,
     requirements: {

@@ -75,4 +75,4 @@ Running 74 tests using 1 worker
 [72/74] specs/br-127-occupancy-limits.spec.js:120:1 › TC-F-126 9 rooms in one search are rejected
 [73/74] specs/br-128-advance-horizon.spec.js:92:1 › TC-F-127 A check-in 500 days ahead is accepted
 [74/74] specs/br-128-advance-horizon.spec.js:100:1 › TC-F-128 A check-in 501 days ahead is rejected
-  74 passed (5.1s)
+  74 passed (4.9s)
