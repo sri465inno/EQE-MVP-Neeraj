@@ -3,16 +3,16 @@
     "name": "Hotel booking attributes",
     "version": "1.0",
     "attributeCount": 21,
-    "source": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/data-dictionary/booking-attributes.json"
+    "source": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4/data-dictionary/booking-attributes.json"
   },
-  "total": 137,
-  "conforming": 129,
+  "total": 144,
+  "conforming": 136,
   "negative": 8,
   "nonConforming": 0,
   "byStatus": {
     "carried over": 130,
     "re-generated": 2,
-    "new": 5
+    "new": 12
   },
   "method": "Booking drivers come from the test case; every other attribute takes the example value the hotel data dictionary specifies, so each data set is a complete, valid booking unless the case deliberately breaks one value.",
   "sets": [
@@ -2231,6 +2231,145 @@
       "conformance": "conforms",
       "problems": [],
       "file": "test-data/TC-F-133.json",
+      "status": "new",
+      "version": 1
+    },
+    {
+      "id": "TD-F-134",
+      "testCaseKey": "TC-F-134",
+      "requirementId": "REQ-133",
+      "drivers": [
+        {
+          "attribute": "selection.ratePlanCode",
+          "value": "SAVER",
+          "spec": "one of FLEX, SAVER"
+        }
+      ],
+      "parameters": {},
+      "attributeCount": 21,
+      "generated": 20,
+      "conformance": "conforms",
+      "problems": [],
+      "file": "test-data/TC-F-134.json",
+      "status": "new",
+      "version": 1
+    },
+    {
+      "id": "TD-F-135",
+      "testCaseKey": "TC-F-135",
+      "requirementId": "REQ-134",
+      "drivers": [
+        {
+          "attribute": "selection.ratePlanCode",
+          "value": "FLEX",
+          "spec": "one of FLEX, SAVER"
+        }
+      ],
+      "parameters": {},
+      "attributeCount": 21,
+      "generated": 20,
+      "conformance": "conforms",
+      "problems": [],
+      "file": "test-data/TC-F-135.json",
+      "status": "new",
+      "version": 1
+    },
+    {
+      "id": "TD-F-136",
+      "testCaseKey": "TC-F-136",
+      "requirementId": "REQ-134",
+      "drivers": [
+        {
+          "attribute": "selection.ratePlanCode",
+          "value": "SAVER",
+          "spec": "one of FLEX, SAVER"
+        }
+      ],
+      "parameters": {},
+      "attributeCount": 21,
+      "generated": 20,
+      "conformance": "conforms",
+      "problems": [],
+      "file": "test-data/TC-F-136.json",
+      "status": "new",
+      "version": 1
+    },
+    {
+      "id": "TD-F-137",
+      "testCaseKey": "TC-F-137",
+      "requirementId": "REQ-135",
+      "drivers": [
+        {
+          "attribute": "guest.email",
+          "value": "jane@fail.test",
+          "spec": "string, required"
+        }
+      ],
+      "parameters": {},
+      "attributeCount": 21,
+      "generated": 20,
+      "conformance": "conforms",
+      "problems": [],
+      "file": "test-data/TC-F-137.json",
+      "status": "new",
+      "version": 1
+    },
+    {
+      "id": "TD-F-138",
+      "testCaseKey": "TC-F-138",
+      "requirementId": "REQ-136",
+      "drivers": [
+        {
+          "attribute": "selection.ratePlanCode",
+          "value": "FLEX",
+          "spec": "one of FLEX, SAVER"
+        }
+      ],
+      "parameters": {},
+      "attributeCount": 21,
+      "generated": 20,
+      "conformance": "conforms",
+      "problems": [],
+      "file": "test-data/TC-F-138.json",
+      "status": "new",
+      "version": 1
+    },
+    {
+      "id": "TD-F-139",
+      "testCaseKey": "TC-F-139",
+      "requirementId": "REQ-137",
+      "drivers": [
+        {
+          "attribute": "selection.ratePlanCode",
+          "value": "FLEX",
+          "spec": "one of FLEX, SAVER"
+        },
+        {
+          "attribute": "guest.email",
+          "value": "jane@fail.test",
+          "spec": "string, required"
+        }
+      ],
+      "parameters": {},
+      "attributeCount": 21,
+      "generated": 19,
+      "conformance": "conforms",
+      "problems": [],
+      "file": "test-data/TC-F-139.json",
+      "status": "new",
+      "version": 1
+    },
+    {
+      "id": "TD-F-140",
+      "testCaseKey": "TC-F-140",
+      "requirementId": "REQ-138",
+      "drivers": [],
+      "parameters": {},
+      "attributeCount": 21,
+      "generated": 21,
+      "conformance": "conforms",
+      "problems": [],
+      "file": "test-data/TC-F-140.json",
       "status": "new",
       "version": 1
     }

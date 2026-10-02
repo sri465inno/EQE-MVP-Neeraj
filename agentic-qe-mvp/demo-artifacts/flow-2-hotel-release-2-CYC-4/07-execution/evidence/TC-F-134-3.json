@@ -1,0 +1,20 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "http://127.0.0.1:39045/api/reservations/R-a4dae903/cancel",
+    "headers": {},
+    "data": {}
+  },
+  "response": {
+    "status": 409,
+    "correlationId": "da96654a-1a74-4d7f-bdbb-aa1f86986dba",
+    "body": {
+      "status": 409,
+      "code": "NON_REFUNDABLE_RATE",
+      "message": "This rate is non-refundable, so it can't be cancelled free of charge. Your booking is still confirmed.",
+      "correlationId": "da96654a-1a74-4d7f-bdbb-aa1f86986dba",
+      "retryable": false,
+      "fieldIssues": []
+    }
+  }
+}

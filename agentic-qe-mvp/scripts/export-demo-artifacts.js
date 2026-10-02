@@ -1,6 +1,6 @@
 'use strict';
 /* Runs the hotel booking Flow 1 cycles (release 1.0: functional, regression, end-to-end), then the Flow 2 increment
-   (release 2.0, AQPI-32) on the functional baseline, end to end, and writes every artifact to a folder for demos.
+   (release 2.0: Epic 8 AQPI-32 + revised Epic 6 AQPI-23) on the functional baseline, end to end, and writes every artifact to a folder for demos.
    Usage: node scripts/export-demo-artifacts.js [outDir]   (default: demo-artifacts/) */
 const fs = require('fs');
 const os = require('os');
@@ -17,7 +17,7 @@ const REVIEWER = 'Priya Shah';
 const APPROVER = 'Sam Lee';
 const HOTEL_INPUTS = { initiative: { mode: 'github', key: 'AQPI-1' }, epic: { mode: 'github', key: 'AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27' }, codebase: { mode: 'github', branch: 'demo/hotel-booking-platform' } };
 const HOTEL_TESTING_TYPES = [['functional', 'Functional'], ['regression', 'Regression'], ['e2e', 'End-to-end']];
-const INCREMENT_INPUTS = { epic: { mode: 'github', key: 'AQPI-32' }, codebase: { mode: 'github', branch: 'demo/hotel-booking-platform-v2' } };
+const INCREMENT_INPUTS = { epic: { mode: 'github', key: 'AQPI-32, AQPI-23', snapshot: 'release-2.0' }, codebase: { mode: 'github', branch: 'demo/hotel-booking-platform-v2' } };
 
 const json = (f, v) => write(f, `${JSON.stringify(v, null, 2)}\n`);
 function write(f, body) { fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, body); }
@@ -46,6 +46,7 @@ async function exportCycle(pipeline, store, c, dir) {
   write(path.join(dir, '09-report', `${c.id}-cycle-report.html`), renderReportHtml(c.report));
   write(path.join(dir, '09-report', `${c.id}-cycle-report.xlsx`), await reportWorkbook(c.report, c));
   json(path.join(dir, '09-report', `${c.id}-cycle-report.json`), c.report);
+  if (c.report.traceability) json(path.join(dir, '09-report', 'traceability.json'), c.report.traceability);
   if (c.mergeProposal) json(path.join(dir, '10-merge-approval', 'merge-proposal.json'), { proposal: c.mergeProposal, approvals: c.approvals });
 
   const lead = buildLeadReport(c);
@@ -74,7 +75,7 @@ async function main() {
   }
 
   const c1 = hotel.find((h) => h.testingType === 'functional');
-  let c2 = await pipeline.startCycle({ type: 'incremental', name: 'Hotel booking release 2.0 (AQPI-32)', baselineId: c1.baselineId, inputs: INCREMENT_INPUTS, reviewer: REVIEWER });
+  let c2 = await pipeline.startCycle({ type: 'incremental', name: 'Hotel booking release 2.0 (AQPI-32 + AQPI-23)', baselineId: c1.baselineId, inputs: INCREMENT_INPUTS, reviewer: REVIEWER });
   await pipeline.review(c2.id, { reviewer: REVIEWER }).done;
   await pipeline.decideMerge(c2.id, { decision: 'approve', approver: APPROVER }).done;
   c2 = store.getCycle(c2.id);
@@ -89,16 +90,27 @@ async function main() {
   write(path.join(OUT, 'comparison', `compare-${c1.id}-vs-${c2.id}.xlsx`), await compareWorkbook(cmp));
   json(path.join(OUT, 'comparison', `compare-${c1.id}-vs-${c2.id}.json`), cmp);
 
+  const storyOf = (d) => (d.jira && d.jira.linkedTo) || (d.jiraKeys || [])[0] || '-';
+  const fixedIn = new Map((c2.artifacts.resolvedDefects || []).map((d) => [d.id, d]));
+  const openIn = new Set(c2.artifacts.defects.map((d) => d.id));
+  const lifecycle = [
+    ...c1.artifacts.defects.map((d) => [d.id, storyOf(d), d.title, 'new',
+      fixedIn.has(d.id) ? `fixed, retested (${d.testCaseKey} passed), certified closed` : openIn.has(d.id) ? 'still open' : 'not re-run']),
+    ...c2.artifacts.defects.filter((d) => d.movement === 'new').map((d) => [d.id, storyOf(d), d.title, '-', 'new']),
+  ];
   const row = (c, e) => [c.id, `${c.type} · ${c.testingType}`, c.artifacts.requirements.length, c.artifacts.testCases.length, c.artifacts.scripts.length, `${e.passed}/${e.executed}`, `${e.passRate}%`, c.artifacts.defects.length];
   write(path.join(OUT, 'README.md'), [
     '# Agentic QE Platform - demo artifacts', '',
     `Generated ${new Date().toISOString()} by \`node scripts/export-demo-artifacts.js\`. Every cycle was run end to end; the Playwright results are real runs against the system under test.`, '',
     '## Flow 1: hotel booking platform (AQPI)', '',
-    'Inputs: the AQPI-1 initiative, its 7 epics and 23 stories (Jira REST v3 export of the AQPI space on GitHub branch `demo/jira-export`) and the Java 21 Spring Boot WebFlux codebase on branch `demo/hotel-booking-platform`. The cases ran against the six real hotel services (search, hotel, offer, cart, reservation, notification) started from their built jars on free local ports. Cases the platform cannot automate against these APIs (for example browser accessibility and measured load targets) are reported as manual, not run.', '',
+    'Inputs: the AQPI-1 initiative, its 7 epics and 23 stories (Jira REST v3 export of the AQPI space on GitHub branch `demo/jira-export`) and the Java 21 Spring Boot WebFlux codebase on branch `demo/hotel-booking-platform`. The cases ran against the six real hotel services (search, hotel, offer, cart, reservation, notification) started from their built jars on free local ports. Cases the platform cannot automate against these APIs (for example browser accessibility and measured load targets) are reported as manual, not run. Release 1.0 has three real defects: a 9-room search is accepted (AQPI-4), a 0.5% price change already asks for acknowledgement (AQPI-17) and a 7-character Idempotency-Key is accepted (AQPI-21).', '',
     mdTable(['Cycle', 'Mode · testing', 'Requirements', 'Test cases', 'Scripts', 'Passed', 'Pass rate', 'Defects'], hotel.map((h, i) => row(h, eh[i]))), '',
-    '## Flow 2: hotel booking release 2.0 (AQPI-32)', '',
-    `Inputs: the AQPI-32 "Release 2.0" epic and its stories AQPI-33 to AQPI-36 and the release 2.0 codebase on branch \`demo/hotel-booking-platform-v2\`, added on top of the functional baseline ${c1.id}. Changed: cart hold 30 -> 20 minutes, Paris stay 21 -> 14 nights, resends 3 -> 5. New: free cancellation up to 48 hours before check-in. The merge was approved before execution; the cases ran against the six release 2.0 services. The one real defect: release 2.0 still accepts a 15-night Paris stay.`, '',
+    '## Flow 2: hotel booking release 2.0 (AQPI-32 + AQPI-23)', '',
+    `Inputs: Epic 8 AQPI-32 "Release 2.0" with stories AQPI-33 to AQPI-36, Epic 6 AQPI-23 "Confirmation and Notifications" as revised for release 2.0 (AQPI-24 and AQPI-25 changed, AQPI-26 unchanged, AQPI-37 new; Jira export snapshot \`release-2.0\`) and the release 2.0 codebase on branch \`demo/hotel-booking-platform-v2\`, added on top of the functional baseline ${c1.id}. Changed: cart hold 30 -> 20 minutes, Paris stay 21 -> 14 nights, resends 3 -> 5, ops e-mail retries 2 -> 3, the confirmation of a refundable booking states its free-cancellation deadline. New: free cancellation up to 48 hours before check-in and a cancellation e-mail. The merge was approved before execution; the cases ran against the six release 2.0 services. Release 2.0 fixes the 9-room search defect (AQPI-4), which Flow 2 retests and certifies closed; the other two Flow 1 defects stay open. New defects in the release 2.0 requirements: a 15-night Paris stay is accepted (AQPI-34) and a 4th ops e-mail retry is accepted (AQPI-25).`, '',
     mdTable(['Cycle', 'Mode · testing', 'Requirements', 'Test cases', 'Scripts', 'Passed', 'Pass rate', 'Defects'], [row(c2, e2)]), '',
+    `## Defect lifecycle: ${c1.id} (release 1.0) -> ${c2.id} (release 2.0)`, '',
+    'Every defect comes from a test that really failed. Flow 2 re-runs the Flow 1 test behind each open defect against the release 2.0 build: a pass closes the defect as fixed, retested and certified; a fail keeps it open under the same ID.', '',
+    mdTable(['Defect', 'Story', 'Title', c1.id, c2.id], lifecycle), '',
     'Each cycle folder\'s README is its QE lead report: inputs taken, how the cycle was run, artifacts produced, risks, a go/no-go recommendation and sign-off.', '',
     '## Folder layout (per cycle)',
     '- `01-inputs/` inputs with provenance, normalisation (agreed / single-source / conflicts) and, for Flow 2, the delta classification',

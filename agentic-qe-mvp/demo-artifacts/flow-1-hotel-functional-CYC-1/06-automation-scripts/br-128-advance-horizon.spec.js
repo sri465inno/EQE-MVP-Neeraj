@@ -2,7 +2,7 @@
 // Business rule: BR-128 - Booking horizon
 // Type of testing: Functional testing
 // Statement: Check-in can be at most 500 days ahead.
-// Requirement: REQ-128 v1; sources: search-service/src/main/resources/search-service.yml
+// Requirement: REQ-128 v1; sources: AQPI-4
 // Covers test cases: TC-F-127 (A check-in 500 days ahead is accepted); TC-F-128 (A check-in 501 days ahead is rejected)
 // Skills applied: automation-script-conventions, incremental-merge, testing-functional, traceability-handover
 // Self-contained: needs only @playwright/test and the hotel service URLs (config metadata.services).

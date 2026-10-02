@@ -1,16 +1,16 @@
 {
   "request": {
     "method": "GET",
-    "url": "http://127.0.0.1:40929/api/searches/S-96f4ef5b/results?amenities=spa",
+    "url": "http://127.0.0.1:33827/api/searches/S-919133b3/results?amenities=spa",
     "headers": {},
     "data": null
   },
   "response": {
     "status": 200,
-    "correlationId": "27aefd6d-d0fa-465c-9726-e573da63bc93",
+    "correlationId": "278dceb4-ad75-489b-bd78-11459a29d97a",
     "body": {
-      "searchId": "S-96f4ef5b",
-      "sessionId": "4268e91e-aa6f-4113-8e36-5b6b67d1fae0",
+      "searchId": "S-919133b3",
+      "sessionId": "4d1ac335-bd98-42b7-b832-acd54d76e671",
       "status": "NO_AVAILABILITY",
       "criteria": {
         "destination": "NYC",

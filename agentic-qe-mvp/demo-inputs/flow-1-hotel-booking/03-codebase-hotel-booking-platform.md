@@ -748,10 +748,10 @@ platform:
       timeout: 800ms
       retries: 0
   cart:
-    # @rule A cart expires 30 minutes after it is created and never creates a reservation itself.
-    # @rule A price change of more than 1% must be acknowledged by the guest before checkout.
+    # @rule [AQPI-15] A cart expires 30 minutes after it is created and never creates a reservation itself.
+    # @rule [AQPI-17] A price change of more than 1% must be acknowledged by the guest before checkout.
     ttl: 30m
-    material-change-percent: 1.0
+    material-change-percent: 0.4
 management:
   endpoints:
     web:
@@ -2774,7 +2774,7 @@ platform:
   service: notification-service
   environment: local
   notification:
-    # @rule A confirmation can be resent at most 3 times per booking in 24 hours.
+    # @rule [AQPI-26] A confirmation can be resent at most 3 times per booking in 24 hours.
     max-send-attempts: 3
     resend-limit-per-booking: 3
     resend-booking-window: 24h
@@ -4442,7 +4442,7 @@ Run a service: `mvn -pl hotel-service -am spring-boot:run` (start hotel, offer a
 
 ## Business rules
 
-The rules this code enforces are tagged `@rule` next to their configured values in each service's `src/main/resources/<service>.yml`. The booking attributes, their types, limits and example values are in [data-dictionary/booking-attributes.json](data-dictionary/booking-attributes.json); test data is generated from it.
+The rules this code enforces are tagged `@rule [AQPI-n]` next to their configured values in each service's `src/main/resources/<service>.yml`; the key names the Jira story the rule implements. The booking attributes, their types, limits and example values are in [data-dictionary/booking-attributes.json](data-dictionary/booking-attributes.json); test data is generated from it.
 
 ## Demo switches
 
@@ -5072,7 +5072,7 @@ import reactor.core.scheduler.Schedulers;
 public class ReservationService {
 
     public static final String PAY_NOW = "PAY_NOW";
-    private static final Pattern KEY = Pattern.compile("[A-Za-z0-9._-]{8,64}");
+    private static final Pattern KEY = Pattern.compile("[A-Za-z0-9._-]{7,64}");
     private static final char[] ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".toCharArray();
 
     public record Submission(Outcome outcome, boolean replay) {
@@ -5516,7 +5516,7 @@ platform:
       timeout: 2s
       retries: 1
   reservation:
-    # @rule Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.
+    # @rule [AQPI-21] Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.
     idempotency-ttl: 24h
     retention-days: 365
 management:
@@ -6148,13 +6148,13 @@ platform:
       timeout: 2s
       retries: 1
   search:
-    # @rule A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights.
-    # @rule Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.
-    # @rule Check-in can be at most 500 days ahead.
+    # @rule [AQPI-4] A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights.
+    # @rule [AQPI-4] Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.
+    # @rule [AQPI-4] Check-in can be at most 500 days ahead.
     defaults:
       max-stay-nights: 30
       max-advance-days: 500
-      max-rooms: 8
+      max-rooms: 9
       max-adults-per-room: 4
       max-children-per-room: 3
     markets:
@@ -6197,3 +6197,13 @@ Maps every story in the Jira space AQPI (https://tcs-team-ou6drgfr.atlassian.net
 | [AQPI-29](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-29) | 9.2 Provide end-to-end observability | AQPI-27 Cross-Cutting Quality, Privacy and Observability | 1. Events use a correlation ID across supported services.<br>2. Business events and technical logs are distinguishable.<br>3. Metrics and alerts exist for agreed critical failures and latency.<br>4. Logging degradation does not expose sensitive payloads or silently block booking unless explicitly required. | platform-common: CorrelationIdWebFilter, CorrelationPropagation, EventPublisher, BusinessEvent | BookingJourneyTest#happyPathBooking<br>PlatformCommonTest#correlationIdSanitised<br>PlatformCommonTest#eventsScrubbed | Events are structured logs and Micrometer counters; no tracing backend. |
 | [AQPI-30](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-30) | 9.3 Meet accessibility requirements | AQPI-27 Cross-Cutting Quality, Privacy and Observability | 1. Keyboard navigation, focus order, labels, instructions, status messaging, and error handling are accessible.<br>2. Visual information is not conveyed by color alone.<br>3. Dynamic updates are announced appropriately.<br>4. Email templates are readable and structurally accessible. | search-service FormSpec (labels, error summary role/live region); notification TemplateRenderer (lang, headings, captions, text part) | NotificationServiceTest#accessibleTemplate<br>SearchServiceTest#validationRules | APIs and the e-mail template only; no browser UI to test keyboard/focus. |
 | [AQPI-31](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-31) | 9.4 Meet performance and reliability objectives | AQPI-27 Cross-Cutting Quality, Privacy and Observability | 1. Search, pricing, cart, checkout, reservation, and email dependencies have agreed performance targets.<br>2. Timeout, retry, circuit-breaker, and fallback behavior are documented.<br>3. Load, resilience, and recovery tests cover critical journeys.<br>4. Reservation integrity is prioritized over non-critical personalization and analytics. | platform-common: DependencyCalls (timeouts, retries, circuit breakers), DependencyUnavailableException; per-service dependency config | BookingJourneyTest#unavailableExtraIsolated<br>CartServiceTest#offerOutageIsolated<br>PlatformCommonTest#retries<br>PlatformCommonTest#timeout<br>ReservationServiceTest#inventoryTimeoutRecovered<br>SearchServiceTest#dependencyUnavailable | Resilience is tested; load and performance targets are not measured. |
+
+## Known defects in release 1.0
+
+Found by the Agentic QE Flow 1 cycles (Functional and Regression). None has a unit test, which is why `mvn verify` still passes.
+
+| Story | Rule | Defect | Code |
+|---|---|---|---|
+| [AQPI-4](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-4) 3.2 Validate occupancy and stay criteria | One search books 1 to 8 rooms | A search for 9 rooms is accepted | search-service.yml `max-rooms: 9` |
+| [AQPI-17](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-17) 6.3 Review cart and total price | A price change of more than 1% must be acknowledged | A 0.5% change already asks for acknowledgement | cart-service.yml `material-change-percent: 0.4` |
+| [AQPI-21](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-21) 7.3 Create reservation idempotently | Idempotency-Key of 8 to 64 characters | A 7-character key is accepted | ReservationService `KEY` pattern `{7,64}` |

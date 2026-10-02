@@ -3,37 +3,87 @@
     "slot": "epic",
     "label": "Jira epic",
     "mode": "github",
-    "ref": "AQPI-32",
-    "summary": "[Epic 8] Release 2.0 – Booking Rule Changes and Free Cancellation",
+    "ref": "AQPI-32, AQPI-23",
+    "summary": "2 epics: [Epic 8] Release 2.0 – Booking Rule Changes and Free Cancellation; [Epic 6] Confirmation and Notifications",
     "children": [
       "AQPI-33",
       "AQPI-34",
       "AQPI-35",
-      "AQPI-36"
+      "AQPI-36",
+      "AQPI-24",
+      "AQPI-25",
+      "AQPI-26",
+      "AQPI-37"
+    ],
+    "hierarchy": [
+      {
+        "key": "AQPI-32",
+        "summary": "[Epic 8] Release 2.0 – Booking Rule Changes and Free Cancellation",
+        "children": [
+          {
+            "key": "AQPI-33",
+            "summary": "10.1 Shorten the cart hold to 20 minutes"
+          },
+          {
+            "key": "AQPI-34",
+            "summary": "10.2 Limit Paris stays to 14 nights"
+          },
+          {
+            "key": "AQPI-35",
+            "summary": "10.3 Allow up to 5 confirmation resends"
+          },
+          {
+            "key": "AQPI-36",
+            "summary": "10.4 Cancel a reservation free of charge"
+          }
+        ]
+      },
+      {
+        "key": "AQPI-23",
+        "summary": "[Epic 6] Confirmation and Notifications",
+        "children": [
+          {
+            "key": "AQPI-24",
+            "summary": "8.1 Generate confirmation message"
+          },
+          {
+            "key": "AQPI-25",
+            "summary": "8.2 Send and track confirmation email"
+          },
+          {
+            "key": "AQPI-26",
+            "summary": "8.3 Resend confirmation safely"
+          },
+          {
+            "key": "AQPI-37",
+            "summary": "8.4 Send a cancellation e-mail"
+          }
+        ]
+      }
     ],
     "provenance": {
       "kind": "github",
       "system": "jira",
-      "label": "Jira export on GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export): Jira REST API v3 JSON of AQPI-32, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
+      "label": "Jira export on GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export, release-2.0 snapshot): Jira REST API v3 JSON of AQPI-32, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
       "ref": "AQPI-32",
-      "fetchedAt": "2026-10-02T16:18:37.849Z",
+      "fetchedAt": "2026-10-02T20:29:03.976Z",
       "files": [
-        "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/AQPI-32.json",
-        "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/AQPI-32.children.json"
+        "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/release-2.0/AQPI-32.json",
+        "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/release-2.0/AQPI-32.children.json"
       ]
     },
-    "statementCount": 9
+    "statementCount": 33
   },
   {
     "slot": "codebase",
     "label": "Codebase",
     "mode": "github",
-    "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (5bd7164)",
+    "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (fe1ce44)",
     "provenance": {
       "kind": "github",
-      "label": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (5bd7164) at 2026-10-02T16:18:37.849Z",
-      "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (5bd7164)",
-      "fetchedAt": "2026-10-02T16:18:37.849Z",
+      "label": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (fe1ce44) at 2026-10-02T20:29:03.996Z",
+      "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (fe1ce44)",
+      "fetchedAt": "2026-10-02T20:29:03.996Z",
       "files": [
         "README.md",
         "TRACEABILITY.md",
@@ -127,11 +177,11 @@
     },
     "branch": "demo/hotel-booking-platform-v2",
     "repo": "sri465inno/uc-agentic-quality-engineering",
-    "commit": "5bd716475c9c55aed4d5f822bd0536f7e81767b7",
+    "commit": "fe1ce449d9a5fa0682ced74d98edc633ba2a57e4",
     "compare": {
       "status": "ahead",
       "aheadBy": null,
-      "base": "35af1ef510e2b67f90d326d660ac1c886b194ecf",
+      "base": "452df417b95db3cc3064a0f7049b1311ee93684f",
       "baseBranch": "demo/hotel-booking-platform",
       "files": [
         {
@@ -179,11 +229,31 @@
           "status": "modified"
         },
         {
+          "filename": "notification-service/src/main/java/com/hotelbooking/notification/NotificationApi.java",
+          "status": "modified"
+        },
+        {
+          "filename": "notification-service/src/main/java/com/hotelbooking/notification/NotificationController.java",
+          "status": "modified"
+        },
+        {
           "filename": "notification-service/src/main/java/com/hotelbooking/notification/NotificationProperties.java",
           "status": "modified"
         },
         {
+          "filename": "notification-service/src/main/java/com/hotelbooking/notification/NotificationService.java",
+          "status": "modified"
+        },
+        {
+          "filename": "notification-service/src/main/java/com/hotelbooking/notification/TemplateRenderer.java",
+          "status": "modified"
+        },
+        {
           "filename": "notification-service/src/main/resources/notification-service.yml",
+          "status": "modified"
+        },
+        {
+          "filename": "notification-service/src/test/java/com/hotelbooking/notification/NotificationServiceTest.java",
           "status": "modified"
         },
         {
@@ -204,6 +274,10 @@
         },
         {
           "filename": "reservation-service/pom.xml",
+          "status": "modified"
+        },
+        {
+          "filename": "reservation-service/src/main/java/com/hotelbooking/reservation/Downstream.java",
           "status": "modified"
         },
         {
@@ -243,7 +317,7 @@
     "description": "AQPI-1 Intelligent Hotel Shopping and Reservation Experience: reactive Spring Boot microservices",
     "dataModel": {
       "file": "data-dictionary/booking-attributes.json",
-      "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/data-dictionary/booking-attributes.json",
+      "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4/data-dictionary/booking-attributes.json",
       "name": "Hotel booking attributes",
       "version": "1.0",
       "attributeCount": 21,
@@ -326,6 +400,6 @@
         }
       ]
     },
-    "statementCount": 9
+    "statementCount": 13
   }
 ]

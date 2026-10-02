@@ -4,7 +4,7 @@
   "ahead_by": 1,
   "behind_by": 0,
   "base_commit": {
-    "sha": "35af1ef510e2b67f90d326d660ac1c886b194ecf"
+    "sha": "452df417b95db3cc3064a0f7049b1311ee93684f"
   },
   "files": [
     {
@@ -52,11 +52,31 @@
       "status": "modified"
     },
     {
+      "filename": "notification-service/src/main/java/com/hotelbooking/notification/NotificationApi.java",
+      "status": "modified"
+    },
+    {
+      "filename": "notification-service/src/main/java/com/hotelbooking/notification/NotificationController.java",
+      "status": "modified"
+    },
+    {
       "filename": "notification-service/src/main/java/com/hotelbooking/notification/NotificationProperties.java",
       "status": "modified"
     },
     {
+      "filename": "notification-service/src/main/java/com/hotelbooking/notification/NotificationService.java",
+      "status": "modified"
+    },
+    {
+      "filename": "notification-service/src/main/java/com/hotelbooking/notification/TemplateRenderer.java",
+      "status": "modified"
+    },
+    {
       "filename": "notification-service/src/main/resources/notification-service.yml",
+      "status": "modified"
+    },
+    {
+      "filename": "notification-service/src/test/java/com/hotelbooking/notification/NotificationServiceTest.java",
       "status": "modified"
     },
     {
@@ -77,6 +97,10 @@
     },
     {
       "filename": "reservation-service/pom.xml",
+      "status": "modified"
+    },
+    {
+      "filename": "reservation-service/src/main/java/com/hotelbooking/reservation/Downstream.java",
       "status": "modified"
     },
     {

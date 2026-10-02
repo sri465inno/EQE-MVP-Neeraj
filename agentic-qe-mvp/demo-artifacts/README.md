@@ -1,24 +1,36 @@
 # Agentic QE Platform - demo artifacts
 
-Generated 2026-10-02T16:18:52.357Z by `node scripts/export-demo-artifacts.js`. Every cycle was run end to end; the Playwright results are real runs against the system under test.
+Generated 2026-10-02T20:29:20.497Z by `node scripts/export-demo-artifacts.js`. Every cycle was run end to end; the Playwright results are real runs against the system under test.
 
 ## Flow 1: hotel booking platform (AQPI)
 
-Inputs: the AQPI-1 initiative, its 7 epics and 23 stories (Jira REST v3 export of the AQPI space on GitHub branch `demo/jira-export`) and the Java 21 Spring Boot WebFlux codebase on branch `demo/hotel-booking-platform`. The cases ran against the six real hotel services (search, hotel, offer, cart, reservation, notification) started from their built jars on free local ports. Cases the platform cannot automate against these APIs (for example browser accessibility and measured load targets) are reported as manual, not run.
+Inputs: the AQPI-1 initiative, its 7 epics and 23 stories (Jira REST v3 export of the AQPI space on GitHub branch `demo/jira-export`) and the Java 21 Spring Boot WebFlux codebase on branch `demo/hotel-booking-platform`. The cases ran against the six real hotel services (search, hotel, offer, cart, reservation, notification) started from their built jars on free local ports. Cases the platform cannot automate against these APIs (for example browser accessibility and measured load targets) are reported as manual, not run. Release 1.0 has three real defects: a 9-room search is accepted (AQPI-4), a 0.5% price change already asks for acknowledgement (AQPI-17) and a 7-character Idempotency-Key is accepted (AQPI-21).
 
 | Cycle | Mode · testing | Requirements | Test cases | Scripts | Passed | Pass rate | Defects |
 |---|---|---|---|---|---|---|---|
-| CYC-1 | baseline · functional | 128 | 132 | 58 | 74/74 | 100% | 0 |
-| CYC-2 | baseline · regression | 128 | 137 | 58 | 74/74 | 100% | 0 |
+| CYC-1 | baseline · functional | 128 | 132 | 58 | 71/74 | 95.9% | 3 |
+| CYC-2 | baseline · regression | 128 | 137 | 58 | 71/74 | 95.9% | 3 |
 | CYC-3 | baseline · e2e | 128 | 8 | 7 | 8/8 | 100% | 0 |
 
-## Flow 2: hotel booking release 2.0 (AQPI-32)
+## Flow 2: hotel booking release 2.0 (AQPI-32 + AQPI-23)
 
-Inputs: the AQPI-32 "Release 2.0" epic and its stories AQPI-33 to AQPI-36 and the release 2.0 codebase on branch `demo/hotel-booking-platform-v2`, added on top of the functional baseline CYC-1. Changed: cart hold 30 -> 20 minutes, Paris stay 21 -> 14 nights, resends 3 -> 5. New: free cancellation up to 48 hours before check-in. The merge was approved before execution; the cases ran against the six release 2.0 services. The one real defect: release 2.0 still accepts a 15-night Paris stay.
+Inputs: Epic 8 AQPI-32 "Release 2.0" with stories AQPI-33 to AQPI-36, Epic 6 AQPI-23 "Confirmation and Notifications" as revised for release 2.0 (AQPI-24 and AQPI-25 changed, AQPI-26 unchanged, AQPI-37 new; Jira export snapshot `release-2.0`) and the release 2.0 codebase on branch `demo/hotel-booking-platform-v2`, added on top of the functional baseline CYC-1. Changed: cart hold 30 -> 20 minutes, Paris stay 21 -> 14 nights, resends 3 -> 5, ops e-mail retries 2 -> 3, the confirmation of a refundable booking states its free-cancellation deadline. New: free cancellation up to 48 hours before check-in and a cancellation e-mail. The merge was approved before execution; the cases ran against the six release 2.0 services. Release 2.0 fixes the 9-room search defect (AQPI-4), which Flow 2 retests and certifies closed; the other two Flow 1 defects stay open. New defects in the release 2.0 requirements: a 15-night Paris stay is accepted (AQPI-34) and a 4th ops e-mail retry is accepted (AQPI-25).
 
 | Cycle | Mode · testing | Requirements | Test cases | Scripts | Passed | Pass rate | Defects |
 |---|---|---|---|---|---|---|---|
-| CYC-4 | incremental · regression | 132 | 137 | 60 | 76/77 | 98.7% | 1 |
+| CYC-4 | incremental · regression | 138 | 144 | 65 | 79/83 | 95.2% | 4 |
+
+## Defect lifecycle: CYC-1 (release 1.0) -> CYC-4 (release 2.0)
+
+Every defect comes from a test that really failed. Flow 2 re-runs the Flow 1 test behind each open defect against the release 2.0 build: a pass closes the defect as fixed, retested and certified; a fail keeps it open under the same ID.
+
+| Defect | Story | Title | CYC-1 | CYC-4 |
+|---|---|---|---|---|
+| DEF-001 | AQPI-17 | A price change within 1% does not need acknowledgement: returns true instead of false | new | still open |
+| DEF-002 | AQPI-21 | A key shorter than 8 characters is refused: returns 201 instead of 400 | new | still open |
+| DEF-003 | AQPI-4 | 9 rooms in one search are rejected: returns 200 instead of 400 | new | fixed, retested (TC-F-126 passed), certified closed |
+| DEF-007 | AQPI-34 | A 15-night stay in Paris is rejected: returns 200 instead of 400 | - | new |
+| DEF-008 | AQPI-25 | Operations can retry a failed confirmation e-mail 3 times; retry 4 is refused: returns 200 instead of 409 | - | new |
 
 Each cycle folder's README is its QE lead report: inputs taken, how the cycle was run, artifacts produced, risks, a go/no-go recommendation and sign-off.
 

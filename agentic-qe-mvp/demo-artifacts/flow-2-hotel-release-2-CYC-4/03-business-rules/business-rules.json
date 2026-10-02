@@ -3481,8 +3481,8 @@
         "source": "code",
         "ref": "cart-service/src/main/resources/cart-service.yml",
         "line": 16,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/cart-service/src/main/resources/cart-service.yml",
-        "text": "# @rule A cart expires 20 minutes after it is created and never creates a reservation itself.",
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4/cart-service/src/main/resources/cart-service.yml",
+        "text": "# @rule [AQPI-33] A cart expires 20 minutes after it is created and never creates a reservation itself.",
         "provenance": "github"
       }
     ],
@@ -3516,8 +3516,8 @@
         "source": "code",
         "ref": "cart-service/src/main/resources/cart-service.yml",
         "line": 17,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/cart-service/src/main/resources/cart-service.yml",
-        "text": "# @rule A price change of more than 1% must be acknowledged by the guest before checkout.",
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/cart-service/src/main/resources/cart-service.yml",
+        "text": "# @rule [AQPI-17] A price change of more than 1% must be acknowledged by the guest before checkout.",
         "provenance": "github"
       }
     ],
@@ -3554,8 +3554,8 @@
         "source": "code",
         "ref": "notification-service/src/main/resources/notification-service.yml",
         "line": 7,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/notification-service/src/main/resources/notification-service.yml",
-        "text": "# @rule A confirmation can be resent at most 5 times per booking in 24 hours.",
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4/notification-service/src/main/resources/notification-service.yml",
+        "text": "# @rule [AQPI-35] A confirmation can be resent at most 5 times per booking in 24 hours.",
         "provenance": "github"
       }
     ],
@@ -3592,8 +3592,8 @@
         "source": "code",
         "ref": "reservation-service/src/main/resources/reservation-service.yml",
         "line": 20,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/reservation-service/src/main/resources/reservation-service.yml",
-        "text": "# @rule Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.",
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/reservation-service/src/main/resources/reservation-service.yml",
+        "text": "# @rule [AQPI-21] Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.",
         "provenance": "github"
       }
     ],
@@ -3630,8 +3630,8 @@
         "source": "code",
         "ref": "search-service/src/main/resources/search-service.yml",
         "line": 12,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/search-service/src/main/resources/search-service.yml",
-        "text": "# @rule A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.",
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4/search-service/src/main/resources/search-service.yml",
+        "text": "# @rule [AQPI-34] A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.",
         "provenance": "github"
       }
     ],
@@ -3668,8 +3668,8 @@
         "source": "code",
         "ref": "search-service/src/main/resources/search-service.yml",
         "line": 13,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/search-service/src/main/resources/search-service.yml",
-        "text": "# @rule Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.",
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/search-service/src/main/resources/search-service.yml",
+        "text": "# @rule [AQPI-4] Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.",
         "provenance": "github"
       }
     ],
@@ -3697,8 +3697,8 @@
         "source": "code",
         "ref": "search-service/src/main/resources/search-service.yml",
         "line": 14,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/search-service/src/main/resources/search-service.yml",
-        "text": "# @rule Check-in can be at most 500 days ahead.",
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/search-service/src/main/resources/search-service.yml",
+        "text": "# @rule [AQPI-4] Check-in can be at most 500 days ahead.",
         "provenance": "github"
       }
     ],
@@ -3774,7 +3774,7 @@
     "requirementId": "REQ-131",
     "kind": "free-cancellation",
     "title": "Free cancellation window",
-    "statement": "A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
+    "statement": "A confirmed reservation on a refundable rate can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
     "parameters": {
       "hours": 48
     },
@@ -3785,15 +3785,15 @@
         "ref": "AQPI-36",
         "line": null,
         "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-36",
-        "text": "A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
+        "text": "A confirmed reservation on a refundable rate can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
         "provenance": "github"
       },
       {
         "source": "code",
         "ref": "reservation-service/src/main/resources/reservation-service.yml",
         "line": 22,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/reservation-service/src/main/resources/reservation-service.yml",
-        "text": "# @rule A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4/reservation-service/src/main/resources/reservation-service.yml",
+        "text": "# @rule [AQPI-36] A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.",
         "provenance": "github"
       }
     ],
@@ -3827,8 +3827,206 @@
         "source": "code",
         "ref": "reservation-service/src/main/resources/reservation-service.yml",
         "line": 23,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/reservation-service/src/main/resources/reservation-service.yml",
-        "text": "# @rule A cancelled reservation shows status CANCELLED, its payment authorisation is voided and its rooms are released.",
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4/reservation-service/src/main/resources/reservation-service.yml",
+        "text": "# @rule [AQPI-36] A cancelled reservation shows status CANCELLED, its payment authorisation is voided and its rooms are released.",
+        "provenance": "github"
+      }
+    ],
+    "designedWith": [
+      "incremental-merge",
+      "input-normalisation",
+      "traceability-handover"
+    ],
+    "status": "new",
+    "version": 1,
+    "previous": null
+  },
+  {
+    "id": "BR-133",
+    "requirementId": "REQ-133",
+    "kind": "non-refundable-cancellation",
+    "title": "Non-refundable rates are not cancelled free of charge",
+    "statement": "A reservation on a non-refundable rate cannot be cancelled free of charge and stays confirmed.",
+    "parameters": {},
+    "executable": true,
+    "quotes": [
+      {
+        "source": "jira",
+        "ref": "AQPI-36",
+        "line": null,
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-36",
+        "text": "A reservation on a non-refundable rate cannot be cancelled free of charge and stays confirmed.",
+        "provenance": "github"
+      }
+    ],
+    "designedWith": [
+      "incremental-merge",
+      "input-normalisation",
+      "traceability-handover"
+    ],
+    "status": "new",
+    "version": 1,
+    "previous": null
+  },
+  {
+    "id": "BR-134",
+    "requirementId": "REQ-134",
+    "kind": "cancellation-deadline-email",
+    "title": "Confirmation states the free-cancellation deadline",
+    "statement": "The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.",
+    "parameters": {
+      "hours": 48
+    },
+    "executable": true,
+    "quotes": [
+      {
+        "source": "jira",
+        "ref": "AQPI-24",
+        "line": null,
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24",
+        "text": "The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.",
+        "provenance": "github"
+      },
+      {
+        "source": "code",
+        "ref": "notification-service/src/main/resources/notification-service.yml",
+        "line": 16,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4/notification-service/src/main/resources/notification-service.yml",
+        "text": "# @rule [AQPI-24] The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.",
+        "provenance": "github"
+      }
+    ],
+    "designedWith": [
+      "incremental-merge",
+      "input-normalisation",
+      "traceability-handover"
+    ],
+    "status": "new",
+    "version": 1,
+    "previous": null
+  },
+  {
+    "id": "BR-135",
+    "requirementId": "REQ-135",
+    "kind": "ops-retry-limit",
+    "title": "Operational e-mail retry limit",
+    "statement": "Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.",
+    "parameters": {
+      "limit": 3
+    },
+    "executable": true,
+    "quotes": [
+      {
+        "source": "jira",
+        "ref": "AQPI-25",
+        "line": null,
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25",
+        "text": "Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.",
+        "provenance": "github"
+      },
+      {
+        "source": "code",
+        "ref": "notification-service/src/main/resources/notification-service.yml",
+        "line": 14,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4/notification-service/src/main/resources/notification-service.yml",
+        "text": "# @rule [AQPI-25] Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.",
+        "provenance": "github"
+      }
+    ],
+    "designedWith": [
+      "incremental-merge",
+      "input-normalisation",
+      "traceability-handover"
+    ],
+    "status": "new",
+    "version": 1,
+    "previous": null
+  },
+  {
+    "id": "BR-136",
+    "requirementId": "REQ-136",
+    "kind": "cancellation-email",
+    "title": "One cancellation e-mail per cancelled booking",
+    "statement": "A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.",
+    "parameters": {},
+    "executable": true,
+    "quotes": [
+      {
+        "source": "jira",
+        "ref": "AQPI-37",
+        "line": null,
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37",
+        "text": "A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.",
+        "provenance": "github"
+      },
+      {
+        "source": "code",
+        "ref": "notification-service/src/main/resources/notification-service.yml",
+        "line": 18,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4/notification-service/src/main/resources/notification-service.yml",
+        "text": "# @rule [AQPI-37] A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.",
+        "provenance": "github"
+      }
+    ],
+    "designedWith": [
+      "incremental-merge",
+      "input-normalisation",
+      "traceability-handover"
+    ],
+    "status": "new",
+    "version": 1,
+    "previous": null
+  },
+  {
+    "id": "BR-137",
+    "requirementId": "REQ-137",
+    "kind": "cancellation-email-failure",
+    "title": "Cancellation e-mail failure does not undo the cancellation",
+    "statement": "A cancellation e-mail that cannot be sent does not undo the cancellation.",
+    "parameters": {},
+    "executable": true,
+    "quotes": [
+      {
+        "source": "jira",
+        "ref": "AQPI-37",
+        "line": null,
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37",
+        "text": "A cancellation e-mail that cannot be sent does not undo the cancellation.",
+        "provenance": "github"
+      },
+      {
+        "source": "code",
+        "ref": "notification-service/src/main/resources/notification-service.yml",
+        "line": 19,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4/notification-service/src/main/resources/notification-service.yml",
+        "text": "# @rule [AQPI-37] A cancellation e-mail that cannot be sent does not undo the cancellation.",
+        "provenance": "github"
+      }
+    ],
+    "designedWith": [
+      "incremental-merge",
+      "input-normalisation",
+      "traceability-handover"
+    ],
+    "status": "new",
+    "version": 1,
+    "previous": null
+  },
+  {
+    "id": "BR-138",
+    "requirementId": "REQ-138",
+    "kind": "unclassified",
+    "title": "Operational users see the cancellation e-mail with",
+    "statement": "Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation.",
+    "parameters": {},
+    "executable": false,
+    "quotes": [
+      {
+        "source": "jira",
+        "ref": "AQPI-37",
+        "line": null,
+        "url": "https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37",
+        "text": "Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation.",
         "provenance": "github"
       }
     ],

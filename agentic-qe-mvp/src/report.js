@@ -4,6 +4,8 @@ const { PLATFORM_AGENTS, INPUT_TYPES } = require('./platform');
 const { domainOf } = require('./agents/domains');
 // Cycle report: every figure is computed here from persisted artifacts; the model (optional) drafts the narrative only.
 const { draftNarrative } = require('./llm');
+const { computeTraceability } = require('./traceability');
+const { jiraDefectText } = require('./connectors/jira-defects');
 
 const APP_TITLE = 'Agentic QE Platform - MVP';
 
@@ -113,11 +115,13 @@ async function buildCycleReport(cycle, { env = process.env, fetchImpl, guidance 
       results: exec.results.map((r) => ({ key: r.key, requirementId: r.requirementId, name: r.name, status: r.status, duration: r.duration, reason: r.reason || null })),
     } : { executed: false, reason: exec ? exec.tool : null },
     defects: {
-      open: defects.map((d) => ({ id: d.id, title: d.title, severity: d.severity, blocksRelease: d.blocksRelease ?? null, ruleId: d.ruleId || null, movement: d.movement, testCaseKey: d.testCaseKey, requirementId: d.requirementId, expected: d.expected, actual: d.actual, assertion: d.assertion })),
-      resolved: (a.resolvedDefects || []).map((d) => ({ id: d.id, title: d.title, testCaseKey: d.testCaseKey })),
+      open: defects.map((d) => ({ id: d.id, title: d.title, severity: d.severity, blocksRelease: d.blocksRelease ?? null, ruleId: d.ruleId || null, movement: d.movement, testCaseKey: d.testCaseKey, requirementId: d.requirementId, expected: d.expected, actual: d.actual, assertion: d.assertion,
+        story: (d.jira && d.jira.linkedTo) || (d.jiraKeys || [])[0] || null, jiraStatus: d.jira ? d.jira.status : 'not raised', jiraKey: d.jira ? d.jira.key || null : null, jiraUrl: d.jira ? d.jira.url || null : null, jira: jiraDefectText(d) })),
+      resolved: (a.resolvedDefects || []).map((d) => ({ id: d.id, title: d.title, testCaseKey: d.testCaseKey, story: (d.jira && d.jira.linkedTo) || (d.jiraKeys || [])[0] || null, status: d.status, firstSeenCycle: d.firstSeenCycle, resolvedInCycle: d.resolvedInCycle || null, retestResult: d.retest ? d.retest.result : null, certification: d.certification || null })),
       movement: countBy(defects, (d) => d.movement),
     },
     coverage: a.coverage || null,
+    traceability: computeTraceability(cycle),
     approvals: cycle.approvals,
     narrative,
     honesty: [
@@ -139,6 +143,14 @@ table{border-collapse:collapse;width:100%;font-size:13px;margin:8px 0}th,td{bord
 
 function statusCell(s) {
   return `<span class="${s === 'passed' ? 'pass' : s === 'failed' ? 'fail' : 'muted'}">${esc(s)}</span>`;
+}
+
+function traceabilityHtml(t) {
+  if (!t) return '';
+  const res = (x) => (x === 'passed' || x === 'failed' ? statusCell(x) : esc(x));
+  return `<h2>Traceability</h2><p class="muted">Jira item &rarr; requirement &rarr; business rule &rarr; test case &rarr; test data &rarr; script &rarr; result &rarr; defect. ${esc(t.totals.covered)} of ${esc(t.totals.jiraItems)} Jira items covered by a test case; ${esc(t.totals.verified)} verified, ${esc(t.totals.failing)} failing.</p>
+<h3>By Jira item</h3>${table(['Jira item', 'Level', 'Parent', 'Summary', 'Requirements', 'Test cases', 'Automated', 'Passed', 'Failed', 'Defects', 'Status'], t.stories.map((x) => [esc(x.key), esc(x.level), esc(x.parent || '-'), esc(x.summary || ''), x.requirements, x.testCases, x.automated, x.passed, x.failed, esc(x.defects.join(', ') || '-'), esc(x.status)]))}
+<h3>By test case</h3>${table(['Jira', 'Requirement', 'Rule', 'Test case', 'Type', 'Test data', 'Script', 'Result', 'Defect', 'Jira defect'], t.rows.map((x) => [esc(x.jiraKeys.join(', ')), esc(x.requirementId), esc(x.ruleId || '-'), `${esc(x.testCaseKey)} ${esc(x.testCase)}`, esc(x.testType), esc(x.testDataId || '-'), esc(x.scriptFile || '-'), res(x.result), esc(x.defects.join(', ') || '-'), esc(x.jiraDefects.join(', ') || '-')]))}`;
 }
 
 function renderReportHtml(r) {
@@ -169,11 +181,13 @@ ${r.automation.notAutomated.length ? table(['Case', 'Name', 'Why not automated']
 <p>${kv({ executed: ex.summary.executed, passed: ex.summary.passed, failed: ex.summary.failed, quarantined: ex.quarantined, 'not run (manual)': ex.summary.notRun, 'pass rate %': ex.summary.passRate, 'duration ms': ex.durationMs })}</p><p class="muted">These numbers come from an actual Playwright run.</p>
 ${table(['Case', 'Requirement', 'Name', 'Result', 'Duration ms', 'Note'], ex.results.map((x) => [esc(x.key), esc(x.requirementId), esc(x.name), statusCell(x.status), x.duration, esc(x.reason || '')]))}` : '<p>Not executed.</p>'}
 <h2>Defects</h2><p>Movement: ${kv(r.defects.movement)}${r.defects.resolved.length ? ` &middot; resolved: ${r.defects.resolved.map((d) => esc(d.id)).join(', ')}` : ''}</p>
-${table(['ID', 'Title', 'Severity', 'Blocks release', 'Case', 'Rule', 'Requirement', 'Expected', 'Actual', 'Failing assertion', 'Movement'], r.defects.open.map((d) => [esc(d.id), esc(d.title), esc(d.severity), d.blocksRelease === null ? 'not assessed' : d.blocksRelease ? '<b class="fail">yes</b>' : 'no', esc(d.testCaseKey), esc(d.ruleId || '-'), esc(d.requirementId), esc(d.expected), esc(d.actual), `<code>${esc(d.assertion)}</code>`, esc(d.movement)]))}
+${table(['ID', 'Title', 'Severity', 'Blocks release', 'Story', 'Jira defect', 'Case', 'Rule', 'Requirement', 'Expected', 'Actual', 'Failing assertion', 'Movement'], r.defects.open.map((d) => [esc(d.id), esc(d.title), esc(d.severity), d.blocksRelease === null ? 'not assessed' : d.blocksRelease ? '<b class="fail">yes</b>' : 'no', esc(d.story || '-'), d.jiraUrl ? `<a href="${esc(d.jiraUrl)}">${esc(d.jiraKey)}</a>` : esc(d.jira || 'not raised in Jira'), esc(d.testCaseKey), esc(d.ruleId || '-'), esc(d.requirementId), esc(d.expected), esc(d.actual), `<code>${esc(d.assertion)}</code>`, esc(d.movement)]))}
+${r.defects.resolved.length ? `<h3>Fixed, retested and certified</h3>${table(['ID', 'Title', 'Story', 'First seen', 'Retested', 'Result', 'Status', 'Certification'], r.defects.resolved.map((d) => [esc(d.id), esc(d.title), esc(d.story || '-'), esc(d.firstSeenCycle), `${esc(d.testCaseKey)} in ${esc(d.resolvedInCycle || '-')}`, statusCell(d.retestResult || 'passed'), esc(d.status), esc(d.certification || '')]))}` : ''}
 <h2>Coverage</h2>${r.coverage ? `<p>${kv({ 'designed %': r.coverage.percent.designed, 'automated %': r.coverage.percent.automated, 'executed %': r.coverage.percent.executed, 'passing %': r.coverage.percent.passing })}</p>
 ${table(['Requirement', 'Cases', 'Automated', 'Executed', 'Failed', 'Status'], r.coverage.rows.map((c) => [esc(c.requirementId), c.cases, c.automated, c.executed, c.failed, esc(c.status)]))}
 ${r.coverage.attributes ? `<h3>Driver attribute coverage</h3><p>${esc(r.coverage.attributes.exercised)} of ${esc(r.coverage.attributes.driverCount)} ${esc(r.platform?.driversLabel || 'commission-driving attributes')} (of ${esc(r.coverage.attributes.attributeCount)} ${esc(r.platform?.modelLabel || 'reservation')} attributes) are varied by at least one test case (${esc(r.coverage.attributes.percent)}%).</p>
 ${table(['Attribute', 'Description', 'Varied by cases', 'Status'], r.coverage.attributes.rows.map((x) => [`<code>${esc(x.attribute)}</code>`, esc(x.description), esc(x.cases.join(', ') || '-'), esc(x.status)]))}` : ''}` : '-'}
+${traceabilityHtml(r.traceability)}
 <h2>Approvals</h2>${table(['Gate', 'Decision', 'By', 'When', 'Detail'], r.approvals.map((p) => [esc(p.gate), esc(p.decision), esc(p.by), esc(p.at), esc(p.detail)]))}
 <h2>What this cycle reused</h2><p>${r.cycle.type === 'incremental' ? `${r.reuse.carriedOver} of ${r.reuse.total} test cases carried over (${r.reuse.percent}%).` : 'Baseline cycle: nothing reused, every artefact designed in this cycle.'} ${esc(r.reuse.note)}</p>
 <h2>Skill hand-overs</h2><p>Overall: <b class="${r.handoverStatus === 'complete' ? 'pass' : 'fail'}">${esc(r.handoverStatus)}</b></p>

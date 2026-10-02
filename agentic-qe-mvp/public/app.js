@@ -69,7 +69,7 @@ async function loadMeta() {
 
 function modesHtml() {
   return [
-    META.jira.mode === 'live' ? pill(`Jira: live (${META.jira.baseUrl})`, 'live') : `<span title="${esc(META.jira.note)}">${pill(`Jira: export on GitHub (${META.jiraExport.branch}) or recorded fixture; live Jira not configured`, 'github')}</span>`,
+    META.jira.mode === 'live' ? pill(`Jira: live (${META.jira.baseUrl}); defects raised in Jira`, 'live') : `<span title="${esc(META.jira.note)}">${pill(`Jira: export on GitHub (${META.jiraExport.branch}) or recorded fixture; live Jira not configured, so defects are not raised in Jira`, 'github')}</span>`,
     pill(`Source: GitHub ${META.codebase.repo}`, 'github'),
     META.model.mode === 'model' ? pill(`Prose: ${META.model.model}`, 'live') : `<span title="${esc(META.model.note)}">${pill('Prose: deterministic demo mode', 'demo')}</span>`,
   ].join('');
@@ -116,13 +116,47 @@ function skillsDropdown() {
   const on = new Set(selectedSkills());
   const item = (s) => checkItem({
     cls: 'skill-on', value: s.id, checked: on.has(s.id), title: s.name, sub: s.description,
-    extra: `<span class="small muted">${s.testingType ? `for ${esc(testingTypeOf(s.testingType).name)} · ` : ''}seen by: ${esc(s.appliesTo.join(', '))} · owes: ${esc(ownes(s))}</span>`,
+    extra: `<span class="small muted">${s.source === 'enterprise upload' ? '<b>enterprise upload</b> · ' : ''}${s.testingType ? `for ${esc(testingTypeOf(s.testingType).name)} · ` : ''}seen by: ${esc(s.appliesTo.join(', '))} · owes: ${esc(ownes(s))}</span>`,
   });
   const general = META.skills.filter((s) => !s.testingType);
   const typed = META.skills.filter((s) => s.testingType);
   return checkDropdown('skills', skillsSummary(on.size), `<div class="ms-group">General skills</div>${general.map(item).join('')}
 <div class="ms-group">Skills for a type of testing</div>${typed.map(item).join('')}
-<div class="ms-foot">Markdown files loaded from <code>skills/</code> at startup. Each skill's text goes only to the agents it names, and what each phase produced is checked against what the skill says it owes.</div>`);
+<div class="ms-foot">Platform skills are Markdown files in <code>skills/</code>; enterprise skills are uploaded below. Each skill's text goes only to the agents it names, and what each phase produced is checked against what the skill says it owes.</div>`);
+}
+
+function skillUploadBox() {
+  const uploaded = META.skills.filter((s) => s.source === 'enterprise upload');
+  return `<details class="card" id="skill-upload-box"><summary><b>Upload an enterprise skill</b> <span class="small muted">${uploaded.length ? `${uploaded.length} uploaded: ${esc(uploaded.map((s) => s.id).join(', '))}` : 'your organisation\'s QE standards as a Markdown skill'}</span></summary>
+<p class="small">A skill is a Markdown file with YAML front matter: <code>id</code>, <code>name</code>, <code>description</code>, <code>appliesTo</code> (agent ids: ${esc(['requirements', 'rules', 'testcases', 'testdata', 'scripts', 'execution', 'defects', 'report'].join(', '))}), optional <code>testingType</code> and <code>delivers</code>. The body is the standard the named agents must follow.</p>
+<div class="row"><input type="file" id="skill-file" accept=".md,text/markdown"><button class="btn secondary" id="skill-upload">Upload skill</button></div>
+${uploaded.length ? `<p class="small">${uploaded.map((s) => `${pill(s.id, 'designed')} ${esc(s.name)} <button class="btn secondary small skill-remove" data-id="${esc(s.id)}">Remove</button>`).join('<br>')}</p>` : ''}
+<div id="skill-msg" class="small"></div></details>`;
+}
+
+function bindSkillUpload() {
+  const btn = document.getElementById('skill-upload');
+  if (!btn) return;
+  const msg = document.getElementById('skill-msg');
+  const refresh = async () => { META = await api('/api/meta'); route(); };
+  btn.onclick = async () => {
+    const f = document.getElementById('skill-file').files[0];
+    if (!f) { msg.innerHTML = '<span class="err">Choose a .md file first.</span>'; return; }
+    try {
+      const r = await api('/api/skills', { method: 'POST', body: { fileName: f.name, text: await f.text() } });
+      if (runState.skills && !runState.skills.includes(r.skill.id)) runState.skills.push(r.skill.id);
+      await refresh();
+      const m = document.getElementById('skill-msg');
+      if (m) m.innerHTML = `<span class="ok">Uploaded ${esc(r.skill.name)} (${esc(r.skill.id)}); it is now in the skills list.</span>`;
+      const box = document.getElementById('skill-upload-box');
+      if (box) box.open = true;
+    } catch (e) { msg.innerHTML = `<span class="err">${esc(e.message)}</span>`; }
+  };
+  $view.querySelectorAll('.skill-remove').forEach((b) => b.onclick = async () => {
+    await api(`/api/skills/${encodeURIComponent(b.dataset.id)}`, { method: 'DELETE' });
+    if (runState.skills) runState.skills = runState.skills.filter((id) => id !== b.dataset.id);
+    await refresh();
+  });
 }
 
 function handoverBadge(p) {
@@ -328,7 +362,7 @@ function testingTypesDropdown(type, domainId) {
 
 function readSummary(slot, label, st) {
   const where = st.mode === 'paste' ? (st.fileName ? `uploaded file ${st.fileName}` : st.text ? 'pasted text' : 'nothing pasted yet')
-    : slot === 'codebase' ? `${META.codebase.repo} @ ${st.branch}` : st.key;
+    : slot === 'codebase' ? `${META.codebase.repo} @ ${st.branch}` : `${st.key}${st.snapshot && st.mode !== 'jira' ? ` (${st.snapshot} snapshot)` : ''}`;
   const prov = st.mode === 'paste' ? pill('pasted', 'pasted') : st.mode === 'github' ? pill(slot === 'codebase' ? 'pulled live from GitHub' : 'Jira export on GitHub', 'github')
     : st.mode === 'jira' && META.jira.mode === 'live' ? pill('live Jira call', 'live') : pill('recorded fixture', 'fixture');
   return `<li><b>${esc(label)}</b><span class="muted small">${esc(where)}</span>${prov}</li>`;
@@ -367,7 +401,7 @@ async function viewRun(params) {
   for (const [slot, , , sampleKey] of slots) {
     const def = ex.samples[sampleKey];
     const cur = runState.inputs[slot];
-    if (!cur || cur.forType !== forType) runState.inputs[slot] = slot === 'codebase' ? { forType, mode: 'github', branch: def, text: '' } : { forType, mode: META.jira.mode === 'live' ? 'jira' : 'github', key: def, text: '' };
+    if (!cur || cur.forType !== forType) runState.inputs[slot] = slot === 'codebase' ? { forType, mode: 'github', branch: def, text: '' } : { forType, mode: META.jira.mode === 'live' ? 'jira' : 'github', key: def, text: '', snapshot: type === 'incremental' ? ex.samples.incrementalSnapshot : undefined };
   }
   const exampleOption = (e) => `<label class="mode-option"><input type="radio" name="run-example" value="${esc(e.id)}" ${e.id === ex.id ? 'checked' : ''}><span><b>${esc(e.name)}</b><span class="muted">${esc(e.about)}</span></span></label>`;
   const active = slots.filter(([slot]) => !runState.inputsOff.has(`${type}:${slot}`));
@@ -389,7 +423,7 @@ async function viewRun(params) {
     ? `<label class="field">Baseline to add to<select id="baseline">${baselines.map((b) => `<option value="${esc(b.id)}" ${b.id === runState.baselineId ? 'selected' : ''}>${esc(b.id)} v${b.version} - ${esc(b.name)} (${b.counts.requirements} requirements)</option>`).join('')}</select></label>`
     : '<div class="banner">No approved baseline yet. Run Flow 1 first.</div>') : ''}
     ${type === 'baseline'
-    ? `<p class="hint"><b>Demo example.</b> Pick the project whose inputs fill the slots below. Flow 2 adds hotel release 2.0 (AQPI-32) on top of the hotel baseline, so run Flow 1 first.</p>${(META.platform.examples || []).map(exampleOption).join('')}`
+    ? `<p class="hint"><b>Demo example.</b> Pick the project whose inputs fill the slots below. Flow 2 adds hotel release 2.0 (Epic 8 AQPI-32 + revised Epic 6 AQPI-23) on top of the hotel baseline, so run Flow 1 first.</p>${(META.platform.examples || []).map(exampleOption).join('')}`
     : `<p class="hint"><b>Demo example:</b> ${esc(ex.name)}. ${esc(ex.about)}</p>`}
   </div>
   <div class="step-block">
@@ -408,6 +442,7 @@ async function viewRun(params) {
     <p class="hint">Skills tune and govern each agent to your standards. The general skills are on, plus the skill for each ticked type of testing; untick any you do not want.</p>
     ${META.skillWarnings && META.skillWarnings.length ? `<div class="banner">${META.skillWarnings.map(esc).join('<br>')}</div>` : ''}
     ${skillsDropdown()}
+    ${skillUploadBox()}
   </div>
   <div class="step-block">
     <h3><span class="step-num">5</span>Run the agents</h3>
@@ -477,6 +512,7 @@ async function viewRun(params) {
   const sel = document.getElementById('baseline');
   if (sel) sel.onchange = () => { runState.baselineId = sel.value; };
   document.getElementById('reset').onclick = resetDemo;
+  bindSkillUpload();
   document.getElementById('go').onclick = async (ev) => {
     const who = document.getElementById('who').value.trim();
     localStorage.setItem('aqe-user', who);
@@ -541,12 +577,13 @@ async function viewCycle(id, params) {
   const summaryRail = rail('summary', 'Cycle summary', 'what went in, what came out, and the QE lead report', [
     tile({ href: `#/cycle/${c.id}?tab=inputs`, art: 'input', tag: 'Inputs taken', big: c.inputs.length, title: 'Inputs taken', lines: [esc(c.inputs.map((i) => `${i.label} ${i.ref}`).join(' · '))], cls: tab === 'inputs' ? 'sel' : '' }),
     tile({ href: `#/cycle/${c.id}?tab=artifacts`, art: 'design', tag: 'Artifacts produced', big: c.phases.filter((p) => p.status === 'done').length, title: 'Artifacts produced', lines: ['Every artifact of this cycle, with links and downloads'], cls: tab === 'artifacts' ? 'sel' : '' }),
+    tile({ href: `#/cycle/${c.id}?tab=traceability`, art: 'design', tag: 'Traceability', big: c.report && c.report.traceability ? c.report.traceability.totals.jiraItems : '…', title: 'Traceability matrix', lines: [c.report && c.report.traceability ? `${c.report.traceability.totals.covered} Jira items covered · ${c.report.traceability.totals.verified} verified · ${c.report.traceability.totals.failing} failing` : '<span class="muted">available when the cycle completes</span>'], cls: tab === 'traceability' ? 'sel' : '' }),
     tile({ href: `#/reporting?cycle=${c.id}`, art: 'run', tag: 'Reporting', big: c.report ? '✔' : '…', title: 'QE lead report', lines: [c.report ? `${ex0 ? `${ex0.passed}/${ex0.executed} passed · ` : ''}${(c.artifacts.defects || []).length} defect(s) · opens in Reporting` : '<span class="muted">available in Reporting when the cycle completes</span>'] }),
   ]);
   const done = c.phases.filter((p) => p.status === 'done').length;
   const ex = c.artifacts && c.artifacts.execution ? c.artifacts.execution.summary : null;
   const current = c.phases.find((p) => phaseArtifactTab(p.name, c) === tab);
-  const label = tab === 'overview' ? 'QE lead report' : tab === 'artifacts' ? 'Artifacts produced' : tab === 'inputs' ? 'Inputs taken' : tab === 'skills' ? 'Skills and hand-overs' : tab === 'merge' ? 'Human approval to merge' : tab === 'review' ? 'Human review of requirement set' : tab === 'review-agent' ? 'Review agent suggestions' : current ? current.label : tab;
+  const label = tab === 'overview' ? 'QE lead report' : tab === 'artifacts' ? 'Artifacts produced' : tab === 'inputs' ? 'Inputs taken' : tab === 'skills' ? 'Skills and hand-overs' : tab === 'traceability' ? 'Traceability: Jira to defect' : tab === 'merge' ? 'Human approval to merge' : tab === 'review' ? 'Human review of requirement set' : tab === 'review-agent' ? 'Review agent suggestions' : current ? current.label : tab;
   let body = '';
   try { body = await renderCycleTab(c, tab); } catch (e) { body = `<div class="banner err">${esc(e.message)}</div>`; }
   $view.innerHTML = `<section class="hero small-hero"><div class="eyebrow">${c.type === 'baseline' ? 'Flow 1 · Baseline cycle' : 'Flow 2 · Incremental cycle'}</div>
@@ -673,6 +710,7 @@ ${normaliseView(c, true)}
     case 'execution': return a.execution ? executionView(c) : `${notYet('Execution')}<p class="muted">Scripts are <b>designed</b> but have not been executed.</p>`;
     case 'defects': return a.defects ? defectsView(c) : notYet('Defects');
     case 'skills': return skillsView(c);
+    case 'traceability': return c.report && c.report.traceability ? traceabilityView(c) : notYet('Traceability');
     default: return '';
   }
 }
@@ -822,15 +860,39 @@ ${table(['Case', 'Req', 'Name', 'Result', 'Duration', 'Failure / note', 'Evidenc
     (r.evidence || []).map((e) => `<a class="small" target="_blank" href="/api/cycles/${esc(c.id)}/evidence/${esc(e.file)}">${esc(e.name)}</a>`).join('<br>')]), (i) => `row-${ex.results[i].status}`)}`;
 }
 
+function traceabilityView(c) {
+  const t = c.report.traceability;
+  const res = (x) => (x === 'passed' || x === 'failed' ? pill(x, x) : `<span class="muted small">${esc(x)}</span>`);
+  const jiraLink = (k) => `<a href="${esc(jiraBrowse(c, k))}" target="_blank" rel="noopener">${esc(k)}</a>`;
+  return `<p class="muted">Every test case traced from the Jira item it came from to its requirement, business rule, test data, script, real result and defect. Computed from this cycle's artifacts.</p>
+<div class="kpis"><div class="kpi">Jira items<b>${t.totals.jiraItems}</b></div><div class="kpi">Covered by a test<b>${t.totals.covered}</b></div><div class="kpi">Verified<b>${t.totals.verified}</b></div><div class="kpi">Failing<b>${t.totals.failing}</b></div><div class="kpi">Test cases<b>${t.totals.testCases}</b></div><div class="kpi">With test data<b>${t.totals.withData}</b></div><div class="kpi">With a script<b>${t.totals.withScript}</b></div><div class="kpi">Executed<b>${t.totals.executed}</b></div></div>
+<div class="row"><a class="btn secondary" href="/api/cycles/${esc(c.id)}/report.xlsx">Download Excel (Traceability sheets)</a></div>
+<h3>By Jira item (initiative, epics, stories)</h3>${t.stories.some((x) => x.scope === 'baseline') ? '<p class="muted small">Includes the baseline stories this cycle re-tested through the carried test pack, not only the incoming epics.</p>' : ''}${table(['Jira item', 'Level', 'Parent', 'Summary', 'Requirements', 'Test cases', 'Automated', 'Passed', 'Failed', 'Defects', 'Status'], t.stories.map((x) => [jiraLink(x.key), `${esc(x.level)}${x.scope === 'baseline' ? ' <span class="muted small">(baseline, re-tested)</span>' : ''}`, esc(x.parent || '-'), esc(x.summary || ''), x.requirements, x.testCases, x.automated, x.passed, x.failed, x.defects.length ? `<a href="#/cycle/${esc(c.id)}?tab=defects">${esc(x.defects.join(', '))}</a>` : '-', pill(x.status, x.status === 'verified' ? 'passed' : x.status === 'failing' ? 'failed' : 'pending')]), (i) => (t.stories[i].status === 'failing' ? 'row-failed' : ''))}
+<h3>By test case</h3>${table(['Jira', 'Requirement', 'Rule', 'Test case', 'Type', 'Test data', 'Script', 'Result', 'Defect'], t.rows.map((x) => [x.jiraKeys.map(jiraLink).join(', '), `<a href="#/cycle/${esc(c.id)}?tab=requirements">${esc(x.requirementId)}</a>`, esc(x.ruleId || '-'), `<b>${esc(x.testCaseKey)}</b> ${esc(x.testCase)}`, esc(x.testType), x.testDataId ? `<a target="_blank" href="/api/cycles/${esc(c.id)}/testdata/${esc(x.testCaseKey)}.json">${esc(x.testDataId)}</a>` : '-', x.scriptFile ? `<a href="#/scripts?cycle=${esc(c.id)}&file=${esc(x.scriptFile)}">${esc(x.scriptFile)}</a>` : '-', res(x.result), x.defects.length ? `<a href="#/cycle/${esc(c.id)}?tab=defects">${esc(x.defects.join(', '))}</a>${x.jiraDefects.length ? ` (${x.jiraDefects.map(jiraLink).join(', ')})` : ''}` : '-']), (i) => (t.rows[i].result === 'failed' ? 'row-failed' : ''))}`;
+}
+
+function jiraBrowse(c, key) {
+  const i = c.inputs.find((x) => (x.slot === 'initiative' || x.slot === 'epic') && x.provenance && /atlassian\.net/.test(x.provenance.label || ''));
+  const m = i && i.provenance.label.match(/https:\/\/[\w.-]+atlassian\.net/);
+  return m ? `${m[0]}/browse/${key}` : '#';
+}
+
+function jiraDefectLine(x) {
+  const j = x.jira;
+  if (j && j.key) return `<b>Jira defect:</b> <a href="${esc(j.url)}" target="_blank" rel="noopener">${esc(j.key)}</a> (${esc(j.issueType || 'issue')}, ${esc(j.link || 'linked to')} ${esc(j.linkedTo)})${j.updatedInCycle ? ` · updated in ${esc(j.updatedInCycle)}` : ''}`;
+  if (j && j.status === 'failed') return `<b>Jira defect:</b> <span class="err">Jira call failed: ${esc(j.reason)}</span> · linked to ${esc(j.linkedTo)} in the platform`;
+  return `<b>Jira defect:</b> ${pill('not raised in Jira', 'pending')} ${j && j.linkedTo ? `linked to story <b>${esc(j.linkedTo)}</b> in the platform` : ''}<br><span class="small muted">${esc(j ? j.reason : 'Raised before Jira linking existed')}</span>${j && j.payload ? `<details><summary class="small">Jira payload ready to send</summary><pre class="code">${esc(JSON.stringify(j.payload, null, 2))}</pre></details>` : ''}`;
+}
+
 function defectsView(c) {
   const d = c.artifacts.defects;
   const res = c.artifacts.resolvedDefects || [];
   return `<h2>Defects (${d.length})</h2><p class="muted small">Raised only from test cases that actually failed in the real Playwright run of this cycle.</p>
-${d.length ? d.map((x) => `<div class="card"><h3>${esc(x.id)} - ${esc(x.title)} ${pill(x.severity, 'failed')} ${pill(x.movement, x.movement === 'new' ? 'failed' : 'enhanced')}</h3>
+${d.length ? d.map((x) => `<div class="card"><h3>${esc(x.id)} - ${esc(x.title)} ${pill(x.severity, 'failed')} ${pill(x.movement === 'still open' ? `still open since ${x.firstSeenCycle}` : x.movement, x.movement === 'new' ? 'failed' : 'enhanced')}</h3>
 <div class="grid2"><div><b>Expected:</b> <span class="newv">${esc(x.expected)}</span><br><b>Actual:</b> <span class="old" style="text-decoration:none">${esc(x.actual)}</span><br><b>Severity:</b> ${esc(x.severity)}${x.impact ? ` (${esc(x.impact)})` : ''}<br><b>Release:</b> ${esc(x.releaseDecision || 'not assessed')}<br><b>Suspected code area:</b> <code>${esc(x.suspectedCodeArea || '-')}</code><br><b>Failing assertion:</b> <code>${esc(x.assertion)}</code> <span class="small muted">(${esc(x.location)})</span></div>
-<div><b>Test case:</b> <a href="#/cycle/${esc(c.id)}?tab=testcases">${esc(x.testCaseKey)}</a> · <b>Script:</b> <a href="#/scripts?cycle=${esc(c.id)}&file=${esc(x.scriptFile)}">${esc(x.scriptFile)}</a><br><b>Requirement:</b> <a href="#/cycle/${esc(c.id)}?tab=requirements">${esc(x.requirementId)}</a> ${esc(x.requirementText)}<br><b>Rule:</b> ${esc(x.ruleId || '-')} · <b>Source:</b> ${esc((x.sourceRefs || x.jiraKeys).join(', '))} · first seen ${esc(x.firstSeenCycle)}</div></div>
+<div><b>Test case:</b> <a href="#/cycle/${esc(c.id)}?tab=testcases">${esc(x.testCaseKey)}</a> · <b>Script:</b> <a href="#/scripts?cycle=${esc(c.id)}&file=${esc(x.scriptFile)}">${esc(x.scriptFile)}</a><br><b>Requirement:</b> <a href="#/cycle/${esc(c.id)}?tab=requirements">${esc(x.requirementId)}</a> ${esc(x.requirementText)}<br><b>Rule:</b> ${esc(x.ruleId || '-')} · <b>Source:</b> ${esc((x.sourceRefs || x.jiraKeys).join(', '))} · first seen ${esc(x.firstSeenCycle)}<br>${jiraDefectLine(x)}</div></div>
 <details><summary class="small">Error output and evidence</summary><pre class="code">${esc(x.errorMessage)}</pre>${x.evidence.map((e) => `<a class="small" target="_blank" href="/api/cycles/${esc(c.id)}/evidence/${esc(e.file)}">${esc(e.name)}</a>`).join(' · ')}</details></div>`).join('') : '<div class="banner ok">No test case failed, so no defects were raised.</div>'}
-${res.length ? `<h3>Resolved since previous cycle</h3>${table(['ID', 'Title', 'Case'], res.map((x) => [esc(x.id), esc(x.title), esc(x.testCaseKey)]))}` : ''}`;
+${res.length ? `<h3>Fixed, retested and certified (${res.length})</h3><p class="muted small">Defects open in the previous cycle whose test case was re-run against this build and passed.</p>${table(['ID', 'Title', 'Story', 'First seen', 'Retest', 'Result', 'Certification'], res.map((x) => [esc(x.id), esc(x.title), esc((x.jira && x.jira.linkedTo) || (x.jiraKeys || [])[0] || '-'), esc(x.firstSeenCycle), `${esc(x.testCaseKey)} in ${esc(x.resolvedInCycle)}${x.retest && x.retest.scriptFile ? ` · <a href="#/scripts?cycle=${esc(c.id)}&file=${esc(x.retest.scriptFile)}">${esc(x.retest.scriptFile)}</a>` : ''}`, pill(x.retest ? x.retest.result : 'passed', 'passed'), `${pill(x.status || 'Closed', 'passed')} ${esc(x.certification || '')}`]))}` : ''}`;
 }
 
 function reportView(c) {

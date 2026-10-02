@@ -1,7 +1,7 @@
 'use strict';
 // Deterministic statement extraction from Jira ADF, pasted text and codebase notes.
 // Convention: every ADF/markdown bullet is one requirement statement; in source files,
-// every "@rule" tag is one statement.
+// every "@rule" tag is one statement; "@rule [AQPI-4] ..." names the Jira story the rule implements.
 
 function adfText(node) {
   if (!node) return '';
@@ -98,8 +98,8 @@ function statementsFromMarkdown(md, { path, url, input }) {
 function statementsFromSource(src, { path, url, input }) {
   const out = [];
   src.split(/\r?\n/).forEach((line, i) => {
-    const m = line.match(/@rule\s+(.*\S)\s*(?:\*\/)?\s*$/);
-    if (m) out.push({ text: m[1].replace(/\*\/$/, '').trim(), source: 'code', input, origin: { kind: 'code-source', ref: path, line: i + 1, url }, quote: line.trim() });
+    const m = line.match(/@rule\s+(?:\[([A-Z][A-Z0-9]*-\d+)\]\s+)?(.*\S)\s*(?:\*\/)?\s*$/);
+    if (m) out.push({ text: m[2].replace(/\*\/$/, '').trim(), source: 'code', input, origin: { kind: 'code-source', ref: path, line: i + 1, url, ...(m[1] ? { story: m[1] } : {}) }, quote: line.trim() });
   });
   return out;
 }

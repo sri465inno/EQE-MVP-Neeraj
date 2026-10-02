@@ -13,7 +13,7 @@ const { listFixtureBranches, loadCodebaseFixture, DEFAULT_BRANCH, SOURCE } = req
 const { modelConfig } = require('./llm');
 const { PW_VERSION } = require('./execution');
 const { dataSetFile } = require('./agents/testdata');
-const { loadSkills } = require('./skills');
+const { loadSkills, parseSkill, AGENTS } = require('./skills');
 const { PLATFORM_AGENTS, REVIEW_AGENT, INTAKE_STAGES, INPUT_TYPES, DEMO, DEMO_EXAMPLES, exampleOf } = require('./platform');
 const { TESTING_TYPES, DEFAULT_TESTING_TYPE } = require('./testing-types');
 const { FLOWS: DEMO_INPUT_FLOWS } = require('../scripts/make-demo-inputs');
@@ -24,9 +24,22 @@ const XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
 function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process.env, skillsDir = path.join(__dirname, '..', 'skills') } = {}) {
   const store = new Store(dataDir);
-  const skillLib = loadSkills(skillsDir);
+  const uploadDir = path.join(dataDir, 'skills');
+  const readSkills = () => {
+    const platform = loadSkills(skillsDir);
+    const uploaded = fs.existsSync(uploadDir) ? loadSkills(uploadDir) : { skills: [], warnings: [] };
+    const skills = [...platform.skills.map((x) => ({ ...x, source: 'platform' }))];
+    const warnings = [...platform.warnings, ...uploaded.warnings];
+    for (const x of uploaded.skills) {
+      if (skills.some((k) => k.id === x.id)) warnings.push(`${x.file}: uploaded skill id "${x.id}" clashes with a platform skill and is ignored`);
+      else skills.push({ ...x, source: 'enterprise upload' });
+    }
+    return { dir: skillsDir, skills, warnings };
+  };
+  let skillLib = readSkills();
   for (const w of skillLib.warnings) console.warn(`[skills] ${w}`);
   const pipeline = new Pipeline(store, { env, skills: skillLib.skills });
+  const reloadSkills = () => { skillLib = readSkills(); pipeline.skills = skillLib.skills; };
   pipeline.recover();
   const app = express();
   app.use(express.json({ limit: '2mb' }));
@@ -49,7 +62,7 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
     const model = modelConfig(env);
     res.json({
       title: APP_TITLE,
-      jira: jira ? { mode: 'live', baseUrl: jira.baseUrl } : { mode: 'fixture', note: 'JIRA_BASE_URL / JIRA_EMAIL / JIRA_API_TOKEN not set: recorded fixtures are used; no live Jira call is made' },
+      jira: jira ? { mode: 'live', baseUrl: jira.baseUrl, defects: 'raised in Jira' } : { mode: 'fixture', defects: 'not raised in Jira', note: 'JIRA_BASE_URL / JIRA_EMAIL / JIRA_API_TOKEN not set: recorded fixtures are used; no live Jira call is made, and defects stay in the platform with their story link' },
       model: model ? { mode: 'model', model: model.model } : { mode: 'demo', note: 'No model API key: deterministic demo mode (template prose)' },
       codebase: { repo: SOURCE.fullName, url: SOURCE.htmlUrl, branches: listFixtureBranches().filter(isHotelBranch) },
       jiraExport: { repo: EXPORT.repo, branch: EXPORT.branch },
@@ -82,6 +95,29 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
   }));
 
   app.get('/api/skills', (req, res) => res.json({ dir: 'skills/', skills: skillLib.skills, warnings: skillLib.warnings }));
+  app.post('/api/skills', (req, res) => {
+    const { text, fileName } = req.body || {};
+    if (!text || typeof text !== 'string') return res.status(400).json({ error: 'Send the skill as Markdown text with YAML front matter' });
+    let skill;
+    try { skill = parseSkill(text, fileName || 'upload.md'); } catch (e) { return res.status(400).json({ error: e.message }); }
+    const unknown = [...skill.appliesTo, ...Object.keys(skill.delivers)].filter((a) => !AGENTS[a]);
+    if (unknown.length) return res.status(400).json({ error: `Unknown agent id(s): ${[...new Set(unknown)].join(', ')}. Use: ${Object.keys(AGENTS).join(', ')}` });
+    if (!/^[a-z0-9][a-z0-9-]*$/.test(skill.id)) return res.status(400).json({ error: 'Skill id must be lower-case letters, digits and dashes' });
+    if (skillLib.skills.some((k) => k.id === skill.id && k.source === 'platform')) return res.status(409).json({ error: `"${skill.id}" is a platform skill; give the enterprise skill its own id` });
+    fs.mkdirSync(uploadDir, { recursive: true });
+    fs.writeFileSync(path.join(uploadDir, `${skill.id}.md`), text);
+    reloadSkills();
+    const { body, ...meta } = skillLib.skills.find((k) => k.id === skill.id);
+    res.status(201).json({ skill: meta, warnings: skillLib.warnings });
+  });
+  app.delete('/api/skills/:id', (req, res) => {
+    const s = skillLib.skills.find((k) => k.id === req.params.id);
+    if (!s) return res.status(404).json({ error: `Skill ${req.params.id} not found` });
+    if (s.source !== 'enterprise upload') return res.status(409).json({ error: 'Only uploaded enterprise skills can be removed here' });
+    fs.rmSync(path.join(uploadDir, s.file), { force: true });
+    reloadSkills();
+    res.json({ removed: s.id });
+  });
 
   app.get('/api/sample-text', (req, res) => {
     if (req.query.slot === 'codebase') {

@@ -748,10 +748,10 @@ platform:
       timeout: 800ms
       retries: 0
   cart:
-    # @rule A cart expires 20 minutes after it is created and never creates a reservation itself.
-    # @rule A price change of more than 1% must be acknowledged by the guest before checkout.
+    # @rule [AQPI-33] A cart expires 20 minutes after it is created and never creates a reservation itself.
+    # @rule [AQPI-17] A price change of more than 1% must be acknowledged by the guest before checkout.
     ttl: 20m
-    material-change-percent: 1.0
+    material-change-percent: 0.4
 management:
   endpoints:
     web:
@@ -2118,7 +2118,8 @@ public final class NotificationApi {
 
     public enum Kind {
         CONFIRMATION,
-        RESEND
+        RESEND,
+        CANCELLATION
     }
 
     public record HotelInfo(@NotBlank String name, String address, String city, String checkInFrom, String checkOutUntil) {
@@ -2133,7 +2134,7 @@ public final class NotificationApi {
             @NotBlank @Email String guestEmail, @NotNull @Valid HotelInfo hotel, @NotNull LocalDate checkIn,
             @NotNull LocalDate checkOut, long nights, int rooms, int adults, int children, String roomName,
             String ratePlanName, List<@Valid Item> items, @NotNull Money total, String paymentRule,
-            String cancellationTerms) {
+            String cancellationTerms, Boolean refundable) {
     }
 
     public record StatusChange(DeliveryStatus status, Instant at, String detail) {
@@ -2208,6 +2209,13 @@ public class NotificationController {
                 .status(c.created() ? HttpStatus.CREATED : HttpStatus.OK).body(c.view()));
     }
 
+    /** Story 8.4. */
+    @PostMapping("/cancellations")
+    public Mono<ResponseEntity<MessageView>> cancellation(@Valid @RequestBody ConfirmationRequest request) {
+        return notifications.cancellation(request).map(c -> ResponseEntity
+                .status(c.created() ? HttpStatus.CREATED : HttpStatus.OK).body(c.view()));
+    }
+
     @GetMapping("/confirmations/{reservationId}")
     public Mono<MessageView> forReservation(@PathVariable String reservationId) {
         return Mono.fromSupplier(() -> notifications.forReservation(reservationId).orElseThrow(
@@ -2266,7 +2274,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class NotificationProperties {
 
     private int maxSendAttempts = 3;
-    private int maxManualRetries = 2;
+    private int maxManualRetries = 3;
+    private Duration freeCancellationWindow = Duration.ofHours(48);
     private int resendLimitPerBooking = 5;
     private Duration resendBookingWindow = Duration.ofHours(24);
     private int resendLimitPerClient = 10;
@@ -2346,6 +2355,14 @@ public class NotificationProperties {
     public void setLocales(List<String> locales) {
         this.locales = locales;
     }
+
+    public Duration getFreeCancellationWindow() {
+        return freeCancellationWindow;
+    }
+
+    public void setFreeCancellationWindow(Duration freeCancellationWindow) {
+        this.freeCancellationWindow = freeCancellationWindow;
+    }
 }
 
 
@@ -2383,7 +2400,7 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 import reactor.util.retry.Retry;
 
-/** Stories 8.1, 8.2, 8.3 (AQPI-24, AQPI-25, AQPI-26). */
+/** Stories 8.1, 8.2, 8.3, 8.4 (AQPI-24, AQPI-25, AQPI-26, AQPI-37). */
 @Service
 public class NotificationService {
 
@@ -2430,6 +2447,7 @@ public class NotificationService {
 
     private final Map<String, Message> messages = new ConcurrentHashMap<>();
     private final Map<String, String> confirmationByReservation = new ConcurrentHashMap<>();
+    private final Map<String, String> cancellationByReservation = new ConcurrentHashMap<>();
     private final Map<String, Booking> bookings = new ConcurrentHashMap<>();
     private final Map<String, Deque<Instant>> resendsByBooking = new ConcurrentHashMap<>();
     private final Map<String, Deque<Instant>> resendsByClient = new ConcurrentHashMap<>();
@@ -2480,6 +2498,24 @@ public class NotificationService {
                 .attr("templateVersion", message.templateVersion).attr("locale", message.locale)
                 .attr("created", created).publish())
                 .then(Mono.fromSupplier(() -> new Created(view(message, false), created)));
+    }
+
+    /** Story 8.4: one cancellation e-mail per cancelled reservation; repeats return the original. */
+    public Mono<Created> cancellation(ConfirmationRequest r) {
+        if (!"CANCELLED".equals(r.status())) {
+            return Mono.error(new ApiException(HttpStatus.CONFLICT, "RESERVATION_NOT_CANCELLED",
+                    "A cancellation e-mail can only be sent for a cancelled reservation."));
+        }
+        Message message;
+        boolean created;
+        synchronized (this) {
+            String existing = cancellationByReservation.get(r.reservationId());
+            created = existing == null;
+            message = created ? newMessage(r, Kind.CANCELLATION) : messages.get(existing);
+            cancellationByReservation.putIfAbsent(r.reservationId(), message.id);
+        }
+        Mono<Void> send = created ? deliver(message, r.guestEmail()) : Mono.empty();
+        return send.then(Mono.fromSupplier(() -> new Created(view(message, false), created)));
     }
 
     /** Story 8.3: verify without revealing anything, rate-limit, then send a new message event. */
@@ -2544,6 +2580,7 @@ public class NotificationService {
     public void reset() {
         messages.clear();
         confirmationByReservation.clear();
+        cancellationByReservation.clear();
         bookings.clear();
         resendsByBooking.clear();
         resendsByClient.clear();
@@ -2551,7 +2588,7 @@ public class NotificationService {
     }
 
     private Message newMessage(ConfirmationRequest r, Kind kind) {
-        TemplateRenderer.Rendered content = renderer.render(r);
+        TemplateRenderer.Rendered content = kind == Kind.CANCELLATION ? renderer.renderCancellation(r) : renderer.render(r);
         Message message = new Message("M-" + UUID.randomUUID().toString().substring(0, 8), r.reservationId(),
                 r.confirmationNumber(), kind, content.locale(), properties.getTemplateVersion(),
                 cipher.encrypt(r.guestEmail()), Masking.email(r.guestEmail()), content, clock.instant());
@@ -2611,14 +2648,14 @@ public class NotificationService {
         return new ConfirmationRequest(r.reservationId(), r.confirmationNumber(), r.status(), r.locale(),
                 cipher.encrypt(r.guestFirstName()), cipher.encrypt(r.guestLastName()), cipher.encrypt(r.guestEmail()),
                 r.hotel(), r.checkIn(), r.checkOut(), r.nights(), r.rooms(), r.adults(), r.children(), r.roomName(),
-                r.ratePlanName(), r.items(), r.total(), r.paymentRule(), r.cancellationTerms());
+                r.ratePlanName(), r.items(), r.total(), r.paymentRule(), r.cancellationTerms(), r.refundable());
     }
 
     private ConfirmationRequest unseal(ConfirmationRequest r) {
         return new ConfirmationRequest(r.reservationId(), r.confirmationNumber(), r.status(), r.locale(),
                 cipher.decrypt(r.guestFirstName()), cipher.decrypt(r.guestLastName()), cipher.decrypt(r.guestEmail()),
                 r.hotel(), r.checkIn(), r.checkOut(), r.nights(), r.rooms(), r.adults(), r.children(), r.roomName(),
-                r.ratePlanName(), r.items(), r.total(), r.paymentRule(), r.cancellationTerms());
+                r.ratePlanName(), r.items(), r.total(), r.paymentRule(), r.cancellationTerms(), r.refundable());
     }
 
     private static boolean allow(Map<String, Deque<Instant>> buckets, String key, int limit, Duration window, Instant now) {
@@ -2664,6 +2701,7 @@ public class NotificationServiceApplication {
 # notification-service/src/main/java/com/hotelbooking/notification/TemplateRenderer.java
 package com.hotelbooking.notification;
 
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.HashMap;
@@ -2689,15 +2727,25 @@ public class TemplateRenderer {
             "en", labels("subject", "Your booking is confirmed - %s", "title", "Booking confirmed", "hello", "Hello %s,",
                     "intro", "Your reservation is confirmed.", "number", "Confirmation number", "stay", "Your stay",
                     "checkIn", "Check-in", "checkOut", "Check-out", "items", "What you booked", "total", "Total",
-                    "policies", "Policies"),
+                    "policies", "Policies", "freeUntil", "Free cancellation until %s (%d hours before check-in).",
+                    "cancelSubject", "Your booking is cancelled - %s", "cancelTitle", "Booking cancelled",
+                    "cancelIntro", "Your reservation has been cancelled free of charge. No payment will be taken."),
             "fr", labels("subject", "Votre réservation est confirmée - %s", "title", "Réservation confirmée",
                     "hello", "Bonjour %s,", "intro", "Votre réservation est confirmée.", "number", "Numéro de confirmation",
                     "stay", "Votre séjour", "checkIn", "Arrivée", "checkOut", "Départ", "items", "Votre réservation",
-                    "total", "Total", "policies", "Conditions"),
+                    "total", "Total", "policies", "Conditions",
+                    "freeUntil", "Annulation gratuite jusqu'au %s (%d heures avant l'arrivée).",
+                    "cancelSubject", "Votre réservation est annulée - %s", "cancelTitle", "Réservation annulée",
+                    "cancelIntro", "Votre réservation a été annulée sans frais. Aucun paiement ne sera prélevé."),
             "es", labels("subject", "Su reserva está confirmada - %s", "title", "Reserva confirmada",
                     "hello", "Hola %s:", "intro", "Su reserva está confirmada.", "number", "Número de confirmación",
                     "stay", "Su estancia", "checkIn", "Entrada", "checkOut", "Salida", "items", "Lo que ha reservado",
-                    "total", "Total", "policies", "Condiciones"));
+                    "total", "Total", "policies", "Condiciones",
+                    "freeUntil", "Cancelación gratuita hasta el %s (%d horas antes de la entrada).",
+                    "cancelSubject", "Su reserva está cancelada - %s", "cancelTitle", "Reserva cancelada",
+                    "cancelIntro", "Su reserva se ha cancelado sin coste. No se cobrará ningún importe."));
+
+    private static final DateTimeFormatter DEADLINE = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm 'UTC'");
 
     private final NotificationProperties properties;
 
@@ -2725,6 +2773,7 @@ public class TemplateRenderer {
         String subject = l.get("subject").formatted(r.confirmationNumber());
         String checkIn = r.checkIn().format(dates) + (r.hotel().checkInFrom() == null ? "" : " (" + r.hotel().checkInFrom() + ")");
         String checkOut = r.checkOut().format(dates) + (r.hotel().checkOutUntil() == null ? "" : " (" + r.hotel().checkOutUntil() + ")");
+        String deadline = freeCancellationDeadline(r, l);
         String payment = "PAY_NOW".equals(r.paymentRule()) ? "Paid in full at booking" : "Pay at the hotel";
         StringBuilder rows = new StringBuilder();
         StringBuilder textRows = new StringBuilder();
@@ -2760,7 +2809,7 @@ public class TemplateRenderer {
                 </table>
                 <p>Payment: %s</p>
                 <h2>%s</h2>
-                <p>%s</p>
+                <p>%s</p>%s
                 </main>
                 </body>
                 </html>
@@ -2769,13 +2818,55 @@ public class TemplateRenderer {
                 esc(r.hotel().name()), esc(join(r.hotel().address(), r.hotel().city())), esc(l.get("checkIn")),
                 esc(checkIn), esc(l.get("checkOut")), esc(checkOut), esc(r.roomName()), esc(r.ratePlanName()),
                 r.rooms(), r.adults(), r.children(), esc(l.get("items")), esc(l.get("items")), rows,
-                esc(l.get("total")), esc(total), esc(payment), esc(l.get("policies")), esc(r.cancellationTerms()));
+                esc(l.get("total")), esc(total), esc(payment), esc(l.get("policies")), esc(r.cancellationTerms()),
+                deadline.isEmpty() ? "" : "\n<p><strong>" + esc(deadline) + "</strong></p>");
         String text = l.get("title") + "\n\n" + l.get("hello").formatted(r.guestFirstName()) + "\n" + l.get("intro") + "\n\n"
                 + l.get("number") + ": " + r.confirmationNumber() + "\n\n" + r.hotel().name() + ", "
                 + join(r.hotel().address(), r.hotel().city()) + "\n" + l.get("checkIn") + ": " + checkIn + "\n"
                 + l.get("checkOut") + ": " + checkOut + "\nRoom: " + r.roomName() + " - " + r.ratePlanName() + "\n\n"
                 + l.get("items") + ":\n" + textRows + l.get("total") + ": " + total + "\nPayment: " + payment + "\n\n"
-                + l.get("policies") + ": " + r.cancellationTerms() + "\n";
+                + l.get("policies") + ": " + r.cancellationTerms() + "\n" + (deadline.isEmpty() ? "" : deadline + "\n");
+        return new Rendered(tag, subject, html, text);
+    }
+
+    /** Story 8.1 (release 2.0): a refundable booking states when free cancellation closes. */
+    private String freeCancellationDeadline(ConfirmationRequest r, Map<String, String> l) {
+        if (!Boolean.TRUE.equals(r.refundable())) {
+            return "";
+        }
+        long hours = properties.getFreeCancellationWindow().toHours();
+        String at = r.checkIn().atStartOfDay(ZoneOffset.UTC).minus(properties.getFreeCancellationWindow()).format(DEADLINE);
+        return l.get("freeUntil").formatted(at, hours);
+    }
+
+    /** Story 8.4: cancellation e-mail with the same accessibility rules as the confirmation. */
+    public Rendered renderCancellation(ConfirmationRequest r) {
+        String tag = resolveLocale(r.locale());
+        Locale locale = Locale.forLanguageTag(tag);
+        Map<String, String> l = LABELS.getOrDefault(locale.getLanguage(), LABELS.get("en"));
+        DateTimeFormatter dates = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(locale);
+        String subject = l.get("cancelSubject").formatted(r.confirmationNumber());
+        String hello = l.get("hello").formatted(r.guestFirstName());
+        String stay = r.hotel().name() + " - " + r.checkIn().format(dates) + " / " + r.checkOut().format(dates);
+        String html = """
+                <!DOCTYPE html>
+                <html lang="%s">
+                <head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>%s</title></head>
+                <body>
+                <main role="main" style="font-family:Arial,sans-serif;font-size:16px;line-height:1.5;color:#1a1a1a">
+                <h1>%s</h1>
+                <p>%s</p>
+                <p>%s</p>
+                <p><strong>%s:</strong> %s</p>
+                <h2>%s</h2>
+                <p>%s</p>
+                </main>
+                </body>
+                </html>
+                """.formatted(tag, esc(subject), esc(l.get("cancelTitle")), esc(hello), esc(l.get("cancelIntro")),
+                esc(l.get("number")), esc(r.confirmationNumber()), esc(l.get("stay")), esc(stay));
+        String text = l.get("cancelTitle") + "\n\n" + hello + "\n" + l.get("cancelIntro") + "\n\n" + l.get("number") + ": "
+                + r.confirmationNumber() + "\n" + stay + "\n";
         return new Rendered(tag, subject, html, text);
     }
 
@@ -2803,13 +2894,19 @@ platform:
   service: notification-service
   environment: local
   notification:
-    # @rule A confirmation can be resent at most 5 times per booking in 24 hours.
+    # @rule [AQPI-35] A confirmation can be resent at most 5 times per booking in 24 hours.
     max-send-attempts: 3
     resend-limit-per-booking: 5
     resend-booking-window: 24h
     resend-limit-per-client: 10
     resend-client-window: 1h
     simulate-delivery: true
+    # @rule [AQPI-25] Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.
+    max-manual-retries: 4
+    # @rule [AQPI-24] The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.
+    free-cancellation-window: 48h
+    # @rule [AQPI-37] A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.
+    # @rule [AQPI-37] A cancellation e-mail that cannot be sent does not undo the cancellation.
 management:
   endpoints:
     web:
@@ -4472,7 +4569,7 @@ Run a service: `mvn -pl hotel-service -am spring-boot:run` (start hotel, offer a
 
 ## Business rules
 
-The rules this code enforces are tagged `@rule` next to their configured values in each service's `src/main/resources/<service>.yml`. The booking attributes, their types, limits and example values are in [data-dictionary/booking-attributes.json](data-dictionary/booking-attributes.json); test data is generated from it.
+The rules this code enforces are tagged `@rule [AQPI-n]` next to their configured values in each service's `src/main/resources/<service>.yml`; the key names the Jira story the rule implements. The booking attributes, their types, limits and example values are in [data-dictionary/booking-attributes.json](data-dictionary/booking-attributes.json); test data is generated from it.
 
 ## Demo switches
 
@@ -4550,6 +4647,11 @@ public class Downstream {
 
     public Mono<MessageStatus> requestConfirmation(ConfirmationRequest request) {
         return calls.call(NOTIFICATION, true, notification.post().uri("/api/confirmations").bodyValue(request)
+                .retrieve().bodyToMono(MessageStatus.class)).onErrorMap(DownstreamErrors::translate);
+    }
+
+    public Mono<MessageStatus> requestCancellationEmail(ConfirmationRequest request) {
+        return calls.call(NOTIFICATION, true, notification.post().uri("/api/cancellations").bodyValue(request)
                 .retrieve().bodyToMono(MessageStatus.class)).onErrorMap(DownstreamErrors::translate);
     }
 }
@@ -4898,7 +5000,7 @@ public final class ReservationApi {
     public record ConfirmationRequest(String reservationId, String confirmationNumber, String status, String locale,
             String guestFirstName, String guestLastName, String guestEmail, HotelInfo hotel, LocalDate checkIn,
             LocalDate checkOut, long nights, int rooms, int adults, int children, String roomName, String ratePlanName,
-            List<Item> items, Money total, String paymentRule, String cancellationTerms) {
+            List<Item> items, Money total, String paymentRule, String cancellationTerms, Boolean refundable) {
     }
 
     public record MessageStatus(String messageId, String status) {
@@ -5119,7 +5221,7 @@ import reactor.core.scheduler.Schedulers;
 public class ReservationService {
 
     public static final String PAY_NOW = "PAY_NOW";
-    private static final Pattern KEY = Pattern.compile("[A-Za-z0-9._-]{8,64}");
+    private static final Pattern KEY = Pattern.compile("[A-Za-z0-9._-]{7,64}");
     private static final char[] ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".toCharArray();
 
     public record Submission(Outcome outcome, boolean replay) {
@@ -5256,7 +5358,7 @@ public class ReservationService {
             note(r, "rooms released for cancellation");
             if (gateway.voidAuthorization(r.idempotencyKey)) {
                 r.paymentStatus = PaymentStatus.VOIDED;
-                return finish(r, Status.CANCELLED, null);
+                return finish(r, Status.CANCELLED, null).then(cancellationEmail(r));
             }
             return finish(r, Status.MANUAL_REVIEW, "VOID_FAILED");
         })).then(events.event(EventNames.CANCELLATION_REQUESTED).outcome("cancelled").attr("reservationId", r.id)
@@ -5427,7 +5529,7 @@ public class ReservationService {
     private Mono<Void> afterConfirm(Reservation r) {
         Mono<Void> cart = downstream.completeCart(r.cartId, r.id)
                 .onErrorResume(e -> Mono.fromRunnable(() -> note(r, "cart completion deferred")));
-        Mono<Void> notify = downstream.requestConfirmation(confirmation(r))
+        Mono<Void> notify = downstream.requestConfirmation(notice(r, Status.CONFIRMED))
                 .doOnNext(m -> {
                     r.notificationStatus = m.status();
                     note(r, "confirmation " + m.messageId() + " " + m.status());
@@ -5452,14 +5554,22 @@ public class ReservationService {
                 .attr("inventory", r.inventoryStatus.name()).publish();
     }
 
-    private ConfirmationRequest confirmation(Reservation r) {
+    /** Story 8.4 (release 2.0): the guest is told about the cancellation; a failed e-mail never undoes it. */
+    private Mono<Void> cancellationEmail(Reservation r) {
+        return Mono.defer(() -> downstream.requestCancellationEmail(notice(r, Status.CANCELLED)))
+                .doOnNext(m -> note(r, "cancellation e-mail " + m.messageId() + " " + m.status()))
+                .onErrorResume(e -> Mono.fromRunnable(() -> note(r, "cancellation e-mail request failed; booking stays cancelled")))
+                .then();
+    }
+
+    private ConfirmationRequest notice(Reservation r, Status status) {
         CartRoom room = r.cart.room();
-        return new ConfirmationRequest(r.id, r.confirmationNumber, Status.CONFIRMED.name(), r.locale,
+        return new ConfirmationRequest(r.id, r.confirmationNumber, status.name(), r.locale,
                 open(r.firstNameSealed), open(r.lastNameSealed), open(r.emailSealed),
                 new HotelInfo(room.hotelName(), room.address(), room.city(), room.checkInFrom(), room.checkOutUntil()),
                 room.checkIn(), room.checkOut(), room.nights(), room.rooms(), room.adults(), room.children(),
                 room.roomName(), room.ratePlanName(), items(r), r.cart.totals().total(), room.paymentRule(),
-                room.cancellationTerms());
+                room.cancellationTerms(), room.refundable());
     }
 
     Outcome outcome(Reservation r) {
@@ -5609,10 +5719,10 @@ platform:
       timeout: 2s
       retries: 1
   reservation:
-    # @rule Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.
+    # @rule [AQPI-21] Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.
     idempotency-ttl: 24h
-    # @rule A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.
-    # @rule A cancelled reservation shows status CANCELLED, its payment authorisation is voided and its rooms are released.
+    # @rule [AQPI-36] A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.
+    # @rule [AQPI-36] A cancelled reservation shows status CANCELLED, its payment authorisation is voided and its rooms are released.
     free-cancellation-window: 48h
     retention-days: 365
 management:
@@ -6244,9 +6354,9 @@ platform:
       timeout: 2s
       retries: 1
   search:
-    # @rule A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.
-    # @rule Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.
-    # @rule Check-in can be at most 500 days ahead.
+    # @rule [AQPI-34] A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.
+    # @rule [AQPI-4] Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.
+    # @rule [AQPI-4] Check-in can be at most 500 days ahead.
     defaults:
       max-stay-nights: 30
       max-advance-days: 500
@@ -6286,8 +6396,8 @@ Maps every story in the Jira space AQPI (https://tcs-team-ou6drgfr.atlassian.net
 | [AQPI-20](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-20) | 7.2 Capture and authorize payment | AQPI-18 Checkout and Reservation | 1. The guest sees the final payable or guarantee amount before authorization.<br>2. Payment data is handled through approved secure components.<br>3. Authorization success, decline, timeout, and technical failure are handled distinctly.<br>4. The product does not store prohibited card data in application logs. | reservation-service: PaymentGateway (simulated tokens), GET /api/checkout/{cartId}/payment-summary | BookingJourneyTest#happyPathBooking<br>BookingJourneyTest#paymentDeclined<br>ReservationServiceTest#payAtHotelGuarantee | Payment provider is simulated; tokens like tok_visa_ok / tok_decline drive outcomes. |
 | [AQPI-21](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-21) | 7.3 Create reservation idempotently | AQPI-18 Checkout and Reservation | 1. A successful request creates one reservation and returns a confirmation identifier.<br>2. Repeated submissions with the same idempotency key do not create duplicate reservations.<br>3. Inventory, price, payment, and reservation outcomes remain reconcilable.<br>4. Partial failures trigger defined recovery or manual-review handling. | reservation-service: ReservationService (Idempotency-Key, inventory commit/void), hotel-service inventory commitments | BookingJourneyTest#happyPathBooking<br>BookingJourneyTest#idempotencyMismatch<br>BookingJourneyTest#lastRoomSoldOnce<br>BookingJourneyTest#lostPaymentResponseReconciled<br>BookingJourneyTest#priceChangeNeedsAcknowledgement<br>CartServiceTest#completedCart<br>HotelServiceTest#inventoryCommitments<br>ReservationServiceTest#inventoryConflictVoidsPayment<br>ReservationServiceTest#inventoryTimeoutRecovered | Idempotency store is in-memory, single instance. |
 | [AQPI-22](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-22) | 7.4 Show booking outcome | AQPI-18 Checkout and Reservation | 1. Success displays confirmation identifier, hotel, stay summary, selected products, and total.<br>2. A failure does not display a false confirmation.<br>3. Unknown or timeout states instruct the guest not to resubmit blindly and provide a safe recovery path. | reservation-service: Outcome, GET /api/reservations/{id}, reconcile, ops manual-review | BookingJourneyTest#happyPathBooking<br>BookingJourneyTest#lostPaymentResponseReconciled<br>BookingJourneyTest#paymentDeclined<br>ReservationServiceTest#failedVoidGoesToManualReview |  |
-| [AQPI-24](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24) | 8.1 Generate confirmation message | AQPI-23 Confirmation and Notifications | 1. The message contains guest-safe confirmation details, hotel information, stay dates, booked items, pricing summary, and applicable policy information.<br>2. The message content matches the confirmed reservation state.<br>3. Templates support required locale and accessibility standards. | notification-service: TemplateRenderer, NotificationService.confirm | BookingJourneyTest#happyPathBooking<br>NotificationServiceTest#accessibleTemplate<br>ReservationServiceTest#notificationFailureKeepsBooking |  |
-| [AQPI-25](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25) | 8.2 Send and track confirmation email | AQPI-23 Confirmation and Notifications | 1. A successful reservation creates one confirmation-email request.<br>2. Send failure does not reverse a valid reservation.<br>3. Permitted retries avoid duplicate or excessive messages.<br>4. Operational users can distinguish queued, sent, delivered, bounced, and failed states when supported by the provider. | notification-service: EmailProvider (simulated), delivery states, webhook, ops retry | BookingJourneyTest#happyPathBooking<br>NotificationServiceTest#deliveryStates<br>NotificationServiceTest#idempotentConfirmation | E-mail provider is simulated (fail.test, flaky.test, bounce.test domains). |
+| [AQPI-24](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24) | 8.1 Generate confirmation message | AQPI-23 Confirmation and Notifications | 1. The message contains guest-safe confirmation details, hotel information, stay dates, booked items, pricing summary, and applicable policy information.<br>2. The message content matches the confirmed reservation state.<br>3. Templates support required locale and accessibility standards.<br>4. (release 2.0) The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in. | notification-service: TemplateRenderer, NotificationService.confirm; TemplateRenderer.freeCancellationDeadline, NotificationProperties.freeCancellationWindow (48h) | BookingJourneyTest#happyPathBooking<br>NotificationServiceTest#accessibleTemplate<br>ReservationServiceTest#notificationFailureKeepsBooking<br>NotificationServiceTest#freeCancellationDeadline |  |
+| [AQPI-25](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25) | 8.2 Send and track confirmation email | AQPI-23 Confirmation and Notifications | 1. A successful reservation creates one confirmation-email request.<br>2. Send failure does not reverse a valid reservation.<br>3. (release 2.0) Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.<br>4. Operational users can distinguish queued, sent, delivered, bounced, and failed states when supported by the provider. | notification-service: EmailProvider (simulated), delivery states, webhook, ops retry; NotificationProperties.maxManualRetries, notification-service.yml | BookingJourneyTest#happyPathBooking<br>NotificationServiceTest#deliveryStates<br>NotificationServiceTest#idempotentConfirmation | E-mail provider is simulated (fail.test, flaky.test, bounce.test domains). Known defect in release 2.0: a 4th retry is accepted (see Known defects). |
 | [AQPI-26](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-26) | 8.3 Resend confirmation safely | AQPI-23 Confirmation and Notifications | 1. The request verifies sufficient reservation information without exposing data.<br>2. Rate limits and abuse controls apply.<br>3. The resend creates a new message event without creating a new reservation. | notification-service: POST /api/confirmations/resend (generic answer, rate limits: 5 per booking in 24 hours, AQPI-35) | BookingJourneyTest#resendConfirmation<br>NotificationServiceTest#resendGeneric |  |
 | [AQPI-28](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-28) | 9.1 Protect sensitive data | AQPI-27 Cross-Cutting Quality, Privacy and Observability | 1. Sensitive data is classified and mapped to approved storage and processing locations.<br>2. Data is encrypted in transit and at rest where required.<br>3. Logs and analytics exclude or mask prohibited fields.<br>4. Access to operational data is role-based and auditable.<br>5. Retention and deletion follow approved policy. | platform-common: FieldCipher, Masking, DataMap; reservation ops views and retention purge | BookingJourneyTest#rawCardRejected<br>PlatformCommonTest#fieldCipher<br>PlatformCommonTest#masking<br>ReservationServiceTest#opsViewMasking<br>ReservationServiceTest#retentionPurge | Encryption key comes from configuration; no KMS. |
 | [AQPI-29](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-29) | 9.2 Provide end-to-end observability | AQPI-27 Cross-Cutting Quality, Privacy and Observability | 1. Events use a correlation ID across supported services.<br>2. Business events and technical logs are distinguishable.<br>3. Metrics and alerts exist for agreed critical failures and latency.<br>4. Logging degradation does not expose sensitive payloads or silently block booking unless explicitly required. | platform-common: CorrelationIdWebFilter, CorrelationPropagation, EventPublisher, BusinessEvent | BookingJourneyTest#happyPathBooking<br>PlatformCommonTest#correlationIdSanitised<br>PlatformCommonTest#eventsScrubbed | Events are structured logs and Micrometer counters; no tracing backend. |
@@ -6297,3 +6407,16 @@ Maps every story in the Jira space AQPI (https://tcs-team-ou6drgfr.atlassian.net
 | [AQPI-34](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-34) | 10.2 Limit Paris stays to 14 nights | AQPI-32 Release 2.0 | 1. A Paris (PAR) stay of up to 14 nights is accepted.<br>2. A Paris stay of more than 14 nights is rejected with a field-level message. | search-service: SearchRules, search-service.yml (PAR maximum stay) | (no unit test) | Known defect in release 2.0: a 15-night Paris stay is still accepted. Found by the Agentic QE Flow 2 cycle. |
 | [AQPI-35](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-35) | 10.3 Allow up to 5 confirmation resends | AQPI-32 Release 2.0 | 1. A guest can resend the confirmation 5 times per booking in 24 hours.<br>2. The 6th resend is refused (HTTP 429). | notification-service: NotificationProperties.resendLimit (5), notification-service.yml | BookingJourneyTest#resendConfirmation |  |
 | [AQPI-36](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-36) | 10.4 Cancel a reservation free of charge | AQPI-32 Release 2.0 | 1. A refundable booking can be cancelled free of charge up to 48 hours before check-in.<br>2. A later cancellation is refused and the booking stays confirmed.<br>3. A non-refundable rate cannot be cancelled free of charge.<br>4. A cancelled booking is CANCELLED, its payment hold voided and its room released. | reservation-service: POST /api/reservations/{id}/cancel, ReservationService.cancel, ReservationProperties.freeCancellationWindow (48h) | BookingJourneyTest#freeCancellation<br>BookingJourneyTest#lateCancellationRefused<br>ReservationServiceTest#freeCancellation<br>ReservationServiceTest#lateCancellationRefused<br>ReservationServiceTest#nonRefundableNotCancelled |  |
+| [AQPI-37](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37) | 8.4 Send a cancellation e-mail | AQPI-23 Confirmation and Notifications | 1. A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.<br>2. A cancellation e-mail that cannot be sent does not undo the cancellation.<br>3. Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation. | reservation-service: ReservationService.cancellationEmail, Downstream.requestCancellationEmail; notification-service: POST /api/cancellations, NotificationService.cancellation, TemplateRenderer.renderCancellation | NotificationServiceTest#cancellationEmail<br>ReservationServiceTest#cancellationEmail | E-mail provider is simulated. |
+
+## Known defects
+
+Found by the Agentic QE cycles. None has a unit test, which is why `mvn verify` still passes.
+
+| Story | Rule | Defect | Code | Release 2.0 |
+|---|---|---|---|---|
+| [AQPI-4](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-4) 3.2 Validate occupancy and stay criteria | One search books 1 to 8 rooms | Release 1.0 accepts a search for 9 rooms (Flow 1) | search-service.yml `max-rooms` | Fixed: `max-rooms: 8`; retested by Flow 2 |
+| [AQPI-17](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-17) 6.3 Review cart and total price | A price change of more than 1% must be acknowledged | A 0.5% change already asks for acknowledgement (Flow 1) | cart-service.yml `material-change-percent: 0.4` | Still open |
+| [AQPI-21](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-21) 7.3 Create reservation idempotently | Idempotency-Key of 8 to 64 characters | A 7-character key is accepted (Flow 1) | ReservationService `KEY` pattern `{7,64}` | Still open |
+| [AQPI-34](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-34) 10.2 Limit Paris stays to 14 nights | Paris allows at most 14 nights | A 15-night Paris stay is accepted (Flow 2) | search-service.yml PAR `max-stay-nights: 15` | New in release 2.0 |
+| [AQPI-25](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25) 8.2 Send and track confirmation email | Operations can retry a failed e-mail at most 3 times | A 4th retry is accepted (Flow 2) | notification-service.yml `max-manual-retries: 4` | New in release 2.0 |

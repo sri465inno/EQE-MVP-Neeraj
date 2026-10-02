@@ -1,6 +1,6 @@
 {
   "title": "Agentic QE Platform - MVP - Cycle report",
-  "generatedAt": "2026-10-02T16:18:37.436Z",
+  "generatedAt": "2026-10-02T20:29:03.915Z",
   "cycle": {
     "id": "CYC-3",
     "name": "Hotel booking baseline · End-to-end",
@@ -8,8 +8,8 @@
     "testingType": "e2e",
     "testingTypeName": "End-to-end testing",
     "status": "completed",
-    "createdAt": "2026-10-02T16:18:28.418Z",
-    "completedAt": "2026-10-02T16:18:37.422Z",
+    "createdAt": "2026-10-02T20:28:55.712Z",
+    "completedAt": "2026-10-02T20:29:03.902Z",
     "baselineId": "BL-3",
     "baselineVersionAtStart": null,
     "baselineVersionAfter": 1,
@@ -274,8 +274,8 @@
             "source": "code",
             "ref": "cart-service/src/main/resources/cart-service.yml",
             "line": 16,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/cart-service/src/main/resources/cart-service.yml",
-            "quote": "# @rule A cart expires 30 minutes after it is created and never creates a reservation itself."
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/cart-service/src/main/resources/cart-service.yml",
+            "quote": "# @rule [AQPI-15] A cart expires 30 minutes after it is created and never creates a reservation itself."
           }
         ]
       },
@@ -292,8 +292,8 @@
             "source": "code",
             "ref": "cart-service/src/main/resources/cart-service.yml",
             "line": 17,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/cart-service/src/main/resources/cart-service.yml",
-            "quote": "# @rule A price change of more than 1% must be acknowledged by the guest before checkout."
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/cart-service/src/main/resources/cart-service.yml",
+            "quote": "# @rule [AQPI-17] A price change of more than 1% must be acknowledged by the guest before checkout."
           }
         ]
       },
@@ -310,8 +310,8 @@
             "source": "code",
             "ref": "notification-service/src/main/resources/notification-service.yml",
             "line": 7,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/notification-service/src/main/resources/notification-service.yml",
-            "quote": "# @rule A confirmation can be resent at most 3 times per booking in 24 hours."
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/notification-service/src/main/resources/notification-service.yml",
+            "quote": "# @rule [AQPI-26] A confirmation can be resent at most 3 times per booking in 24 hours."
           }
         ]
       },
@@ -328,8 +328,8 @@
             "source": "code",
             "ref": "reservation-service/src/main/resources/reservation-service.yml",
             "line": 20,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/reservation-service/src/main/resources/reservation-service.yml",
-            "quote": "# @rule Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome."
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/reservation-service/src/main/resources/reservation-service.yml",
+            "quote": "# @rule [AQPI-21] Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome."
           }
         ]
       },
@@ -346,8 +346,8 @@
             "source": "code",
             "ref": "search-service/src/main/resources/search-service.yml",
             "line": 12,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/search-service/src/main/resources/search-service.yml",
-            "quote": "# @rule A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights."
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/search-service/src/main/resources/search-service.yml",
+            "quote": "# @rule [AQPI-4] A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights."
           }
         ]
       },
@@ -364,8 +364,8 @@
             "source": "code",
             "ref": "search-service/src/main/resources/search-service.yml",
             "line": 13,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/search-service/src/main/resources/search-service.yml",
-            "quote": "# @rule Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms."
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/search-service/src/main/resources/search-service.yml",
+            "quote": "# @rule [AQPI-4] Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms."
           }
         ]
       },
@@ -382,8 +382,8 @@
             "source": "code",
             "ref": "search-service/src/main/resources/search-service.yml",
             "line": 14,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/search-service/src/main/resources/search-service.yml",
-            "quote": "# @rule Check-in can be at most 500 days ahead."
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/search-service/src/main/resources/search-service.yml",
+            "quote": "# @rule [AQPI-4] Check-in can be at most 500 days ahead."
           }
         ]
       },
@@ -4039,7 +4039,7 @@
   },
   "dataModel": {
     "file": "data-dictionary/booking-attributes.json",
-    "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/data-dictionary/booking-attributes.json",
+    "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/data-dictionary/booking-attributes.json",
     "name": "Hotel booking attributes",
     "version": "1.0",
     "attributeCount": 21,
@@ -4695,12 +4695,12 @@
     {
       "slot": "codebase",
       "label": "Codebase",
-      "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef)",
+      "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (452df41)",
       "summary": "AQPI-1 Intelligent Hotel Shopping and Reservation Experience: reactive Spring Boot microservices",
       "children": [],
       "statements": 7,
       "provenance": "github",
-      "provenanceLabel": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef) at 2026-10-02T16:18:27.590Z",
+      "provenanceLabel": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (452df41) at 2026-10-02T20:28:54.959Z",
       "files": [
         "README.md",
         "TRACEABILITY.md",
@@ -6178,7 +6178,9 @@
         "status": "new",
         "version": 1,
         "previous": null,
-        "jiraKeys": []
+        "jiraKeys": [
+          "AQPI-15"
+        ]
       },
       {
         "id": "REQ-123",
@@ -6187,7 +6189,9 @@
         "status": "new",
         "version": 1,
         "previous": null,
-        "jiraKeys": []
+        "jiraKeys": [
+          "AQPI-17"
+        ]
       },
       {
         "id": "REQ-124",
@@ -6196,7 +6200,9 @@
         "status": "new",
         "version": 1,
         "previous": null,
-        "jiraKeys": []
+        "jiraKeys": [
+          "AQPI-26"
+        ]
       },
       {
         "id": "REQ-125",
@@ -6205,7 +6211,9 @@
         "status": "new",
         "version": 1,
         "previous": null,
-        "jiraKeys": []
+        "jiraKeys": [
+          "AQPI-21"
+        ]
       },
       {
         "id": "REQ-126",
@@ -6214,7 +6222,9 @@
         "status": "new",
         "version": 1,
         "previous": null,
-        "jiraKeys": []
+        "jiraKeys": [
+          "AQPI-4"
+        ]
       },
       {
         "id": "REQ-127",
@@ -6223,7 +6233,9 @@
         "status": "new",
         "version": 1,
         "previous": null,
-        "jiraKeys": []
+        "jiraKeys": [
+          "AQPI-4"
+        ]
       },
       {
         "id": "REQ-128",
@@ -6232,7 +6244,9 @@
         "status": "new",
         "version": 1,
         "previous": null,
-        "jiraKeys": []
+        "jiraKeys": [
+          "AQPI-4"
+        ]
       }
     ]
   },
@@ -6275,7 +6289,7 @@
       "name": "Hotel booking attributes",
       "version": "1.0",
       "attributeCount": 21,
-      "source": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/data-dictionary/booking-attributes.json"
+      "source": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/data-dictionary/booking-attributes.json"
     },
     "total": 8,
     "conforming": 8,
@@ -6420,24 +6434,24 @@
   "execution": {
     "executed": true,
     "quarantined": "not measured",
-    "durationMs": 4701,
+    "durationMs": 4530,
     "tool": "Playwright 1.63.0 (headless Chromium, JSON reporter)",
-    "command": "npx playwright test --config ../../../../../tmp/aqe-demo-efFxOP/runs/CYC-3/playwright.config.js",
+    "command": "npx playwright test --config ../../../../../tmp/aqe-demo-iPEMin/runs/CYC-3/playwright.config.js",
     "sut": {
       "build": "demo/hotel-booking-platform",
-      "url": "http://127.0.0.1:34149",
+      "url": "http://127.0.0.1:34219",
       "services": {
-        "hotel-service": "http://127.0.0.1:44957",
-        "offer-service": "http://127.0.0.1:43747",
-        "notification-service": "http://127.0.0.1:39365",
-        "search-service": "http://127.0.0.1:34149",
-        "cart-service": "http://127.0.0.1:34931",
-        "reservation-service": "http://127.0.0.1:37255"
+        "hotel-service": "http://127.0.0.1:35597",
+        "offer-service": "http://127.0.0.1:46825",
+        "notification-service": "http://127.0.0.1:36693",
+        "search-service": "http://127.0.0.1:34219",
+        "cart-service": "http://127.0.0.1:37879",
+        "reservation-service": "http://127.0.0.1:39969"
       },
       "name": "Hotel booking platform release 1.0, six Spring Boot services built from branch demo/hotel-booking-platform"
     },
-    "startedAt": "2026-10-02T16:18:32.704Z",
-    "finishedAt": "2026-10-02T16:18:37.405Z",
+    "startedAt": "2026-10-02T20:28:59.355Z",
+    "finishedAt": "2026-10-02T20:29:03.885Z",
     "summary": {
       "total": 8,
       "executed": 8,
@@ -6445,7 +6459,7 @@
       "failed": 0,
       "skipped": 0,
       "notRun": 0,
-      "durationMs": 1742,
+      "durationMs": 1608,
       "passRate": 100
     },
     "results": [
@@ -6454,7 +6468,7 @@
         "requirementId": "REQ-001",
         "name": "Guest books a pay-at-hotel room with breakfast from search to confirmation e-mail",
         "status": "passed",
-        "duration": 1187,
+        "duration": 1078,
         "reason": null
       },
       {
@@ -6462,7 +6476,7 @@
         "requirementId": "REQ-001",
         "name": "Guest books a prepaid non-refundable room in Paris and pays now",
         "status": "passed",
-        "duration": 128,
+        "duration": 112,
         "reason": null
       },
       {
@@ -6470,7 +6484,7 @@
         "requirementId": "REQ-002",
         "name": "A sold-out hotel is shown as unavailable and cannot be put in a cart",
         "status": "passed",
-        "duration": 74,
+        "duration": 70,
         "reason": null
       },
       {
@@ -6478,7 +6492,7 @@
         "requirementId": "REQ-004",
         "name": "An unavailable extra is refused and the room still books",
         "status": "passed",
-        "duration": 100,
+        "duration": 89,
         "reason": null
       },
       {
@@ -6486,7 +6500,7 @@
         "requirementId": "REQ-005",
         "name": "A double-clicked Book button creates one reservation and one payment",
         "status": "passed",
-        "duration": 72,
+        "duration": 67,
         "reason": null
       },
       {
@@ -6494,7 +6508,7 @@
         "requirementId": "REQ-006",
         "name": "The confirmation number can be looked up again after booking",
         "status": "passed",
-        "duration": 63,
+        "duration": 62,
         "reason": null
       },
       {
@@ -6502,7 +6516,7 @@
         "requirementId": "REQ-007",
         "name": "The guest sees the booking outcome and one confirmation e-mail is created",
         "status": "passed",
-        "duration": 57,
+        "duration": 64,
         "reason": null
       },
       {
@@ -6510,7 +6524,7 @@
         "requirementId": "REQ-051",
         "name": "An unavailable extra is refused and the room still books",
         "status": "passed",
-        "duration": 61,
+        "duration": 66,
         "reason": null
       }
     ]
@@ -7806,24 +7820,634 @@
       "passing": 5.5
     }
   },
+  "traceability": {
+    "rows": [
+      {
+        "jiraKeys": [
+          "AQPI-1"
+        ],
+        "jiraLevel": "initiative",
+        "requirementId": "REQ-001",
+        "requirement": "A guest can complete the complete search-to-confirmation flow using valid inputs.",
+        "requirementStatus": "new",
+        "ruleId": "BR-001",
+        "testCaseKey": "TC-F-001",
+        "testCase": "Guest books a pay-at-hotel room with breakfast from search to confirmation e-mail",
+        "testType": "functional",
+        "automation": "Automated",
+        "caseStatus": "new",
+        "testDataId": "TD-F-001",
+        "scriptFile": "br-001-booking-journey.spec.js",
+        "result": "passed",
+        "defects": [],
+        "jiraDefects": []
+      },
+      {
+        "jiraKeys": [
+          "AQPI-1"
+        ],
+        "jiraLevel": "initiative",
+        "requirementId": "REQ-001",
+        "requirement": "A guest can complete the complete search-to-confirmation flow using valid inputs.",
+        "requirementStatus": "new",
+        "ruleId": "BR-001",
+        "testCaseKey": "TC-F-002",
+        "testCase": "Guest books a prepaid non-refundable room in Paris and pays now",
+        "testType": "functional",
+        "automation": "Automated",
+        "caseStatus": "new",
+        "testDataId": "TD-F-002",
+        "scriptFile": "br-001-booking-journey.spec.js",
+        "result": "passed",
+        "defects": [],
+        "jiraDefects": []
+      },
+      {
+        "jiraKeys": [
+          "AQPI-1"
+        ],
+        "jiraLevel": "initiative",
+        "requirementId": "REQ-002",
+        "requirement": "Only bookable inventory and valid rates are presented as available.",
+        "requirementStatus": "new",
+        "ruleId": "BR-002",
+        "testCaseKey": "TC-F-003",
+        "testCase": "A sold-out hotel is shown as unavailable and cannot be put in a cart",
+        "testType": "functional",
+        "automation": "Automated",
+        "caseStatus": "new",
+        "testDataId": "TD-F-003",
+        "scriptFile": "br-002-bookable-inventory.spec.js",
+        "result": "passed",
+        "defects": [],
+        "jiraDefects": []
+      },
+      {
+        "jiraKeys": [
+          "AQPI-1"
+        ],
+        "jiraLevel": "initiative",
+        "requirementId": "REQ-004",
+        "requirement": "Ancillary offers do not block booking when declined or unavailable.",
+        "requirementStatus": "new",
+        "ruleId": "BR-004",
+        "testCaseKey": "TC-F-004",
+        "testCase": "An unavailable extra is refused and the room still books",
+        "testType": "functional",
+        "automation": "Automated",
+        "caseStatus": "new",
+        "testDataId": "TD-F-004",
+        "scriptFile": "br-004-offers-not-blocking.spec.js",
+        "result": "passed",
+        "defects": [],
+        "jiraDefects": []
+      },
+      {
+        "jiraKeys": [
+          "AQPI-1"
+        ],
+        "jiraLevel": "initiative",
+        "requirementId": "REQ-005",
+        "requirement": "The platform prevents or safely handles duplicate reservation submissions.",
+        "requirementStatus": "new",
+        "ruleId": "BR-005",
+        "testCaseKey": "TC-F-005",
+        "testCase": "A double-clicked Book button creates one reservation and one payment",
+        "testType": "functional",
+        "automation": "Automated",
+        "caseStatus": "new",
+        "testDataId": "TD-F-005",
+        "scriptFile": "br-005-duplicate-submission.spec.js",
+        "result": "passed",
+        "defects": [],
+        "jiraDefects": []
+      },
+      {
+        "jiraKeys": [
+          "AQPI-1"
+        ],
+        "jiraLevel": "initiative",
+        "requirementId": "REQ-006",
+        "requirement": "A successful reservation produces a durable confirmation identifier.",
+        "requirementStatus": "new",
+        "ruleId": "BR-006",
+        "testCaseKey": "TC-F-006",
+        "testCase": "The confirmation number can be looked up again after booking",
+        "testType": "functional",
+        "automation": "Automated",
+        "caseStatus": "new",
+        "testDataId": "TD-F-006",
+        "scriptFile": "br-006-durable-confirmation.spec.js",
+        "result": "passed",
+        "defects": [],
+        "jiraDefects": []
+      },
+      {
+        "jiraKeys": [
+          "AQPI-1"
+        ],
+        "jiraLevel": "initiative",
+        "requirementId": "REQ-007",
+        "requirement": "Confirmation is displayed on screen and an email request is generated.",
+        "requirementStatus": "new",
+        "ruleId": "BR-007",
+        "testCaseKey": "TC-F-007",
+        "testCase": "The guest sees the booking outcome and one confirmation e-mail is created",
+        "testType": "functional",
+        "automation": "Automated",
+        "caseStatus": "new",
+        "testDataId": "TD-F-007",
+        "scriptFile": "br-007-confirmation-shown.spec.js",
+        "result": "passed",
+        "defects": [],
+        "jiraDefects": []
+      },
+      {
+        "jiraKeys": [
+          "AQPI-12"
+        ],
+        "jiraLevel": "story",
+        "requirementId": "REQ-051",
+        "requirement": "Failure to load offers does not block room booking.",
+        "requirementStatus": "new",
+        "ruleId": "BR-051",
+        "testCaseKey": "TC-F-008",
+        "testCase": "An unavailable extra is refused and the room still books",
+        "testType": "functional",
+        "automation": "Automated",
+        "caseStatus": "new",
+        "testDataId": "TD-F-008",
+        "scriptFile": "br-051-offers-not-blocking.spec.js",
+        "result": "passed",
+        "defects": [],
+        "jiraDefects": []
+      }
+    ],
+    "stories": [
+      {
+        "key": "AQPI-1",
+        "level": "initiative",
+        "parent": null,
+        "summary": "[Initiative] Intelligent Hotel Shopping and Reservation Experience",
+        "scope": "this cycle",
+        "requirements": 6,
+        "testCases": 7,
+        "automated": 7,
+        "passed": 7,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-2",
+        "level": "epic",
+        "parent": "AQPI-1",
+        "summary": "[Epic 1] Search and Availability",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-3",
+        "level": "story",
+        "parent": "AQPI-2",
+        "summary": "3.1 Search hotels by destination and date range",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-4",
+        "level": "story",
+        "parent": "AQPI-2",
+        "summary": "3.2 Validate occupancy and stay criteria",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-5",
+        "level": "story",
+        "parent": "AQPI-2",
+        "summary": "3.3 Handle unavailable or failed searches",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-6",
+        "level": "epic",
+        "parent": "AQPI-1",
+        "summary": "[Epic 2] Hotel Results and Selection",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-7",
+        "level": "story",
+        "parent": "AQPI-6",
+        "summary": "4.1 Display available hotels",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-8",
+        "level": "story",
+        "parent": "AQPI-6",
+        "summary": "4.2 Sort and filter hotel results",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-9",
+        "level": "story",
+        "parent": "AQPI-6",
+        "summary": "4.3 View hotel and room details",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-10",
+        "level": "epic",
+        "parent": "AQPI-1",
+        "summary": "[Epic 3] Personalized Ancillary Offers",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-11",
+        "level": "story",
+        "parent": "AQPI-10",
+        "summary": "5.1 Determine eligible ancillary offers",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-12",
+        "level": "story",
+        "parent": "AQPI-10",
+        "summary": "5.2 Display ancillary offers",
+        "scope": "this cycle",
+        "requirements": 1,
+        "testCases": 1,
+        "automated": 1,
+        "passed": 1,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-13",
+        "level": "story",
+        "parent": "AQPI-10",
+        "summary": "5.3 Explain and control personalization",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-14",
+        "level": "epic",
+        "parent": "AQPI-1",
+        "summary": "[Epic 4] Cart Management",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-15",
+        "level": "story",
+        "parent": "AQPI-14",
+        "summary": "6.1 Add room selection to cart",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-16",
+        "level": "story",
+        "parent": "AQPI-14",
+        "summary": "6.2 Add, update, and remove ancillaries",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-17",
+        "level": "story",
+        "parent": "AQPI-14",
+        "summary": "6.3 Review cart and total price",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-18",
+        "level": "epic",
+        "parent": "AQPI-1",
+        "summary": "[Epic 5] Checkout and Reservation",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-19",
+        "level": "story",
+        "parent": "AQPI-18",
+        "summary": "7.1 Capture guest and contact information",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-20",
+        "level": "story",
+        "parent": "AQPI-18",
+        "summary": "7.2 Capture and authorize payment",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-21",
+        "level": "story",
+        "parent": "AQPI-18",
+        "summary": "7.3 Create reservation idempotently",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-22",
+        "level": "story",
+        "parent": "AQPI-18",
+        "summary": "7.4 Show booking outcome",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-23",
+        "level": "epic",
+        "parent": "AQPI-1",
+        "summary": "[Epic 6] Confirmation and Notifications",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-24",
+        "level": "story",
+        "parent": "AQPI-23",
+        "summary": "8.1 Generate confirmation message",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-25",
+        "level": "story",
+        "parent": "AQPI-23",
+        "summary": "8.2 Send and track confirmation email",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-26",
+        "level": "story",
+        "parent": "AQPI-23",
+        "summary": "8.3 Resend confirmation safely",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-27",
+        "level": "epic",
+        "parent": "AQPI-1",
+        "summary": "[Epic 7] Cross-Cutting Quality, Privacy and Observability",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-28",
+        "level": "story",
+        "parent": "AQPI-27",
+        "summary": "9.1 Protect sensitive data",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-29",
+        "level": "story",
+        "parent": "AQPI-27",
+        "summary": "9.2 Provide end-to-end observability",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-30",
+        "level": "story",
+        "parent": "AQPI-27",
+        "summary": "9.3 Meet accessibility requirements",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      },
+      {
+        "key": "AQPI-31",
+        "level": "story",
+        "parent": "AQPI-27",
+        "summary": "9.4 Meet performance and reliability objectives",
+        "scope": "this cycle",
+        "requirements": 0,
+        "testCases": 0,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "not covered"
+      }
+    ],
+    "totals": {
+      "jiraItems": 31,
+      "covered": 2,
+      "verified": 2,
+      "failing": 0,
+      "testCases": 8,
+      "withData": 8,
+      "withScript": 8,
+      "executed": 8
+    }
+  },
   "approvals": [
     {
       "gate": "Requirement set review",
       "by": "Priya Shah",
-      "at": "2026-10-02T16:18:28.425Z",
+      "at": "2026-10-02T20:28:55.725Z",
       "decision": "approved",
       "comment": "",
       "detail": "128 requirements approved; 0 excluded; 0 conflict(s) resolved"
     }
   ],
   "narrative": {
-    "text": "Hotel booking baseline · End-to-end (baseline) worked from Jira initiative AQPI-1 (Jira export on GitHub), Jira epic AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27 (Jira export on GitHub), Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef) (pulled live from GitHub). The reviewed requirement set holds 128 requirements. 8 test cases are designed, 8 of them automated in 7 Playwright scripts. Execution ran 8 automated cases for real: 8 passed and 0 failed (pass rate 100%). No defects were raised.",
+    "text": "Hotel booking baseline · End-to-end (baseline) worked from Jira initiative AQPI-1 (Jira export on GitHub), Jira epic AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27 (Jira export on GitHub), Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (452df41) (pulled live from GitHub). The reviewed requirement set holds 128 requirements. 8 test cases are designed, 8 of them automated in 7 Playwright scripts. Execution ran 8 automated cases for real: 8 passed and 0 failed (pass rate 100%). No defects were raised.",
     "draftedBy": "Deterministic template (demo mode - no model API key set)"
   },
   "honesty": [
     "Jira initiative AQPI-1: Jira export on GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export): Jira REST API v3 JSON of AQPI-1, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
     "Jira epic AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27: Jira export on GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export): Jira REST API v3 JSON of AQPI-2, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
-    "Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef): Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef) at 2026-10-02T16:18:27.590Z",
+    "Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (452df41): Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (452df41) at 2026-10-02T20:28:54.959Z",
     "Execution: 8 automated cases really executed by Playwright 1.63.0 (headless Chromium, JSON reporter) against Hotel booking platform release 1.0, six Spring Boot services built from branch demo/hotel-booking-platform (demo/hotel-booking-platform); 0 manual case(s) designed but not executed.",
     "Normalisation, delta classification, coverage, pass/fail and defect raising are computed in code, not by a model."
   ]

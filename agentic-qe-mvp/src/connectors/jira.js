@@ -33,7 +33,10 @@ async function liveRequest(cfg, fetchImpl, method, urlPath, body) {
     body: body ? JSON.stringify(body) : undefined,
   });
   if (!res.ok) throw new Error(`Jira ${method} ${urlPath} failed: HTTP ${res.status}`);
-  return res.json();
+  if (res.status === 204) return {};
+  if (typeof res.text !== 'function') return res.json();
+  const text = await res.text();
+  return text ? JSON.parse(text) : {};
 }
 
 function readFixture(name) {
@@ -50,18 +53,19 @@ async function pullExport(name, fetchImpl, rawBase) {
 }
 
 /** Pulls an issue from the Jira REST v3 export published on GitHub (not a Jira call). */
-async function loadJiraExport(cleanKey, { withChildren, fetchImpl, rawBase = EXPORT.rawBase }) {
-  const issue = await pullExport(cleanKey, fetchImpl, rawBase);
-  if (!issue) throw new Error(`${cleanKey} is not in the Jira export on ${EXPORT.repo}@${EXPORT.branch}`);
-  const children = withChildren ? ((await pullExport(`${cleanKey}.children`, fetchImpl, rawBase)) || { issues: [] }).issues : [];
-  const files = [`${cleanKey}.json`, ...(withChildren ? [`${cleanKey}.children.json`] : [])];
+async function loadJiraExport(cleanKey, { withChildren, fetchImpl, rawBase = EXPORT.rawBase, snapshot }) {
+  const base = snapshot ? `${rawBase}/${snapshot}` : rawBase;
+  const issue = await pullExport(cleanKey, fetchImpl, base);
+  if (!issue) throw new Error(`${cleanKey} is not in the Jira export on ${EXPORT.repo}@${EXPORT.branch}${snapshot ? ` (${snapshot} snapshot)` : ''}`);
+  const children = withChildren ? ((await pullExport(`${cleanKey}.children`, fetchImpl, base)) || { issues: [] }).issues : [];
+  const files = [`${cleanKey}.json`, ...(withChildren ? [`${cleanKey}.children.json`] : [])].map((f) => (snapshot ? `${snapshot}/${f}` : f));
   const site = EXPORT.sites[cleanKey.split('-')[0]];
   return {
     issue, children, baseUrl: site || FIXTURE_BASE,
     provenance: {
       kind: 'github',
       system: 'jira',
-      label: `Jira export on GitHub (${EXPORT.repo}@${EXPORT.branch}): Jira REST API v3 JSON of ${cleanKey}${site ? `, exported from ${site}` : ' - synthetic test issues'}; no live Jira call was made`,
+      label: `Jira export on GitHub (${EXPORT.repo}@${EXPORT.branch}${snapshot ? `, ${snapshot} snapshot` : ''}): Jira REST API v3 JSON of ${cleanKey}${site ? `, exported from ${site}` : ' - synthetic test issues'}; no live Jira call was made`,
       ref: cleanKey, fetchedAt: new Date().toISOString(),
       files: files.map((f) => `${EXPORT.htmlBase}/${f}`),
     },
@@ -72,10 +76,11 @@ async function loadJiraExport(cleanKey, { withChildren, fetchImpl, rawBase = EXP
  * Loads an issue (and optionally its child issues). With source 'github' it pulls the published export from GitHub. Calls Jira live only when
  * JIRA_BASE_URL/JIRA_EMAIL/JIRA_API_TOKEN are all set; otherwise reads the recorded fixture.
  */
-async function loadJiraIssue(key, { withChildren = false, env = process.env, fetchImpl = globalThis.fetch, source = 'jira', exportBase } = {}) {
+async function loadJiraIssue(key, { withChildren = false, env = process.env, fetchImpl = globalThis.fetch, source = 'jira', exportBase, snapshot } = {}) {
   const cleanKey = String(key || '').trim().toUpperCase();
   if (!/^[A-Z][A-Z0-9]+-\d+$/.test(cleanKey)) throw new Error(`"${key}" is not a Jira issue key`);
-  if (source === 'github') return loadJiraExport(cleanKey, { withChildren, fetchImpl, rawBase: exportBase });
+  if (snapshot && !/^[a-z0-9][a-z0-9.-]*$/i.test(snapshot)) throw new Error(`"${snapshot}" is not a Jira export snapshot name`);
+  if (source === 'github') return loadJiraExport(cleanKey, { withChildren, fetchImpl, rawBase: exportBase, snapshot });
   const cfg = jiraLiveConfig(env);
   if (cfg) {
     const issue = await liveRequest(cfg, fetchImpl, 'GET', `/rest/api/3/issue/${cleanKey}?fields=${FIELDS.join(',')}`);
@@ -89,18 +94,19 @@ async function loadJiraIssue(key, { withChildren = false, env = process.env, fet
       provenance: { kind: 'live', label: `Live Jira call to ${cfg.baseUrl}`, ref: cleanKey, fetchedAt: new Date().toISOString() },
     };
   }
-  const issue = readFixture(cleanKey);
+  const dir = snapshot && readFixture(`${snapshot}/${cleanKey}`) ? `${snapshot}/` : '';
+  const issue = readFixture(`${dir}${cleanKey}`);
   if (!issue) throw new Error(`No recorded fixture for ${cleanKey} and Jira is not configured (set JIRA_BASE_URL, JIRA_EMAIL, JIRA_API_TOKEN for live calls)`);
-  const children = withChildren ? (readFixture(`${cleanKey}.children`) || { issues: [] }).issues : [];
+  const children = withChildren ? (readFixture(`${dir}${cleanKey}.children`) || { issues: [] }).issues : [];
   return {
     issue, children, baseUrl: FIXTURE_BASE,
     provenance: {
       kind: 'fixture',
       label: `Recorded fixture (Jira REST API v3 shape) - no live Jira call was made`,
       ref: cleanKey,
-      files: [`fixtures/jira/${cleanKey}.json`, ...(withChildren ? [`fixtures/jira/${cleanKey}.children.json`] : [])],
+      files: [`fixtures/jira/${dir}${cleanKey}.json`, ...(withChildren ? [`fixtures/jira/${dir}${cleanKey}.children.json`] : [])],
     },
   };
 }
 
-module.exports = { loadJiraIssue, jiraLiveConfig, FIXTURE_BASE, EXPORT };
+module.exports = { loadJiraIssue, jiraLiveConfig, liveRequest, FIXTURE_BASE, EXPORT };
