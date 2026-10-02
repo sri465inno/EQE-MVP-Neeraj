@@ -16,6 +16,13 @@ function jiraItems(inputs) {
   return items;
 }
 
+/** The cycle's own Jira items plus the baseline's, which an incremental cycle re-tests through the carried pack. */
+function cycleJiraItems(cycle) {
+  const items = jiraItems(cycle.inputs);
+  for (const x of cycle.baselineJiraItems || []) if (!items.has(x.key)) items.set(x.key, { ...x, fromBaseline: true });
+  return items;
+}
+
 function computeTraceability(cycle) {
   const a = cycle.artifacts || {};
   const reqById = new Map((a.requirements || []).map((r) => [r.id, r]));
@@ -25,7 +32,7 @@ function computeTraceability(cycle) {
   const resultByCase = new Map(((a.execution && a.execution.results) || []).map((r) => [r.key, r]));
   const defectsByCase = new Map();
   for (const d of a.defects || []) defectsByCase.set(d.testCaseKey, [...(defectsByCase.get(d.testCaseKey) || []), d]);
-  const items = jiraItems(cycle.inputs);
+  const items = cycleJiraItems(cycle);
 
   const rows = (a.testCases || []).map((t) => {
     const req = reqById.get(t.requirementId);
@@ -48,14 +55,15 @@ function computeTraceability(cycle) {
     };
   });
 
-  const stories = [...items.values()].map((it) => {
+  const referenced = new Set(rows.flatMap((r) => r.jiraKeys));
+  const stories = [...items.values()].filter((it) => !it.fromBaseline || referenced.has(it.key)).map((it) => {
     const mine = rows.filter((r) => r.jiraKeys.includes(it.key));
     const reqs = new Set(mine.map((r) => r.requirementId));
     const failed = mine.filter((r) => r.result === 'failed').length;
     const passed = mine.filter((r) => r.result === 'passed').length;
     const defects = [...new Set(mine.flatMap((r) => r.defects))];
     const status = !mine.length ? 'not covered' : failed ? 'failing' : passed ? (passed === mine.filter((r) => r.automation === 'Automated' && r.result !== 'not in this run').length ? 'verified' : 'partly verified') : 'designed, not executed';
-    return { key: it.key, level: it.level, parent: it.parent, summary: it.summary, requirements: reqs.size, testCases: mine.length,
+    return { key: it.key, level: it.level, parent: it.parent, summary: it.summary, scope: it.fromBaseline ? 'baseline' : 'this cycle', requirements: reqs.size, testCases: mine.length,
       automated: mine.filter((r) => r.automation === 'Automated').length, passed, failed, defects, status };
   });
 
@@ -75,4 +83,4 @@ function computeTraceability(cycle) {
   };
 }
 
-module.exports = { computeTraceability, jiraItems };
+module.exports = { computeTraceability, jiraItems, cycleJiraItems };

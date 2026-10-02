@@ -190,7 +190,7 @@ async function reportWorkbook(report, cycle) {
       report.coverage.attributes.rows.map((x) => ({ ...x, casesText: x.cases.join(', ') })));
   }
   if (report.traceability) {
-    sheetFromRows(wb, 'Traceability by story', [['Jira item', 'key', 11], ['Level', 'level', 11], ['Parent', 'parent', 11], ['Summary', 'summary', 50], ['Requirements', 'requirements', 12], ['Test cases', 'testCases', 10], ['Automated', 'automated', 10], ['Passed', 'passed', 8], ['Failed', 'failed', 8], ['Defects', 'defectsText', 16], ['Status', 'status', 20]],
+    sheetFromRows(wb, 'Traceability by story', [['Jira item', 'key', 11], ['Level', 'level', 11], ['Scope', 'scope', 11], ['Parent', 'parent', 11], ['Summary', 'summary', 50], ['Requirements', 'requirements', 12], ['Test cases', 'testCases', 10], ['Automated', 'automated', 10], ['Passed', 'passed', 8], ['Failed', 'failed', 8], ['Defects', 'defectsText', 16], ['Status', 'status', 20]],
       report.traceability.stories.map((x) => ({ ...x, parent: x.parent || '', defectsText: x.defects.join(', ') })));
     sheetFromRows(wb, 'Traceability matrix', [['Jira', 'jira', 16], ['Requirement', 'requirementId', 12], ['Requirement text', 'requirement', 60], ['Rule', 'ruleId', 9], ['Test case', 'testCaseKey', 11], ['Name', 'testCase', 50], ['Type', 'testType', 12], ['Automation', 'automation', 11], ['Test data', 'testDataId', 11], ['Script', 'scriptFile', 40], ['Result', 'result', 14], ['Defect', 'defectsText', 10], ['Jira defect', 'jiraDefectsText', 12]],
       report.traceability.rows.map((x) => ({ ...x, jira: x.jiraKeys.join(', '), defectsText: x.defects.join(', '), jiraDefectsText: x.jiraDefects.join(', ') })));

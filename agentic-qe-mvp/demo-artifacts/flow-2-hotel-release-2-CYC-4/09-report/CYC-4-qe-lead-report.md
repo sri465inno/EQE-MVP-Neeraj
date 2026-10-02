@@ -9,7 +9,7 @@ CYC-4 · incremental cycle
 | Regression testing | 138 | 144 | 83 | 95.2% | 4 | 44.2% |
 
 ## 1. Summary
-- Incremental cycle for Guest hotel booking from search to confirmation (AQPI-1) on build demo/hotel-booking-platform-v2, 2026-10-02 20:05 UTC.
+- Incremental cycle for Guest hotel booking from search to confirmation (AQPI-1) on build demo/hotel-booking-platform-v2, 2026-10-02 20:26 UTC.
 - Type of testing: Regression testing. The full pack: every functional case plus the privacy, security, observability and resilience cases, so nothing that worked before has broken.
 - We took 2 inputs (Jira epic AQPI-32, AQPI-23, Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (fe1ce44)) and produced 138 requirements, 144 test cases and 65 automated scripts.
 - We ran 83 automated tests for real: 79 passed, 4 failed (pass rate 95.2%). 61 manual tests still to be run by hand.
@@ -26,11 +26,11 @@ CYC-4 · incremental cycle
 ## 3. How we ran the cycle
 1. Read 46 statements from the inputs and lined them up into 33 requirement groups: 9 agreed by every source, 20 only in Jira, 4 only in the code, 0 in conflict.
 2. The review agent read the inputs first and suggested 17 addition(s), 33 missing piece(s) and 0 conflict(s) for the reviewer (2 high severity). It approved nothing.
-3. Priya Shah reviewed and approved the requirement set on 2026-10-02 20:05 UTC.
+3. Priya Shah reviewed and approved the requirement set on 2026-10-02 20:26 UTC.
 4. Compared every statement with baseline BL-1 v1: 20 unchanged · 3 enhanced · 10 new. Changed: REQ-122 "A cart expires 30 minutes after it is created and never creates a reservation itself." → "A cart expires 20 minutes after it is created and never creates a reservation itself."; REQ-124 "A confirmation can be resent at most 3 times per booking in 24 hours." → "A confirmation can be resent at most 5 times per booking in 24 hours."; REQ-126 "A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights." → "A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.".
 5. Regression testing steered the design: Re-runs every case carried over from the baseline alongside the new and re-designed ones. Result: 144 case(s) in this run (126 reused, 6 re-designed, 12 new).
 6. Derived 138 business rules (each quoting its source), designed 144 test cases (140 functional, 4 non-functional) and generated 65 Playwright scripts.
-7. Sam Lee approved the merge into the baseline on 2026-10-02 20:05 UTC.
+7. Sam Lee approved the merge into the baseline on 2026-10-02 20:26 UTC.
 8. Executed the automated suite with Playwright 1.63.0 (headless Chromium, JSON reporter) against Hotel booking platform release 2.0, six Spring Boot services built from branch demo/hotel-booking-platform-v2; defects were raised only for tests that actually failed.
 
 ## 4. Artifacts produced
@@ -47,7 +47,7 @@ CYC-4 · incremental cycle
 | Automation scripts (Playwright) | 65 | 55 carried over · 3 re-designed · 7 new | [06-automation-scripts/](06-automation-scripts/) |
 | Merge approval | 1 | approved by Sam Lee | [10-merge-approval/](10-merge-approval/) |
 | Execution results and evidence | 83 | 79 passed · 4 failed · 61 manual | [07-execution/](07-execution/) |
-| Traceability matrix | 144 | 10 of 10 Jira items covered · 6 verified · 2 failing | [09-report/traceability.json](09-report/traceability.json) |
+| Traceability matrix | 144 | 37 of 37 Jira items covered · 23 verified · 5 failing | [09-report/traceability.json](09-report/traceability.json) |
 | Defects | 4 | DEF-001 Critical still open · DEF-002 Medium still open · DEF-007 Medium new · DEF-008 Medium new · fixed and certified: DEF-003 | [08-defects/](08-defects/) |
 | Cycle report (HTML, Excel) | 1 | full detail behind this summary | [09-report/](09-report/) |
 
@@ -84,11 +84,37 @@ _13 of 15 booking-driving attributes (out of 21 booking attributes) are varied b
 | AQPI-25 | story | 8.2 Send and track confirmation email | 6 | 6 | 1 | 1 | DEF-008 | failing |
 | AQPI-26 | story | 8.3 Resend confirmation safely | 4 | 4 | 2 | 0 | - | verified |
 | AQPI-37 | story | 8.4 Send a cancellation e-mail | 3 | 3 | 2 | 0 | - | verified |
+| AQPI-2 | epic | [Epic 1] Search and Availability | 4 | 4 | 0 | 0 | - | designed, not executed |
+| AQPI-3 | story | 3.1 Search hotels by destination and date range | 7 | 9 | 6 | 0 | - | verified |
+| AQPI-4 | story | 3.2 Validate occupancy and stay criteria | 7 | 14 | 11 | 1 | DEF-007 | failing |
+| AQPI-5 | story | 3.3 Handle unavailable or failed searches | 3 | 3 | 2 | 0 | - | verified |
+| AQPI-6 | epic | [Epic 2] Hotel Results and Selection | 4 | 4 | 0 | 0 | - | designed, not executed |
+| AQPI-7 | story | 4.1 Display available hotels | 5 | 5 | 5 | 0 | - | verified |
+| AQPI-8 | story | 4.2 Sort and filter hotel results | 4 | 5 | 4 | 0 | - | verified |
+| AQPI-9 | story | 4.3 View hotel and room details | 4 | 4 | 2 | 0 | - | verified |
+| AQPI-10 | epic | [Epic 3] Personalized Ancillary Offers | 4 | 4 | 0 | 0 | - | designed, not executed |
+| AQPI-11 | story | 5.1 Determine eligible ancillary offers | 7 | 7 | 2 | 0 | - | verified |
+| AQPI-12 | story | 5.2 Display ancillary offers | 3 | 3 | 3 | 0 | - | verified |
+| AQPI-13 | story | 5.3 Explain and control personalization | 3 | 3 | 2 | 0 | - | verified |
+| AQPI-14 | epic | [Epic 4] Cart Management | 4 | 4 | 0 | 0 | - | designed, not executed |
+| AQPI-15 | story | 6.1 Add room selection to cart | 6 | 6 | 2 | 0 | - | verified |
+| AQPI-16 | story | 6.2 Add, update, and remove ancillaries | 4 | 4 | 2 | 0 | - | verified |
+| AQPI-17 | story | 6.3 Review cart and total price | 6 | 7 | 2 | 1 | DEF-001 | failing |
+| AQPI-18 | epic | [Epic 5] Checkout and Reservation | 4 | 4 | 0 | 0 | - | designed, not executed |
+| AQPI-19 | story | 7.1 Capture guest and contact information | 6 | 6 | 4 | 0 | - | verified |
+| AQPI-20 | story | 7.2 Capture and authorize payment | 6 | 9 | 6 | 0 | - | verified |
+| AQPI-21 | story | 7.3 Create reservation idempotently | 7 | 9 | 5 | 1 | DEF-002 | failing |
+| AQPI-22 | story | 7.4 Show booking outcome | 3 | 3 | 3 | 0 | - | verified |
+| AQPI-27 | epic | [Epic 7] Cross-Cutting Quality, Privacy and Observability | 4 | 4 | 0 | 0 | - | designed, not executed |
+| AQPI-28 | story | 9.1 Protect sensitive data | 5 | 5 | 1 | 0 | - | verified |
+| AQPI-29 | story | 9.2 Provide end-to-end observability | 5 | 5 | 1 | 0 | - | verified |
+| AQPI-30 | story | 9.3 Meet accessibility requirements | 3 | 3 | 1 | 0 | - | verified |
+| AQPI-31 | story | 9.4 Meet performance and reliability objectives | 3 | 3 | 0 | 0 | - | designed, not executed |
 
 ## 7. Sign-off
 | Gate | Decision | By | When | Detail |
 |---|---|---|---|---|
-| Requirement set review | approved | Priya Shah | 2026-10-02 20:05 UTC | 33 requirements approved; 0 excluded; 0 conflict(s) resolved |
-| Merge into baseline | approved | Sam Lee | 2026-10-02 20:05 UTC | 13 requirements, 18 test cases, 10 scripts merged: BL-1 v1 -> v2 |
+| Requirement set review | approved | Priya Shah | 2026-10-02 20:26 UTC | 33 requirements approved; 0 excluded; 0 conflict(s) resolved |
+| Merge into baseline | approved | Sam Lee | 2026-10-02 20:26 UTC | 13 requirements, 18 test cases, 10 scripts merged: BL-1 v1 -> v2 |
 
-_Agentic QE Platform (QE lead report, computed from the cycle) · generated 2026-10-02 20:05 UTC. Every figure comes from the persisted cycle; nothing is estimated._
+_Agentic QE Platform (QE lead report, computed from the cycle) · generated 2026-10-02 20:26 UTC. Every figure comes from the persisted cycle; nothing is estimated._

@@ -9,7 +9,7 @@ CYC-1 · baseline cycle
 | Functional testing | 128 | 132 | 74 | 95.9% | 3 | 43% |
 
 ## 1. Summary
-- Baseline cycle for Guest hotel booking from search to confirmation (AQPI-1) on build demo/hotel-booking-platform, 2026-10-02 20:04 UTC.
+- Baseline cycle for Guest hotel booking from search to confirmation (AQPI-1) on build demo/hotel-booking-platform, 2026-10-02 20:25 UTC.
 - Type of testing: Functional testing. Every business rule and its boundaries, checked through the service API.
 - We took 3 inputs (Jira initiative AQPI-1, Jira epic AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27, Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (452df41)) and produced 128 requirements, 132 test cases and 58 automated scripts.
 - We ran 74 automated tests for real: 71 passed, 3 failed (pass rate 95.9%). 58 manual tests still to be run by hand.
@@ -25,7 +25,7 @@ CYC-1 · baseline cycle
 ## 3. How we ran the cycle
 1. Read 152 statements from the inputs and lined them up into 128 requirement groups: 0 agreed by every source, 121 only in Jira, 7 only in the code, 0 in conflict.
 2. The review agent read the inputs first and suggested 7 addition(s), 184 missing piece(s) and 0 conflict(s) for the reviewer (8 high severity). It approved nothing.
-3. Priya Shah reviewed and approved the requirement set on 2026-10-02 20:04 UTC.
+3. Priya Shah reviewed and approved the requirement set on 2026-10-02 20:25 UTC.
 4. Functional testing steered the design: Designs every functional test case and Playwright script from the inputs and runs them all. Result: 132 case(s) in this run (0 reused, 0 re-designed, 132 new).
 5. Derived 128 business rules (each quoting its source), designed 132 test cases (128 functional, 4 non-functional) and generated 58 Playwright scripts.
 6. Executed the automated suite with Playwright 1.63.0 (headless Chromium, JSON reporter) against Hotel booking platform release 1.0, six Spring Boot services built from branch demo/hotel-booking-platform; defects were raised only for tests that actually failed.
@@ -108,6 +108,6 @@ _13 of 15 booking-driving attributes (out of 21 booking attributes) are varied b
 ## 7. Sign-off
 | Gate | Decision | By | When | Detail |
 |---|---|---|---|---|
-| Requirement set review | approved | Priya Shah | 2026-10-02 20:04 UTC | 128 requirements approved; 0 excluded; 0 conflict(s) resolved |
+| Requirement set review | approved | Priya Shah | 2026-10-02 20:25 UTC | 128 requirements approved; 0 excluded; 0 conflict(s) resolved |
 
-_Agentic QE Platform (QE lead report, computed from the cycle) · generated 2026-10-02 20:04 UTC. Every figure comes from the persisted cycle; nothing is estimated._
+_Agentic QE Platform (QE lead report, computed from the cycle) · generated 2026-10-02 20:25 UTC. Every figure comes from the persisted cycle; nothing is estimated._

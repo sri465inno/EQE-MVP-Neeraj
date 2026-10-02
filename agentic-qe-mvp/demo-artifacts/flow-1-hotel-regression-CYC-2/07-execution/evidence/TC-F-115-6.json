@@ -1,21 +1,21 @@
 {
   "request": {
     "method": "POST",
-    "url": "http://127.0.0.1:45005/api/confirmations/resend",
+    "url": "http://127.0.0.1:40637/api/confirmations/resend",
     "headers": {},
     "data": {
-      "confirmationNumber": "HB4L9XH3EQ",
+      "confirmationNumber": "HBUS5A6YBL",
       "lastName": "Doe"
     }
   },
   "response": {
     "status": 429,
-    "correlationId": "e9887e6e-557e-4953-8b76-b525f7cdbbb2",
+    "correlationId": "25e51683-de8a-417b-8ecf-d5d5e9a1a2d3",
     "body": {
       "status": 429,
       "code": "RESEND_RATE_LIMITED",
       "message": "Too many resend requests. Please wait before trying again.",
-      "correlationId": "e9887e6e-557e-4953-8b76-b525f7cdbbb2",
+      "correlationId": "25e51683-de8a-417b-8ecf-d5d5e9a1a2d3",
       "retryable": true,
       "fieldIssues": []
     }

@@ -1,13 +1,13 @@
 {
   "request": {
     "method": "GET",
-    "url": "http://127.0.0.1:44857/api/hotels/H-NYC-001?checkIn=2026-11-01&checkOut=2026-11-04",
+    "url": "http://127.0.0.1:41589/api/hotels/H-NYC-001?checkIn=2026-11-01&checkOut=2026-11-04",
     "headers": {},
     "data": null
   },
   "response": {
     "status": 200,
-    "correlationId": "1823c116-279b-4251-953e-5c04e003daad",
+    "correlationId": "b432dc38-b62f-4054-af2d-ea28aa1727f4",
     "body": {
       "hotelId": "H-NYC-001",
       "name": "Harbor View Hotel",

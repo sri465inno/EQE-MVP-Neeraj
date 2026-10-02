@@ -10,6 +10,7 @@ const { FLOWS } = require('../scripts/make-demo-inputs');
 const { domainOf } = require('../src/agents/domains');
 const { getTestingType } = require('../src/testing-types');
 const { compareCycles } = require('../src/compare');
+const { computeTraceability } = require('../src/traceability');
 const { unavailableReason } = require('../sut/hotel');
 const { tmpDir, HOTEL_V2_INPUTS } = require('./helpers');
 
@@ -148,6 +149,9 @@ test('Flow 2: release 2.0 adds to the hotel baseline, waits for merge approval, 
   assert.deepEqual([fixed.id, fixed.status, fixed.movement, fixed.retest.result, fixed.resolvedInCycle], [flow1.get('AQPI-4').id, 'Closed', 'fixed and retested', 'passed', done.id]);
   assert.equal(done.artifacts.execution.results.find((r) => r.key === fixed.testCaseKey)?.status, 'passed');
   assert.match(fixed.certification, /certified closed/);
+  const byKey = new Map(computeTraceability(done).stories.map((x) => [x.key, x]));
+  for (const k of ['AQPI-17', 'AQPI-21']) assert.deepEqual([byKey.get(k).scope, byKey.get(k).status], ['baseline', 'failing'], k);
+  assert.deepEqual([byKey.get('AQPI-34').scope, byKey.get('AQPI-34').status], ['this cycle', 'failing']);
   const cmp = compareCycles(c1, done);
   assert.doesNotMatch(JSON.stringify(cmp), /commission/i);
   assert.deepEqual([cmp.defects.new.length, cmp.defects.stillOpen.length, cmp.defects.resolved], [2, 2, [fixed.id]]);

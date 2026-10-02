@@ -8,7 +8,7 @@ const design = require('./agents/design');
 const { executeSuite, summarise } = require('./execution');
 const { raiseDefects } = require('./defects');
 const { raiseDefectsInJira } = require('./connectors/jira-defects');
-const { jiraItems } = require('./traceability');
+const { cycleJiraItems } = require('./traceability');
 const { computeCoverage } = require('./coverage');
 const { DEFAULT_BUILD, BUILDS, ENGINE_DIR } = require('../sut/server');
 const { isHotelBranch } = require('./agents/domains');
@@ -397,7 +397,9 @@ class Pipeline {
       cycles: [...baseline.cycles, cycle.id],
       history: [...baseline.history, { version: baseline.version + 1, at, cycleId: cycle.id, change: cycle.delta.summary, approvedBy: approver }],
     };
-    const previousDefects = this.store.getCycle(baseline.lastCycleId)?.artifacts?.defects || [];
+    const lastCycle = this.store.getCycle(baseline.lastCycleId);
+    const previousDefects = lastCycle?.artifacts?.defects || [];
+    cycle.baselineJiraItems = lastCycle ? [...cycleJiraItems(lastCycle).values()].map(({ fromBaseline, ...x }) => x) : [];
     merged.lastCycleId = cycle.id;
     this.store.saveBaseline(merged);
     cycle.approvals.push({ gate: 'Merge into baseline', by: approver, at, decision: 'approved', comment,
@@ -446,7 +448,7 @@ class Pipeline {
       previousDefects, startNo: this.store.meta().nextDefect,
     });
     this.store.bumpDefectCounter(nextNo);
-    await raiseDefectsInJira(defects, { cycle, env: this.env, fetchImpl: this.fetchImpl, items: jiraItems(cycle.inputs) });
+    await raiseDefectsInJira(defects, { cycle, env: this.env, fetchImpl: this.fetchImpl, items: cycleJiraItems(cycle) });
     cycle.artifacts.defects = defects;
     cycle.artifacts.resolvedDefects = resolved;
     this.handover(cycle, 'defects');

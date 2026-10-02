@@ -7,12 +7,14 @@ const NOT_CONFIGURED = 'Jira write is not configured (JIRA_BASE_URL, JIRA_EMAIL,
 const adf = (lines) => ({ type: 'doc', version: 1, content: lines.map((t) => ({ type: 'paragraph', content: [{ type: 'text', text: String(t) }] })) });
 const label = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-/** The Jira item a defect belongs to: the most specific level (story, then epic, then initiative). */
+/** The Jira item a defect belongs to: the most specific level (story, then epic, then initiative), this cycle's items before the baseline's. */
 function storyOf(defect, items = new Map()) {
   const keys = defect.jiraKeys && defect.jiraKeys.length ? defect.jiraKeys : defect.sourceRefs || [];
-  for (const level of ['story', 'epic', 'initiative']) {
-    const k = keys.find((x) => (items.get(x) || {}).level === level);
-    if (k) return k;
+  for (const fromBaseline of [false, true]) {
+    for (const level of ['story', 'epic', 'initiative']) {
+      const k = keys.find((x) => (items.get(x) || {}).level === level && Boolean((items.get(x) || {}).fromBaseline) === fromBaseline);
+      if (k) return k;
+    }
   }
   return keys[0] || null;
 }

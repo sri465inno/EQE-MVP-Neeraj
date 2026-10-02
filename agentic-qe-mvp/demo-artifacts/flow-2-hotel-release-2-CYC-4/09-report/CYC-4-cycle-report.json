@@ -1,6 +1,6 @@
 {
   "title": "Agentic QE Platform - MVP - Cycle report",
-  "generatedAt": "2026-10-02T20:05:33.897Z",
+  "generatedAt": "2026-10-02T20:26:37.483Z",
   "cycle": {
     "id": "CYC-4",
     "name": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
@@ -8,8 +8,8 @@
     "testingType": "regression",
     "testingTypeName": "Regression testing",
     "status": "completed",
-    "createdAt": "2026-10-02T20:05:20.206Z",
-    "completedAt": "2026-10-02T20:05:33.835Z",
+    "createdAt": "2026-10-02T20:26:23.922Z",
+    "completedAt": "2026-10-02T20:26:37.422Z",
     "baselineId": "BL-1",
     "baselineVersionAtStart": 1,
     "baselineVersionAfter": 2,
@@ -1805,7 +1805,7 @@
       "children": [],
       "statements": 13,
       "provenance": "github",
-      "provenanceLabel": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (fe1ce44) at 2026-10-02T20:05:18.310Z",
+      "provenanceLabel": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (fe1ce44) at 2026-10-02T20:26:22.186Z",
       "files": [
         "README.md",
         "TRACEABILITY.md",
@@ -5561,24 +5561,24 @@
   "execution": {
     "executed": true,
     "quarantined": "not measured",
-    "durationMs": 9606,
+    "durationMs": 9777,
     "tool": "Playwright 1.63.0 (headless Chromium, JSON reporter)",
-    "command": "npx playwright test --config ../../../../../tmp/aqe-demo-4MUalt/runs/CYC-4/playwright.config.js",
+    "command": "npx playwright test --config ../../../../../tmp/aqe-demo-t4hSAw/runs/CYC-4/playwright.config.js",
     "sut": {
       "build": "demo/hotel-booking-platform-v2",
-      "url": "http://127.0.0.1:35877",
+      "url": "http://127.0.0.1:34039",
       "services": {
-        "hotel-service": "http://127.0.0.1:44857",
-        "offer-service": "http://127.0.0.1:37873",
-        "notification-service": "http://127.0.0.1:41387",
-        "search-service": "http://127.0.0.1:35877",
-        "cart-service": "http://127.0.0.1:38107",
-        "reservation-service": "http://127.0.0.1:39687"
+        "hotel-service": "http://127.0.0.1:41589",
+        "offer-service": "http://127.0.0.1:37435",
+        "notification-service": "http://127.0.0.1:40547",
+        "search-service": "http://127.0.0.1:34039",
+        "cart-service": "http://127.0.0.1:46175",
+        "reservation-service": "http://127.0.0.1:42083"
       },
       "name": "Hotel booking platform release 2.0, six Spring Boot services built from branch demo/hotel-booking-platform-v2"
     },
-    "startedAt": "2026-10-02T20:05:24.198Z",
-    "finishedAt": "2026-10-02T20:05:33.804Z",
+    "startedAt": "2026-10-02T20:26:27.615Z",
+    "finishedAt": "2026-10-02T20:26:37.392Z",
     "summary": {
       "total": 144,
       "executed": 83,
@@ -5586,7 +5586,7 @@
       "failed": 4,
       "skipped": 0,
       "notRun": 61,
-      "durationMs": 4424,
+      "durationMs": 4528,
       "passRate": 95.2
     },
     "results": [
@@ -5595,7 +5595,7 @@
         "requirementId": "REQ-003",
         "name": "The payment summary shows taxes, mandatory fees and the total before booking",
         "status": "passed",
-        "duration": 507,
+        "duration": 528,
         "reason": null
       },
       {
@@ -5643,7 +5643,7 @@
         "requirementId": "REQ-013",
         "name": "A valid search returns available hotels for the destination",
         "status": "passed",
-        "duration": 200,
+        "duration": 209,
         "reason": null
       },
       {
@@ -5651,7 +5651,7 @@
         "requirementId": "REQ-014",
         "name": "The results page returns the criteria the guest submitted",
         "status": "passed",
-        "duration": 54,
+        "duration": 56,
         "reason": null
       },
       {
@@ -5659,7 +5659,7 @@
         "requirementId": "REQ-015",
         "name": "A check-in date in the past is rejected",
         "status": "passed",
-        "duration": 43,
+        "duration": 42,
         "reason": null
       },
       {
@@ -5667,7 +5667,7 @@
         "requirementId": "REQ-015",
         "name": "A check-out on the check-in day is rejected",
         "status": "passed",
-        "duration": 32,
+        "duration": 31,
         "reason": null
       },
       {
@@ -5675,7 +5675,7 @@
         "requirementId": "REQ-015",
         "name": "A search without a destination is rejected",
         "status": "passed",
-        "duration": 30,
+        "duration": 31,
         "reason": null
       },
       {
@@ -5683,7 +5683,7 @@
         "requirementId": "REQ-016",
         "name": "When every hotel is sold out the guest is told and offered other dates, guests or destination",
         "status": "passed",
-        "duration": 46,
+        "duration": 44,
         "reason": null
       },
       {
@@ -5747,7 +5747,7 @@
         "requirementId": "REQ-025",
         "name": "When every hotel is sold out the guest is told and offered other dates, guests or destination",
         "status": "passed",
-        "duration": 35,
+        "duration": 39,
         "reason": null
       },
       {
@@ -5763,7 +5763,7 @@
         "requirementId": "REQ-027",
         "name": "Submitting the same search twice in one session returns the same search",
         "status": "passed",
-        "duration": 34,
+        "duration": 35,
         "reason": null
       },
       {
@@ -5771,7 +5771,7 @@
         "requirementId": "REQ-028",
         "name": "Every result has a name, location, image, availability and, when bookable, a starting price in a currency",
         "status": "passed",
-        "duration": 24,
+        "duration": 23,
         "reason": null
       },
       {
@@ -5779,7 +5779,7 @@
         "requirementId": "REQ-029",
         "name": "Every bookable result states what its price includes",
         "status": "passed",
-        "duration": 24,
+        "duration": 23,
         "reason": null
       },
       {
@@ -5787,7 +5787,7 @@
         "requirementId": "REQ-030",
         "name": "A sold-out hotel is listed as SOLD_OUT without a price",
         "status": "passed",
-        "duration": 25,
+        "duration": 29,
         "reason": null
       },
       {
@@ -5795,7 +5795,7 @@
         "requirementId": "REQ-031",
         "name": "Results can be read two at a time",
         "status": "passed",
-        "duration": 37,
+        "duration": 36,
         "reason": null
       },
       {
@@ -5803,7 +5803,7 @@
         "requirementId": "REQ-032",
         "name": "The starting price equals the cheapest rate on the hotel page",
         "status": "passed",
-        "duration": 32,
+        "duration": 31,
         "reason": null
       },
       {
@@ -5819,7 +5819,7 @@
         "requirementId": "REQ-034",
         "name": "Sorting by lowest price orders bookable hotels by starting price",
         "status": "passed",
-        "duration": 33,
+        "duration": 31,
         "reason": null
       },
       {
@@ -5827,7 +5827,7 @@
         "requirementId": "REQ-034",
         "name": "An unapproved sort option is refused with a clear message",
         "status": "passed",
-        "duration": 50,
+        "duration": 48,
         "reason": null
       },
       {
@@ -5843,7 +5843,7 @@
         "requirementId": "REQ-036",
         "name": "A filter that leaves no hotels offers a reset",
         "status": "passed",
-        "duration": 27,
+        "duration": 29,
         "reason": null
       },
       {
@@ -5875,7 +5875,7 @@
         "requirementId": "REQ-040",
         "name": "Every rate plan states its cancellation terms and payment rule",
         "status": "passed",
-        "duration": 18,
+        "duration": 19,
         "reason": null
       },
       {
@@ -5891,7 +5891,7 @@
         "requirementId": "REQ-042",
         "name": "Spa access is not offered at a hotel without a spa",
         "status": "passed",
-        "duration": 117,
+        "duration": 123,
         "reason": null
       },
       {
@@ -5899,7 +5899,7 @@
         "requirementId": "REQ-043",
         "name": "Every recommended extra carries at least one reason code",
         "status": "passed",
-        "duration": 16,
+        "duration": 20,
         "reason": null
       },
       {
@@ -5939,7 +5939,7 @@
         "requirementId": "REQ-048",
         "name": "Each offer shows name, description, price and currency and is labelled an optional extra",
         "status": "passed",
-        "duration": 17,
+        "duration": 18,
         "reason": null
       },
       {
@@ -5947,7 +5947,7 @@
         "requirementId": "REQ-049",
         "name": "The guest can record add, skip and dismiss on an offer",
         "status": "passed",
-        "duration": 24,
+        "duration": 25,
         "reason": null
       },
       {
@@ -5955,7 +5955,7 @@
         "requirementId": "REQ-050",
         "name": "Each offer shows name, description, price and currency and is labelled an optional extra",
         "status": "passed",
-        "duration": 18,
+        "duration": 19,
         "reason": null
       },
       {
@@ -5971,7 +5971,7 @@
         "requirementId": "REQ-053",
         "name": "A room books without any extra",
         "status": "passed",
-        "duration": 229,
+        "duration": 215,
         "reason": null
       },
       {
@@ -5979,7 +5979,7 @@
         "requirementId": "REQ-054",
         "name": "Withdrawing consent stops personalized offers",
         "status": "passed",
-        "duration": 35,
+        "duration": 33,
         "reason": null
       },
       {
@@ -6035,7 +6035,7 @@
         "requirementId": "REQ-061",
         "name": "Breakfast can go to 2 but not above its limit of 4",
         "status": "passed",
-        "duration": 76,
+        "duration": 82,
         "reason": null
       },
       {
@@ -6043,7 +6043,7 @@
         "requirementId": "REQ-062",
         "name": "Removing breakfast returns the total to the room-only amount",
         "status": "passed",
-        "duration": 29,
+        "duration": 30,
         "reason": null
       },
       {
@@ -6059,7 +6059,7 @@
         "requirementId": "REQ-064",
         "name": "The cart itemises room, taxes, fees, extras and discounts and they add up to the total",
         "status": "passed",
-        "duration": 25,
+        "duration": 34,
         "reason": null
       },
       {
@@ -6099,7 +6099,7 @@
         "requirementId": "REQ-069",
         "name": "Checkout lists name, e-mail, payment and privacy notice as required and phone as optional",
         "status": "passed",
-        "duration": 30,
+        "duration": 31,
         "reason": null
       },
       {
@@ -6107,7 +6107,7 @@
         "requirementId": "REQ-070",
         "name": "An invalid e-mail address is rejected on the e-mail field",
         "status": "passed",
-        "duration": 31,
+        "duration": 32,
         "reason": null
       },
       {
@@ -6115,7 +6115,7 @@
         "requirementId": "REQ-071",
         "name": "Booking without accepting the privacy notice is refused",
         "status": "passed",
-        "duration": 24,
+        "duration": 21,
         "reason": null
       },
       {
@@ -6147,7 +6147,7 @@
         "requirementId": "REQ-075",
         "name": "A pay-at-hotel rate shows nothing to pay now and the total due at the hotel",
         "status": "passed",
-        "duration": 28,
+        "duration": 27,
         "reason": null
       },
       {
@@ -6155,7 +6155,7 @@
         "requirementId": "REQ-075",
         "name": "A prepaid rate shows the full total to pay now",
         "status": "passed",
-        "duration": 26,
+        "duration": 27,
         "reason": null
       },
       {
@@ -6171,7 +6171,7 @@
         "requirementId": "REQ-077",
         "name": "A declined card returns a decline without a booking",
         "status": "passed",
-        "duration": 34,
+        "duration": 35,
         "reason": null
       },
       {
@@ -6179,7 +6179,7 @@
         "requirementId": "REQ-077",
         "name": "A lost payment response leaves the booking pending and tells the guest not to resubmit",
         "status": "passed",
-        "duration": 43,
+        "duration": 44,
         "reason": null
       },
       {
@@ -6187,7 +6187,7 @@
         "requirementId": "REQ-077",
         "name": "A payment provider failure returns a failure without a booking",
         "status": "passed",
-        "duration": 29,
+        "duration": 38,
         "reason": null
       },
       {
@@ -6219,7 +6219,7 @@
         "requirementId": "REQ-081",
         "name": "A successful booking creates one reservation with a confirmation number",
         "status": "passed",
-        "duration": 40,
+        "duration": 41,
         "reason": null
       },
       {
@@ -6227,7 +6227,7 @@
         "requirementId": "REQ-082",
         "name": "Resubmitting with the same key returns the original reservation",
         "status": "passed",
-        "duration": 44,
+        "duration": 48,
         "reason": null
       },
       {
@@ -6235,7 +6235,7 @@
         "requirementId": "REQ-083",
         "name": "After a booking and a decline the reconciliation report is consistent",
         "status": "passed",
-        "duration": 59,
+        "duration": 61,
         "reason": null
       },
       {
@@ -6267,7 +6267,7 @@
         "requirementId": "REQ-087",
         "name": "The success outcome shows confirmation number, hotel, stay, extras and total",
         "status": "passed",
-        "duration": 57,
+        "duration": 51,
         "reason": null
       },
       {
@@ -6275,7 +6275,7 @@
         "requirementId": "REQ-088",
         "name": "A declined payment does not say the booking is confirmed",
         "status": "passed",
-        "duration": 33,
+        "duration": 27,
         "reason": null
       },
       {
@@ -6283,7 +6283,7 @@
         "requirementId": "REQ-089",
         "name": "A pending outcome tells the guest not to resubmit and how to check later",
         "status": "passed",
-        "duration": 29,
+        "duration": 27,
         "reason": null
       },
       {
@@ -6291,7 +6291,7 @@
         "requirementId": "REQ-090",
         "name": "The confirmation e-mail matches the booking and contains no payment token",
         "status": "passed",
-        "duration": 41,
+        "duration": 42,
         "reason": null
       },
       {
@@ -6315,7 +6315,7 @@
         "requirementId": "REQ-094",
         "name": "The confirmation e-mail matches the booking and contains no payment token",
         "status": "passed",
-        "duration": 39,
+        "duration": 40,
         "reason": null
       },
       {
@@ -6331,7 +6331,7 @@
         "requirementId": "REQ-096",
         "name": "When the e-mail cannot be sent the booking stays confirmed",
         "status": "passed",
-        "duration": 99,
+        "duration": 106,
         "reason": null
       },
       {
@@ -6363,7 +6363,7 @@
         "requirementId": "REQ-100",
         "name": "A resend with the wrong last name gets the same answer as a correct one",
         "status": "passed",
-        "duration": 51,
+        "duration": 56,
         "reason": null
       },
       {
@@ -6411,7 +6411,7 @@
         "requirementId": "REQ-106",
         "name": "Support staff see a masked e-mail and other callers are refused",
         "status": "passed",
-        "duration": 40,
+        "duration": 42,
         "reason": null
       },
       {
@@ -6427,7 +6427,7 @@
         "requirementId": "REQ-108",
         "name": "A correlation ID sent by the client is returned by search, cart and reservation",
         "status": "passed",
-        "duration": 44,
+        "duration": 45,
         "reason": null
       },
       {
@@ -6483,7 +6483,7 @@
         "requirementId": "REQ-117",
         "name": "The confirmation e-mail has a language, a heading, a captioned table with scoped headers and a text part",
         "status": "passed",
-        "duration": 38,
+        "duration": 40,
         "reason": null
       },
       {
@@ -6523,7 +6523,7 @@
         "requirementId": "REQ-123",
         "name": "A price rise above 1% blocks booking until the guest acknowledges it",
         "status": "passed",
-        "duration": 74,
+        "duration": 73,
         "reason": null
       },
       {
@@ -6531,7 +6531,7 @@
         "requirementId": "REQ-123",
         "name": "A price change within 1% does not need acknowledgement",
         "status": "failed",
-        "duration": 23,
+        "duration": 24,
         "reason": null
       },
       {
@@ -6539,7 +6539,7 @@
         "requirementId": "REQ-124",
         "name": "The 6th resend within 24 hours is refused",
         "status": "passed",
-        "duration": 107,
+        "duration": 103,
         "reason": null
       },
       {
@@ -6547,7 +6547,7 @@
         "requirementId": "REQ-125",
         "name": "A reservation without an Idempotency-Key is refused",
         "status": "passed",
-        "duration": 25,
+        "duration": 24,
         "reason": null
       },
       {
@@ -6555,7 +6555,7 @@
         "requirementId": "REQ-125",
         "name": "A key shorter than 8 characters is refused",
         "status": "failed",
-        "duration": 45,
+        "duration": 43,
         "reason": null
       },
       {
@@ -6563,7 +6563,7 @@
         "requirementId": "REQ-125",
         "name": "Reusing a key for a different cart is refused",
         "status": "passed",
-        "duration": 76,
+        "duration": 79,
         "reason": null
       },
       {
@@ -6571,7 +6571,7 @@
         "requirementId": "REQ-126",
         "name": "A 30-night stay is accepted",
         "status": "passed",
-        "duration": 26,
+        "duration": 29,
         "reason": null
       },
       {
@@ -6579,7 +6579,7 @@
         "requirementId": "REQ-126",
         "name": "A 31-night stay is rejected",
         "status": "passed",
-        "duration": 18,
+        "duration": 21,
         "reason": null
       },
       {
@@ -6587,7 +6587,7 @@
         "requirementId": "REQ-126",
         "name": "A 14-night stay in Paris is accepted",
         "status": "passed",
-        "duration": 22,
+        "duration": 27,
         "reason": null
       },
       {
@@ -6595,7 +6595,7 @@
         "requirementId": "REQ-126",
         "name": "A 15-night stay in Paris is rejected",
         "status": "failed",
-        "duration": 21,
+        "duration": 25,
         "reason": null
       },
       {
@@ -6603,7 +6603,7 @@
         "requirementId": "REQ-127",
         "name": "4 adults in one room are accepted",
         "status": "passed",
-        "duration": 47,
+        "duration": 43,
         "reason": null
       },
       {
@@ -6611,7 +6611,7 @@
         "requirementId": "REQ-127",
         "name": "5 adults in one room are rejected",
         "status": "passed",
-        "duration": 26,
+        "duration": 22,
         "reason": null
       },
       {
@@ -6619,7 +6619,7 @@
         "requirementId": "REQ-127",
         "name": "4 children in one room are rejected",
         "status": "passed",
-        "duration": 23,
+        "duration": 21,
         "reason": null
       },
       {
@@ -6627,7 +6627,7 @@
         "requirementId": "REQ-127",
         "name": "9 rooms in one search are rejected",
         "status": "passed",
-        "duration": 17,
+        "duration": 18,
         "reason": null
       },
       {
@@ -6635,7 +6635,7 @@
         "requirementId": "REQ-128",
         "name": "A check-in 500 days ahead is accepted",
         "status": "passed",
-        "duration": 29,
+        "duration": 30,
         "reason": null
       },
       {
@@ -6643,7 +6643,7 @@
         "requirementId": "REQ-128",
         "name": "A check-in 501 days ahead is rejected",
         "status": "passed",
-        "duration": 18,
+        "duration": 15,
         "reason": null
       },
       {
@@ -6667,7 +6667,7 @@
         "requirementId": "REQ-131",
         "name": "A flexible booking cancelled more than 48 hours before check-in is cancelled free of charge",
         "status": "passed",
-        "duration": 61,
+        "duration": 56,
         "reason": null
       },
       {
@@ -6675,7 +6675,7 @@
         "requirementId": "REQ-131",
         "name": "A cancellation within 48 hours of check-in is refused and the booking stays confirmed",
         "status": "passed",
-        "duration": 48,
+        "duration": 47,
         "reason": null
       },
       {
@@ -6683,7 +6683,7 @@
         "requirementId": "REQ-132",
         "name": "A cancelled booking shows CANCELLED, its payment hold is voided and its room is released",
         "status": "passed",
-        "duration": 59,
+        "duration": 57,
         "reason": null
       },
       {
@@ -6691,7 +6691,7 @@
         "requirementId": "REQ-133",
         "name": "A non-refundable booking cannot be cancelled free of charge",
         "status": "passed",
-        "duration": 43,
+        "duration": 38,
         "reason": null
       },
       {
@@ -6699,7 +6699,7 @@
         "requirementId": "REQ-134",
         "name": "The confirmation of a flexible booking states free cancellation until 48 hours before check-in",
         "status": "passed",
-        "duration": 40,
+        "duration": 38,
         "reason": null
       },
       {
@@ -6707,7 +6707,7 @@
         "requirementId": "REQ-134",
         "name": "The confirmation of a non-refundable booking states no free-cancellation deadline",
         "status": "passed",
-        "duration": 57,
+        "duration": 39,
         "reason": null
       },
       {
@@ -6715,7 +6715,7 @@
         "requirementId": "REQ-135",
         "name": "Operations can retry a failed confirmation e-mail 3 times; retry 4 is refused",
         "status": "failed",
-        "duration": 313,
+        "duration": 394,
         "reason": null
       },
       {
@@ -6723,7 +6723,7 @@
         "requirementId": "REQ-136",
         "name": "A cancelled booking gets one cancellation e-mail, even when cancelled twice",
         "status": "passed",
-        "duration": 92,
+        "duration": 82,
         "reason": null
       },
       {
@@ -6731,7 +6731,7 @@
         "requirementId": "REQ-137",
         "name": "When the cancellation e-mail cannot be sent the booking stays cancelled",
         "status": "passed",
-        "duration": 176,
+        "duration": 174,
         "reason": null
       },
       {
@@ -8268,7 +8268,7 @@
         "jiraKeys": [
           "AQPI-1"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "initiative",
         "requirementId": "REQ-003",
         "requirement": "Total price is disclosed before confirmation, including mandatory taxes and fees.",
         "requirementStatus": "carried over",
@@ -8288,7 +8288,7 @@
         "jiraKeys": [
           "AQPI-1"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "initiative",
         "requirementId": "REQ-008",
         "requirement": "Required business and technical events are logged using approved identifiers and masking rules.",
         "requirementStatus": "carried over",
@@ -8314,7 +8314,7 @@
           "AQPI-23",
           "AQPI-27"
         ],
-        "jiraLevel": "issue, epic",
+        "jiraLevel": "epic",
         "requirementId": "REQ-009",
         "requirement": "All child user stories meet their acceptance criteria and the Definition of Done.",
         "requirementStatus": "unchanged",
@@ -8340,7 +8340,7 @@
           "AQPI-23",
           "AQPI-27"
         ],
-        "jiraLevel": "issue, epic",
+        "jiraLevel": "epic",
         "requirementId": "REQ-010",
         "requirement": "Negative and error paths for each story are tested and evidenced.",
         "requirementStatus": "unchanged",
@@ -8366,7 +8366,7 @@
           "AQPI-23",
           "AQPI-27"
         ],
-        "jiraLevel": "issue, epic",
+        "jiraLevel": "epic",
         "requirementId": "REQ-011",
         "requirement": "Required logging is in place and verified free of sensitive data.",
         "requirementStatus": "unchanged",
@@ -8392,7 +8392,7 @@
           "AQPI-23",
           "AQPI-27"
         ],
-        "jiraLevel": "issue, epic",
+        "jiraLevel": "epic",
         "requirementId": "REQ-012",
         "requirement": "The Product Owner has accepted the capability end to end.",
         "requirementStatus": "unchanged",
@@ -8412,7 +8412,7 @@
         "jiraKeys": [
           "AQPI-3"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-013",
         "requirement": "Given valid search criteria, when the guest submits the search, then a search request is created and matching available hotels are returned.",
         "requirementStatus": "carried over",
@@ -8432,7 +8432,7 @@
         "jiraKeys": [
           "AQPI-3"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-014",
         "requirement": "The submitted criteria remain visible and editable on the results page.",
         "requirementStatus": "carried over",
@@ -8452,7 +8452,7 @@
         "jiraKeys": [
           "AQPI-3"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-015",
         "requirement": "Past check-in dates, check-out dates not after check-in, and missing mandatory fields are rejected with actionable messages.",
         "requirementStatus": "carried over",
@@ -8472,7 +8472,7 @@
         "jiraKeys": [
           "AQPI-3"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-015",
         "requirement": "Past check-in dates, check-out dates not after check-in, and missing mandatory fields are rejected with actionable messages.",
         "requirementStatus": "carried over",
@@ -8492,7 +8492,7 @@
         "jiraKeys": [
           "AQPI-3"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-015",
         "requirement": "Past check-in dates, check-out dates not after check-in, and missing mandatory fields are rejected with actionable messages.",
         "requirementStatus": "carried over",
@@ -8512,7 +8512,7 @@
         "jiraKeys": [
           "AQPI-3"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-016",
         "requirement": "A no-availability result explains that no matching inventory was found and allows criteria changes.",
         "requirementStatus": "carried over",
@@ -8532,7 +8532,7 @@
         "jiraKeys": [
           "AQPI-3"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-017",
         "requirement": "Check-in must precede check-out.",
         "requirementStatus": "carried over",
@@ -8552,7 +8552,7 @@
         "jiraKeys": [
           "AQPI-3"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-018",
         "requirement": "Occupancy must comply with configured room limits.",
         "requirementStatus": "carried over",
@@ -8572,7 +8572,7 @@
         "jiraKeys": [
           "AQPI-3"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-019",
         "requirement": "Maximum stay length must be configurable.",
         "requirementStatus": "carried over",
@@ -8592,7 +8592,7 @@
         "jiraKeys": [
           "AQPI-4"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-020",
         "requirement": "Required fields are clearly identified.",
         "requirementStatus": "carried over",
@@ -8612,7 +8612,7 @@
         "jiraKeys": [
           "AQPI-4"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-021",
         "requirement": "Invalid combinations return field-level messages.",
         "requirementStatus": "carried over",
@@ -8632,7 +8632,7 @@
         "jiraKeys": [
           "AQPI-4"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-022",
         "requirement": "Server validation is authoritative when client and server results differ.",
         "requirementStatus": "carried over",
@@ -8652,7 +8652,7 @@
         "jiraKeys": [
           "AQPI-4"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-024",
         "requirement": "Validation rules must be configurable where market or property rules vary.",
         "requirementStatus": "carried over",
@@ -8672,7 +8672,7 @@
         "jiraKeys": [
           "AQPI-5"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-025",
         "requirement": "Zero results provide options to alter dates, occupancy, destination, or filters.",
         "requirementStatus": "carried over",
@@ -8692,7 +8692,7 @@
         "jiraKeys": [
           "AQPI-5"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-026",
         "requirement": "Technical failures display a non-technical message and retry option.",
         "requirementStatus": "carried over",
@@ -8712,7 +8712,7 @@
         "jiraKeys": [
           "AQPI-5"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-027",
         "requirement": "Repeated submission does not create inconsistent sessions.",
         "requirementStatus": "carried over",
@@ -8732,7 +8732,7 @@
         "jiraKeys": [
           "AQPI-7"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-028",
         "requirement": "Each result shows hotel name, location, representative image, starting price, currency, and availability indicator.",
         "requirementStatus": "carried over",
@@ -8752,7 +8752,7 @@
         "jiraKeys": [
           "AQPI-7"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-029",
         "requirement": "Mandatory fees or pricing qualifications are clearly disclosed.",
         "requirementStatus": "carried over",
@@ -8772,7 +8772,7 @@
         "jiraKeys": [
           "AQPI-7"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-030",
         "requirement": "Unavailable hotels are not presented as immediately bookable.",
         "requirementStatus": "carried over",
@@ -8792,7 +8792,7 @@
         "jiraKeys": [
           "AQPI-7"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-031",
         "requirement": "Results support pagination or progressive loading.",
         "requirementStatus": "carried over",
@@ -8812,7 +8812,7 @@
         "jiraKeys": [
           "AQPI-7"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-032",
         "requirement": "Displayed starting price must correspond to a valid rate returned for the search criteria.",
         "requirementStatus": "carried over",
@@ -8832,7 +8832,7 @@
         "jiraKeys": [
           "AQPI-8"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-033",
         "requirement": "The guest can apply supported filters such as price range, amenities, hotel category, and distance when data is available.",
         "requirementStatus": "carried over",
@@ -8852,7 +8852,7 @@
         "jiraKeys": [
           "AQPI-8"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-034",
         "requirement": "The guest can sort using approved options.",
         "requirementStatus": "carried over",
@@ -8872,7 +8872,7 @@
         "jiraKeys": [
           "AQPI-8"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-034",
         "requirement": "The guest can sort using approved options.",
         "requirementStatus": "carried over",
@@ -8892,7 +8892,7 @@
         "jiraKeys": [
           "AQPI-8"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-035",
         "requirement": "Selected criteria are visible and removable.",
         "requirementStatus": "carried over",
@@ -8912,7 +8912,7 @@
         "jiraKeys": [
           "AQPI-8"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-036",
         "requirement": "Zero results after filtering offer a reset option.",
         "requirementStatus": "carried over",
@@ -8932,7 +8932,7 @@
         "jiraKeys": [
           "AQPI-9"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-037",
         "requirement": "Hotel description, images, location, amenities, room options, pricing, major policies, and relevant restrictions are displayed.",
         "requirementStatus": "carried over",
@@ -8952,7 +8952,7 @@
         "jiraKeys": [
           "AQPI-9"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-038",
         "requirement": "The guest can select a valid room and rate plan.",
         "requirementStatus": "carried over",
@@ -8972,7 +8972,7 @@
         "jiraKeys": [
           "AQPI-9"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-039",
         "requirement": "If inventory changes, the guest is informed before continuing.",
         "requirementStatus": "carried over",
@@ -8992,7 +8992,7 @@
         "jiraKeys": [
           "AQPI-9"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-040",
         "requirement": "Rate conditions and cancellation terms must be shown before selection.",
         "requirementStatus": "carried over",
@@ -9012,7 +9012,7 @@
         "jiraKeys": [
           "AQPI-11"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-041",
         "requirement": "The service considers available context such as stay dates, season, destination, hotel, room, party composition, declared interests, and consented profile attributes.",
         "requirementStatus": "carried over",
@@ -9032,7 +9032,7 @@
         "jiraKeys": [
           "AQPI-11"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-042",
         "requirement": "Unavailable or ineligible products are excluded.",
         "requirementStatus": "carried over",
@@ -9052,7 +9052,7 @@
         "jiraKeys": [
           "AQPI-11"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-043",
         "requirement": "The service returns a reason code for each recommended item.",
         "requirementStatus": "carried over",
@@ -9072,7 +9072,7 @@
         "jiraKeys": [
           "AQPI-11"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-044",
         "requirement": "When personalization data is unavailable, safe contextual defaults may be returned.",
         "requirementStatus": "carried over",
@@ -9092,7 +9092,7 @@
         "jiraKeys": [
           "AQPI-11"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-045",
         "requirement": "Sensitive traits must not be inferred or used.",
         "requirementStatus": "carried over",
@@ -9112,7 +9112,7 @@
         "jiraKeys": [
           "AQPI-11"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-046",
         "requirement": "Personalization must honor consent and data-retention rules.",
         "requirementStatus": "carried over",
@@ -9132,7 +9132,7 @@
         "jiraKeys": [
           "AQPI-11"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-047",
         "requirement": "Business rules and model versions must be auditable.",
         "requirementStatus": "carried over",
@@ -9152,7 +9152,7 @@
         "jiraKeys": [
           "AQPI-12"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-048",
         "requirement": "Each offer shows name, description, price, currency, applicability, and any restrictions.",
         "requirementStatus": "carried over",
@@ -9172,7 +9172,7 @@
         "jiraKeys": [
           "AQPI-12"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-049",
         "requirement": "The guest can add, skip, or dismiss an offer.",
         "requirementStatus": "carried over",
@@ -9192,7 +9192,7 @@
         "jiraKeys": [
           "AQPI-12"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-050",
         "requirement": "Offers are clearly distinguished from mandatory fees.",
         "requirementStatus": "carried over",
@@ -9212,7 +9212,7 @@
         "jiraKeys": [
           "AQPI-13"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-052",
         "requirement": "The interface identifies when offers are personalized where required.",
         "requirementStatus": "carried over",
@@ -9232,7 +9232,7 @@
         "jiraKeys": [
           "AQPI-13"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-053",
         "requirement": "The guest can proceed without selecting ancillary products.",
         "requirementStatus": "carried over",
@@ -9252,7 +9252,7 @@
         "jiraKeys": [
           "AQPI-13"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-054",
         "requirement": "A consent or preference change affects future eligible recommendations according to policy.",
         "requirementStatus": "carried over",
@@ -9272,7 +9272,7 @@
         "jiraKeys": [
           "AQPI-15"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-055",
         "requirement": "The cart contains hotel, room, rate plan, stay dates, occupancy, quantity, currency, and price components.",
         "requirementStatus": "carried over",
@@ -9292,7 +9292,7 @@
         "jiraKeys": [
           "AQPI-15"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-056",
         "requirement": "Inventory and price are revalidated when required.",
         "requirementStatus": "carried over",
@@ -9312,7 +9312,7 @@
         "jiraKeys": [
           "AQPI-15"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-057",
         "requirement": "The cart has a defined expiration and displays relevant timeout behavior.",
         "requirementStatus": "carried over",
@@ -9332,7 +9332,7 @@
         "jiraKeys": [
           "AQPI-15"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-058",
         "requirement": "A cart must not itself create a reservation.",
         "requirementStatus": "carried over",
@@ -9352,7 +9352,7 @@
         "jiraKeys": [
           "AQPI-15"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-059",
         "requirement": "Price-change handling must require guest acknowledgement when material.",
         "requirementStatus": "carried over",
@@ -9372,7 +9372,7 @@
         "jiraKeys": [
           "AQPI-16"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-060",
         "requirement": "The guest can add an available ancillary.",
         "requirementStatus": "carried over",
@@ -9392,7 +9392,7 @@
         "jiraKeys": [
           "AQPI-16"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-061",
         "requirement": "Supported quantities can be changed within product limits.",
         "requirementStatus": "carried over",
@@ -9412,7 +9412,7 @@
         "jiraKeys": [
           "AQPI-16"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-062",
         "requirement": "Removal updates totals immediately.",
         "requirementStatus": "carried over",
@@ -9432,7 +9432,7 @@
         "jiraKeys": [
           "AQPI-16"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-063",
         "requirement": "Ineligible or sold-out products cannot be retained silently.",
         "requirementStatus": "carried over",
@@ -9452,7 +9452,7 @@
         "jiraKeys": [
           "AQPI-17"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-064",
         "requirement": "Room charges, taxes, mandatory fees, optional products, discounts, and total are itemized.",
         "requirementStatus": "carried over",
@@ -9472,7 +9472,7 @@
         "jiraKeys": [
           "AQPI-17"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-065",
         "requirement": "Currency is consistently displayed.",
         "requirementStatus": "carried over",
@@ -9492,7 +9492,7 @@
         "jiraKeys": [
           "AQPI-17"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-066",
         "requirement": "Material changes are highlighted and require acknowledgement.",
         "requirementStatus": "carried over",
@@ -9512,7 +9512,7 @@
         "jiraKeys": [
           "AQPI-17"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-067",
         "requirement": "The guest can return to edit supported selections.",
         "requirementStatus": "carried over",
@@ -9532,7 +9532,7 @@
         "jiraKeys": [
           "AQPI-17"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-068",
         "requirement": "The final payable total must be revalidated before reservation submission.",
         "requirementStatus": "carried over",
@@ -9552,7 +9552,7 @@
         "jiraKeys": [
           "AQPI-19"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-069",
         "requirement": "Required and optional fields are clearly distinguished.",
         "requirementStatus": "carried over",
@@ -9572,7 +9572,7 @@
         "jiraKeys": [
           "AQPI-19"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-070",
         "requirement": "Inputs are validated and error messages are accessible.",
         "requirementStatus": "carried over",
@@ -9592,7 +9592,7 @@
         "jiraKeys": [
           "AQPI-19"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-071",
         "requirement": "The guest receives applicable privacy notice and consent controls.",
         "requirementStatus": "carried over",
@@ -9612,7 +9612,7 @@
         "jiraKeys": [
           "AQPI-19"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-072",
         "requirement": "Data is transmitted securely and is not exposed in client logs.",
         "requirementStatus": "carried over",
@@ -9632,7 +9632,7 @@
         "jiraKeys": [
           "AQPI-19"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-073",
         "requirement": "Data minimization applies.",
         "requirementStatus": "carried over",
@@ -9652,7 +9652,7 @@
         "jiraKeys": [
           "AQPI-19"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-074",
         "requirement": "Sensitive values must be masked in support tools and excluded from analytics logs.",
         "requirementStatus": "carried over",
@@ -9672,7 +9672,7 @@
         "jiraKeys": [
           "AQPI-20"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-075",
         "requirement": "The guest sees the final payable or guarantee amount before authorization.",
         "requirementStatus": "carried over",
@@ -9692,7 +9692,7 @@
         "jiraKeys": [
           "AQPI-20"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-075",
         "requirement": "The guest sees the final payable or guarantee amount before authorization.",
         "requirementStatus": "carried over",
@@ -9712,7 +9712,7 @@
         "jiraKeys": [
           "AQPI-20"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-076",
         "requirement": "Payment data is handled through approved secure components.",
         "requirementStatus": "carried over",
@@ -9732,7 +9732,7 @@
         "jiraKeys": [
           "AQPI-20"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-077",
         "requirement": "Authorization success, decline, timeout, and technical failure are handled distinctly.",
         "requirementStatus": "carried over",
@@ -9752,7 +9752,7 @@
         "jiraKeys": [
           "AQPI-20"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-077",
         "requirement": "Authorization success, decline, timeout, and technical failure are handled distinctly.",
         "requirementStatus": "carried over",
@@ -9772,7 +9772,7 @@
         "jiraKeys": [
           "AQPI-20"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-077",
         "requirement": "Authorization success, decline, timeout, and technical failure are handled distinctly.",
         "requirementStatus": "carried over",
@@ -9792,7 +9792,7 @@
         "jiraKeys": [
           "AQPI-20"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-078",
         "requirement": "The product does not store prohibited card data in application logs.",
         "requirementStatus": "carried over",
@@ -9812,7 +9812,7 @@
         "jiraKeys": [
           "AQPI-20"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-079",
         "requirement": "Payment requirements depend on rate conditions.",
         "requirementStatus": "carried over",
@@ -9832,7 +9832,7 @@
         "jiraKeys": [
           "AQPI-20"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-080",
         "requirement": "Retry behavior must avoid duplicate authorization.",
         "requirementStatus": "carried over",
@@ -9852,7 +9852,7 @@
         "jiraKeys": [
           "AQPI-21"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-081",
         "requirement": "A successful request creates one reservation and returns a confirmation identifier.",
         "requirementStatus": "carried over",
@@ -9872,7 +9872,7 @@
         "jiraKeys": [
           "AQPI-21"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-082",
         "requirement": "Repeated submissions with the same idempotency key do not create duplicate reservations.",
         "requirementStatus": "carried over",
@@ -9892,7 +9892,7 @@
         "jiraKeys": [
           "AQPI-21"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-083",
         "requirement": "Inventory, price, payment, and reservation outcomes remain reconcilable.",
         "requirementStatus": "carried over",
@@ -9912,7 +9912,7 @@
         "jiraKeys": [
           "AQPI-21"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-084",
         "requirement": "Partial failures trigger defined recovery or manual-review handling.",
         "requirementStatus": "carried over",
@@ -9932,7 +9932,7 @@
         "jiraKeys": [
           "AQPI-21"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-085",
         "requirement": "Reservation submission must use an idempotency mechanism.",
         "requirementStatus": "carried over",
@@ -9952,7 +9952,7 @@
         "jiraKeys": [
           "AQPI-21"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-086",
         "requirement": "The source of truth for confirmation status must be defined.",
         "requirementStatus": "carried over",
@@ -9972,7 +9972,7 @@
         "jiraKeys": [
           "AQPI-22"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-087",
         "requirement": "Success displays confirmation identifier, hotel, stay summary, selected products, and total.",
         "requirementStatus": "carried over",
@@ -9992,7 +9992,7 @@
         "jiraKeys": [
           "AQPI-22"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-088",
         "requirement": "A failure does not display a false confirmation.",
         "requirementStatus": "carried over",
@@ -10012,7 +10012,7 @@
         "jiraKeys": [
           "AQPI-22"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-089",
         "requirement": "Unknown or timeout states instruct the guest not to resubmit blindly and provide a safe recovery path.",
         "requirementStatus": "carried over",
@@ -10272,7 +10272,7 @@
         "jiraKeys": [
           "AQPI-28"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-103",
         "requirement": "Sensitive data is classified and mapped to approved storage and processing locations.",
         "requirementStatus": "carried over",
@@ -10292,7 +10292,7 @@
         "jiraKeys": [
           "AQPI-28"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-104",
         "requirement": "Data is encrypted in transit and at rest where required.",
         "requirementStatus": "carried over",
@@ -10312,7 +10312,7 @@
         "jiraKeys": [
           "AQPI-28"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-105",
         "requirement": "Logs and analytics exclude or mask prohibited fields.",
         "requirementStatus": "carried over",
@@ -10332,7 +10332,7 @@
         "jiraKeys": [
           "AQPI-28"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-106",
         "requirement": "Access to operational data is role-based and auditable.",
         "requirementStatus": "carried over",
@@ -10352,7 +10352,7 @@
         "jiraKeys": [
           "AQPI-28"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-107",
         "requirement": "Retention and deletion follow approved policy.",
         "requirementStatus": "carried over",
@@ -10372,7 +10372,7 @@
         "jiraKeys": [
           "AQPI-29"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-108",
         "requirement": "Events use a correlation ID across supported services.",
         "requirementStatus": "carried over",
@@ -10392,7 +10392,7 @@
         "jiraKeys": [
           "AQPI-29"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-109",
         "requirement": "Business events and technical logs are distinguishable.",
         "requirementStatus": "carried over",
@@ -10412,7 +10412,7 @@
         "jiraKeys": [
           "AQPI-29"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-111",
         "requirement": "Logging degradation does not expose sensitive payloads or silently block booking unless explicitly required.",
         "requirementStatus": "carried over",
@@ -10432,7 +10432,7 @@
         "jiraKeys": [
           "AQPI-29"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-112",
         "requirement": "Event schemas must be versioned.",
         "requirementStatus": "carried over",
@@ -10452,7 +10452,7 @@
         "jiraKeys": [
           "AQPI-29"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-113",
         "requirement": "Production log access must be controlled and retained according to policy.",
         "requirementStatus": "carried over",
@@ -10472,7 +10472,7 @@
         "jiraKeys": [
           "AQPI-30"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-115",
         "requirement": "Visual information is not conveyed by color alone.",
         "requirementStatus": "carried over",
@@ -10492,7 +10492,7 @@
         "jiraKeys": [
           "AQPI-30"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-116",
         "requirement": "Dynamic updates are announced appropriately.",
         "requirementStatus": "carried over",
@@ -10512,7 +10512,7 @@
         "jiraKeys": [
           "AQPI-30"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-117",
         "requirement": "Email templates are readable and structurally accessible.",
         "requirementStatus": "carried over",
@@ -10532,7 +10532,7 @@
         "jiraKeys": [
           "AQPI-31"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-119",
         "requirement": "Timeout, retry, circuit-breaker, and fallback behavior are documented.",
         "requirementStatus": "carried over",
@@ -10552,7 +10552,7 @@
         "jiraKeys": [
           "AQPI-31"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-120",
         "requirement": "Load, resilience, and recovery tests cover critical journeys.",
         "requirementStatus": "carried over",
@@ -10572,7 +10572,7 @@
         "jiraKeys": [
           "AQPI-31"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-121",
         "requirement": "Reservation integrity is prioritized over non-critical personalization and analytics.",
         "requirementStatus": "carried over",
@@ -10593,7 +10593,7 @@
           "AQPI-15",
           "AQPI-33"
         ],
-        "jiraLevel": "issue, story",
+        "jiraLevel": "story",
         "requirementId": "REQ-122",
         "requirement": "A cart expires 20 minutes after it is created and never creates a reservation itself.",
         "requirementStatus": "enhanced",
@@ -10613,7 +10613,7 @@
         "jiraKeys": [
           "AQPI-17"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-123",
         "requirement": "A price change of more than 1% must be acknowledged by the guest before checkout.",
         "requirementStatus": "unchanged",
@@ -10633,7 +10633,7 @@
         "jiraKeys": [
           "AQPI-17"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-123",
         "requirement": "A price change of more than 1% must be acknowledged by the guest before checkout.",
         "requirementStatus": "unchanged",
@@ -10676,7 +10676,7 @@
         "jiraKeys": [
           "AQPI-21"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-125",
         "requirement": "Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.",
         "requirementStatus": "unchanged",
@@ -10696,7 +10696,7 @@
         "jiraKeys": [
           "AQPI-21"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-125",
         "requirement": "Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.",
         "requirementStatus": "unchanged",
@@ -10718,7 +10718,7 @@
         "jiraKeys": [
           "AQPI-21"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-125",
         "requirement": "Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.",
         "requirementStatus": "unchanged",
@@ -10739,7 +10739,7 @@
           "AQPI-4",
           "AQPI-34"
         ],
-        "jiraLevel": "issue, story",
+        "jiraLevel": "story",
         "requirementId": "REQ-126",
         "requirement": "A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.",
         "requirementStatus": "enhanced",
@@ -10760,7 +10760,7 @@
           "AQPI-4",
           "AQPI-34"
         ],
-        "jiraLevel": "issue, story",
+        "jiraLevel": "story",
         "requirementId": "REQ-126",
         "requirement": "A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.",
         "requirementStatus": "enhanced",
@@ -10781,7 +10781,7 @@
           "AQPI-4",
           "AQPI-34"
         ],
-        "jiraLevel": "issue, story",
+        "jiraLevel": "story",
         "requirementId": "REQ-126",
         "requirement": "A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.",
         "requirementStatus": "enhanced",
@@ -10802,7 +10802,7 @@
           "AQPI-4",
           "AQPI-34"
         ],
-        "jiraLevel": "issue, story",
+        "jiraLevel": "story",
         "requirementId": "REQ-126",
         "requirement": "A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.",
         "requirementStatus": "enhanced",
@@ -10824,7 +10824,7 @@
         "jiraKeys": [
           "AQPI-4"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-127",
         "requirement": "Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.",
         "requirementStatus": "unchanged",
@@ -10844,7 +10844,7 @@
         "jiraKeys": [
           "AQPI-4"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-127",
         "requirement": "Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.",
         "requirementStatus": "unchanged",
@@ -10864,7 +10864,7 @@
         "jiraKeys": [
           "AQPI-4"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-127",
         "requirement": "Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.",
         "requirementStatus": "unchanged",
@@ -10884,7 +10884,7 @@
         "jiraKeys": [
           "AQPI-4"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-127",
         "requirement": "Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.",
         "requirementStatus": "unchanged",
@@ -10904,7 +10904,7 @@
         "jiraKeys": [
           "AQPI-4"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-128",
         "requirement": "Check-in can be at most 500 days ahead.",
         "requirementStatus": "unchanged",
@@ -10924,7 +10924,7 @@
         "jiraKeys": [
           "AQPI-4"
         ],
-        "jiraLevel": "issue",
+        "jiraLevel": "story",
         "requirementId": "REQ-128",
         "requirement": "Check-in can be at most 500 days ahead.",
         "requirementStatus": "unchanged",
@@ -11189,6 +11189,7 @@
         "level": "epic",
         "parent": null,
         "summary": "[Epic 8] Release 2.0 – Booking Rule Changes and Free Cancellation",
+        "scope": "this cycle",
         "requirements": 2,
         "testCases": 2,
         "automated": 0,
@@ -11202,6 +11203,7 @@
         "level": "story",
         "parent": "AQPI-32",
         "summary": "10.1 Shorten the cart hold to 20 minutes",
+        "scope": "this cycle",
         "requirements": 1,
         "testCases": 1,
         "automated": 1,
@@ -11215,6 +11217,7 @@
         "level": "story",
         "parent": "AQPI-32",
         "summary": "10.2 Limit Paris stays to 14 nights",
+        "scope": "this cycle",
         "requirements": 1,
         "testCases": 4,
         "automated": 4,
@@ -11230,6 +11233,7 @@
         "level": "story",
         "parent": "AQPI-32",
         "summary": "10.3 Allow up to 5 confirmation resends",
+        "scope": "this cycle",
         "requirements": 1,
         "testCases": 1,
         "automated": 1,
@@ -11243,6 +11247,7 @@
         "level": "story",
         "parent": "AQPI-32",
         "summary": "10.4 Cancel a reservation free of charge",
+        "scope": "this cycle",
         "requirements": 3,
         "testCases": 4,
         "automated": 4,
@@ -11256,6 +11261,7 @@
         "level": "epic",
         "parent": null,
         "summary": "[Epic 6] Confirmation and Notifications",
+        "scope": "this cycle",
         "requirements": 4,
         "testCases": 4,
         "automated": 0,
@@ -11269,6 +11275,7 @@
         "level": "story",
         "parent": "AQPI-23",
         "summary": "8.1 Generate confirmation message",
+        "scope": "this cycle",
         "requirements": 5,
         "testCases": 6,
         "automated": 5,
@@ -11282,6 +11289,7 @@
         "level": "story",
         "parent": "AQPI-23",
         "summary": "8.2 Send and track confirmation email",
+        "scope": "this cycle",
         "requirements": 6,
         "testCases": 6,
         "automated": 2,
@@ -11297,6 +11305,7 @@
         "level": "story",
         "parent": "AQPI-23",
         "summary": "8.3 Resend confirmation safely",
+        "scope": "this cycle",
         "requirements": 4,
         "testCases": 4,
         "automated": 2,
@@ -11310,6 +11319,7 @@
         "level": "story",
         "parent": "AQPI-23",
         "summary": "8.4 Send a cancellation e-mail",
+        "scope": "this cycle",
         "requirements": 3,
         "testCases": 3,
         "automated": 2,
@@ -11317,13 +11327,397 @@
         "failed": 0,
         "defects": [],
         "status": "verified"
+      },
+      {
+        "key": "AQPI-1",
+        "level": "initiative",
+        "parent": null,
+        "summary": "[Initiative] Intelligent Hotel Shopping and Reservation Experience",
+        "scope": "baseline",
+        "requirements": 2,
+        "testCases": 2,
+        "automated": 1,
+        "passed": 1,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-2",
+        "level": "epic",
+        "parent": "AQPI-1",
+        "summary": "[Epic 1] Search and Availability",
+        "scope": "baseline",
+        "requirements": 4,
+        "testCases": 4,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "designed, not executed"
+      },
+      {
+        "key": "AQPI-3",
+        "level": "story",
+        "parent": "AQPI-2",
+        "summary": "3.1 Search hotels by destination and date range",
+        "scope": "baseline",
+        "requirements": 7,
+        "testCases": 9,
+        "automated": 6,
+        "passed": 6,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-4",
+        "level": "story",
+        "parent": "AQPI-2",
+        "summary": "3.2 Validate occupancy and stay criteria",
+        "scope": "baseline",
+        "requirements": 7,
+        "testCases": 14,
+        "automated": 12,
+        "passed": 11,
+        "failed": 1,
+        "defects": [
+          "DEF-007"
+        ],
+        "status": "failing"
+      },
+      {
+        "key": "AQPI-5",
+        "level": "story",
+        "parent": "AQPI-2",
+        "summary": "3.3 Handle unavailable or failed searches",
+        "scope": "baseline",
+        "requirements": 3,
+        "testCases": 3,
+        "automated": 2,
+        "passed": 2,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-6",
+        "level": "epic",
+        "parent": "AQPI-1",
+        "summary": "[Epic 2] Hotel Results and Selection",
+        "scope": "baseline",
+        "requirements": 4,
+        "testCases": 4,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "designed, not executed"
+      },
+      {
+        "key": "AQPI-7",
+        "level": "story",
+        "parent": "AQPI-6",
+        "summary": "4.1 Display available hotels",
+        "scope": "baseline",
+        "requirements": 5,
+        "testCases": 5,
+        "automated": 5,
+        "passed": 5,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-8",
+        "level": "story",
+        "parent": "AQPI-6",
+        "summary": "4.2 Sort and filter hotel results",
+        "scope": "baseline",
+        "requirements": 4,
+        "testCases": 5,
+        "automated": 4,
+        "passed": 4,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-9",
+        "level": "story",
+        "parent": "AQPI-6",
+        "summary": "4.3 View hotel and room details",
+        "scope": "baseline",
+        "requirements": 4,
+        "testCases": 4,
+        "automated": 2,
+        "passed": 2,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-10",
+        "level": "epic",
+        "parent": "AQPI-1",
+        "summary": "[Epic 3] Personalized Ancillary Offers",
+        "scope": "baseline",
+        "requirements": 4,
+        "testCases": 4,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "designed, not executed"
+      },
+      {
+        "key": "AQPI-11",
+        "level": "story",
+        "parent": "AQPI-10",
+        "summary": "5.1 Determine eligible ancillary offers",
+        "scope": "baseline",
+        "requirements": 7,
+        "testCases": 7,
+        "automated": 2,
+        "passed": 2,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-12",
+        "level": "story",
+        "parent": "AQPI-10",
+        "summary": "5.2 Display ancillary offers",
+        "scope": "baseline",
+        "requirements": 3,
+        "testCases": 3,
+        "automated": 3,
+        "passed": 3,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-13",
+        "level": "story",
+        "parent": "AQPI-10",
+        "summary": "5.3 Explain and control personalization",
+        "scope": "baseline",
+        "requirements": 3,
+        "testCases": 3,
+        "automated": 2,
+        "passed": 2,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-14",
+        "level": "epic",
+        "parent": "AQPI-1",
+        "summary": "[Epic 4] Cart Management",
+        "scope": "baseline",
+        "requirements": 4,
+        "testCases": 4,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "designed, not executed"
+      },
+      {
+        "key": "AQPI-15",
+        "level": "story",
+        "parent": "AQPI-14",
+        "summary": "6.1 Add room selection to cart",
+        "scope": "baseline",
+        "requirements": 6,
+        "testCases": 6,
+        "automated": 2,
+        "passed": 2,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-16",
+        "level": "story",
+        "parent": "AQPI-14",
+        "summary": "6.2 Add, update, and remove ancillaries",
+        "scope": "baseline",
+        "requirements": 4,
+        "testCases": 4,
+        "automated": 2,
+        "passed": 2,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-17",
+        "level": "story",
+        "parent": "AQPI-14",
+        "summary": "6.3 Review cart and total price",
+        "scope": "baseline",
+        "requirements": 6,
+        "testCases": 7,
+        "automated": 3,
+        "passed": 2,
+        "failed": 1,
+        "defects": [
+          "DEF-001"
+        ],
+        "status": "failing"
+      },
+      {
+        "key": "AQPI-18",
+        "level": "epic",
+        "parent": "AQPI-1",
+        "summary": "[Epic 5] Checkout and Reservation",
+        "scope": "baseline",
+        "requirements": 4,
+        "testCases": 4,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "designed, not executed"
+      },
+      {
+        "key": "AQPI-19",
+        "level": "story",
+        "parent": "AQPI-18",
+        "summary": "7.1 Capture guest and contact information",
+        "scope": "baseline",
+        "requirements": 6,
+        "testCases": 6,
+        "automated": 4,
+        "passed": 4,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-20",
+        "level": "story",
+        "parent": "AQPI-18",
+        "summary": "7.2 Capture and authorize payment",
+        "scope": "baseline",
+        "requirements": 6,
+        "testCases": 9,
+        "automated": 6,
+        "passed": 6,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-21",
+        "level": "story",
+        "parent": "AQPI-18",
+        "summary": "7.3 Create reservation idempotently",
+        "scope": "baseline",
+        "requirements": 7,
+        "testCases": 9,
+        "automated": 6,
+        "passed": 5,
+        "failed": 1,
+        "defects": [
+          "DEF-002"
+        ],
+        "status": "failing"
+      },
+      {
+        "key": "AQPI-22",
+        "level": "story",
+        "parent": "AQPI-18",
+        "summary": "7.4 Show booking outcome",
+        "scope": "baseline",
+        "requirements": 3,
+        "testCases": 3,
+        "automated": 3,
+        "passed": 3,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-27",
+        "level": "epic",
+        "parent": "AQPI-1",
+        "summary": "[Epic 7] Cross-Cutting Quality, Privacy and Observability",
+        "scope": "baseline",
+        "requirements": 4,
+        "testCases": 4,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "designed, not executed"
+      },
+      {
+        "key": "AQPI-28",
+        "level": "story",
+        "parent": "AQPI-27",
+        "summary": "9.1 Protect sensitive data",
+        "scope": "baseline",
+        "requirements": 5,
+        "testCases": 5,
+        "automated": 1,
+        "passed": 1,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-29",
+        "level": "story",
+        "parent": "AQPI-27",
+        "summary": "9.2 Provide end-to-end observability",
+        "scope": "baseline",
+        "requirements": 5,
+        "testCases": 5,
+        "automated": 1,
+        "passed": 1,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-30",
+        "level": "story",
+        "parent": "AQPI-27",
+        "summary": "9.3 Meet accessibility requirements",
+        "scope": "baseline",
+        "requirements": 3,
+        "testCases": 3,
+        "automated": 1,
+        "passed": 1,
+        "failed": 0,
+        "defects": [],
+        "status": "verified"
+      },
+      {
+        "key": "AQPI-31",
+        "level": "story",
+        "parent": "AQPI-27",
+        "summary": "9.4 Meet performance and reliability objectives",
+        "scope": "baseline",
+        "requirements": 3,
+        "testCases": 3,
+        "automated": 0,
+        "passed": 0,
+        "failed": 0,
+        "defects": [],
+        "status": "designed, not executed"
       }
     ],
     "totals": {
-      "jiraItems": 10,
-      "covered": 10,
-      "verified": 6,
-      "failing": 2,
+      "jiraItems": 37,
+      "covered": 37,
+      "verified": 23,
+      "failing": 5,
       "testCases": 144,
       "withData": 144,
       "withScript": 83,
@@ -11334,7 +11728,7 @@
     {
       "gate": "Requirement set review",
       "by": "Priya Shah",
-      "at": "2026-10-02T20:05:20.214Z",
+      "at": "2026-10-02T20:26:23.937Z",
       "decision": "approved",
       "comment": "",
       "detail": "33 requirements approved; 0 excluded; 0 conflict(s) resolved"
@@ -11342,7 +11736,7 @@
     {
       "gate": "Merge into baseline",
       "by": "Sam Lee",
-      "at": "2026-10-02T20:05:20.255Z",
+      "at": "2026-10-02T20:26:23.982Z",
       "decision": "approved",
       "comment": "",
       "detail": "13 requirements, 18 test cases, 10 scripts merged: BL-1 v1 -> v2"
@@ -11354,7 +11748,7 @@
   },
   "honesty": [
     "Jira epic AQPI-32, AQPI-23: Jira export on GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export, release-2.0 snapshot): Jira REST API v3 JSON of AQPI-32, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
-    "Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (fe1ce44): Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (fe1ce44) at 2026-10-02T20:05:18.310Z",
+    "Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (fe1ce44): Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (fe1ce44) at 2026-10-02T20:26:22.186Z",
     "Execution: 83 automated cases really executed by Playwright 1.63.0 (headless Chromium, JSON reporter) against Hotel booking platform release 2.0, six Spring Boot services built from branch demo/hotel-booking-platform-v2 (demo/hotel-booking-platform-v2); 61 manual case(s) designed but not executed.",
     "Normalisation, delta classification, coverage, pass/fail and defect raising are computed in code, not by a model."
   ]

@@ -1,16 +1,16 @@
 {
   "request": {
     "method": "GET",
-    "url": "http://127.0.0.1:44815/api/searches/S-bf3e1907/results?minPrice=99999",
+    "url": "http://127.0.0.1:38887/api/searches/S-1fffddfb/results?minPrice=99999",
     "headers": {},
     "data": null
   },
   "response": {
     "status": 200,
-    "correlationId": "7a596485-8804-4358-9560-028bbcd1f76a",
+    "correlationId": "b03f74e8-f780-498f-ae25-94163712a538",
     "body": {
-      "searchId": "S-bf3e1907",
-      "sessionId": "4d1f8d87-8de7-4755-9b1f-5e3565aaf354",
+      "searchId": "S-1fffddfb",
+      "sessionId": "3e291b83-2ccf-4849-bfa6-1a58a6698a0f",
       "status": "NO_AVAILABILITY",
       "criteria": {
         "destination": "NYC",

@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "POST",
-    "url": "http://127.0.0.1:44815/api/searches",
+    "url": "http://127.0.0.1:38887/api/searches",
     "headers": {},
     "data": {
       "destination": "PAR",
@@ -14,12 +14,12 @@
   },
   "response": {
     "status": 400,
-    "correlationId": "d2dbcab6-3646-48ee-b713-0ab928d319a0",
+    "correlationId": "1c376b2f-e6ac-4bc4-a958-463ed2634d9e",
     "body": {
       "status": 400,
       "code": "VALIDATION_FAILED",
       "message": "Please correct the highlighted search details.",
-      "correlationId": "d2dbcab6-3646-48ee-b713-0ab928d319a0",
+      "correlationId": "1c376b2f-e6ac-4bc4-a958-463ed2634d9e",
       "retryable": false,
       "fieldIssues": [
         {

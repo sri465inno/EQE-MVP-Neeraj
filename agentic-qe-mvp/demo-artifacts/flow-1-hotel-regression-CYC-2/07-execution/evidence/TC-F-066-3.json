@@ -1,18 +1,18 @@
 {
   "request": {
     "method": "GET",
-    "url": "http://127.0.0.1:40837/api/ops/reservations/R-eca3e056",
+    "url": "http://127.0.0.1:44711/api/ops/reservations/R-4c6f1c88",
     "headers": {},
     "data": null
   },
   "response": {
     "status": 403,
-    "correlationId": "84660482-9543-49d3-9c42-71b2fdd3ec0f",
+    "correlationId": "009fc9c4-fd85-4ff2-ad73-d20ff265c8e7",
     "body": {
       "status": 403,
       "code": "ROLE_NOT_PERMITTED",
       "message": "Your role is not permitted to view reservation details.",
-      "correlationId": "84660482-9543-49d3-9c42-71b2fdd3ec0f",
+      "correlationId": "009fc9c4-fd85-4ff2-ad73-d20ff265c8e7",
       "retryable": false,
       "fieldIssues": []
     }
