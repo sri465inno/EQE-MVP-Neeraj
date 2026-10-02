@@ -188,7 +188,7 @@ public class ReservationService {
             note(r, "rooms released for cancellation");
             if (gateway.voidAuthorization(r.idempotencyKey)) {
                 r.paymentStatus = PaymentStatus.VOIDED;
-                return finish(r, Status.CANCELLED, null);
+                return finish(r, Status.CANCELLED, null).then(cancellationEmail(r));
             }
             return finish(r, Status.MANUAL_REVIEW, "VOID_FAILED");
         })).then(events.event(EventNames.CANCELLATION_REQUESTED).outcome("cancelled").attr("reservationId", r.id)
@@ -359,7 +359,7 @@ public class ReservationService {
     private Mono<Void> afterConfirm(Reservation r) {
         Mono<Void> cart = downstream.completeCart(r.cartId, r.id)
                 .onErrorResume(e -> Mono.fromRunnable(() -> note(r, "cart completion deferred")));
-        Mono<Void> notify = downstream.requestConfirmation(confirmation(r))
+        Mono<Void> notify = downstream.requestConfirmation(notice(r, Status.CONFIRMED))
                 .doOnNext(m -> {
                     r.notificationStatus = m.status();
                     note(r, "confirmation " + m.messageId() + " " + m.status());
@@ -384,14 +384,22 @@ public class ReservationService {
                 .attr("inventory", r.inventoryStatus.name()).publish();
     }
 
-    private ConfirmationRequest confirmation(Reservation r) {
+    /** Story 8.4 (release 2.0): the guest is told about the cancellation; a failed e-mail never undoes it. */
+    private Mono<Void> cancellationEmail(Reservation r) {
+        return Mono.defer(() -> downstream.requestCancellationEmail(notice(r, Status.CANCELLED)))
+                .doOnNext(m -> note(r, "cancellation e-mail " + m.messageId() + " " + m.status()))
+                .onErrorResume(e -> Mono.fromRunnable(() -> note(r, "cancellation e-mail request failed; booking stays cancelled")))
+                .then();
+    }
+
+    private ConfirmationRequest notice(Reservation r, Status status) {
         CartRoom room = r.cart.room();
-        return new ConfirmationRequest(r.id, r.confirmationNumber, Status.CONFIRMED.name(), r.locale,
+        return new ConfirmationRequest(r.id, r.confirmationNumber, status.name(), r.locale,
                 open(r.firstNameSealed), open(r.lastNameSealed), open(r.emailSealed),
                 new HotelInfo(room.hotelName(), room.address(), room.city(), room.checkInFrom(), room.checkOutUntil()),
                 room.checkIn(), room.checkOut(), room.nights(), room.rooms(), room.adults(), room.children(),
                 room.roomName(), room.ratePlanName(), items(r), r.cart.totals().total(), room.paymentRule(),
-                room.cancellationTerms());
+                room.cancellationTerms(), room.refundable());
     }
 
     Outcome outcome(Reservation r) {

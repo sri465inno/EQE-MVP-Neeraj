@@ -31,7 +31,7 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 import reactor.util.retry.Retry;
 
-/** Stories 8.1, 8.2, 8.3 (AQPI-24, AQPI-25, AQPI-26). */
+/** Stories 8.1, 8.2, 8.3, 8.4 (AQPI-24, AQPI-25, AQPI-26, AQPI-37). */
 @Service
 public class NotificationService {
 
@@ -78,6 +78,7 @@ public class NotificationService {
 
     private final Map<String, Message> messages = new ConcurrentHashMap<>();
     private final Map<String, String> confirmationByReservation = new ConcurrentHashMap<>();
+    private final Map<String, String> cancellationByReservation = new ConcurrentHashMap<>();
     private final Map<String, Booking> bookings = new ConcurrentHashMap<>();
     private final Map<String, Deque<Instant>> resendsByBooking = new ConcurrentHashMap<>();
     private final Map<String, Deque<Instant>> resendsByClient = new ConcurrentHashMap<>();
@@ -128,6 +129,24 @@ public class NotificationService {
                 .attr("templateVersion", message.templateVersion).attr("locale", message.locale)
                 .attr("created", created).publish())
                 .then(Mono.fromSupplier(() -> new Created(view(message, false), created)));
+    }
+
+    /** Story 8.4: one cancellation e-mail per cancelled reservation; repeats return the original. */
+    public Mono<Created> cancellation(ConfirmationRequest r) {
+        if (!"CANCELLED".equals(r.status())) {
+            return Mono.error(new ApiException(HttpStatus.CONFLICT, "RESERVATION_NOT_CANCELLED",
+                    "A cancellation e-mail can only be sent for a cancelled reservation."));
+        }
+        Message message;
+        boolean created;
+        synchronized (this) {
+            String existing = cancellationByReservation.get(r.reservationId());
+            created = existing == null;
+            message = created ? newMessage(r, Kind.CANCELLATION) : messages.get(existing);
+            cancellationByReservation.putIfAbsent(r.reservationId(), message.id);
+        }
+        Mono<Void> send = created ? deliver(message, r.guestEmail()) : Mono.empty();
+        return send.then(Mono.fromSupplier(() -> new Created(view(message, false), created)));
     }
 
     /** Story 8.3: verify without revealing anything, rate-limit, then send a new message event. */
@@ -192,6 +211,7 @@ public class NotificationService {
     public void reset() {
         messages.clear();
         confirmationByReservation.clear();
+        cancellationByReservation.clear();
         bookings.clear();
         resendsByBooking.clear();
         resendsByClient.clear();
@@ -199,7 +219,7 @@ public class NotificationService {
     }
 
     private Message newMessage(ConfirmationRequest r, Kind kind) {
-        TemplateRenderer.Rendered content = renderer.render(r);
+        TemplateRenderer.Rendered content = kind == Kind.CANCELLATION ? renderer.renderCancellation(r) : renderer.render(r);
         Message message = new Message("M-" + UUID.randomUUID().toString().substring(0, 8), r.reservationId(),
                 r.confirmationNumber(), kind, content.locale(), properties.getTemplateVersion(),
                 cipher.encrypt(r.guestEmail()), Masking.email(r.guestEmail()), content, clock.instant());
@@ -259,14 +279,14 @@ public class NotificationService {
         return new ConfirmationRequest(r.reservationId(), r.confirmationNumber(), r.status(), r.locale(),
                 cipher.encrypt(r.guestFirstName()), cipher.encrypt(r.guestLastName()), cipher.encrypt(r.guestEmail()),
                 r.hotel(), r.checkIn(), r.checkOut(), r.nights(), r.rooms(), r.adults(), r.children(), r.roomName(),
-                r.ratePlanName(), r.items(), r.total(), r.paymentRule(), r.cancellationTerms());
+                r.ratePlanName(), r.items(), r.total(), r.paymentRule(), r.cancellationTerms(), r.refundable());
     }
 
     private ConfirmationRequest unseal(ConfirmationRequest r) {
         return new ConfirmationRequest(r.reservationId(), r.confirmationNumber(), r.status(), r.locale(),
                 cipher.decrypt(r.guestFirstName()), cipher.decrypt(r.guestLastName()), cipher.decrypt(r.guestEmail()),
                 r.hotel(), r.checkIn(), r.checkOut(), r.nights(), r.rooms(), r.adults(), r.children(), r.roomName(),
-                r.ratePlanName(), r.items(), r.total(), r.paymentRule(), r.cancellationTerms());
+                r.ratePlanName(), r.items(), r.total(), r.paymentRule(), r.cancellationTerms(), r.refundable());
     }
 
     private static boolean allow(Map<String, Deque<Instant>> buckets, String key, int limit, Duration window, Instant now) {

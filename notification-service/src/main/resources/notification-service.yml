@@ -11,6 +11,12 @@ platform:
     resend-limit-per-client: 10
     resend-client-window: 1h
     simulate-delivery: true
+    # @rule Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.
+    max-manual-retries: 3
+    # @rule The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.
+    free-cancellation-window: 48h
+    # @rule A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.
+    # @rule A cancellation e-mail that cannot be sent does not undo the cancellation.
 management:
   endpoints:
     web:

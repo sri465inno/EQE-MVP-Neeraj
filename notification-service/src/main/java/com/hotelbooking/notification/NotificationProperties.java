@@ -9,7 +9,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class NotificationProperties {
 
     private int maxSendAttempts = 3;
-    private int maxManualRetries = 2;
+    private int maxManualRetries = 3;
+    private Duration freeCancellationWindow = Duration.ofHours(48);
     private int resendLimitPerBooking = 5;
     private Duration resendBookingWindow = Duration.ofHours(24);
     private int resendLimitPerClient = 10;
@@ -88,5 +89,13 @@ public class NotificationProperties {
 
     public void setLocales(List<String> locales) {
         this.locales = locales;
+    }
+
+    public Duration getFreeCancellationWindow() {
+        return freeCancellationWindow;
+    }
+
+    public void setFreeCancellationWindow(Duration freeCancellationWindow) {
+        this.freeCancellationWindow = freeCancellationWindow;
     }
 }

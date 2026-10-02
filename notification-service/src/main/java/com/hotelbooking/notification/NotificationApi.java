@@ -27,7 +27,8 @@ public final class NotificationApi {
 
     public enum Kind {
         CONFIRMATION,
-        RESEND
+        RESEND,
+        CANCELLATION
     }
 
     public record HotelInfo(@NotBlank String name, String address, String city, String checkInFrom, String checkOutUntil) {
@@ -42,7 +43,7 @@ public final class NotificationApi {
             @NotBlank @Email String guestEmail, @NotNull @Valid HotelInfo hotel, @NotNull LocalDate checkIn,
             @NotNull LocalDate checkOut, long nights, int rooms, int adults, int children, String roomName,
             String ratePlanName, List<@Valid Item> items, @NotNull Money total, String paymentRule,
-            String cancellationTerms) {
+            String cancellationTerms, Boolean refundable) {
     }
 
     public record StatusChange(DeliveryStatus status, Instant at, String detail) {

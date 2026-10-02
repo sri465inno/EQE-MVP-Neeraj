@@ -17,7 +17,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-/** Epic 6 (AQPI-23) stories 8.1-8.3. */
+/** Epic 6 (AQPI-23) stories 8.1-8.4. */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = "spring.config.name=notification-service")
 class NotificationServiceTest {
@@ -77,6 +77,53 @@ class NotificationServiceTest {
         String ok = resend("HBTEST0006", "Doe");
         assertThat(resend("HBTEST0006", "Wrong")).isEqualTo(ok);
         assertThat(resend("HBNOTREAL1", "Doe")).isEqualTo(ok);
+    }
+
+    @Test
+    @DisplayName("AQPI-24 8.1 release 2.0: a refundable booking's confirmation states its free-cancellation deadline")
+    void freeCancellationDeadline() {
+        Map<String, Object> flex = request("R-7", "HBTEST0007", "Jane", "jane@example.com", "en-GB");
+        flex.put("refundable", true);
+        String deadline = LocalDate.now().plusDays(28) + " 00:00 UTC";
+        JsonNode m = post("/api/confirmations", flex, HttpStatus.CREATED);
+        assertThat(m.path("html").asText()).contains("Free cancellation until " + deadline + " (48 hours before check-in).");
+        assertThat(m.path("text").asText()).contains(deadline);
+        Map<String, Object> saver = request("R-8", "HBTEST0008", "Jane", "jane@example.com", "en-GB");
+        saver.put("refundable", false);
+        assertThat(post("/api/confirmations", saver, HttpStatus.CREATED).path("html").asText())
+                .doesNotContain(" UTC (48 hours before check-in)");
+    }
+
+    @Test
+    @DisplayName("AQPI-25 8.2 release 2.0: operations can retry a failed e-mail at most 3 times")
+    void retryLimit() {
+        String id = confirm("R-9", "HBTEST0009", "Jane", "jane@fail.test", "en-GB", HttpStatus.CREATED)
+                .path("messageId").asText();
+        for (int i = 0; i < 3; i++) {
+            web.post().uri("/api/ops/messages/{id}/retry", id).exchange().expectStatus().isOk();
+        }
+        web.post().uri("/api/ops/messages/{id}/retry", id).exchange().expectStatus().isEqualTo(HttpStatus.CONFLICT)
+                .expectBody().jsonPath("$.code").isEqualTo("RETRY_LIMIT_REACHED");
+    }
+
+    @Test
+    @DisplayName("AQPI-37 8.4: one cancellation e-mail per cancelled reservation; only cancelled reservations get one")
+    void cancellationEmail() {
+        Map<String, Object> cancelled = request("R-10", "HBTEST0010", "Jane", "jane@example.com", "en-GB");
+        cancelled.put("status", "CANCELLED");
+        JsonNode first = post("/api/cancellations", cancelled, HttpStatus.CREATED);
+        assertThat(first.path("kind").asText()).isEqualTo("CANCELLATION");
+        assertThat(first.path("subject").asText()).isEqualTo("Your booking is cancelled - HBTEST0010");
+        assertThat(first.path("html").asText()).contains("lang=\"en-GB\"", "cancelled free of charge");
+        assertThat(first.path("recipient").asText()).isEqualTo("j***@e***.com");
+        assertThat(post("/api/cancellations", cancelled, HttpStatus.OK).path("messageId").asText())
+                .isEqualTo(first.path("messageId").asText());
+        post("/api/cancellations", request("R-11", "HBTEST0011", "Jane", "jane@example.com", "en-GB"), HttpStatus.CONFLICT);
+    }
+
+    private JsonNode post(String uri, Map<String, Object> body, HttpStatus expected) {
+        return web.post().uri(uri).bodyValue(body).exchange().expectStatus().isEqualTo(expected)
+                .expectBody(JsonNode.class).returnResult().getResponseBody();
     }
 
     private JsonNode ops(String role) {

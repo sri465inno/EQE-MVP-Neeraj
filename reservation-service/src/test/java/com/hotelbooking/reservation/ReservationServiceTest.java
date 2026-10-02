@@ -4,8 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -182,6 +184,25 @@ class ReservationServiceTest {
         assertThat(gateway.ledger().get(0).voided()).isTrue();
         assertThat(early.reconciliation().get(0).consistent()).isTrue();
         assertThat(early.cancel(id).block().status()).isEqualTo(Status.CANCELLED);
+    }
+
+    @Test
+    @DisplayName("AQPI-37 8.4: a cancelled booking requests one cancellation e-mail; a failed e-mail does not undo it")
+    void cancellationEmail() {
+        ReservationService early = service(at(CHECK_IN, 49));
+        when(downstream.checkout(anyString())).thenReturn(Mono.just(cart("PAY_AT_HOTEL", true)));
+        when(downstream.commit(any())).thenReturn(Mono.empty());
+        when(downstream.requestCancellationEmail(any())).thenReturn(Mono.just(new MessageStatus("M-2", "DELIVERED")));
+        String id = early.submit("key-cxl-00004", request("tok_visa_ok")).block().outcome().reservationId();
+        early.cancel(id).block();
+        early.cancel(id).block();
+        verify(downstream, times(1)).requestCancellationEmail(argThat(c -> "CANCELLED".equals(c.status())
+                && Boolean.TRUE.equals(c.refundable()) && id.equals(c.reservationId())));
+
+        when(downstream.requestCancellationEmail(any())).thenReturn(Mono.error(new RuntimeException("smtp down")));
+        String other = early.submit("key-cxl-00005", request("tok_visa_ok")).block().outcome().reservationId();
+        assertThat(early.cancel(other).block().status()).isEqualTo(Status.CANCELLED);
+        assertThat(early.view(other).block().status()).isEqualTo(Status.CANCELLED);
     }
 
     @Test

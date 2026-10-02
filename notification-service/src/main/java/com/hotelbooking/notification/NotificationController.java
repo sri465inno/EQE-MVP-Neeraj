@@ -50,6 +50,13 @@ public class NotificationController {
                 .status(c.created() ? HttpStatus.CREATED : HttpStatus.OK).body(c.view()));
     }
 
+    /** Story 8.4. */
+    @PostMapping("/cancellations")
+    public Mono<ResponseEntity<MessageView>> cancellation(@Valid @RequestBody ConfirmationRequest request) {
+        return notifications.cancellation(request).map(c -> ResponseEntity
+                .status(c.created() ? HttpStatus.CREATED : HttpStatus.OK).body(c.view()));
+    }
+
     @GetMapping("/confirmations/{reservationId}")
     public Mono<MessageView> forReservation(@PathVariable String reservationId) {
         return Mono.fromSupplier(() -> notifications.forReservation(reservationId).orElseThrow(

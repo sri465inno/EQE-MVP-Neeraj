@@ -60,4 +60,9 @@ public class Downstream {
         return calls.call(NOTIFICATION, true, notification.post().uri("/api/confirmations").bodyValue(request)
                 .retrieve().bodyToMono(MessageStatus.class)).onErrorMap(DownstreamErrors::translate);
     }
+
+    public Mono<MessageStatus> requestCancellationEmail(ConfirmationRequest request) {
+        return calls.call(NOTIFICATION, true, notification.post().uri("/api/cancellations").bodyValue(request)
+                .retrieve().bodyToMono(MessageStatus.class)).onErrorMap(DownstreamErrors::translate);
+    }
 }

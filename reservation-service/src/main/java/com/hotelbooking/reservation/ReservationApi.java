@@ -104,7 +104,7 @@ public final class ReservationApi {
     public record ConfirmationRequest(String reservationId, String confirmationNumber, String status, String locale,
             String guestFirstName, String guestLastName, String guestEmail, HotelInfo hotel, LocalDate checkIn,
             LocalDate checkOut, long nights, int rooms, int adults, int children, String roomName, String ratePlanName,
-            List<Item> items, Money total, String paymentRule, String cancellationTerms) {
+            List<Item> items, Money total, String paymentRule, String cancellationTerms, Boolean refundable) {
     }
 
     public record MessageStatus(String messageId, String status) {
