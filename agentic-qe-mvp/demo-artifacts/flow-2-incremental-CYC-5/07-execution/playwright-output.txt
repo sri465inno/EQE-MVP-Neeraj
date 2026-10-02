@@ -22,7 +22,7 @@ Running 18 tests using 2 workers
       59 | });
       60 |
       61 | test("TC-F-007 A stay of 6 nights earns no long-stay bonus", async ({ request }, testInfo) => {
-        at /tmp/aqe-demo-UCbj9q/runs/CYC-5/specs/br-007-long-stay-bonus.spec.js:58:29
+        at /tmp/aqe-demo-RmcTqM/runs/CYC-5/specs/br-007-long-stay-bonus.spec.js:58:29
 
     Error Context: test-results/br-007-long-stay-bonus-TC--13b3d-rns-the-1-5-long-stay-bonus/error-context.md
 
@@ -36,8 +36,8 @@ Running 18 tests using 2 workers
 [14/18] specs/br-015-group-flat-rate.spec.js:55:1 › TC-F-015 A group of 10 rooms is commissioned at a flat 8%
 [15/18] specs/br-015-group-flat-rate.spec.js:62:1 › TC-F-016 9 rooms keep the transient base rate
 [16/18] specs/br-016-package-room-component.spec.js:55:1 › TC-F-017 Package rates are commissioned on 70% of the package price
-[17/18] specs/br-017-corporate-flat-rate.spec.js:55:1 › TC-F-018 Negotiated corporate rates are commissioned at a flat 5%
-[18/18] specs/br-007-long-stay-bonus.spec.js:61:1 › TC-F-007 A stay of 6 nights earns no long-stay bonus
+[17/18] specs/br-007-long-stay-bonus.spec.js:61:1 › TC-F-007 A stay of 6 nights earns no long-stay bonus
+[18/18] specs/br-017-corporate-flat-rate.spec.js:55:1 › TC-F-018 Negotiated corporate rates are commissioned at a flat 5%
   1 failed
     specs/br-007-long-stay-bonus.spec.js:55:1 › TC-F-006 A stay of exactly 7 nights earns the 1.5% long-stay bonus 
-  17 passed (938ms)
+  17 passed (928ms)

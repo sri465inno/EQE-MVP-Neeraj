@@ -1,6 +1,6 @@
 {
   "title": "Agentic QE Platform - MVP - Cycle report",
-  "generatedAt": "2026-10-02T03:54:17.521Z",
+  "generatedAt": "2026-10-02T04:13:56.639Z",
   "cycle": {
     "id": "CYC-4",
     "name": "Commission baseline",
@@ -8,8 +8,8 @@
     "testingType": "regression",
     "testingTypeName": "Regression testing",
     "status": "completed",
-    "createdAt": "2026-10-02T03:54:16.123Z",
-    "completedAt": "2026-10-02T03:54:17.511Z",
+    "createdAt": "2026-10-02T04:13:55.295Z",
+    "completedAt": "2026-10-02T04:13:56.628Z",
     "baselineId": "BL-4",
     "baselineVersionAtStart": null,
     "baselineVersionAfter": 1,
@@ -89,7 +89,9 @@
       "UI designs (Figma)",
       "Policy and contract documents (e.g. commission agreements)"
     ],
-    "capability": "Travel-advisor commission calculated from reservation attributes"
+    "capability": "Travel-advisor commission calculated from reservation attributes",
+    "modelLabel": "reservation",
+    "driversLabel": "commission-driving attributes"
   },
   "testing": {
     "id": "regression",
@@ -915,7 +917,7 @@
       "summary": "Travel-advisor commission engine for Aurora Hotels reservations (sample codebase for the Agentic QE Platform - MVP demo)",
       "statements": 16,
       "provenance": "github",
-      "provenanceLabel": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/commission-engine (df5203e) at 2026-10-02T03:54:15.412Z",
+      "provenanceLabel": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/commission-engine (df5203e) at 2026-10-02T04:13:54.623Z",
       "files": [
         "README.md",
         "data-dictionary/reservation-attributes.json",
@@ -1400,16 +1402,16 @@
   "execution": {
     "executed": true,
     "quarantined": "not measured",
-    "durationMs": 1357,
+    "durationMs": 1306,
     "tool": "Playwright 1.63.0 (headless Chromium, JSON reporter)",
-    "command": "npx playwright test --config ../../../../../tmp/aqe-demo-UCbj9q/runs/CYC-4/playwright.config.js",
+    "command": "npx playwright test --config ../../../../../tmp/aqe-demo-RmcTqM/runs/CYC-4/playwright.config.js",
     "sut": {
       "build": "demo/commission-engine",
-      "url": "http://127.0.0.1:45463",
+      "url": "http://127.0.0.1:40735",
       "name": "Aurora commission engine, bundled copy of branch demo/commission-engine (samples/commission-engine/baseline)"
     },
-    "startedAt": "2026-10-02T03:54:16.148Z",
-    "finishedAt": "2026-10-02T03:54:17.505Z",
+    "startedAt": "2026-10-02T04:13:55.316Z",
+    "finishedAt": "2026-10-02T04:13:56.622Z",
     "summary": {
       "total": 15,
       "executed": 14,
@@ -1417,7 +1419,7 @@
       "failed": 1,
       "skipped": 0,
       "notRun": 1,
-      "durationMs": 413,
+      "durationMs": 425,
       "passRate": 92.9
     },
     "results": [
@@ -1426,7 +1428,7 @@
         "requirementId": "REQ-001",
         "name": "The reservation model has 1000 attributes and a full reservation is accepted",
         "status": "passed",
-        "duration": 37,
+        "duration": 33,
         "reason": null
       },
       {
@@ -1434,7 +1436,7 @@
         "requirementId": "REQ-002",
         "name": "Advisor views the commission breakdown on the commission statement page",
         "status": "passed",
-        "duration": 226,
+        "duration": 228,
         "reason": null
       },
       {
@@ -1442,7 +1444,7 @@
         "requirementId": "REQ-003",
         "name": "Commission quote p95 response time is within 300 ms",
         "status": "passed",
-        "duration": 51,
+        "duration": 55,
         "reason": null
       },
       {
@@ -1450,7 +1452,7 @@
         "requirementId": "REQ-004",
         "name": "Base commission is 10% of commissionable room revenue",
         "status": "passed",
-        "duration": 8,
+        "duration": 9,
         "reason": null
       },
       {
@@ -1474,7 +1476,7 @@
         "requirementId": "REQ-007",
         "name": "A stay of exactly 7 nights earns the 1.5% long-stay bonus",
         "status": "failed",
-        "duration": 6,
+        "duration": 11,
         "reason": null
       },
       {
@@ -1482,7 +1484,7 @@
         "requirementId": "REQ-007",
         "name": "A stay of 6 nights earns no long-stay bonus",
         "status": "passed",
-        "duration": 22,
+        "duration": 21,
         "reason": null
       },
       {
@@ -1490,7 +1492,7 @@
         "requirementId": "REQ-008",
         "name": "Commission is capped at USD 500 per reservation",
         "status": "passed",
-        "duration": 8,
+        "duration": 10,
         "reason": null
       },
       {
@@ -1498,7 +1500,7 @@
         "requirementId": "REQ-009",
         "name": "Commission is rounded half-up to 2 decimal places",
         "status": "passed",
-        "duration": 12,
+        "duration": 9,
         "reason": null
       },
       {
@@ -1506,7 +1508,7 @@
         "requirementId": "REQ-010",
         "name": "A stay paid with loyalty points earns no commission",
         "status": "passed",
-        "duration": 7,
+        "duration": 10,
         "reason": null
       },
       {
@@ -1530,7 +1532,7 @@
         "requirementId": "REQ-013",
         "name": "A reservation without an advisor IATA number returns HTTP 422",
         "status": "passed",
-        "duration": 7,
+        "duration": 10,
         "reason": null
       },
       {
@@ -1807,7 +1809,7 @@
     {
       "gate": "Requirement set review",
       "by": "Priya Shah",
-      "at": "2026-10-02T03:54:16.127Z",
+      "at": "2026-10-02T04:13:55.299Z",
       "decision": "approved",
       "comment": "",
       "detail": "14 requirements approved; 0 excluded; 1 conflict(s) resolved"
@@ -1820,7 +1822,7 @@
   "honesty": [
     "Jira initiative COM-1: Jira REST API v3 export pulled live from GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export) - synthetic test issues; no live Jira call was made",
     "Jira epic COM-10: Jira REST API v3 export pulled live from GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export) - synthetic test issues; no live Jira call was made",
-    "Codebase sri465inno/uc-agentic-quality-engineering@demo/commission-engine (df5203e): Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/commission-engine (df5203e) at 2026-10-02T03:54:15.412Z",
+    "Codebase sri465inno/uc-agentic-quality-engineering@demo/commission-engine (df5203e): Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/commission-engine (df5203e) at 2026-10-02T04:13:54.623Z",
     "Execution: 14 automated cases really executed by Playwright 1.63.0 (headless Chromium, JSON reporter) against Aurora commission engine, bundled copy of branch demo/commission-engine (samples/commission-engine/baseline) (demo/commission-engine); 1 manual case(s) designed but not executed.",
     "Normalisation, delta classification, coverage, pass/fail and defect raising are computed in code, not by a model."
   ]

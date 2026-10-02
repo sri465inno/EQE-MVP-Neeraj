@@ -106,7 +106,7 @@ function buildLeadReport(cycle) {
   return {
     title: `QE lead report - ${cycle.name}`, cycleId: cycle.id, cycleType: cycle.type, preparedBy: 'Agentic QE Platform (QE lead report, computed from the cycle)',
     generatedAt: r.generatedAt, recommendation: rec, kpis, summary, inputs, approach, artifacts, risks, nextSteps,
-    coverageNote: r.coverage?.attributes ? `${r.coverage.attributes.exercised} of ${r.coverage.attributes.driverCount} commission-driving attributes (out of ${r.coverage.attributes.attributeCount} reservation attributes) are varied by at least one test.` : null,
+    coverageNote: r.coverage?.attributes ? `${r.coverage.attributes.exercised} of ${r.coverage.attributes.driverCount} ${r.platform?.driversLabel || 'commission-driving attributes'} (out of ${r.coverage.attributes.attributeCount} ${r.platform?.modelLabel || 'reservation'} attributes) are varied by at least one test.` : null,
     signoff: r.approvals.map((x) => ({ gate: x.gate, decision: x.decision, by: x.by, at: x.at, detail: x.detail })),
   };
 }

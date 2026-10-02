@@ -9,7 +9,7 @@ CYC-5 · incremental cycle
 | Regression testing | 17 | 19 | 18 | 94.4% | 1 | 88.2% |
 
 ## 1. Summary
-- Incremental cycle for Travel-advisor commission calculated from reservation attributes on build demo/commission-engine-v2, 2026-10-02 03:54 UTC.
+- Incremental cycle for Travel-advisor commission calculated from reservation attributes on build demo/commission-engine-v2, 2026-10-02 04:13 UTC.
 - Type of testing: Regression testing. The full pack: every functional, screen and non-functional case, so nothing that worked before has broken.
 - We took 2 inputs (Jira epic COM-20, Codebase sri465inno/uc-agentic-quality-engineering@demo/commission-engine-v2 (6ccd807)) and produced 17 requirements, 19 test cases and 16 automated scripts.
 - We ran 18 automated tests for real: 17 passed, 1 failed (pass rate 94.4%). 1 manual test still to be run by hand.
@@ -25,11 +25,11 @@ CYC-5 · incremental cycle
 ## 3. How we ran the cycle
 1. Read 23 statements from the inputs and lined them up into 14 requirement groups: 2 agreed by every source, 1 only in Jira, 11 only in the code, 0 in conflict.
 2. The review agent read the inputs first and suggested 15 addition(s), 3 missing piece(s) and 0 conflict(s) for the reviewer (8 high severity). It approved nothing.
-3. Priya Shah reviewed and approved the requirement set on 2026-10-02 03:54 UTC.
+3. Priya Shah reviewed and approved the requirement set on 2026-10-02 04:13 UTC.
 4. Compared every statement with baseline BL-4 v1: 10 unchanged · 1 enhanced · 3 new. Changed: REQ-008 "Commission per reservation is capped at USD 500." → "Commission per reservation is capped at USD 750.".
 5. Regression testing steered the design: Re-runs every case carried over from the baseline alongside the new and re-designed ones. Result: 19 case(s) in this run (14 reused, 1 re-designed, 4 new).
 6. Derived 17 business rules (each quoting its source), designed 19 test cases (18 functional, 1 non-functional) and generated 16 Playwright scripts.
-7. Sam Lee approved the merge into the baseline on 2026-10-02 03:54 UTC.
+7. Sam Lee approved the merge into the baseline on 2026-10-02 04:13 UTC.
 8. Executed the automated suite with Playwright 1.63.0 (headless Chromium, JSON reporter) against Aurora commission engine, bundled copy of branch demo/commission-engine-v2 (samples/commission-engine/v2); defects were raised only for tests that actually failed.
 
 ## 4. Artifacts produced
@@ -68,7 +68,7 @@ _11 of 11 commission-driving attributes (out of 1000 reservation attributes) are
 ## 7. Sign-off
 | Gate | Decision | By | When | Detail |
 |---|---|---|---|---|
-| Requirement set review | approved | Priya Shah | 2026-10-02 03:54 UTC | 14 requirements approved; 0 excluded; 0 conflict(s) resolved |
-| Merge into baseline | approved | Sam Lee | 2026-10-02 03:54 UTC | 4 requirements, 5 test cases, 4 scripts merged: BL-4 v1 -> v2 |
+| Requirement set review | approved | Priya Shah | 2026-10-02 04:13 UTC | 14 requirements approved; 0 excluded; 0 conflict(s) resolved |
+| Merge into baseline | approved | Sam Lee | 2026-10-02 04:13 UTC | 4 requirements, 5 test cases, 4 scripts merged: BL-4 v1 -> v2 |
 
-_Agentic QE Platform (QE lead report, computed from the cycle) · generated 2026-10-02 03:54 UTC. Every figure comes from the persisted cycle; nothing is estimated._
+_Agentic QE Platform (QE lead report, computed from the cycle) · generated 2026-10-02 04:13 UTC. Every figure comes from the persisted cycle; nothing is estimated._

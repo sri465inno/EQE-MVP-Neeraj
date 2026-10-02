@@ -8,6 +8,7 @@ const { loadCodebaseFixture } = require('../src/connectors/codebase');
 const { issueRole, statementsFromIssue, statementsFromCodebase } = require('../src/extract');
 const { FLOWS } = require('../scripts/make-demo-inputs');
 const { domainOf } = require('../src/agents/domains');
+const { getTestingType } = require('../src/testing-types');
 const { tmpDir } = require('./helpers');
 
 const HOTEL = 'demo/hotel-booking-platform';
@@ -88,4 +89,13 @@ test('meta lists the hotel booking example as Flow 1 and keeps the commission sa
     assert.deepEqual(commission.samples, meta.samples);
     assert.equal(meta.samples.incrementalBranch, 'demo/commission-engine-v2');
   } finally { server.close(); }
+});
+
+test('hotel cycles describe the hotel journeys and capability, commission cycles keep their wording', () => {
+  const e2e = getTestingType('e2e', domainOf(HOTEL).id);
+  assert.match(e2e.focus, /search.*confirmation e-mail/);
+  assert.doesNotMatch(`${e2e.focus} ${e2e.baseline} ${Object.values(e2e.agents).join(' ')}`, /advisor|statement|screenshot of each/);
+  assert.match(getTestingType('e2e').agents.scripts, /statement page/);
+  assert.match(domainOf(HOTEL).capability, /hotel booking/i);
+  assert.match(domainOf('demo/commission-engine').capability, /commission/);
 });

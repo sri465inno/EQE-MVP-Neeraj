@@ -1,6 +1,6 @@
 {
   "title": "Agentic QE Platform - MVP - Cycle report",
-  "generatedAt": "2026-10-02T03:54:14.865Z",
+  "generatedAt": "2026-10-02T04:13:54.543Z",
   "cycle": {
     "id": "CYC-3",
     "name": "Hotel booking baseline · End-to-end",
@@ -8,8 +8,8 @@
     "testingType": "e2e",
     "testingTypeName": "End-to-end testing",
     "status": "completed",
-    "createdAt": "2026-10-02T03:54:06.239Z",
-    "completedAt": "2026-10-02T03:54:14.848Z",
+    "createdAt": "2026-10-02T04:13:46.477Z",
+    "completedAt": "2026-10-02T04:13:54.529Z",
     "baselineId": "BL-3",
     "baselineVersionAtStart": null,
     "baselineVersionAfter": 1,
@@ -89,7 +89,9 @@
       "UI designs (Figma)",
       "Policy and contract documents (e.g. commission agreements)"
     ],
-    "capability": "Travel-advisor commission calculated from reservation attributes"
+    "capability": "Guest hotel booking from search to confirmation (AQPI-1)",
+    "modelLabel": "booking",
+    "driversLabel": "booking-driving attributes"
   },
   "testing": {
     "id": "e2e",
@@ -97,8 +99,8 @@
       "e2e"
     ],
     "name": "End-to-end testing",
-    "focus": "The travel advisor's experience: store a reservation, open the commission statement in the browser and check every line and the total they see.",
-    "approach": "Designs one browser journey per money rule plus the statement screen check, and runs them in a real browser with screenshots.",
+    "focus": "The guest's booking journey through the six services: search, hotel details, offers, cart, payment, reservation and the confirmation e-mail.",
+    "approach": "Designs one API journey per guest flow in the inputs and runs it against the six hotel services, keeping every request and response as evidence. The services have no browser screen, so no screenshots are taken.",
     "selection": {
       "testingType": "e2e",
       "name": "End-to-end testing",
@@ -245,7 +247,7 @@
         {
           "kind": "no-ui-requirement",
           "severity": "medium",
-          "message": "No input describes the advisor screen, so the journeys check the statement page the codebase ships without a stated requirement for it."
+          "message": "The hotel services have no browser screen, so the journeys run through the service APIs; screen checks such as keyboard and focus order stay manual."
         }
       ]
     }
@@ -4671,7 +4673,7 @@
       "summary": "AQPI-1 Intelligent Hotel Shopping and Reservation Experience: reactive Spring Boot microservices",
       "statements": 7,
       "provenance": "github",
-      "provenanceLabel": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef) at 2026-10-02T03:54:05.425Z",
+      "provenanceLabel": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef) at 2026-10-02T04:13:45.754Z",
       "files": [
         "README.md",
         "TRACEABILITY.md",
@@ -6391,24 +6393,24 @@
   "execution": {
     "executed": true,
     "quarantined": "not measured",
-    "durationMs": 4552,
+    "durationMs": 4424,
     "tool": "Playwright 1.63.0 (headless Chromium, JSON reporter)",
-    "command": "npx playwright test --config ../../../../../tmp/aqe-demo-UCbj9q/runs/CYC-3/playwright.config.js",
+    "command": "npx playwright test --config ../../../../../tmp/aqe-demo-RmcTqM/runs/CYC-3/playwright.config.js",
     "sut": {
       "build": "demo/hotel-booking-platform",
-      "url": "http://127.0.0.1:37587",
+      "url": "http://127.0.0.1:42769",
       "services": {
-        "hotel-service": "http://127.0.0.1:42251",
-        "offer-service": "http://127.0.0.1:41549",
-        "notification-service": "http://127.0.0.1:35329",
-        "search-service": "http://127.0.0.1:37587",
-        "cart-service": "http://127.0.0.1:43167",
-        "reservation-service": "http://127.0.0.1:36243"
+        "hotel-service": "http://127.0.0.1:35475",
+        "offer-service": "http://127.0.0.1:41505",
+        "notification-service": "http://127.0.0.1:33901",
+        "search-service": "http://127.0.0.1:42769",
+        "cart-service": "http://127.0.0.1:41965",
+        "reservation-service": "http://127.0.0.1:40811"
       },
       "name": "Hotel booking platform, six Spring Boot services built from hotel-booking-platform/ (branch demo/hotel-booking-platform)"
     },
-    "startedAt": "2026-10-02T03:54:10.280Z",
-    "finishedAt": "2026-10-02T03:54:14.832Z",
+    "startedAt": "2026-10-02T04:13:50.088Z",
+    "finishedAt": "2026-10-02T04:13:54.512Z",
     "summary": {
       "total": 8,
       "executed": 8,
@@ -6416,7 +6418,7 @@
       "failed": 0,
       "skipped": 0,
       "notRun": 0,
-      "durationMs": 1569,
+      "durationMs": 1500,
       "passRate": 100
     },
     "results": [
@@ -6425,7 +6427,7 @@
         "requirementId": "REQ-001",
         "name": "Guest books a pay-at-hotel room with breakfast from search to confirmation e-mail",
         "status": "passed",
-        "duration": 1083,
+        "duration": 1028,
         "reason": null
       },
       {
@@ -6433,7 +6435,7 @@
         "requirementId": "REQ-001",
         "name": "Guest books a prepaid non-refundable room in Paris and pays now",
         "status": "passed",
-        "duration": 109,
+        "duration": 102,
         "reason": null
       },
       {
@@ -6441,7 +6443,7 @@
         "requirementId": "REQ-002",
         "name": "A sold-out hotel is shown as unavailable and cannot be put in a cart",
         "status": "passed",
-        "duration": 69,
+        "duration": 68,
         "reason": null
       },
       {
@@ -6449,7 +6451,7 @@
         "requirementId": "REQ-004",
         "name": "An unavailable extra is refused and the room still books",
         "status": "passed",
-        "duration": 82,
+        "duration": 72,
         "reason": null
       },
       {
@@ -6457,7 +6459,7 @@
         "requirementId": "REQ-005",
         "name": "A double-clicked Book button creates one reservation and one payment",
         "status": "passed",
-        "duration": 58,
+        "duration": 64,
         "reason": null
       },
       {
@@ -6465,7 +6467,7 @@
         "requirementId": "REQ-006",
         "name": "The confirmation number can be looked up again after booking",
         "status": "passed",
-        "duration": 57,
+        "duration": 59,
         "reason": null
       },
       {
@@ -6473,7 +6475,7 @@
         "requirementId": "REQ-007",
         "name": "The guest sees the booking outcome and one confirmation e-mail is created",
         "status": "passed",
-        "duration": 55,
+        "duration": 52,
         "reason": null
       },
       {
@@ -6481,7 +6483,7 @@
         "requirementId": "REQ-051",
         "name": "An unavailable extra is refused and the room still books",
         "status": "passed",
-        "duration": 56,
+        "duration": 55,
         "reason": null
       }
     ]
@@ -7781,7 +7783,7 @@
     {
       "gate": "Requirement set review",
       "by": "Priya Shah",
-      "at": "2026-10-02T03:54:06.246Z",
+      "at": "2026-10-02T04:13:46.483Z",
       "decision": "approved",
       "comment": "",
       "detail": "128 requirements approved; 0 excluded; 0 conflict(s) resolved"
@@ -7794,7 +7796,7 @@
   "honesty": [
     "Jira initiative AQPI-1: Jira REST API v3 export pulled live from GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export) - synthetic test issues; no live Jira call was made",
     "Jira epic AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27: Jira REST API v3 export pulled live from GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export) - synthetic test issues; no live Jira call was made",
-    "Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef): Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef) at 2026-10-02T03:54:05.425Z",
+    "Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef): Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef) at 2026-10-02T04:13:45.754Z",
     "Execution: 8 automated cases really executed by Playwright 1.63.0 (headless Chromium, JSON reporter) against Hotel booking platform, six Spring Boot services built from hotel-booking-platform/ (branch demo/hotel-booking-platform) (demo/hotel-booking-platform); 0 manual case(s) designed but not executed.",
     "Normalisation, delta classification, coverage, pass/fail and defect raising are computed in code, not by a model."
   ]

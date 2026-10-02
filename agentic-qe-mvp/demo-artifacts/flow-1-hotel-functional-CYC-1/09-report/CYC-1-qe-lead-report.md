@@ -9,7 +9,7 @@ CYC-1 · baseline cycle
 | Functional testing | 128 | 132 | 74 | 100% | 0 | 45.3% |
 
 ## 1. Summary
-- Baseline cycle for Travel-advisor commission calculated from reservation attributes on build demo/hotel-booking-platform, 2026-10-02 03:53 UTC.
+- Baseline cycle for Guest hotel booking from search to confirmation (AQPI-1) on build demo/hotel-booking-platform, 2026-10-02 04:13 UTC.
 - Type of testing: Functional testing. Every business rule and its boundaries, checked through the service API.
 - We took 3 inputs (Jira initiative AQPI-1, Jira epic AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27, Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef)) and produced 128 requirements, 132 test cases and 58 automated scripts.
 - We ran 74 automated tests for real: 74 passed, 0 failed (pass rate 100%). 58 manual tests still to be run by hand.
@@ -25,7 +25,7 @@ CYC-1 · baseline cycle
 ## 3. How we ran the cycle
 1. Read 152 statements from the inputs and lined them up into 128 requirement groups: 0 agreed by every source, 121 only in Jira, 7 only in the code, 0 in conflict.
 2. The review agent read the inputs first and suggested 7 addition(s), 184 missing piece(s) and 0 conflict(s) for the reviewer (8 high severity). It approved nothing.
-3. Priya Shah reviewed and approved the requirement set on 2026-10-02 03:53 UTC.
+3. Priya Shah reviewed and approved the requirement set on 2026-10-02 04:13 UTC.
 4. Functional testing steered the design: Designs every functional test case and Playwright script from the inputs and runs them all. Result: 132 case(s) in this run (0 reused, 0 re-designed, 132 new).
 5. Derived 128 business rules (each quoting its source), designed 132 test cases (128 functional, 4 non-functional) and generated 58 Playwright scripts.
 6. Executed the automated suite with Playwright 1.63.0 (headless Chromium, JSON reporter) against Hotel booking platform, six Spring Boot services built from hotel-booking-platform/ (branch demo/hotel-booking-platform); defects were raised only for tests that actually failed.
@@ -58,7 +58,7 @@ CYC-1 · baseline cycle
 - 70 requirements not yet verified by a passing test: REQ-001 (not covered); REQ-002 (not covered); REQ-004 (not covered); REQ-005 (not covered); REQ-006 (not covered); REQ-007 (not covered); REQ-008 (designed only (manual)); REQ-009 (designed only (manual)); REQ-010 (designed only (manual)); REQ-011 (designed only (manual)); REQ-012 (designed only (manual)); REQ-017 (designed only (manual)); REQ-018 (designed only (manual)); REQ-019 (designed only (manual)); REQ-022 (designed only (manual)); REQ-023 (not covered); REQ-024 (designed only (manual)); REQ-026 (designed only (manual)); REQ-035 (designed only (manual)); REQ-038 (designed only (manual)); REQ-039 (designed only (manual)); REQ-041 (designed only (manual)); REQ-044 (designed only (manual)); REQ-045 (designed only (manual)); REQ-046 (designed only (manual)); REQ-047 (designed only (manual)); REQ-051 (not covered); REQ-052 (designed only (manual)); REQ-056 (designed only (manual)); REQ-057 (designed only (manual)); REQ-058 (designed only (manual)); REQ-059 (designed only (manual)); REQ-060 (designed only (manual)); REQ-063 (designed only (manual)); REQ-065 (designed only (manual)); REQ-066 (designed only (manual)); REQ-067 (designed only (manual)); REQ-068 (designed only (manual)); REQ-072 (designed only (manual)); REQ-073 (designed only (manual)); REQ-076 (designed only (manual)); REQ-079 (designed only (manual)); REQ-080 (designed only (manual)); REQ-084 (designed only (manual)); REQ-085 (designed only (manual)); REQ-086 (designed only (manual)); REQ-092 (not covered); REQ-093 (designed only (manual)); REQ-095 (designed only (manual)); REQ-097 (designed only (manual)); REQ-098 (designed only (manual)); REQ-099 (designed only (manual)); REQ-101 (designed only (manual)); REQ-102 (designed only (manual)); REQ-103 (designed only (manual)); REQ-104 (designed only (manual)); REQ-105 (designed only (manual)); REQ-107 (designed only (manual)); REQ-109 (designed only (manual)); REQ-110 (not covered); REQ-111 (designed only (manual)); REQ-112 (designed only (manual)); REQ-113 (designed only (manual)); REQ-114 (not covered); REQ-115 (designed only (manual)); REQ-116 (designed only (manual)); REQ-118 (not covered); REQ-119 (designed only (manual)); REQ-120 (designed only (manual)); REQ-121 (designed only (manual)).
 - 128 requirement groups come from a single source only; the product owner should confirm them.
 
-_13 of 15 commission-driving attributes (out of 21 reservation attributes) are varied by at least one test._
+_13 of 15 booking-driving attributes (out of 21 booking attributes) are varied by at least one test._
 
 ## 6. Recommendation and next steps
 **Conditional go.** No release-blocking defects, but there are open items to accept or close.
@@ -70,6 +70,6 @@ _13 of 15 commission-driving attributes (out of 21 reservation attributes) are v
 ## 7. Sign-off
 | Gate | Decision | By | When | Detail |
 |---|---|---|---|---|
-| Requirement set review | approved | Priya Shah | 2026-10-02 03:53 UTC | 128 requirements approved; 0 excluded; 0 conflict(s) resolved |
+| Requirement set review | approved | Priya Shah | 2026-10-02 04:13 UTC | 128 requirements approved; 0 excluded; 0 conflict(s) resolved |
 
-_Agentic QE Platform (QE lead report, computed from the cycle) · generated 2026-10-02 03:53 UTC. Every figure comes from the persisted cycle; nothing is estimated._
+_Agentic QE Platform (QE lead report, computed from the cycle) · generated 2026-10-02 04:13 UTC. Every figure comes from the persisted cycle; nothing is estimated._

@@ -5,10 +5,10 @@
       "/home/ubuntu/repos/uc-agentic-quality-engineering/agentic-qe-mvp/node_modules/@playwright/test/cli.js",
       "test",
       "--config",
-      "/tmp/aqe-demo-UCbj9q/runs/CYC-4/playwright.config.js"
+      "/tmp/aqe-demo-RmcTqM/runs/CYC-4/playwright.config.js"
     ],
-    "configFile": "/tmp/aqe-demo-UCbj9q/runs/CYC-4/playwright.config.js",
-    "rootDir": "/tmp/aqe-demo-UCbj9q/runs/CYC-4/specs",
+    "configFile": "/tmp/aqe-demo-RmcTqM/runs/CYC-4/playwright.config.js",
+    "rootDir": "/tmp/aqe-demo-RmcTqM/runs/CYC-4/specs",
     "failOnFlakyTests": false,
     "forbidOnly": false,
     "fullyParallel": false,
@@ -24,7 +24,7 @@
     "preserveOutput": "always",
     "projects": [
       {
-        "outputDir": "/tmp/aqe-demo-UCbj9q/runs/CYC-4/test-results",
+        "outputDir": "/tmp/aqe-demo-RmcTqM/runs/CYC-4/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -32,7 +32,7 @@
         },
         "id": "",
         "name": "",
-        "testDir": "/tmp/aqe-demo-UCbj9q/runs/CYC-4/specs",
+        "testDir": "/tmp/aqe-demo-RmcTqM/runs/CYC-4/specs",
         "testIgnore": [],
         "testMatch": [
           "**/*.spec.js"
@@ -45,7 +45,7 @@
       [
         "json",
         {
-          "outputFile": "/tmp/aqe-demo-UCbj9q/runs/CYC-4/playwright-report.json"
+          "outputFile": "/tmp/aqe-demo-RmcTqM/runs/CYC-4/playwright-report.json"
         }
       ]
     ],
@@ -84,12 +84,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 37,
+                  "duration": 33,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-02T03:54:16.955Z",
+                  "startTime": "2026-10-02T04:13:56.075Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -137,12 +137,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 226,
+                  "duration": 228,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-02T03:54:16.930Z",
+                  "startTime": "2026-10-02T04:13:56.076Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -190,18 +190,18 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 51,
+                  "duration": 55,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-02T03:54:17.026Z",
+                  "startTime": "2026-10-02T04:13:56.142Z",
                   "annotations": [],
                   "attachments": [
                     {
                       "name": "latency samples (ms)",
                       "contentType": "application/json",
-                      "body": "eyJzYW1wbGVzIjpbMSwxLDEsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDMsMywzXSwicDk1IjozfQ=="
+                      "body": "eyJzYW1wbGVzIjpbMSwxLDEsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwzLDMsMywzXSwicDk1IjozfQ=="
                     }
                   ]
                 }
@@ -238,12 +238,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 8,
+                  "duration": 9,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-02T03:54:17.086Z",
+                  "startTime": "2026-10-02T04:13:56.206Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -291,7 +291,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-02T03:54:17.102Z",
+                  "startTime": "2026-10-02T04:13:56.222Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -339,7 +339,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-02T03:54:17.117Z",
+                  "startTime": "2026-10-02T04:13:56.238Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -382,12 +382,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "failed",
-                  "duration": 6,
+                  "duration": 11,
                   "error": {
                     "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m92\u001b[39m\nReceived: \u001b[31m80\u001b[39m",
-                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m92\u001b[39m\nReceived: \u001b[31m80\u001b[39m\n    at /tmp/aqe-demo-UCbj9q/runs/CYC-4/specs/br-007-long-stay-bonus.spec.js:58:29",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m92\u001b[39m\nReceived: \u001b[31m80\u001b[39m\n    at /tmp/aqe-demo-RmcTqM/runs/CYC-4/specs/br-007-long-stay-bonus.spec.js:58:29",
                     "location": {
-                      "file": "/tmp/aqe-demo-UCbj9q/runs/CYC-4/specs/br-007-long-stay-bonus.spec.js",
+                      "file": "/tmp/aqe-demo-RmcTqM/runs/CYC-4/specs/br-007-long-stay-bonus.spec.js",
                       "column": 29,
                       "line": 58
                     },
@@ -396,17 +396,17 @@
                   "errors": [
                     {
                       "location": {
-                        "file": "/tmp/aqe-demo-UCbj9q/runs/CYC-4/specs/br-007-long-stay-bonus.spec.js",
+                        "file": "/tmp/aqe-demo-RmcTqM/runs/CYC-4/specs/br-007-long-stay-bonus.spec.js",
                         "column": 29,
                         "line": 58
                       },
-                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m92\u001b[39m\nReceived: \u001b[31m80\u001b[39m\n\n  56 |   const r = await quote(request, testInfo, {\"reservation.status\":\"CONFIRMED\",\"channel.bookingChannel\":\"DIRECT\",\"stay.nights\":7,\"rate.planCategory\":\"BAR\",\"room.roomCount\":1,\"payment.loyaltyPointsRedemption\":false,\"revenue.totalAmount\":1000,\"revenue.taxAmount\":120,\"revenue.resortFeeAmount\":30,\"revenue.ancillaryAmount\":50});\n  57 |   expect(r.status).toBe(200);\n> 58 |   expect(r.body.commission).toBe(92);\n     |                             ^\n  59 | });\n  60 |\n  61 | test(\"TC-F-007 A stay of 6 nights earns no long-stay bonus\", async ({ request }, testInfo) => {\n    at /tmp/aqe-demo-UCbj9q/runs/CYC-4/specs/br-007-long-stay-bonus.spec.js:58:29"
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m92\u001b[39m\nReceived: \u001b[31m80\u001b[39m\n\n  56 |   const r = await quote(request, testInfo, {\"reservation.status\":\"CONFIRMED\",\"channel.bookingChannel\":\"DIRECT\",\"stay.nights\":7,\"rate.planCategory\":\"BAR\",\"room.roomCount\":1,\"payment.loyaltyPointsRedemption\":false,\"revenue.totalAmount\":1000,\"revenue.taxAmount\":120,\"revenue.resortFeeAmount\":30,\"revenue.ancillaryAmount\":50});\n  57 |   expect(r.status).toBe(200);\n> 58 |   expect(r.body.commission).toBe(92);\n     |                             ^\n  59 | });\n  60 |\n  61 | test(\"TC-F-007 A stay of 6 nights earns no long-stay bonus\", async ({ request }, testInfo) => {\n    at /tmp/aqe-demo-RmcTqM/runs/CYC-4/specs/br-007-long-stay-bonus.spec.js:58:29"
                     }
                   ],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-02T03:54:17.135Z",
+                  "startTime": "2026-10-02T04:13:56.255Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -417,11 +417,11 @@
                     {
                       "name": "error-context",
                       "contentType": "text/markdown",
-                      "path": "/tmp/aqe-demo-UCbj9q/runs/CYC-4/test-results/br-007-long-stay-bonus-TC--13b3d-rns-the-1-5-long-stay-bonus/error-context.md"
+                      "path": "/tmp/aqe-demo-RmcTqM/runs/CYC-4/test-results/br-007-long-stay-bonus-TC--13b3d-rns-the-1-5-long-stay-bonus/error-context.md"
                     }
                   ],
                   "errorLocation": {
-                    "file": "/tmp/aqe-demo-UCbj9q/runs/CYC-4/specs/br-007-long-stay-bonus.spec.js",
+                    "file": "/tmp/aqe-demo-RmcTqM/runs/CYC-4/specs/br-007-long-stay-bonus.spec.js",
                     "column": 29,
                     "line": 58
                   }
@@ -451,12 +451,12 @@
                   "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 22,
+                  "duration": 21,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-02T03:54:17.426Z",
+                  "startTime": "2026-10-02T04:13:56.549Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -499,12 +499,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 8,
+                  "duration": 10,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-02T03:54:17.230Z",
+                  "startTime": "2026-10-02T04:13:56.382Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -547,12 +547,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 12,
+                  "duration": 9,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-02T03:54:17.248Z",
+                  "startTime": "2026-10-02T04:13:56.401Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -595,12 +595,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 7,
+                  "duration": 10,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-02T03:54:17.267Z",
+                  "startTime": "2026-10-02T04:13:56.420Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -648,7 +648,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-02T03:54:17.283Z",
+                  "startTime": "2026-10-02T04:13:56.437Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -696,12 +696,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 7,
+                  "duration": 10,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-02T03:54:17.303Z",
+                  "startTime": "2026-10-02T04:13:56.453Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -749,7 +749,7 @@
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-02T03:54:17.322Z",
+                  "startTime": "2026-10-02T04:13:56.470Z",
                   "annotations": [],
                   "attachments": [
                     {
@@ -773,8 +773,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-10-02T03:54:16.526Z",
-    "duration": 964.7850000000001,
+    "startTime": "2026-10-02T04:13:55.684Z",
+    "duration": 926.383,
     "expected": 13,
     "skipped": 0,
     "unexpected": 1,

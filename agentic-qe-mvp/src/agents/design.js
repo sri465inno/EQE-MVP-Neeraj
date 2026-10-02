@@ -263,11 +263,11 @@ function designAgents(requirements, { cycle, counters, previous = null, skills =
     testCases.push(...reqCases.map(({ code, ...rest }) => rest));
     if (scriptFile) writeScript(req, rule, scriptFile, reqCases.filter((t) => t.code), prevScripts.get(req.id));
   }
-  return { rules, testCases, scripts, affected: [...affected], selection: selectionSummary(tt, requirements, testCases, previous) };
+  return { rules, testCases, scripts, affected: [...affected], selection: selectionSummary(tt, requirements, testCases, previous, dom) };
 }
 
 /** What the type of testing selected, reused and left out, and the gaps it leaves. */
-function selectionSummary(tt, requirements, testCases, previous) {
+function selectionSummary(tt, requirements, testCases, previous, dom = DOMAINS.commission) {
   const run = testCases.filter((t) => t.inRun);
   const coveredInRun = new Set(run.map((t) => t.requirementId));
   const outOfScope = requirements.filter((r) => !coveredInRun.has(r.id)).map((r) => r.id);
@@ -278,7 +278,7 @@ function selectionSummary(tt, requirements, testCases, previous) {
   }
   if (tt.ids.includes('e2e') && !run.some((t) => t.suite === 'ui')) {
     gaps.push({ kind: 'no-ui-requirement', severity: 'medium',
-      message: 'No input describes the advisor screen, so the journeys check the statement page the codebase ships without a stated requirement for it.' });
+      message: dom.gaps.e2eNoUi });
   }
   if (!run.length && !tt.ids.includes('performance')) gaps.push({ kind: 'nothing-to-run', severity: 'high', message: `The inputs give ${tt.name.toLowerCase()} nothing to run.` });
   return {

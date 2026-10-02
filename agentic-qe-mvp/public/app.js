@@ -81,9 +81,10 @@ const selectedSkills = () => runState.skills || META.skills.filter((s) => skillF
 const ownes = (s) => Object.entries(s.delivers).map(([a, keys]) => `${a}: ${keys.join(', ')}`).join(' · ');
 
 /** A single type of testing, or several ticked together (persisted as ids joined with "+"). */
-function testingTypeOf(value) {
+function testingTypeOf(value, domainId) {
   const ids = String(value || META.defaultTestingType).split('+');
-  const parts = META.testingTypes.filter((t) => ids.includes(t.id));
+  const inDomain = (t) => { const o = t.domains?.[domainId]; return o ? { ...t, ...o, agents: { ...t.agents, ...o.agents } } : t; };
+  const parts = META.testingTypes.filter((t) => ids.includes(t.id)).map(inDomain);
   if (!parts.length) return META.testingTypes.find((t) => t.id === META.defaultTestingType);
   if (parts.length === 1) return parts[0];
   const each = (f) => parts.map((p) => `${p.short}: ${p[f]}`).join(' ');
@@ -294,6 +295,7 @@ function exampleFor(type) {
   const xs = META.platform.examples || [];
   return type === 'incremental' ? xs.find((e) => e.modes.includes('incremental')) : (xs.find((e) => e.id === runState.example) || xs[0]);
 }
+const exampleIdOf = (c) => c.example || (META.platform.examples || []).find((e) => e.samples.baselineBranch === c.sutBuild || e.samples.incrementalBranch === c.sutBuild)?.id || null;
 const exampleShort = (id) => (META.platform.examples || []).find((e) => e.id === id)?.short || '';
 
 function inputsDropdown(type, slots, active) {
@@ -314,10 +316,10 @@ function inputsDropdown(type, slots, active) {
 <div class="ms-group">The platform also accepts</div>${types.filter((t) => !inFlow.has(t.id) && t.id !== 'data-model').map(item).join('')}`);
 }
 
-function testingTypesDropdown(type) {
+function testingTypesDropdown(type, domainId) {
   const ids = runState.testingTypes;
-  const parts = META.testingTypes.filter((t) => ids.includes(t.id));
-  const body = META.testingTypes.map((t) => checkItem({ cls: 'tt-on', value: t.id, checked: ids.includes(t.id), title: t.name, sub: t.focus })).join('')
+  const parts = META.testingTypes.filter((t) => ids.includes(t.id)).map((t) => testingTypeOf(t.id, domainId));
+  const body = META.testingTypes.map((t) => checkItem({ cls: 'tt-on', value: t.id, checked: ids.includes(t.id), title: t.name, sub: testingTypeOf(t.id, domainId).focus })).join('')
     + '<div class="ms-foot">Tick more than one to combine them in a single run: the agents design, script and run the cases every ticked type needs.</div>';
   return `${checkDropdown('testing', chips(parts.map((p) => p.short)), body)}
 <ul class="tt-how-list">${parts.map((p) => `<li><b>${esc(p.short)}:</b> ${esc(type === 'baseline' ? p.baseline : p.incremental)}</li>`).join('')}</ul>
@@ -372,8 +374,8 @@ async function viewRun(params) {
   const flowNo = type === 'baseline' ? 1 : 2;
   const modeOption = (v, title, text) => `<label class="mode-option"><input type="radio" name="run-type" value="${v}" ${type === v ? 'checked' : ''}><span><b>${title}</b><span class="muted">${text}</span></span></label>`;
   const agents = META.platform.agents;
-  const tt = testingTypeOf(runState.testingTypes.join('+'));
-  const ttParts = META.testingTypes.filter((t) => runState.testingTypes.includes(t.id));
+  const tt = testingTypeOf(runState.testingTypes.join('+'), ex.id);
+  const ttParts = runState.testingTypes.map((id) => testingTypeOf(id, ex.id)).filter((t) => t.id);
   const ra = META.platform.reviewAgent;
 
   $view.innerHTML = `${pendingBanner(cycles)}<div class="run-layout">
@@ -393,7 +395,7 @@ async function viewRun(params) {
   <div class="step-block">
     <h3><span class="step-num">2</span>Type of testing</h3>
     <p class="hint">Steers what the agents design, script and run. The project inputs, this choice, the skills and the flow together decide the artifacts.</p>
-    ${testingTypesDropdown(type)}
+    ${testingTypesDropdown(type, ex.id)}
   </div>
   <div class="step-block">
     <h3><span class="step-num">3</span>Choose what you are bringing</h3>
@@ -549,7 +551,7 @@ async function viewCycle(id, params) {
   try { body = await renderCycleTab(c, tab); } catch (e) { body = `<div class="banner err">${esc(e.message)}</div>`; }
   $view.innerHTML = `<section class="hero small-hero"><div class="eyebrow">${c.type === 'baseline' ? 'Flow 1 · Baseline cycle' : 'Flow 2 · Incremental cycle'}</div>
 <h1>${esc(c.name)} <span class="muted small">${esc(c.id)}</span> ${statusPill(c.status)}</h1>
-<div class="facts"><div><b>${esc(testingTypeOf(c.testingType).name)}</b>type of testing</div><div><b>${done}/${c.phases.length}</b>phases done</div>${c.delta ? `<div><b>${esc(c.delta.summary)}</b>delta</div>` : ''}${ex ? `<div><b>${ex.passed}/${ex.executed}</b>passed</div><div><b>${ex.passRate}%</b>pass rate</div>` : ''}${c.artifacts && c.artifacts.defects ? `<div><b>${c.artifacts.defects.length}</b>defects</div>` : ''}</div>
+<div class="facts"><div><b>${esc(testingTypeOf(c.testingType, exampleIdOf(c)).name)}</b>type of testing</div><div><b>${done}/${c.phases.length}</b>phases done</div>${c.delta ? `<div><b>${esc(c.delta.summary)}</b>delta</div>` : ''}${ex ? `<div><b>${ex.passed}/${ex.executed}</b>passed</div><div><b>${ex.passRate}%</b>pass rate</div>` : ''}${c.artifacts && c.artifacts.defects ? `<div><b>${c.artifacts.defects.length}</b>defects</div>` : ''}</div>
 <div class="muted small">Baseline: ${esc(c.baselineId || '(created when this cycle completes)')}${c.baselineVersionAtStart ? ` v${c.baselineVersionAtStart} at start` : ''}${c.baselineVersionAfter ? ` → v${c.baselineVersionAfter}` : ''} · SUT build <code>${esc(c.sutBuild)}</code> · created ${fmtTime(c.createdAt)}</div></section>
 ${c.error ? `<div class="banner err">Failed: ${esc(c.error)} <button class="btn secondary" id="resume">Resume</button></div>` : ''}
 ${c.status === 'interrupted' ? `<div class="banner">This cycle was interrupted by a restart. <button class="btn secondary" id="resume">Resume</button></div>` : ''}
@@ -586,7 +588,7 @@ function artifactsView(c) {
 
 function inputsTable(c) {
   return table(['Input', 'Reference', 'Statements', 'Provenance', 'Files / detail'], c.inputs.map((i) => [esc(i.label), `${esc(i.ref)}${i.summary ? `<br><span class="muted">${esc(i.summary)}</span>` : ''}${i.children && i.children.length ? `<br><span class="muted small">child issues: ${esc(i.children.join(', '))}</span>` : ''}`,
-    `${i.statementCount}${i.dataModel ? `<br><span class="small muted">data model: ${esc(i.dataModel.attributeCount)} attributes, ${esc(i.dataModel.drivers.length)} commission drivers</span>` : ''}`, `${provPill(i.provenance)}<br><span class="small">${esc(i.provenance.label)}</span>`, `<span class="small">${esc((i.provenance.files || []).join(', '))}</span>${i.compare ? `<br><span class="small">compare vs ${esc(i.compare.baseBranch || (i.compare.base ? i.compare.base.slice(0, 7) : 'base'))} (${esc(i.compare.status)}): ${esc(i.compare.files.map((f) => `${f.filename} (${f.status})`).join(', '))}</span>` : ''}`]));
+    `${i.statementCount}${i.dataModel ? `<br><span class="small muted">data model: ${esc(i.dataModel.attributeCount)} attributes, ${esc(i.dataModel.drivers.length)} drivers</span>` : ''}`, `${provPill(i.provenance)}<br><span class="small">${esc(i.provenance.label)}</span>`, `<span class="small">${esc((i.provenance.files || []).join(', '))}</span>${i.compare ? `<br><span class="small">compare vs ${esc(i.compare.baseBranch || (i.compare.base ? i.compare.base.slice(0, 7) : 'base'))} (${esc(i.compare.status)}): ${esc(i.compare.files.map((f) => `${f.filename} (${f.status})`).join(', '))}</span>` : ''}`]));
 }
 
 const originCell = (origins) => origins.map((o) => `<div class="quote">"${esc(o.quote)}"</div><div class="small muted">${pill(o.source, o.source === 'jira' ? 'jira-only' : 'code-only')} <a href="${esc(o.url || '#')}" target="_blank" rel="noopener">${esc(o.ref)}${o.line ? `:${o.line}` : ''}</a></div>`).join('');
@@ -909,7 +911,7 @@ async function viewReporting(params) {
   const result = (x) => (x.summary ? `${x.summary.passed}/${x.summary.executed} passed · ${x.summary.passRate}%` : 'not executed');
   const picked = cycles.find((x) => x.id === id);
   const picker = `<section class="panel cycle-picker"><label class="field" for="rep-cycle">Cycle run</label>
-<select id="rep-cycle">${cycles.slice().reverse().map((x) => `<option value="${esc(x.id)}" ${x.id === id ? 'selected' : ''}>${esc(when(x))} · ${esc(x.id)} · ${x.type === 'baseline' ? 'Flow 1 baseline' : 'Flow 2 incremental'} · ${esc(testingTypeOf(x.testingType).short)} · ${esc(result(x))}</option>`).join('')}</select>
+<select id="rep-cycle">${cycles.slice().reverse().map((x) => `<option value="${esc(x.id)}" ${x.id === id ? 'selected' : ''}>${esc(when(x))} · ${esc(x.id)} · ${esc(x.example ? exampleShort(x.example) : '')} ${x.type} · ${esc(testingTypeOf(x.testingType).short)} · ${esc(result(x))}</option>`).join('')}</select>
 <span class="muted small">${cycles.length} completed cycle(s) · run on ${esc(when(picked))}</span></section>`;
   const ex = c.artifacts.execution ? c.artifacts.execution.summary : null;
   const defects = c.artifacts.defects || [];
