@@ -1894,6 +1894,56 @@
             }
           }
         }
+      },
+      {
+        "id": "10007",
+        "self": "https://api.atlassian.com/ex/jira/565eb966-e060-4529-a2df-ce43e25142b9/rest/api/3/issueLink/10007",
+        "type": {
+          "id": "10003",
+          "name": "Relates",
+          "inward": "relates to",
+          "outward": "relates to",
+          "self": "https://api.atlassian.com/ex/jira/565eb966-e060-4529-a2df-ce43e25142b9/rest/api/3/issueLinkType/10003"
+        },
+        "inwardIssue": {
+          "id": "18016",
+          "key": "AQPI-32",
+          "self": "https://api.atlassian.com/ex/jira/565eb966-e060-4529-a2df-ce43e25142b9/rest/api/3/issue/18016",
+          "fields": {
+            "summary": "[Epic 8] Release 2.0 – Booking Rule Changes and Free Cancellation",
+            "status": {
+              "self": "https://api.atlassian.com/ex/jira/565eb966-e060-4529-a2df-ce43e25142b9/rest/api/3/status/10109",
+              "description": "",
+              "iconUrl": "https://tcs-team-ou6drgfr.atlassian.net/images/icons/statuses/generic.png",
+              "name": "To Do",
+              "id": "10109",
+              "statusCategory": {
+                "self": "https://api.atlassian.com/ex/jira/565eb966-e060-4529-a2df-ce43e25142b9/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "To Do"
+              }
+            },
+            "priority": {
+              "self": "https://api.atlassian.com/ex/jira/565eb966-e060-4529-a2df-ce43e25142b9/rest/api/3/priority/3",
+              "iconUrl": "https://tcs-team-ou6drgfr.atlassian.net/images/icons/priorities/medium_new.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://api.atlassian.com/ex/jira/565eb966-e060-4529-a2df-ce43e25142b9/rest/api/3/issuetype/10121",
+              "id": "10121",
+              "description": "Workstreams track a set of related work and activities that work towards a larger deliverable.",
+              "iconUrl": "https://api.atlassian.com/ex/jira/565eb966-e060-4529-a2df-ce43e25142b9/rest/api/2/universal_avatar/view/type/issuetype/avatar/10307?size=medium",
+              "name": "Workstream",
+              "subtask": false,
+              "avatarId": 10307,
+              "entityId": "4838daea-66de-49f0-899b-2b8c77a6cf9d",
+              "hierarchyLevel": 1
+            }
+          }
+        }
       }
     ],
     "duedate": "2026-12-31",
