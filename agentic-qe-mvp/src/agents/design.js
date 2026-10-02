@@ -162,8 +162,8 @@ function caseLabels(type, suite, kind, slot, automated, tt) {
  * Cases the type of testing asks for but the pack lacks are added; cases it does not run stay in the pack with inRun=false.
  */
 function designAgents(requirements, { cycle, counters, previous = null, skills = {}, testingType = cycle.testingType }) {
-  const tt = getTestingType(testingType);
   const dom = domainOf(cycle);
+  const tt = getTestingType(testingType, dom.id);
   const { classify, MONEY_KINDS } = dom;
   const used = (agent) => (skills[agent]?.skills || []).map((x) => x.id);
   counters.caseF = counters.caseF || 0;

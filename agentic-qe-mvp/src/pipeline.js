@@ -9,9 +9,10 @@ const { executeSuite, summarise } = require('./execution');
 const { raiseDefects } = require('./defects');
 const { computeCoverage } = require('./coverage');
 const { DEFAULT_BUILD, BUILDS, ENGINE_DIR } = require('../sut/server');
-const { HOTEL_BRANCH } = require('./agents/domains');
+const { isHotelBranch } = require('./agents/domains');
+const { BRANCHES } = require('./connectors/codebase');
 
-const HOTEL_DICTIONARY = path.join(__dirname, '..', 'fixtures', 'github', 'hotel-booking-platform', 'contents', 'data-dictionary', 'booking-attributes.json.json');
+const hotelDictionary = (branch) => path.join(__dirname, '..', 'fixtures', 'github', BRANCHES[branch].dir, 'contents', 'data-dictionary', 'booking-attributes.json.json');
 const decodeContents = (c) => Buffer.from(c.content.replace(/\n/g, ''), c.encoding || 'base64').toString('utf8');
 const fs = require('fs');
 const { buildCycleReport, collectHandovers } = require('./report');
@@ -80,9 +81,10 @@ class Pipeline {
   dictionaryOf(cycle) {
     const file = path.join(this.store.runDir(cycle.id), DICTIONARY_FILE);
     if (cycle.dataDictionary && fs.existsSync(file)) return { dictionary: JSON.parse(fs.readFileSync(file, 'utf8')), source: cycle.dataDictionary.source || 'codebase input' };
-    if (cycle.sutBuild === HOTEL_BRANCH) {
-      if (!fs.existsSync(HOTEL_DICTIONARY)) throw httpError(409, `Build ${cycle.sutBuild} has no data dictionary, so no test data can be generated for it.`);
-      return { dictionary: JSON.parse(decodeContents(JSON.parse(fs.readFileSync(HOTEL_DICTIONARY, 'utf8')))), source: `data dictionary of build ${cycle.sutBuild}` };
+    if (isHotelBranch(cycle.sutBuild)) {
+      const file = hotelDictionary(cycle.sutBuild);
+      if (!fs.existsSync(file)) throw httpError(409, `Build ${cycle.sutBuild} has no data dictionary, so no test data can be generated for it.`);
+      return { dictionary: JSON.parse(decodeContents(JSON.parse(fs.readFileSync(file, 'utf8')))), source: `data dictionary of build ${cycle.sutBuild}` };
     }
     if (!BUILDS[cycle.sutBuild] && cycle.sutBuild !== undefined && cycle.sutBuild !== null) {
       throw httpError(409, `Build ${cycle.sutBuild} has no data dictionary in its codebase input, so no test data can be generated for it.`);

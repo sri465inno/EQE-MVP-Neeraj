@@ -1,13 +1,19 @@
 'use strict';
 // Starts the hotel booking platform (Java 21 Spring Boot WebFlux, six services) as the system under test.
-// The services run from the jars `mvn install` builds in hotel-booking-platform/, each on a free local port.
+// Release 1.0 runs from the jars `mvn install` builds in hotel-booking-platform/, release 2.0 from the build of branch
+// demo/hotel-booking-platform-v2 (npm run build:hotel-v2); each service gets a free local port.
 const fs = require('fs');
 const net = require('net');
 const path = require('path');
 const { spawn } = require('child_process');
 
 const HOTEL_BRANCH = 'demo/hotel-booking-platform';
-const VERSION = '1.0.0-SNAPSHOT';
+const HOTEL_BRANCH_V2 = 'demo/hotel-booking-platform-v2';
+const HOTEL_BUILDS = {
+  [HOTEL_BRANCH]: { release: '1.0', version: '1.0.0-SNAPSHOT', envVar: 'HOTEL_PLATFORM_DIR', dir: path.join(__dirname, '..', '..', 'hotel-booking-platform'), build: 'npm run build:hotel' },
+  [HOTEL_BRANCH_V2]: { release: '2.0', version: '2.0.0-SNAPSHOT', envVar: 'HOTEL_PLATFORM_V2_DIR', dir: path.join(__dirname, '..', '.hotel-builds', 'hotel-booking-platform-v2'), build: 'npm run build:hotel-v2' },
+};
+const isHotelBranch = (branch) => Object.prototype.hasOwnProperty.call(HOTEL_BUILDS, branch);
 // Start order: a service only starts once the services it calls are known.
 const SERVICES = [
   { name: 'hotel-service', deps: [] },
@@ -18,16 +24,17 @@ const SERVICES = [
   { name: 'reservation-service', deps: ['cart-service', 'hotel-service', 'notification-service'] },
 ];
 
-const platformDir = (env = process.env) => path.resolve(env.HOTEL_PLATFORM_DIR || path.join(__dirname, '..', '..', 'hotel-booking-platform'));
-const jarOf = (dir, name) => path.join(dir, name, 'target', `${name}-${VERSION}-exec.jar`);
+const buildOf = (branch) => HOTEL_BUILDS[branch] || HOTEL_BUILDS[HOTEL_BRANCH];
+const platformDir = (env = process.env, branch = HOTEL_BRANCH) => path.resolve(env[buildOf(branch).envVar] || buildOf(branch).dir);
+const jarOf = (dir, name, branch = HOTEL_BRANCH) => path.join(dir, name, 'target', `${name}-${buildOf(branch).version}-exec.jar`);
 const javaBin = (env = process.env) => (env.JAVA_HOME ? path.join(env.JAVA_HOME, 'bin', 'java') : 'java');
 
 /** Why the hotel services cannot start here, or null when every jar is built. */
-function unavailableReason(env = process.env) {
-  const dir = platformDir(env);
-  const missing = SERVICES.filter((s) => !fs.existsSync(jarOf(dir, s.name))).map((s) => s.name);
+function unavailableReason(env = process.env, branch = HOTEL_BRANCH) {
+  const dir = platformDir(env, branch);
+  const missing = SERVICES.filter((s) => !fs.existsSync(jarOf(dir, s.name, branch))).map((s) => s.name);
   if (!missing.length) return null;
-  return `The hotel booking services are not built (${missing.join(', ')} missing under ${dir}). Build them with "npm run build:hotel" (needs Java 21 and Maven).`;
+  return `The hotel booking services of release ${buildOf(branch).release} are not built (${missing.join(', ')} missing under ${dir}). Build them with "${buildOf(branch).build}" (needs Java 21 and Maven).`;
 }
 
 function freePort() {
@@ -61,17 +68,17 @@ function stop(children) {
 }
 
 /** Starts all six services; resolves with their URLs and a close() that stops them. */
-async function startHotelPlatform({ env = process.env, timeoutMs = 120000 } = {}) {
-  const reason = unavailableReason(env);
+async function startHotelPlatform({ env = process.env, timeoutMs = 120000, branch = HOTEL_BRANCH } = {}) {
+  const reason = unavailableReason(env, branch);
   if (reason) { const err = new Error(reason); err.code = 'SUT_UNAVAILABLE'; throw err; }
-  const dir = platformDir(env);
+  const dir = platformDir(env, branch);
   const urls = {};
   for (const s of SERVICES) urls[s.name] = `http://127.0.0.1:${await freePort()}`;
   const children = [];
   const deadline = Date.now() + timeoutMs;
   try {
     for (const s of SERVICES) {
-      const args = ['-XX:TieredStopAtLevel=1', '-Xss512k', '-Xmx256m', '-jar', jarOf(dir, s.name), `--spring.config.name=${s.name}`,
+      const args = ['-XX:TieredStopAtLevel=1', '-Xss512k', '-Xmx256m', '-jar', jarOf(dir, s.name, branch), `--spring.config.name=${s.name}`,
         `--server.port=${new URL(urls[s.name]).port}`, '--server.address=127.0.0.1', '--spring.main.banner-mode=off',
         ...s.deps.map((d) => `--platform.dependencies.${d}.base-url=${urls[d]}`)];
       let out = '';
@@ -94,13 +101,13 @@ async function startHotelPlatform({ env = process.env, timeoutMs = 120000 } = {}
   }
   return {
     url: urls['search-service'], urls, dir,
-    name: `Hotel booking platform, six Spring Boot services built from hotel-booking-platform/ (branch ${HOTEL_BRANCH})`,
+    name: `Hotel booking platform release ${buildOf(branch).release}, six Spring Boot services built from branch ${branch}`,
     close: () => stop(children),
   };
 }
 
 if (require.main === module) {
-  startHotelPlatform().then((p) => {
+  startHotelPlatform({ branch: process.argv[2] || HOTEL_BRANCH }).then((p) => {
     console.log(JSON.stringify(p.urls, null, 2));
     const bye = () => p.close().then(() => process.exit(0));
     process.on('SIGINT', bye);
@@ -108,4 +115,4 @@ if (require.main === module) {
   }, (e) => { console.error(e.message); process.exit(1); });
 }
 
-module.exports = { startHotelPlatform, unavailableReason, platformDir, HOTEL_BRANCH, SERVICES };
+module.exports = { startHotelPlatform, unavailableReason, platformDir, isHotelBranch, HOTEL_BRANCH, HOTEL_BRANCH_V2, HOTEL_BUILDS, SERVICES };

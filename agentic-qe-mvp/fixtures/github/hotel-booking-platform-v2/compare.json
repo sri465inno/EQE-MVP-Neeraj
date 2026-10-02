@@ -1,0 +1,115 @@
+{
+  "url": "https://api.github.com/repos/sri465inno/uc-agentic-quality-engineering/compare/demo/hotel-booking-platform...demo/hotel-booking-platform-v2",
+  "status": "ahead",
+  "ahead_by": 1,
+  "behind_by": 0,
+  "base_commit": {
+    "sha": "35af1ef510e2b67f90d326d660ac1c886b194ecf"
+  },
+  "files": [
+    {
+      "filename": "TRACEABILITY.md",
+      "status": "modified"
+    },
+    {
+      "filename": "cart-service/pom.xml",
+      "status": "modified"
+    },
+    {
+      "filename": "cart-service/src/main/java/com/hotelbooking/cart/CartProperties.java",
+      "status": "modified"
+    },
+    {
+      "filename": "cart-service/src/main/resources/cart-service.yml",
+      "status": "modified"
+    },
+    {
+      "filename": "cart-service/src/test/java/com/hotelbooking/cart/CartServiceTest.java",
+      "status": "modified"
+    },
+    {
+      "filename": "data-dictionary/booking-attributes.json",
+      "status": "modified"
+    },
+    {
+      "filename": "hotel-service/pom.xml",
+      "status": "modified"
+    },
+    {
+      "filename": "hotel-service/src/main/java/com/hotelbooking/hotel/domain/Catalog.java",
+      "status": "modified"
+    },
+    {
+      "filename": "journey-tests/pom.xml",
+      "status": "modified"
+    },
+    {
+      "filename": "journey-tests/src/test/java/com/hotelbooking/journey/BookingJourneyTest.java",
+      "status": "modified"
+    },
+    {
+      "filename": "notification-service/pom.xml",
+      "status": "modified"
+    },
+    {
+      "filename": "notification-service/src/main/java/com/hotelbooking/notification/NotificationProperties.java",
+      "status": "modified"
+    },
+    {
+      "filename": "notification-service/src/main/resources/notification-service.yml",
+      "status": "modified"
+    },
+    {
+      "filename": "offer-service/pom.xml",
+      "status": "modified"
+    },
+    {
+      "filename": "platform-common/pom.xml",
+      "status": "modified"
+    },
+    {
+      "filename": "platform-common/src/main/java/com/hotelbooking/common/events/EventNames.java",
+      "status": "modified"
+    },
+    {
+      "filename": "pom.xml",
+      "status": "modified"
+    },
+    {
+      "filename": "reservation-service/pom.xml",
+      "status": "modified"
+    },
+    {
+      "filename": "reservation-service/src/main/java/com/hotelbooking/reservation/ReservationApi.java",
+      "status": "modified"
+    },
+    {
+      "filename": "reservation-service/src/main/java/com/hotelbooking/reservation/ReservationController.java",
+      "status": "modified"
+    },
+    {
+      "filename": "reservation-service/src/main/java/com/hotelbooking/reservation/ReservationProperties.java",
+      "status": "modified"
+    },
+    {
+      "filename": "reservation-service/src/main/java/com/hotelbooking/reservation/ReservationService.java",
+      "status": "modified"
+    },
+    {
+      "filename": "reservation-service/src/main/resources/reservation-service.yml",
+      "status": "modified"
+    },
+    {
+      "filename": "reservation-service/src/test/java/com/hotelbooking/reservation/ReservationServiceTest.java",
+      "status": "modified"
+    },
+    {
+      "filename": "search-service/pom.xml",
+      "status": "modified"
+    },
+    {
+      "filename": "search-service/src/main/resources/search-service.yml",
+      "status": "modified"
+    }
+  ]
+}

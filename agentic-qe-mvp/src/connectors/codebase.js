@@ -23,6 +23,7 @@ const BRANCHES = {
   'demo/commission-engine': { dir: 'commission-engine', compareWith: null, snapshot: SNAPSHOT_FILE },
   'demo/commission-engine-v2': { dir: 'commission-engine-v2', compareWith: 'demo/commission-engine', snapshot: SNAPSHOT_FILE },
   'demo/hotel-booking-platform': { dir: 'hotel-booking-platform', compareWith: null, snapshot: JAVA_SNAPSHOT_FILE },
+  'demo/hotel-booking-platform-v2': { dir: 'hotel-booking-platform-v2', compareWith: 'demo/hotel-booking-platform', snapshot: JAVA_SNAPSHOT_FILE },
 };
 const DEFAULT_BRANCH = 'demo/commission-engine';
 const BUILD_FILES = new Set(['package.json', 'pom.xml']);

@@ -1,0 +1,20 @@
+{
+  "name": "demo/hotel-booking-platform-v2",
+  "commit": {
+    "sha": "5bd716475c9c55aed4d5f822bd0536f7e81767b7",
+    "url": "https://api.github.com/repos/sri465inno/uc-agentic-quality-engineering/commits/5bd716475c9c55aed4d5f822bd0536f7e81767b7",
+    "html_url": "https://github.com/sri465inno/uc-agentic-quality-engineering/commit/5bd716475c9c55aed4d5f822bd0536f7e81767b7",
+    "commit": {
+      "message": "TRACEABILITY: AQPI-32 release 2.0 stories (AQPI-33 to AQPI-36), known 15-night Paris defect"
+    }
+  },
+  "_links": {
+    "self": "https://api.github.com/repos/sri465inno/uc-agentic-quality-engineering/branches/demo%2Fhotel-booking-platform-v2",
+    "html": "https://github.com/sri465inno/uc-agentic-quality-engineering/tree/demo/hotel-booking-platform-v2"
+  },
+  "protected": false,
+  "_recorded": {
+    "at": "2026-10-02T15:06:06.738Z",
+    "with": "git clone --depth 1 --branch demo/hotel-booking-platform-v2 https://github.com/sri465inno/uc-agentic-quality-engineering.git"
+  }
+}

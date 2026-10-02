@@ -10,7 +10,7 @@ delivers:
 The data dictionary that arrives with the codebase input is the specification for test data. Build one data
 set per test case, keyed by the case (TC-F-001 -> TD-F-001), carrying every attribute the dictionary defines.
 
-The values a case varies (its commission drivers) come from the case's Test Data line and nothing else. Every
+The values a case varies (its drivers) come from the case's Test Data line and nothing else. Every
 other attribute is generated to the dictionary: an enum takes one of its allowed values, the rest take the
 dictionary example. The same case always gets the same data, so a re-run reproduces the result.
 

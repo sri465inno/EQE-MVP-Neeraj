@@ -18,12 +18,12 @@ Raise a finding for each of these, and quote the source (Jira key or repository 
   excluded if it is unintended.
 - Missing: something Jira asks for that the code does not mention. Tests will be designed from Jira and are expected to
   fail until it is built.
-- Missing: a commission-driving attribute in the data dictionary that no requirement mentions, so no test will vary it.
+- Missing: a rule-driving attribute in the data dictionary that no requirement mentions, so no test will vary it.
 - Missing: a statement with no testable expected value (no number, status or exact outcome). It can only become a
   manual case until an example is added.
 - Missing for the chosen type of testing: for example no response-time target for performance testing, or no user
   journey for end-to-end testing. Name the input that would close the gap.
 - Added in an increment: every new or changed rule compared with the baseline, with the old and new value.
 
-Severity: high when it changes an amount paid to an advisor or blocks the chosen type of testing; medium when a rule
+Severity: high when it changes what a customer is charged or paid, or blocks the chosen type of testing; medium when a rule
 has a single source; low for suggestions about extra inputs.

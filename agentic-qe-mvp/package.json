@@ -13,7 +13,8 @@
     "record-github": "node scripts/record-github-fixtures.js",
     "demo:artifacts": "node scripts/export-demo-artifacts.js",
     "demo:inputs": "node scripts/make-demo-inputs.js",
-    "build:hotel": "mvn -q -f ../hotel-booking-platform/pom.xml -DskipTests install"
+    "build:hotel": "mvn -q -f ../hotel-booking-platform/pom.xml -DskipTests install",
+    "build:hotel-v2": "node scripts/build-hotel-v2.js"
   },
   "engines": {
     "node": ">=20"

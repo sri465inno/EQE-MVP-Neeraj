@@ -1,6 +1,6 @@
 'use strict';
-/* Runs the hotel booking Flow 1 cycles (functional, regression, end-to-end), then the commission baseline and its
-   Flow 2 increment, end to end, and writes every artifact to a folder for demos.
+/* Runs the hotel booking Flow 1 cycles (release 1.0: functional, regression, end-to-end), then the Flow 2 increment
+   (release 2.0, AQPI-32) on the functional baseline, end to end, and writes every artifact to a folder for demos.
    Usage: node scripts/export-demo-artifacts.js [outDir]   (default: demo-artifacts/) */
 const fs = require('fs');
 const os = require('os');
@@ -15,10 +15,9 @@ const { dataSetFile } = require('../src/agents/testdata');
 const OUT = path.resolve(process.argv[2] || path.join(__dirname, '..', 'demo-artifacts'));
 const REVIEWER = 'Priya Shah';
 const APPROVER = 'Sam Lee';
-const BASELINE_INPUTS = { initiative: { mode: 'github', key: 'COM-1' }, epic: { mode: 'github', key: 'COM-10' }, codebase: { mode: 'github', branch: 'demo/commission-engine' } };
 const HOTEL_INPUTS = { initiative: { mode: 'github', key: 'AQPI-1' }, epic: { mode: 'github', key: 'AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27' }, codebase: { mode: 'github', branch: 'demo/hotel-booking-platform' } };
 const HOTEL_TESTING_TYPES = [['functional', 'Functional'], ['regression', 'Regression'], ['e2e', 'End-to-end']];
-const INCREMENT_INPUTS = { epic: { mode: 'github', key: 'COM-20' }, codebase: { mode: 'github', branch: 'demo/commission-engine-v2' } };
+const INCREMENT_INPUTS = { epic: { mode: 'github', key: 'AQPI-32' }, codebase: { mode: 'github', branch: 'demo/hotel-booking-platform-v2' } };
 
 const json = (f, v) => write(f, `${JSON.stringify(v, null, 2)}\n`);
 function write(f, body) { fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, body); }
@@ -74,23 +73,17 @@ async function main() {
     hotel.push(h);
   }
 
-  let c1 = await pipeline.startCycle({ type: 'baseline', name: 'Commission baseline', inputs: BASELINE_INPUTS, reviewer: REVIEWER });
-  const conflict = c1.normalisation.groups.find((g) => g.bucket === 'conflict');
-  const pick = conflict.options.find((o) => o.signature === '1.5 %');
-  await pipeline.review(c1.id, { reviewer: REVIEWER, resolutions: { [conflict.id]: pick.optionId } }).done;
-  c1 = store.getCycle(c1.id);
-
-  let c2 = await pipeline.startCycle({ type: 'incremental', name: 'Commission increment (COM-20, engine 2.0)', baselineId: c1.baselineId, inputs: INCREMENT_INPUTS, reviewer: REVIEWER });
+  const c1 = hotel.find((h) => h.testingType === 'functional');
+  let c2 = await pipeline.startCycle({ type: 'incremental', name: 'Hotel booking release 2.0 (AQPI-32)', baselineId: c1.baselineId, inputs: INCREMENT_INPUTS, reviewer: REVIEWER });
   await pipeline.review(c2.id, { reviewer: REVIEWER }).done;
   await pipeline.decideMerge(c2.id, { decision: 'approve', approver: APPROVER }).done;
   c2 = store.getCycle(c2.id);
-  for (const c of [c1, c2]) if (c.status !== 'completed') throw new Error(`${c.id} ended as ${c.status}`);
+  if (c2.status !== 'completed') throw new Error(`${c2.id} ended as ${c2.status}`);
 
   fs.rmSync(OUT, { recursive: true, force: true });
   const eh = [];
   for (const h of hotel) eh.push(await exportCycle(pipeline, store, h, path.join(OUT, `flow-1-hotel-${h.testingType}-${h.id}`)));
-  const e1 = await exportCycle(pipeline, store, c1, path.join(OUT, `flow-1-baseline-${c1.id}`));
-  const e2 = await exportCycle(pipeline, store, c2, path.join(OUT, `flow-2-incremental-${c2.id}`));
+  const e2 = await exportCycle(pipeline, store, c2, path.join(OUT, `flow-2-hotel-release-2-${c2.id}`));
   const cmp = compareCycles(c1, c2);
   write(path.join(OUT, 'comparison', `compare-${c1.id}-vs-${c2.id}.html`), renderCompareHtml(cmp));
   write(path.join(OUT, 'comparison', `compare-${c1.id}-vs-${c2.id}.xlsx`), await compareWorkbook(cmp));
@@ -103,9 +96,9 @@ async function main() {
     '## Flow 1: hotel booking platform (AQPI)', '',
     'Inputs: the AQPI-1 initiative, its 7 epics and 23 stories (Jira REST v3 export of the AQPI space on GitHub branch `demo/jira-export`) and the Java 21 Spring Boot WebFlux codebase on branch `demo/hotel-booking-platform`. The cases ran against the six real hotel services (search, hotel, offer, cart, reservation, notification) started from their built jars on free local ports. Cases the platform cannot automate against these APIs (for example browser accessibility and measured load targets) are reported as manual, not run.', '',
     mdTable(['Cycle', 'Mode · testing', 'Requirements', 'Test cases', 'Scripts', 'Passed', 'Pass rate', 'Defects'], hotel.map((h, i) => row(h, eh[i]))), '',
-    '## Flow 2: commission engine (COM)', '',
-    'Inputs: Jira REST v3 exports (synthetic issues COM-1, COM-10/COM-11, COM-20) and the commission-engine codebase, pulled from GitHub branches `demo/jira-export`, `demo/commission-engine` and `demo/commission-engine-v2`. The commission baseline is run first so Flow 2 has a baseline to add to. No live Jira call was made.', '',
-    mdTable(['Cycle', 'Mode · testing', 'Requirements', 'Test cases', 'Scripts', 'Passed', 'Pass rate', 'Defects'], [row(c1, e1), row(c2, e2)]), '',
+    '## Flow 2: hotel booking release 2.0 (AQPI-32)', '',
+    `Inputs: the AQPI-32 "Release 2.0" epic and its stories AQPI-33 to AQPI-36 and the release 2.0 codebase on branch \`demo/hotel-booking-platform-v2\`, added on top of the functional baseline ${c1.id}. Changed: cart hold 30 -> 20 minutes, Paris stay 21 -> 14 nights, resends 3 -> 5. New: free cancellation up to 48 hours before check-in. The merge was approved before execution; the cases ran against the six release 2.0 services. The one real defect: release 2.0 still accepts a 15-night Paris stay.`, '',
+    mdTable(['Cycle', 'Mode · testing', 'Requirements', 'Test cases', 'Scripts', 'Passed', 'Pass rate', 'Defects'], [row(c2, e2)]), '',
     'Each cycle folder\'s README is its QE lead report: inputs taken, how the cycle was run, artifacts produced, risks, a go/no-go recommendation and sign-off.', '',
     '## Folder layout (per cycle)',
     '- `01-inputs/` inputs with provenance, normalisation (agreed / single-source / conflicts) and, for Flow 2, the delta classification',
@@ -118,7 +111,7 @@ async function main() {
     '- `08-defects/` defects raised from real failures only',
     '- `09-report/` QE lead report (HTML, Markdown) and full cycle report (HTML, Excel, JSON)',
     '- `10-merge-approval/` (Flow 2) merge proposal and approvals', '',
-    `\`comparison/\` holds the commission ${c1.id} vs ${c2.id} comparison (HTML, Excel, JSON).`,
+    `\`comparison/\` holds the hotel release 1.0 (${c1.id}) vs release 2.0 (${c2.id}) comparison (HTML, Excel, JSON).`,
     'Open the `.html` files in a browser (download them or clone the repo; GitHub shows HTML as source).', '',
   ].join('\n'));
   fs.rmSync(dataDir, { recursive: true, force: true });

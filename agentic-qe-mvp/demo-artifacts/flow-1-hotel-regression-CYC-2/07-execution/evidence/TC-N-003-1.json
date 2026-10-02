@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "POST",
-    "url": "http://127.0.0.1:45447/api/searches",
+    "url": "http://127.0.0.1:37927/api/searches",
     "headers": {},
     "data": {
       "destination": "NYC",
@@ -14,10 +14,10 @@
   },
   "response": {
     "status": 200,
-    "correlationId": "24f73f13-93fb-4da9-a683-a67da14efd6f",
+    "correlationId": "276e3eee-255a-40be-b35b-4da6e8bfbd85",
     "body": {
-      "searchId": "S-6f09290a",
-      "sessionId": "263a820b-0440-4037-8ac9-e4cc642c2a3d",
+      "searchId": "S-bd3a634a",
+      "sessionId": "19b932bc-a6d4-4cbc-b5c7-230a11ba5876",
       "status": "RESULTS",
       "criteria": {
         "destination": "NYC",

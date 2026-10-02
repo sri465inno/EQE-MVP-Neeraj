@@ -4,8 +4,7 @@
 const commission = require('./catalogue');
 const hotel = require('./hotel-catalogue');
 const { extractValues } = require('../text');
-
-const HOTEL_BRANCH = 'demo/hotel-booking-platform';
+const { isHotelBranch, HOTEL_BRANCH, HOTEL_BRANCH_V2 } = require('../../sut/hotel');
 
 function classifyWith(catalogue) {
   return (text) => {
@@ -72,7 +71,7 @@ function domainOf(x) {
   const branch = typeof x === 'string' ? x
     : Array.isArray(x) ? x.find((i) => i.slot === 'codebase')?.branch
       : x?.sutBuild;
-  return branch === HOTEL_BRANCH ? DOMAINS.hotel : DOMAINS.commission;
+  return isHotelBranch(branch) ? DOMAINS.hotel : DOMAINS.commission;
 }
 
-module.exports = { DOMAINS, domainOf, HOTEL_BRANCH };
+module.exports = { DOMAINS, domainOf, isHotelBranch, HOTEL_BRANCH, HOTEL_BRANCH_V2 };

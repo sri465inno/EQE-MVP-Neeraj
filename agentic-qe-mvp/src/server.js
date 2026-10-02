@@ -17,10 +17,8 @@ const { loadSkills } = require('./skills');
 const { PLATFORM_AGENTS, REVIEW_AGENT, INTAKE_STAGES, INPUT_TYPES, DEMO, DEMO_EXAMPLES, exampleOf } = require('./platform');
 const { TESTING_TYPES, DEFAULT_TESTING_TYPE } = require('./testing-types');
 const { FLOWS: DEMO_INPUT_FLOWS } = require('../scripts/make-demo-inputs');
-const { DEMOS: LAB_DEMOS, EXAMPLES: LAB_EXAMPLES, FIELDS: LAB_FIELDS, generateData, runLabCase } = require('./lab');
-const { BUILDS } = require('../sut/server');
-
-const META_DICTIONARY = require('../samples/commission-engine/baseline/data-dictionary/reservation-attributes.json');
+const { labMeta, generateData, runLabCase } = require('./lab');
+const { isHotelBranch } = require('../sut/hotel');
 
 const XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 
@@ -53,15 +51,15 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
       title: APP_TITLE,
       jira: jira ? { mode: 'live', baseUrl: jira.baseUrl } : { mode: 'fixture', note: 'JIRA_BASE_URL / JIRA_EMAIL / JIRA_API_TOKEN not set: recorded fixtures are used; no live Jira call is made' },
       model: model ? { mode: 'model', model: model.model } : { mode: 'demo', note: 'No model API key: deterministic demo mode (template prose)' },
-      codebase: { repo: SOURCE.fullName, url: SOURCE.htmlUrl, branches: listFixtureBranches() },
+      codebase: { repo: SOURCE.fullName, url: SOURCE.htmlUrl, branches: listFixtureBranches().filter(isHotelBranch) },
       jiraExport: { repo: EXPORT.repo, branch: EXPORT.branch },
       playwright: PW_VERSION,
       skills: skillLib.skills.map(({ body, ...s }) => s),
       skillWarnings: skillLib.warnings,
       platform: { agents: PLATFORM_AGENTS, reviewAgent: REVIEW_AGENT, intakeStages: INTAKE_STAGES, inputTypes: INPUT_TYPES, demo: DEMO, examples: DEMO_EXAMPLES },
-      testingTypes: TESTING_TYPES,
+      testingTypes: TESTING_TYPES.map(({ domains, ...t }) => ({ ...t, ...domains?.hotel, agents: { ...t.agents, ...domains?.hotel?.agents } })),
       defaultTestingType: DEFAULT_TESTING_TYPE,
-      samples: { initiative: 'COM-1', epic: 'COM-10', incrementalEpic: 'COM-20', baselineBranch: 'demo/commission-engine', incrementalBranch: 'demo/commission-engine-v2' },
+      samples: DEMO_EXAMPLES[0].samples,
     });
   });
 
@@ -75,10 +73,7 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
     res.json({ cycles: 0, baselines: 0 });
   });
 
-  app.get('/api/lab', (req, res) => {
-    const values = (attr) => (META_DICTIONARY.attributes.find((a) => a.name === attr) || {}).values || [];
-    res.json({ demos: LAB_DEMOS, examples: LAB_EXAMPLES, fields: LAB_FIELDS, builds: Object.keys(BUILDS), values: { status: values(LAB_FIELDS.status), channel: values(LAB_FIELDS.channel), ratePlan: values(LAB_FIELDS.ratePlan) } });
-  });
+  app.get('/api/lab', (req, res) => res.json(labMeta()));
   app.post('/api/lab/data', (req, res) => res.json(generateData(req.body || {})));
   let labSeq = 0;
   app.post('/api/lab/run', wrap(async (req, res) => {

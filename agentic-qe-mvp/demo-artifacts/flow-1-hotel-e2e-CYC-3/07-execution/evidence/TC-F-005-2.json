@@ -1,12 +1,12 @@
 {
   "request": {
     "method": "POST",
-    "url": "http://127.0.0.1:40811/api/reservations",
+    "url": "http://127.0.0.1:39861/api/reservations",
     "headers": {
       "Idempotency-Key": "aqe-double-49c6343e-1"
     },
     "data": {
-      "cartId": "C-ebc75071",
+      "cartId": "C-6f69c0ee",
       "guest": {
         "firstName": "Jane",
         "lastName": "Doe",
@@ -22,9 +22,9 @@
   },
   "response": {
     "status": 202,
-    "correlationId": "a14371ad-d93a-45b0-b040-914297416542",
+    "correlationId": "863850da-b7b5-433c-af72-88231cbd0cfa",
     "body": {
-      "reservationId": "R-cffedeba",
+      "reservationId": "R-ee2a4979",
       "status": "PROCESSING",
       "confirmationNumber": null,
       "headline": "Your booking is being processed",
@@ -33,7 +33,7 @@
       "nextSteps": [
         "Check this page again in a moment"
       ],
-      "statusUrl": "/api/reservations/R-cffedeba",
+      "statusUrl": "/api/reservations/R-ee2a4979",
       "hotelName": null,
       "roomName": null,
       "ratePlanName": null,
@@ -50,7 +50,7 @@
       "cancellationTerms": null,
       "guestFirstName": null,
       "notificationStatus": "NOT_REQUESTED",
-      "updatedAt": "2026-10-02T04:13:52.212661538Z"
+      "updatedAt": "2026-10-02T15:08:34.694822042Z"
     }
   }
 }

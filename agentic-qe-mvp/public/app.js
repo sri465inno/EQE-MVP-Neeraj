@@ -389,7 +389,7 @@ async function viewRun(params) {
     ? `<label class="field">Baseline to add to<select id="baseline">${baselines.map((b) => `<option value="${esc(b.id)}" ${b.id === runState.baselineId ? 'selected' : ''}>${esc(b.id)} v${b.version} - ${esc(b.name)} (${b.counts.requirements} requirements)</option>`).join('')}</select></label>`
     : '<div class="banner">No approved baseline yet. Run Flow 1 first.</div>') : ''}
     ${type === 'baseline'
-    ? `<p class="hint"><b>Demo example.</b> Pick the project whose inputs fill the slots below. Flow 2 adds the commission increment, so run the commission engine baseline first for it.</p>${(META.platform.examples || []).map(exampleOption).join('')}`
+    ? `<p class="hint"><b>Demo example.</b> Pick the project whose inputs fill the slots below. Flow 2 adds hotel release 2.0 (AQPI-32) on top of the hotel baseline, so run Flow 1 first.</p>${(META.platform.examples || []).map(exampleOption).join('')}`
     : `<p class="hint"><b>Demo example:</b> ${esc(ex.name)}. ${esc(ex.about)}</p>`}
   </div>
   <div class="step-block">
@@ -971,7 +971,6 @@ ${table(['Version', 'When', 'Cycle', 'Change', 'Approved by'], b.history.map((h)
 /* ---------------- Test Lab ---------------- */
 let LAB = null;
 const labState = { demo: 'happy', text: null, data: null, result: null, busy: '' };
-const usd = (n) => (n == null ? '-' : `USD ${Number(n).toFixed(2)}`);
 
 function labAgents() {
   const d = labState.data;
@@ -979,9 +978,9 @@ function labAgents() {
   const st = (on, bad) => (bad ? 'failed' : on ? 'done' : labState.busy ? 'running' : 'pending');
   const steps = [
     ['Test design agent', 'Reads your plain-English test case and works out the expected result from the business rules.', st(d)],
-    ['Test data agent', `Builds a full ${d ? d.attributeCount : 1000}-attribute reservation that matches what you described.`, st(d)],
+    ['Test data agent', `Builds a full ${d ? d.attributeCount : 21}-attribute booking from the hotel data dictionary that matches what you described.`, st(d)],
     ['Automation agent', 'Writes the Playwright script for the case.', st(r)],
-    ['Execution agent', 'Runs the script for real against the engine build.', st(r, r && r.status === 'failed')],
+    ['Execution agent', 'Runs the script for real against the six hotel services of the chosen release.', st(r, r && r.status === 'failed')],
     ['Defect agent', r && r.defect ? 'Raised a defect from the real failure.' : 'Raises a defect only if the run really fails.', r ? (r.defect ? 'failed' : 'done') : 'pending'],
   ];
   const label = { done: 'done', failed: 'found a problem', running: labState.busy ? 'working' : 'pending', pending: 'pending' };
@@ -1000,22 +999,18 @@ ${table(['', 'Value', 'Where it came from'], d.reading.map((x) => [esc(x.label),
 ${d.notes.length ? `<div class="banner info">${d.notes.map(esc).join('<br>')}</div>` : ''}`;
     }
     html += `<h3 class="panel-title">Test data</h3>
-<p class="small">A full reservation of <b>${d.attributeCount}</b> attributes built from the data dictionary. These commission drivers follow your test case; every other attribute keeps its dictionary example value.</p>
-${table(['Attribute', 'Value', 'Dictionary example', 'Meaning'], d.drivers.map((x) => [`<code>${esc(x.name)}</code>`, `<b>${esc(x.value)}</b>`, esc(x.example), esc(x.description)]))}
+<p class="small">A full booking of <b>${d.attributeCount}</b> attributes built from the hotel data dictionary. The attributes below follow your test case; every other attribute keeps its dictionary example value.</p>
+${d.drivers.length ? table(['Attribute', 'Value', 'Dictionary example', 'Meaning'], d.drivers.map((x) => [`<code>${esc(x.name)}</code>`, `<b>${esc(x.value)}</b>`, esc(x.example), esc(x.description)])) : '<p class="small muted">Your test uses the standard booking as it is.</p>'}
 <details><summary class="small">A few of the other ${d.attributeCount - d.drivers.length} attributes</summary>${table(['Attribute', 'Value'], d.sample.map((x) => [`<code>${esc(x.name)}</code>`, esc(x.value)]))}</details>
-<div class="banner info">By the release ${esc(d.byRules.release)} business rules: commissionable revenue ${usd(d.byRules.revenue)}; ${esc(d.byRules.applied.join('; ') || 'no rate applies')}. Expected commission <b>${usd(d.byRules.commission)}</b>.</div>`;
+<div class="banner info">By the release ${esc(d.byRules.release)} business rules: ${esc(d.byRules.rule)}. Expected result <b>${esc(d.byRules.expected)}</b>.</div>`;
   }
   if (r) {
     const ok = r.status === 'passed';
-    const rows = [...new Set([...r.expectedLines.map((l) => l.code), ...r.actualLines.map((l) => l.code)])].map((code) => {
-      const e = r.expectedLines.find((l) => l.code === code);
-      const a = r.actualLines.find((l) => l.code === code);
-      return [esc((e || a).label), e ? `${e.ratePct}% · ${usd(e.amount)}` : '<span class="muted">not expected</span>', a ? `${a.ratePct}% · ${usd(a.amount)}` : '<b class="bad">missing</b>', e && a && e.amount === a.amount ? pill('match', 'passed') : pill('differs', 'failed')];
-    });
+    const rows = r.checks.map((x) => [esc(x.label), esc(x.expected), esc(x.actual), x.match ? pill('match', 'passed') : pill('differs', 'failed')]);
     html += `<h3 class="panel-title">Result</h3>
 <div class="lab-verdict ${ok ? 'ok' : 'bad'}"><b>${ok ? 'Passed: the code works as expected' : 'Failed: the code does not work as expected'}</b><span>${esc(r.testCase.title)} · build <code>${esc(r.testCase.build)}</code> · ${r.durationMs} ms</span></div>
-<div class="lab-compare"><div><span>Expected</span><b>${usd(r.expected)}</b></div><div class="${ok ? 'ok' : 'bad'}"><span>Actual</span><b>${usd(r.actual)}</b></div></div>
-${table(['Commission line', 'Expected', 'Actual (engine)', ''], rows)}
+<div class="lab-compare"><div><span>Expected</span><b>${esc(r.expected)}</b></div><div class="${ok ? 'ok' : 'bad'}"><span>Actual</span><b>${esc(r.actual)}</b></div></div>
+${table(['Response', 'Expected', 'Actual (hotel services)', ''], rows)}
 ${r.error && r.error.assertion ? `<p class="small">Failing assertion: <code>${esc(r.error.assertion)}</code> (${esc(r.error.location || '')})</p>` : ''}
 ${r.defect ? `<div class="card defect-card"><h3>Defect raised ${pill(r.defect.severity, 'failed')}</h3><p><b>${esc(r.defect.title)}</b></p>
 <p>Expected <b>${esc(r.defect.expected)}</b>, actual <b>${esc(r.defect.actual)}</b>. ${esc(r.defect.cause)}.</p><ol class="small">${r.defect.steps.map((x) => `<li>${esc(x)}</li>`).join('')}</ol></div>` : ''}
@@ -1042,7 +1037,7 @@ async function viewLab(params) {
   }
   const demo = LAB.demos.find((x) => x.id === labState.demo);
   if (labState.text == null) labState.text = demo.text;
-  $view.innerHTML = `<section class="hero small-hero"><div class="eyebrow">Test Lab</div><h1>Write a test in plain English, generate its data, run the agents</h1><p>Describe a booking and what it should earn. The platform builds matching test data from the specs, runs it against the commission engine and shows expected against actual.</p></section>
+  $view.innerHTML = `<section class="hero small-hero"><div class="eyebrow">Test Lab</div><h1>Write a test in plain English, generate its data, run the agents</h1><p>Describe a guest booking and what should happen. The platform builds matching test data from the hotel data dictionary, runs it against the hotel booking services and shows the expected response against the actual one.</p></section>
 <div class="run-layout">
 <div class="panel">
   <div class="step-block">
@@ -1051,18 +1046,18 @@ async function viewLab(params) {
   </div>
   <div class="step-block">
     <h3><span class="step-num">2</span>Write the test case</h3>
-    <p class="hint">In plain English: the booking (nights, channel, rate plan, status, amounts) and, if you like, what it should earn. Anything you leave out comes from a standard booking.</p>
+    <p class="hint">In plain English: the booking (destination and nights, a cancellation and how far ahead, a confirmation resend or a cart) and, if you like, what should happen. Anything you leave out comes from a standard booking on the latest release (2.0).</p>
     <label class="field">Test case<textarea id="lab-text" rows="4">${esc(labState.text)}</textarea></label>
     <details class="lab-examples"><summary class="small">More examples</summary>${LAB.examples.map((x) => `<button type="button" class="linkish lab-example">${esc(x)}</button>`).join('')}</details>
   </div>
   <div class="step-block">
     <h3><span class="step-num">3</span>Generate test data</h3>
-    <p class="hint">Builds the full reservation from the data dictionary and works out the expected result from the rules.</p>
+    <p class="hint">Builds the full booking from the hotel data dictionary and works out the expected result from the rules.</p>
     <div class="row"><button class="btn secondary" id="lab-gen">Generate test data</button></div>
   </div>
   <div class="step-block">
     <h3><span class="step-num">4</span>Run the test agents</h3>
-    <p class="hint">Writes the Playwright script and really runs it against the chosen engine build.</p>
+    <p class="hint">Writes the Playwright script and really runs it against the six hotel services of the chosen release.</p>
     <div class="row"><button class="btn" id="lab-run">Run the test agents</button></div>
   </div>
   <div id="lab-msg"></div>

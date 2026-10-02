@@ -1,0 +1,41 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "http://127.0.0.1:37943/api/reservations",
+    "headers": {
+      "Idempotency-Key": "aqe-booking-142460aa-1"
+    },
+    "data": {
+      "cartId": "C-c6eb5803",
+      "guest": {
+        "firstName": "Jane",
+        "lastName": "Doe",
+        "email": "jane.doe@example.com",
+        "phone": "+1 212 555 0100",
+        "arrivalTime": "18:00"
+      },
+      "paymentToken": "tok_visa_ok",
+      "privacyNoticeAccepted": false,
+      "marketingOptIn": false,
+      "locale": "en"
+    }
+  },
+  "response": {
+    "status": 422,
+    "correlationId": "f56174b3-2b67-4fbc-b932-566b0415e3ef",
+    "body": {
+      "status": 422,
+      "code": "VALIDATION_FAILED",
+      "message": "Please correct the highlighted fields.",
+      "correlationId": "f56174b3-2b67-4fbc-b932-566b0415e3ef",
+      "retryable": false,
+      "fieldIssues": [
+        {
+          "field": "privacyNoticeAccepted",
+          "ruleId": "PRIVACY_NOTICE_REQUIRED",
+          "message": "Please confirm you have read the privacy notice."
+        }
+      ]
+    }
+  }
+}

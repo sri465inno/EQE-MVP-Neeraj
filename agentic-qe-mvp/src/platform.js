@@ -23,24 +23,23 @@ const REVIEW_AGENT = {
 const INTAKE_STAGES = ['ingest', 'normalise', 'review-agent', 'review', 'delta', 'merge-approval'];
 
 const INPUT_TYPES = [
-  { id: 'jira-initiative', name: 'Jira initiative', mvp: 'implemented', note: 'Business capability scope (COM-1)', about: 'The business capability and its goals, as written in Jira.', reads: 'Scope, objectives and the business rules stated at initiative level.', usedBy: ['requirements', 'rules'] },
-  { id: 'jira-epic', name: 'Jira epic (+ child stories)', mvp: 'implemented', note: 'Acceptance criteria per epic (COM-10, COM-20)', about: 'A slice of that capability with its stories and acceptance criteria.', reads: 'Acceptance criteria and expected values for each story.', usedBy: ['requirements', 'rules', 'testcases'] },
-  { id: 'codebase', name: 'Codebase (GitHub branch)', mvp: 'implemented', note: 'README, @rule source notes and the reservation data dictionary', about: 'The application source for the capability.', reads: 'The rules as actually implemented, source comments and README notes.', usedBy: ['requirements', 'rules', 'testdata', 'scripts'] },
+  { id: 'jira-initiative', name: 'Jira initiative', mvp: 'implemented', note: 'Business capability scope (AQPI-1)', about: 'The business capability and its goals, as written in Jira.', reads: 'Scope, objectives and the business rules stated at initiative level.', usedBy: ['requirements', 'rules'] },
+  { id: 'jira-epic', name: 'Jira epic (+ child stories)', mvp: 'implemented', note: 'Acceptance criteria per epic (AQPI-2 to AQPI-27; AQPI-32 for release 2.0)', about: 'A slice of that capability with its stories and acceptance criteria.', reads: 'Acceptance criteria and expected values for each story.', usedBy: ['requirements', 'rules', 'testcases'] },
+  { id: 'codebase', name: 'Codebase (GitHub branch)', mvp: 'implemented', note: 'README, TRACEABILITY, @rule config notes and the booking data dictionary', about: 'The application source for the capability.', reads: 'The rules as actually implemented, source comments and README notes.', usedBy: ['requirements', 'rules', 'testdata', 'scripts'] },
   { id: 'data-model', name: 'Data model / data dictionary', mvp: 'via codebase', note: 'Read from data-dictionary/ in the codebase input; not a separate input', about: 'The fields a record carries, with types and allowed values.', reads: 'Attributes, allowed values and example data for test data.', usedBy: ['testcases', 'scripts'] },
   { id: 'confluence', name: 'Confluence / BRD / FRD documents', mvp: 'platform only', about: 'Business and functional requirement documents.', reads: 'Narrative rules, definitions and worked examples.', usedBy: ['requirements', 'rules'] },
   { id: 'api-contract', name: 'API contracts (OpenAPI)', mvp: 'platform only', about: 'OpenAPI definitions of the services.', reads: 'Endpoints, request and response shapes, status codes.', usedBy: ['testcases', 'scripts'] },
   { id: 'existing-tests', name: 'Existing test suites (Zephyr / Xray)', mvp: 'platform only', about: 'Test cases the project already owns.', reads: 'Existing cases to reuse, avoid duplicating and measure coverage against.', usedBy: ['testcases', 'report'] },
   { id: 'defect-history', name: 'Defect and incident history', mvp: 'platform only', about: 'Past defects and production incidents.', reads: 'Failure patterns that raise test priority and help match repeat defects.', usedBy: ['testcases', 'defects'] },
   { id: 'ui-design', name: 'UI designs (Figma)', mvp: 'platform only', about: 'Screen designs for the user journeys.', reads: 'Screens, fields and journeys for UI test cases and scripts.', usedBy: ['testcases', 'scripts'] },
-  { id: 'regulatory', name: 'Policy and contract documents (e.g. commission agreements)', mvp: 'platform only', about: 'Policies, contracts and regulations the capability must follow.', reads: 'Mandatory rules and limits that must be tested and reported.', usedBy: ['rules', 'testcases', 'report'] },
+  { id: 'regulatory', name: 'Policy and contract documents (e.g. market stay policies)', mvp: 'platform only', about: 'Policies, contracts and regulations the capability must follow.', reads: 'Mandatory rules and limits that must be tested and reported.', usedBy: ['rules', 'testcases', 'report'] },
 ];
 
 const DEMO = {
-  capability: 'Travel-advisor commission calculated from reservation attributes',
-  system: 'Aurora Hotels commission engine',
-  reservationAttributes: 1000,
-  flow1: 'COM-1 initiative + COM-10 epic (with story COM-11) + codebase branch demo/commission-engine (release 1.0). Conflict to settle: GDS uplift 2% in Jira vs 1.5% in code. Real defect: a stay of exactly 7 nights gets no long-stay bonus (code checks > 7).',
-  flow2: 'COM-20 epic + codebase branch demo/commission-engine-v2 (release 2.0). Enhanced: cap USD 500 -> USD 750. New: group flat 8% for 10+ rooms, package commission on 70% of the price (Jira only), corporate flat 5% (code only).',
+  capability: 'Guest hotel booking from search to confirmation (AQPI-1)',
+  system: 'Hotel booking platform: six Java 21 Spring Boot WebFlux services (search, hotel, offer, cart, reservation, notification)',
+  flow1: 'AQPI-1 initiative + 7 epics (AQPI-2 to AQPI-27) with 23 stories + codebase branch demo/hotel-booking-platform (release 1.0). Functional, Regression and End-to-end cycles build the hotel baseline.',
+  flow2: 'AQPI-32 epic (stories AQPI-33 to AQPI-36) + codebase branch demo/hotel-booking-platform-v2 (release 2.0). Changed: cart hold 30 -> 20 minutes, Paris stay 21 -> 14 nights, resends 3 -> 5. New: free cancellation up to 48 hours before check-in. Real defect: release 2.0 still accepts a 15-night Paris stay.',
 };
 
 // Demo examples a presenter can run. The example decides the inputs; the cycle mode (baseline or
@@ -48,19 +47,11 @@ const DEMO = {
 const DEMO_EXAMPLES = [
   {
     id: 'hotel', flow: 1, name: 'Hotel booking platform (AQPI)', short: 'Hotel booking',
-    system: 'Hotel booking platform: six Java 21 Spring Boot WebFlux services (search, hotel, offer, cart, reservation, notification)',
-    about: 'AQPI-1 initiative + its 7 epics and 23 stories from the AQPI Jira space + the Java codebase on demo/hotel-booking-platform. Functional runs the API cases, Regression adds the privacy, security and resilience cases, End-to-end runs the guest journeys from search to the confirmation e-mail.',
-    modes: ['baseline'],
-    testingTypes: ['functional', 'regression', 'e2e'],
-    samples: { initiative: 'AQPI-1', epic: 'AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27', baselineBranch: 'demo/hotel-booking-platform' },
-  },
-  {
-    id: 'commission', flow: 2, name: 'Aurora commission engine (COM)', short: 'Commission engine',
     system: DEMO.system,
-    about: 'COM-1 + COM-10 + release 1.0 as the baseline, then COM-20 + release 2.0 as the increment merged on top of it.',
+    about: 'Flow 1: AQPI-1 initiative + its 7 epics and 23 stories + the Java codebase on demo/hotel-booking-platform (release 1.0). Flow 2: AQPI-32 "Release 2.0" epic and its 4 stories + demo/hotel-booking-platform-v2, added on top of the hotel baseline. Functional runs the API cases, Regression adds the privacy, security and resilience cases, End-to-end runs the guest journeys from search to the confirmation e-mail.',
     modes: ['baseline', 'incremental'],
-    testingTypes: ['functional', 'e2e', 'regression', 'smoke', 'performance'],
-    samples: { initiative: 'COM-1', epic: 'COM-10', incrementalEpic: 'COM-20', baselineBranch: 'demo/commission-engine', incrementalBranch: 'demo/commission-engine-v2' },
+    testingTypes: ['functional', 'regression', 'e2e'],
+    samples: { initiative: 'AQPI-1', epic: 'AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27', incrementalEpic: 'AQPI-32', baselineBranch: 'demo/hotel-booking-platform', incrementalBranch: 'demo/hotel-booking-platform-v2' },
   },
 ];
 
