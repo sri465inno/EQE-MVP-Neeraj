@@ -9,7 +9,7 @@ CYC-4 · incremental cycle
 | Regression testing | 132 | 137 | 77 | 98.7% | 1 | 44.7% |
 
 ## 1. Summary
-- Incremental cycle for Guest hotel booking from search to confirmation (AQPI-1) on build demo/hotel-booking-platform-v2, 2026-10-02 15:08 UTC.
+- Incremental cycle for Guest hotel booking from search to confirmation (AQPI-1) on build demo/hotel-booking-platform-v2, 2026-10-02 15:29 UTC.
 - Type of testing: Regression testing. The full pack: every functional case plus the privacy, security, observability and resilience cases, so nothing that worked before has broken.
 - We took 2 inputs (Jira epic AQPI-32, Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (5bd7164)) and produced 132 requirements, 137 test cases and 60 automated scripts.
 - We ran 77 automated tests for real: 76 passed, 1 failed (pass rate 98.7%). 60 manual tests still to be run by hand.
@@ -19,17 +19,17 @@ CYC-4 · incremental cycle
 ## 2. Inputs taken
 | Input | Reference | What we took from it | Source |
 |---|---|---|---|
-| Jira epic | AQPI-32 | [Epic 8] Release 2.0 – Booking Rule Changes and Free Cancellation; 9 statements | pulled from GitHub |
+| Jira epic | AQPI-32 | [Epic 8] Release 2.0 – Booking Rule Changes and Free Cancellation; stories AQPI-33, AQPI-34, AQPI-35, AQPI-36; 9 statements | pulled from GitHub |
 | Codebase | sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (5bd7164) | AQPI-1 Intelligent Hotel Shopping and Reservation Experience: reactive Spring Boot microservices; 9 statements | pulled from GitHub |
 
 ## 3. How we ran the cycle
 1. Read 18 statements from the inputs and lined them up into 13 requirement groups: 5 agreed by every source, 4 only in Jira, 4 only in the code, 0 in conflict.
 2. The review agent read the inputs first and suggested 11 addition(s), 7 missing piece(s) and 0 conflict(s) for the reviewer (1 high severity). It approved nothing.
-3. Priya Shah reviewed and approved the requirement set on 2026-10-02 15:08 UTC.
+3. Priya Shah reviewed and approved the requirement set on 2026-10-02 15:29 UTC.
 4. Compared every statement with baseline BL-1 v1: 6 unchanged · 3 enhanced · 4 new. Changed: REQ-122 "A cart expires 30 minutes after it is created and never creates a reservation itself." → "A cart expires 20 minutes after it is created and never creates a reservation itself."; REQ-124 "A confirmation can be resent at most 3 times per booking in 24 hours." → "A confirmation can be resent at most 5 times per booking in 24 hours."; REQ-126 "A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights." → "A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.".
 5. Regression testing steered the design: Re-runs every case carried over from the baseline alongside the new and re-designed ones. Result: 137 case(s) in this run (126 reused, 6 re-designed, 5 new).
 6. Derived 132 business rules (each quoting its source), designed 137 test cases (133 functional, 4 non-functional) and generated 60 Playwright scripts.
-7. Sam Lee approved the merge into the baseline on 2026-10-02 15:08 UTC.
+7. Sam Lee approved the merge into the baseline on 2026-10-02 15:29 UTC.
 8. Executed the automated suite with Playwright 1.63.0 (headless Chromium, JSON reporter) against Hotel booking platform release 2.0, six Spring Boot services built from branch demo/hotel-booking-platform-v2; defects were raised only for tests that actually failed.
 
 ## 4. Artifacts produced
@@ -69,7 +69,7 @@ _13 of 15 booking-driving attributes (out of 21 booking attributes) are varied b
 ## 7. Sign-off
 | Gate | Decision | By | When | Detail |
 |---|---|---|---|---|
-| Requirement set review | approved | Priya Shah | 2026-10-02 15:08 UTC | 13 requirements approved; 0 excluded; 0 conflict(s) resolved |
-| Merge into baseline | approved | Sam Lee | 2026-10-02 15:08 UTC | 7 requirements, 11 test cases, 5 scripts merged: BL-1 v1 -> v2 |
+| Requirement set review | approved | Priya Shah | 2026-10-02 15:29 UTC | 13 requirements approved; 0 excluded; 0 conflict(s) resolved |
+| Merge into baseline | approved | Sam Lee | 2026-10-02 15:29 UTC | 7 requirements, 11 test cases, 5 scripts merged: BL-1 v1 -> v2 |
 
-_Agentic QE Platform (QE lead report, computed from the cycle) · generated 2026-10-02 15:08 UTC. Every figure comes from the persisted cycle; nothing is estimated._
+_Agentic QE Platform (QE lead report, computed from the cycle) · generated 2026-10-02 15:30 UTC. Every figure comes from the persisted cycle; nothing is estimated._

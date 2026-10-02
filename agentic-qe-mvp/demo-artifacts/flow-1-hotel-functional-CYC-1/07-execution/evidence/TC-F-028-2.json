@@ -1,18 +1,18 @@
 {
   "request": {
     "method": "GET",
-    "url": "http://127.0.0.1:35829/api/searches/S-e81e2abd/results?sort=NAME",
+    "url": "http://127.0.0.1:39809/api/searches/S-3d439efb/results?sort=NAME",
     "headers": {},
     "data": null
   },
   "response": {
     "status": 400,
-    "correlationId": "a55f8230-1a7f-4251-91ea-f2c813f06cc0",
+    "correlationId": "14dfe31a-64ef-4891-b37b-7a401bbe6e91",
     "body": {
       "status": 400,
       "code": "UNSUPPORTED_SORT",
       "message": "Sort by one of: [RECOMMENDED, PRICE_ASC, PRICE_DESC, DISTANCE, CATEGORY]",
-      "correlationId": "a55f8230-1a7f-4251-91ea-f2c813f06cc0",
+      "correlationId": "14dfe31a-64ef-4891-b37b-7a401bbe6e91",
       "retryable": false,
       "fieldIssues": []
     }

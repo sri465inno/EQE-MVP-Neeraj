@@ -83,7 +83,7 @@ Running 77 tests using 1 worker
       124 |   expect(r.body.code).toBe('VALIDATION_FAILED');
       125 |   expect(r.body.fieldIssues).toEqual(expect.arrayContaining([expect.objectContaining({ field: 'checkOut', ruleId: 'stay.tooLong' })]));
       126 |   expect(r.body.fieldIssues.every((i) => i.message && i.message.length > 10)).toBe(true);
-        at /tmp/aqe-demo-fhpXFV/runs/CYC-4/specs/br-126-stay-length-limit.spec.js:123:20
+        at /tmp/aqe-demo-tl6uIp/runs/CYC-4/specs/br-126-stay-length-limit.spec.js:123:20
 
     Error Context: test-results/br-126-stay-length-limit-T-52ffe-t-stay-in-Paris-is-rejected/error-context.md
 
@@ -99,4 +99,4 @@ Running 77 tests using 1 worker
 [77/77] specs/br-132-cancellation-outcome.spec.js:92:1 › TC-F-133 A cancelled booking shows CANCELLED, its payment hold is voided and its room is released
   1 failed
     specs/br-126-stay-length-limit.spec.js:119:1 › TC-F-122 A 15-night stay in Paris is rejected ───
-  76 passed (5.6s)
+  76 passed (5.5s)

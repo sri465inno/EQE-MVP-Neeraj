@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "PUT",
-    "url": "http://127.0.0.1:35679/api/admin/inventory",
+    "url": "http://127.0.0.1:41563/api/admin/inventory",
     "headers": {},
     "data": {
       "hotelId": "H-NYC-001",
@@ -10,7 +10,7 @@
   },
   "response": {
     "status": 204,
-    "correlationId": "6568ba92-8540-4ce7-830d-75a18de1cd49",
+    "correlationId": "f48c836c-032d-4350-b6d9-f0e5ce4a3258",
     "body": null
   }
 }

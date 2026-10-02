@@ -9,7 +9,7 @@ CYC-4 · incremental cycle
 | Regression testing | 132 | 137 | 77 | 98.7% | 1 | 44.7% |
 
 ## 1. Summary
-- Incremental cycle for Guest hotel booking from search to confirmation (AQPI-1) on build demo/hotel-booking-platform-v2, 2026-10-02 15:08 UTC.
+- Incremental cycle for Guest hotel booking from search to confirmation (AQPI-1) on build demo/hotel-booking-platform-v2, 2026-10-02 15:29 UTC.
 - Type of testing: Regression testing. The full pack: every functional case plus the privacy, security, observability and resilience cases, so nothing that worked before has broken.
 - We took 2 inputs (Jira epic AQPI-32, Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (5bd7164)) and produced 132 requirements, 137 test cases and 60 automated scripts.
 - We ran 77 automated tests for real: 76 passed, 1 failed (pass rate 98.7%). 60 manual tests still to be run by hand.
@@ -19,17 +19,17 @@ CYC-4 · incremental cycle
 ## 2. Inputs taken
 | Input | Reference | What we took from it | Source |
 |---|---|---|---|
-| Jira epic | AQPI-32 | [Epic 8] Release 2.0 – Booking Rule Changes and Free Cancellation; 9 statements | pulled from GitHub |
+| Jira epic | AQPI-32 | [Epic 8] Release 2.0 – Booking Rule Changes and Free Cancellation; stories AQPI-33, AQPI-34, AQPI-35, AQPI-36; 9 statements | pulled from GitHub |
 | Codebase | sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (5bd7164) | AQPI-1 Intelligent Hotel Shopping and Reservation Experience: reactive Spring Boot microservices; 9 statements | pulled from GitHub |
 
 ## 3. How we ran the cycle
 1. Read 18 statements from the inputs and lined them up into 13 requirement groups: 5 agreed by every source, 4 only in Jira, 4 only in the code, 0 in conflict.
 2. The review agent read the inputs first and suggested 11 addition(s), 7 missing piece(s) and 0 conflict(s) for the reviewer (1 high severity). It approved nothing.
-3. Priya Shah reviewed and approved the requirement set on 2026-10-02 15:08 UTC.
+3. Priya Shah reviewed and approved the requirement set on 2026-10-02 15:29 UTC.
 4. Compared every statement with baseline BL-1 v1: 6 unchanged · 3 enhanced · 4 new. Changed: REQ-122 "A cart expires 30 minutes after it is created and never creates a reservation itself." → "A cart expires 20 minutes after it is created and never creates a reservation itself."; REQ-124 "A confirmation can be resent at most 3 times per booking in 24 hours." → "A confirmation can be resent at most 5 times per booking in 24 hours."; REQ-126 "A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights." → "A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.".
 5. Regression testing steered the design: Re-runs every case carried over from the baseline alongside the new and re-designed ones. Result: 137 case(s) in this run (126 reused, 6 re-designed, 5 new).
 6. Derived 132 business rules (each quoting its source), designed 137 test cases (133 functional, 4 non-functional) and generated 60 Playwright scripts.
-7. Sam Lee approved the merge into the baseline on 2026-10-02 15:08 UTC.
+7. Sam Lee approved the merge into the baseline on 2026-10-02 15:29 UTC.
 8. Executed the automated suite with Playwright 1.63.0 (headless Chromium, JSON reporter) against Hotel booking platform release 2.0, six Spring Boot services built from branch demo/hotel-booking-platform-v2; defects were raised only for tests that actually failed.
 
 ## 4. Artifacts produced
@@ -69,150 +69,150 @@ _13 of 15 booking-driving attributes (out of 21 booking attributes) are varied b
 ## 7. Sign-off
 | Gate | Decision | By | When | Detail |
 |---|---|---|---|---|
-| Requirement set review | approved | Priya Shah | 2026-10-02 15:08 UTC | 13 requirements approved; 0 excluded; 0 conflict(s) resolved |
-| Merge into baseline | approved | Sam Lee | 2026-10-02 15:08 UTC | 7 requirements, 11 test cases, 5 scripts merged: BL-1 v1 -> v2 |
+| Requirement set review | approved | Priya Shah | 2026-10-02 15:29 UTC | 13 requirements approved; 0 excluded; 0 conflict(s) resolved |
+| Merge into baseline | approved | Sam Lee | 2026-10-02 15:29 UTC | 7 requirements, 11 test cases, 5 scripts merged: BL-1 v1 -> v2 |
 
-_Agentic QE Platform (QE lead report, computed from the cycle) · generated 2026-10-02 15:08 UTC. Every figure comes from the persisted cycle; nothing is estimated._
+_Agentic QE Platform (QE lead report, computed from the cycle) · generated 2026-10-02 15:30 UTC. Every figure comes from the persisted cycle; nothing is estimated._
 
 ## Appendix A: test results (real Playwright run)
 | Key | Test | Result | ms |
 |---|---|---|---|
-| TC-F-001 | The payment summary shows taxes, mandatory fees and the total before booking | passed | 529 |
+| TC-F-001 | The payment summary shows taxes, mandatory fees and the total before booking | passed | 527 |
 | TC-F-002 | Verify: Required business and technical events are logged using approved identifiers and masking rules | not-run | 0 |
 | TC-F-003 | Verify: All child user stories meet their acceptance criteria and the Definition of Done | not-run | 0 |
 | TC-F-004 | Verify: Negative and error paths for each story are tested and evidenced | not-run | 0 |
 | TC-F-005 | Verify: Required logging is in place and verified free of sensitive data | not-run | 0 |
 | TC-F-006 | Verify: The Product Owner has accepted the capability end to end | not-run | 0 |
-| TC-F-007 | A valid search returns available hotels for the destination | passed | 215 |
-| TC-F-008 | The results page returns the criteria the guest submitted | passed | 65 |
-| TC-F-009 | A check-in date in the past is rejected | passed | 49 |
-| TC-F-010 | A check-out on the check-in day is rejected | passed | 31 |
-| TC-F-011 | A search without a destination is rejected | passed | 32 |
-| TC-N-001 | When every hotel is sold out the guest is told and offered other dates, guests or destination | passed | 49 |
+| TC-F-007 | A valid search returns available hotels for the destination | passed | 209 |
+| TC-F-008 | The results page returns the criteria the guest submitted | passed | 56 |
+| TC-F-009 | A check-in date in the past is rejected | passed | 46 |
+| TC-F-010 | A check-out on the check-in day is rejected | passed | 32 |
+| TC-F-011 | A search without a destination is rejected | passed | 33 |
+| TC-N-001 | When every hotel is sold out the guest is told and offered other dates, guests or destination | passed | 46 |
 | TC-F-012 | Verify: Check-in must precede check-out | not-run | 0 |
 | TC-F-013 | Verify: Occupancy must comply with configured room limits | not-run | 0 |
 | TC-F-014 | Verify: Maximum stay length must be configurable | not-run | 0 |
-| TC-F-015 | The search form marks destination, dates, rooms and adults as required | passed | 24 |
-| TC-F-016 | Two rooms for one adult return a message on the adults field | passed | 21 |
+| TC-F-015 | The search form marks destination, dates, rooms and adults as required | passed | 27 |
+| TC-F-016 | Two rooms for one adult return a message on the adults field | passed | 19 |
 | TC-F-017 | Verify: Server validation is authoritative when client and server results differ | not-run | 0 |
 | TC-F-018 | Verify: Validation rules must be configurable where market or property rules vary | not-run | 0 |
-| TC-F-019 | When every hotel is sold out the guest is told and offered other dates, guests or destination | passed | 41 |
+| TC-F-019 | When every hotel is sold out the guest is told and offered other dates, guests or destination | passed | 37 |
 | TC-F-020 | Verify: Technical failures display a non-technical message and retry option | not-run | 0 |
-| TC-F-021 | Submitting the same search twice in one session returns the same search | passed | 41 |
-| TC-N-002 | Every result has a name, location, image, availability and, when bookable, a starting price in a currency | passed | 26 |
-| TC-F-022 | Every bookable result states what its price includes | passed | 28 |
-| TC-F-023 | A sold-out hotel is listed as SOLD_OUT without a price | passed | 33 |
-| TC-F-024 | Results can be read two at a time | passed | 54 |
-| TC-F-025 | The starting price equals the cheapest rate on the hotel page | passed | 41 |
-| TC-F-026 | Filtering by the spa amenity returns only hotels with a spa | passed | 37 |
-| TC-F-027 | Sorting by lowest price orders bookable hotels by starting price | passed | 38 |
-| TC-F-028 | An unapproved sort option is refused with a clear message | passed | 57 |
+| TC-F-021 | Submitting the same search twice in one session returns the same search | passed | 38 |
+| TC-N-002 | Every result has a name, location, image, availability and, when bookable, a starting price in a currency | passed | 29 |
+| TC-F-022 | Every bookable result states what its price includes | passed | 24 |
+| TC-F-023 | A sold-out hotel is listed as SOLD_OUT without a price | passed | 27 |
+| TC-F-024 | Results can be read two at a time | passed | 31 |
+| TC-F-025 | The starting price equals the cheapest rate on the hotel page | passed | 35 |
+| TC-F-026 | Filtering by the spa amenity returns only hotels with a spa | passed | 30 |
+| TC-F-027 | Sorting by lowest price orders bookable hotels by starting price | passed | 30 |
+| TC-F-028 | An unapproved sort option is refused with a clear message | passed | 54 |
 | TC-F-029 | Verify: Selected criteria are visible and removable | not-run | 0 |
-| TC-F-030 | A filter that leaves no hotels offers a reset | passed | 33 |
-| TC-F-031 | The hotel page shows description, images, address, amenities, rooms with prices and policies | passed | 19 |
+| TC-F-030 | A filter that leaves no hotels offers a reset | passed | 32 |
+| TC-F-031 | The hotel page shows description, images, address, amenities, rooms with prices and policies | passed | 18 |
 | TC-F-032 | Verify: The guest can select a valid room and rate plan | not-run | 0 |
 | TC-F-033 | Verify: If inventory changes, the guest is informed before continuing | not-run | 0 |
-| TC-F-034 | Every rate plan states its cancellation terms and payment rule | passed | 22 |
+| TC-F-034 | Every rate plan states its cancellation terms and payment rule | passed | 19 |
 | TC-F-035 | Verify: The service considers available context such as stay dates, season, destination, hotel, room, party composition, declared interests, and consented profile attributes | not-run | 0 |
-| TC-F-036 | Spa access is not offered at a hotel without a spa | passed | 191 |
+| TC-F-036 | Spa access is not offered at a hotel without a spa | passed | 127 |
 | TC-F-037 | Every recommended extra carries at least one reason code | passed | 23 |
 | TC-F-038 | Verify: When personalization data is unavailable, safe contextual defaults may be returned | not-run | 0 |
 | TC-F-039 | Verify: Sensitive traits must not be inferred or used | not-run | 0 |
 | TC-F-040 | Verify: Personalization must honor consent and data-retention rules | not-run | 0 |
 | TC-F-041 | Verify: Business rules and model versions must be auditable | not-run | 0 |
-| TC-F-042 | Each offer shows name, description, price and currency and is labelled an optional extra | passed | 21 |
-| TC-F-043 | The guest can record add, skip and dismiss on an offer | passed | 25 |
+| TC-F-042 | Each offer shows name, description, price and currency and is labelled an optional extra | passed | 20 |
+| TC-F-043 | The guest can record add, skip and dismiss on an offer | passed | 28 |
 | TC-F-044 | Each offer shows name, description, price and currency and is labelled an optional extra | passed | 19 |
 | TC-F-045 | Verify: The interface identifies when offers are personalized where required | not-run | 0 |
-| TC-F-046 | A room books without any extra | passed | 218 |
-| TC-F-047 | Withdrawing consent stops personalized offers | passed | 35 |
-| TC-F-048 | The cart holds the selected hotel, room, rate, dates, occupancy and price components | passed | 24 |
+| TC-F-046 | A room books without any extra | passed | 221 |
+| TC-F-047 | Withdrawing consent stops personalized offers | passed | 36 |
+| TC-F-048 | The cart holds the selected hotel, room, rate, dates, occupancy and price components | passed | 26 |
 | TC-F-049 | Verify: Inventory and price are revalidated when required | not-run | 0 |
 | TC-F-050 | Verify: The cart has a defined expiration and displays relevant timeout behavior | not-run | 0 |
 | TC-F-051 | Verify: A cart must not itself create a reservation | not-run | 0 |
 | TC-F-052 | Verify: Price-change handling must require guest acknowledgement when material | not-run | 0 |
 | TC-F-053 | Verify: The guest can add an available ancillary | not-run | 0 |
 | TC-F-054 | Breakfast can go to 2 but not above its limit of 4 | passed | 87 |
-| TC-F-055 | Removing breakfast returns the total to the room-only amount | passed | 34 |
+| TC-F-055 | Removing breakfast returns the total to the room-only amount | passed | 37 |
 | TC-F-056 | Verify: Ineligible or sold-out products cannot be retained silently | not-run | 0 |
-| TC-F-057 | The cart itemises room, taxes, fees, extras and discounts and they add up to the total | passed | 28 |
+| TC-F-057 | The cart itemises room, taxes, fees, extras and discounts and they add up to the total | passed | 29 |
 | TC-F-058 | Verify: Currency is consistently displayed | not-run | 0 |
 | TC-F-059 | Verify: Material changes are highlighted and require acknowledgement | not-run | 0 |
 | TC-F-060 | Verify: The guest can return to edit supported selections | not-run | 0 |
 | TC-F-061 | Verify: The final payable total must be revalidated before reservation submission | not-run | 0 |
-| TC-F-062 | Checkout lists name, e-mail, payment and privacy notice as required and phone as optional | passed | 32 |
-| TC-N-003 | An invalid e-mail address is rejected on the e-mail field | passed | 32 |
-| TC-F-063 | Booking without accepting the privacy notice is refused | passed | 22 |
+| TC-F-062 | Checkout lists name, e-mail, payment and privacy notice as required and phone as optional | passed | 34 |
+| TC-N-003 | An invalid e-mail address is rejected on the e-mail field | passed | 34 |
+| TC-F-063 | Booking without accepting the privacy notice is refused | passed | 24 |
 | TC-F-064 | Verify: Data is transmitted securely and is not exposed in client logs | not-run | 0 |
 | TC-F-065 | Verify: Data minimization applies | not-run | 0 |
-| TC-F-066 | Support staff see a masked e-mail and other callers are refused | passed | 56 |
-| TC-F-067 | A pay-at-hotel rate shows nothing to pay now and the total due at the hotel | passed | 27 |
+| TC-F-066 | Support staff see a masked e-mail and other callers are refused | passed | 62 |
+| TC-F-067 | A pay-at-hotel rate shows nothing to pay now and the total due at the hotel | passed | 28 |
 | TC-F-068 | A prepaid rate shows the full total to pay now | passed | 26 |
 | TC-F-069 | Verify: Payment data is handled through approved secure components | not-run | 0 |
-| TC-F-070 | A declined card returns a decline without a booking | passed | 36 |
-| TC-F-071 | A lost payment response leaves the booking pending and tells the guest not to resubmit | passed | 50 |
+| TC-F-070 | A declined card returns a decline without a booking | passed | 38 |
+| TC-F-071 | A lost payment response leaves the booking pending and tells the guest not to resubmit | passed | 48 |
 | TC-F-072 | A payment provider failure returns a failure without a booking | passed | 30 |
-| TC-F-073 | A raw card number is refused and never echoed back | passed | 23 |
+| TC-F-073 | A raw card number is refused and never echoed back | passed | 21 |
 | TC-F-074 | Verify: Payment requirements depend on rate conditions | not-run | 0 |
 | TC-F-075 | Verify: Retry behavior must avoid duplicate authorization | not-run | 0 |
 | TC-F-076 | A successful booking creates one reservation with a confirmation number | passed | 42 |
-| TC-F-077 | Resubmitting with the same key returns the original reservation | passed | 45 |
-| TC-F-078 | After a booking and a decline the reconciliation report is consistent | passed | 59 |
+| TC-F-077 | Resubmitting with the same key returns the original reservation | passed | 47 |
+| TC-F-078 | After a booking and a decline the reconciliation report is consistent | passed | 61 |
 | TC-F-079 | Verify: Partial failures trigger defined recovery or manual-review handling | not-run | 0 |
 | TC-F-080 | Verify: Reservation submission must use an idempotency mechanism | not-run | 0 |
 | TC-F-081 | Verify: The source of truth for confirmation status must be defined | not-run | 0 |
-| TC-F-082 | The success outcome shows confirmation number, hotel, stay, extras and total | passed | 51 |
-| TC-F-083 | A declined payment does not say the booking is confirmed | passed | 26 |
+| TC-F-082 | The success outcome shows confirmation number, hotel, stay, extras and total | passed | 52 |
+| TC-F-083 | A declined payment does not say the booking is confirmed | passed | 28 |
 | TC-F-084 | A pending outcome tells the guest not to resubmit and how to check later | passed | 27 |
-| TC-F-085 | The confirmation e-mail matches the booking and contains no payment token | passed | 42 |
-| TC-F-086 | The confirmation e-mail matches the booking and contains no payment token | passed | 39 |
+| TC-F-085 | The confirmation e-mail matches the booking and contains no payment token | passed | 44 |
+| TC-F-086 | The confirmation e-mail matches the booking and contains no payment token | passed | 42 |
 | TC-F-087 | Verify: Only necessary personal data may be included | not-run | 0 |
-| TC-F-088 | The confirmation e-mail matches the booking and contains no payment token | passed | 40 |
+| TC-F-088 | The confirmation e-mail matches the booking and contains no payment token | passed | 42 |
 | TC-F-089 | Verify: A successful reservation creates one confirmation-email request | not-run | 0 |
-| TC-F-090 | When the e-mail cannot be sent the booking stays confirmed | passed | 109 |
+| TC-F-090 | When the e-mail cannot be sent the booking stays confirmed | passed | 110 |
 | TC-F-091 | Verify: Permitted retries avoid duplicate or excessive messages | not-run | 0 |
 | TC-F-092 | Verify: Operational users can distinguish queued, sent, delivered, bounced, and failed states when supported by the provider | not-run | 0 |
 | TC-F-093 | Verify: Email addresses must be masked outside authorized operational views | not-run | 0 |
-| TC-F-094 | A resend with the wrong last name gets the same answer as a correct one | passed | 54 |
+| TC-F-094 | A resend with the wrong last name gets the same answer as a correct one | passed | 56 |
 | TC-F-095 | Verify: Rate limits and abuse controls apply | not-run | 0 |
 | TC-F-096 | Verify: The resend creates a new message event without creating a new reservation | not-run | 0 |
 | TC-F-097 | Verify: Sensitive data is classified and mapped to approved storage and processing locations | not-run | 0 |
 | TC-F-098 | Verify: Data is encrypted in transit and at rest where required | not-run | 0 |
 | TC-F-099 | Verify: Logs and analytics exclude or mask prohibited fields | not-run | 0 |
-| TC-F-100 | Support staff see a masked e-mail and other callers are refused | passed | 42 |
+| TC-F-100 | Support staff see a masked e-mail and other callers are refused | passed | 45 |
 | TC-F-101 | Verify: Retention and deletion follow approved policy | not-run | 0 |
-| TC-F-102 | A correlation ID sent by the client is returned by search, cart and reservation | passed | 46 |
+| TC-F-102 | A correlation ID sent by the client is returned by search, cart and reservation | passed | 47 |
 | TC-F-103 | Verify: Business events and technical logs are distinguishable | not-run | 0 |
 | TC-F-104 | Verify: Logging degradation does not expose sensitive payloads or silently block booking unless explicitly required | not-run | 0 |
 | TC-F-105 | Verify: Event schemas must be versioned | not-run | 0 |
 | TC-F-106 | Verify: Production log access must be controlled and retained according to policy | not-run | 0 |
 | TC-F-107 | Verify: Visual information is not conveyed by color alone | not-run | 0 |
 | TC-F-108 | Verify: Dynamic updates are announced appropriately | not-run | 0 |
-| TC-N-004 | The confirmation e-mail has a language, a heading, a captioned table with scoped headers and a text part | passed | 38 |
+| TC-N-004 | The confirmation e-mail has a language, a heading, a captioned table with scoped headers and a text part | passed | 37 |
 | TC-F-109 | Verify: Timeout, retry, circuit-breaker, and fallback behavior are documented | not-run | 0 |
 | TC-F-110 | Verify: Load, resilience, and recovery tests cover critical journeys | not-run | 0 |
 | TC-F-111 | Verify: Reservation integrity is prioritized over non-critical personalization and analytics | not-run | 0 |
 | TC-F-112 | A new cart expires 20 minutes after creation and reserves nothing | passed | 19 |
-| TC-F-113 | A price rise above 1% blocks booking until the guest acknowledges it | passed | 74 |
+| TC-F-113 | A price rise above 1% blocks booking until the guest acknowledges it | passed | 73 |
 | TC-F-114 | A price change within 1% does not need acknowledgement | passed | 23 |
-| TC-F-115 | The 6th resend within 24 hours is refused | passed | 73 |
-| TC-F-116 | A reservation without an Idempotency-Key is refused | passed | 21 |
-| TC-F-117 | A key shorter than 8 characters is refused | passed | 20 |
+| TC-F-115 | The 6th resend within 24 hours is refused | passed | 68 |
+| TC-F-116 | A reservation without an Idempotency-Key is refused | passed | 23 |
+| TC-F-117 | A key shorter than 8 characters is refused | passed | 19 |
 | TC-F-118 | Reusing a key for a different cart is refused | passed | 46 |
-| TC-F-119 | A 30-night stay is accepted | passed | 20 |
+| TC-F-119 | A 30-night stay is accepted | passed | 22 |
 | TC-F-120 | A 31-night stay is rejected | passed | 16 |
-| TC-F-121 | A 14-night stay in Paris is accepted | passed | 18 |
-| TC-F-122 | A 15-night stay in Paris is rejected | failed | 18 |
-| TC-F-123 | 4 adults in one room are accepted | passed | 43 |
-| TC-F-124 | 5 adults in one room are rejected | passed | 21 |
-| TC-F-125 | 4 children in one room are rejected | passed | 22 |
-| TC-F-126 | 9 rooms in one search are rejected | passed | 17 |
-| TC-F-127 | A check-in 500 days ahead is accepted | passed | 27 |
+| TC-F-121 | A 14-night stay in Paris is accepted | passed | 24 |
+| TC-F-122 | A 15-night stay in Paris is rejected | failed | 19 |
+| TC-F-123 | 4 adults in one room are accepted | passed | 46 |
+| TC-F-124 | 5 adults in one room are rejected | passed | 24 |
+| TC-F-125 | 4 children in one room are rejected | passed | 28 |
+| TC-F-126 | 9 rooms in one search are rejected | passed | 19 |
+| TC-F-127 | A check-in 500 days ahead is accepted | passed | 28 |
 | TC-F-128 | A check-in 501 days ahead is rejected | passed | 15 |
 | TC-F-129 | Verify: Release 1.0 behaviour not named in this epic is unchanged and passes regression | not-run | 0 |
 | TC-F-130 | Verify: The Product Owner has accepted the release 2.0 changes end to end | not-run | 0 |
-| TC-F-131 | A flexible booking cancelled more than 48 hours before check-in is cancelled free of charge | passed | 51 |
-| TC-F-132 | A cancellation within 48 hours of check-in is refused and the booking stays confirmed | passed | 47 |
+| TC-F-131 | A flexible booking cancelled more than 48 hours before check-in is cancelled free of charge | passed | 52 |
+| TC-F-132 | A cancellation within 48 hours of check-in is refused and the booking stays confirmed | passed | 44 |
 | TC-F-133 | A cancelled booking shows CANCELLED, its payment hold is voided and its room is released | passed | 53 |
 
 ## Appendix B: requirements

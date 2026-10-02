@@ -9,7 +9,7 @@ CYC-2 · baseline cycle
 | Regression testing | 128 | 137 | 74 | 100% | 0 | 45.3% |
 
 ## 1. Summary
-- Baseline cycle for Guest hotel booking from search to confirmation (AQPI-1) on build demo/hotel-booking-platform, 2026-10-02 15:08 UTC.
+- Baseline cycle for Guest hotel booking from search to confirmation (AQPI-1) on build demo/hotel-booking-platform, 2026-10-02 15:29 UTC.
 - Type of testing: Regression testing. The full pack: every functional case plus the privacy, security, observability and resilience cases, so nothing that worked before has broken.
 - We took 3 inputs (Jira initiative AQPI-1, Jira epic AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27, Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef)) and produced 128 requirements, 137 test cases and 58 automated scripts.
 - We ran 74 automated tests for real: 74 passed, 0 failed (pass rate 100%). 63 manual tests still to be run by hand.
@@ -19,13 +19,13 @@ CYC-2 · baseline cycle
 | Input | Reference | What we took from it | Source |
 |---|---|---|---|
 | Jira initiative | AQPI-1 | [Initiative] Intelligent Hotel Shopping and Reservation Experience; 8 statements | pulled from GitHub |
-| Jira epic | AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27 | 7 epics: [Epic 1] Search and Availability; [Epic 2] Hotel Results and Selection; [Epic 3] Personalized Ancillary Offers; [Epic 4] Cart Management; [Epic 5] Checkout and Reservation; [Epic 6] Confirmation and Notifications; [Epic 7] Cross-Cutting Quality, Privacy and Observability; 137 statements | pulled from GitHub |
+| Jira epic | AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27 | 7 epics: [Epic 1] Search and Availability; [Epic 2] Hotel Results and Selection; [Epic 3] Personalized Ancillary Offers; [Epic 4] Cart Management; [Epic 5] Checkout and Reservation; [Epic 6] Confirmation and Notifications; [Epic 7] Cross-Cutting Quality, Privacy and Observability; stories AQPI-3, AQPI-4, AQPI-5, AQPI-7, AQPI-8, AQPI-9, AQPI-11, AQPI-12, AQPI-13, AQPI-15, AQPI-16, AQPI-17, AQPI-19, AQPI-20, AQPI-21, AQPI-22, AQPI-24, AQPI-25, AQPI-26, AQPI-28, AQPI-29, AQPI-30, AQPI-31; 137 statements | pulled from GitHub |
 | Codebase | sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef) | AQPI-1 Intelligent Hotel Shopping and Reservation Experience: reactive Spring Boot microservices; 7 statements | pulled from GitHub |
 
 ## 3. How we ran the cycle
 1. Read 152 statements from the inputs and lined them up into 128 requirement groups: 0 agreed by every source, 121 only in Jira, 7 only in the code, 0 in conflict.
 2. The review agent read the inputs first and suggested 7 addition(s), 184 missing piece(s) and 0 conflict(s) for the reviewer (8 high severity). It approved nothing.
-3. Priya Shah reviewed and approved the requirement set on 2026-10-02 15:08 UTC.
+3. Priya Shah reviewed and approved the requirement set on 2026-10-02 15:29 UTC.
 4. Regression testing steered the design: No earlier pack exists, so it designs the full regression pack (functional and cross-cutting quality) and runs it. Result: 137 case(s) in this run (0 reused, 0 re-designed, 137 new).
 5. Derived 128 business rules (each quoting its source), designed 137 test cases (128 functional, 9 non-functional) and generated 58 Playwright scripts.
 6. Executed the automated suite with Playwright 1.63.0 (headless Chromium, JSON reporter) against Hotel booking platform release 1.0, six Spring Boot services built from branch demo/hotel-booking-platform; defects were raised only for tests that actually failed.
@@ -70,6 +70,6 @@ _13 of 15 booking-driving attributes (out of 21 booking attributes) are varied b
 ## 7. Sign-off
 | Gate | Decision | By | When | Detail |
 |---|---|---|---|---|
-| Requirement set review | approved | Priya Shah | 2026-10-02 15:08 UTC | 128 requirements approved; 0 excluded; 0 conflict(s) resolved |
+| Requirement set review | approved | Priya Shah | 2026-10-02 15:29 UTC | 128 requirements approved; 0 excluded; 0 conflict(s) resolved |
 
-_Agentic QE Platform (QE lead report, computed from the cycle) · generated 2026-10-02 15:08 UTC. Every figure comes from the persisted cycle; nothing is estimated._
+_Agentic QE Platform (QE lead report, computed from the cycle) · generated 2026-10-02 15:29 UTC. Every figure comes from the persisted cycle; nothing is estimated._
