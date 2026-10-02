@@ -1,0 +1,22 @@
+server:
+  port: 8084
+platform:
+  service: cart-service
+  environment: local
+  dependencies:
+    hotel-service:
+      base-url: http://localhost:8081
+      timeout: 2s
+      retries: 1
+    offer-service:
+      base-url: http://localhost:8083
+      timeout: 800ms
+      retries: 0
+  cart:
+    ttl: 30m
+    material-change-percent: 1.0
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

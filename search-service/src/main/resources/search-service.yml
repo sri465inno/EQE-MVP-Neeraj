@@ -1,0 +1,25 @@
+server:
+  port: 8082
+platform:
+  service: search-service
+  environment: local
+  dependencies:
+    hotel-service:
+      base-url: http://localhost:8081
+      timeout: 2s
+      retries: 1
+  search:
+    defaults:
+      max-stay-nights: 30
+      max-advance-days: 500
+      max-rooms: 8
+      max-adults-per-room: 4
+      max-children-per-room: 3
+    markets:
+      PAR:
+        max-stay-nights: 21
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
