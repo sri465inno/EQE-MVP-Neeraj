@@ -19,3 +19,7 @@ The matching codebase is on branches `demo/commission-engine` (flow 1) and `demo
 (each with `*.children.json` listing its stories) and the 23 stories `AQPI-3` … `AQPI-31`, exported from the
 AQPI Jira space (https://tcs-team-ou6drgfr.atlassian.net/jira/core/projects/AQPI). In that space the initiative and
 epics are Workstreams and the stories are Tasks; the labels `initiative`, `epic` and `user-story` carry the role.
+
+## `jira/release-2.0/`
+
+Snapshot of the release 2.0 scope for Flow 2: Epic 8 AQPI-32 (AQPI-33 to AQPI-36) and Epic 6 AQPI-23 as revised for release 2.0 (AQPI-24 and AQPI-25 changed, AQPI-26 unchanged, new AQPI-37). The top-level `jira/AQPI-23*.json` files keep the release 1.0 Epic 6 that Flow 1 uses.
