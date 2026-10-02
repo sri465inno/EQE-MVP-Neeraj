@@ -12,3 +12,10 @@ They were not exported from a live Jira site. The MVP pulls these files from thi
 | COM-20 | Epic | Group and package reservation commission | Flow 2 (incremental) |
 
 The matching codebase is on branches `demo/commission-engine` (flow 1) and `demo/commission-engine-v2` (flow 2).
+
+## Hotel booking initiative (AQPI)
+
+`AQPI-1` (initiative), the seven epics `AQPI-2`, `AQPI-6`, `AQPI-10`, `AQPI-14`, `AQPI-18`, `AQPI-23`, `AQPI-27`
+(each with `*.children.json` listing its stories) and the 23 stories `AQPI-3` … `AQPI-31`, exported from the
+AQPI Jira space (https://tcs-team-ou6drgfr.atlassian.net/jira/core/projects/AQPI). In that space the initiative and
+epics are Workstreams and the stories are Tasks; the labels `initiative`, `epic` and `user-story` carry the role.
