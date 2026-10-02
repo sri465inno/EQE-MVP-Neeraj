@@ -17,6 +17,7 @@ platform:
       timeout: 2s
       retries: 1
   reservation:
+    # @rule Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.
     idempotency-ttl: 24h
     retention-days: 365
 management:
