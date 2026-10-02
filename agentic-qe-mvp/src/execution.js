@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
 const { startSut, BUILDS, DEFAULT_BUILD } = require('../sut/server');
+const { startHotelPlatform, HOTEL_BRANCH } = require('../sut/hotel');
 
 const ROOT = path.join(__dirname, '..');
 const PW_CLI = require.resolve('@playwright/test/cli');
@@ -12,7 +13,7 @@ const PW_VERSION = require('@playwright/test/package.json').version;
 
 const stripAnsi = (s) => String(s || '').replace(/\u001b\[[0-9;]*m/g, '');
 
-function writeRunFiles(runDir, scripts, baseURL, keys = null) {
+function writeRunFiles(runDir, scripts, baseURL, keys = null, services = null) {
   const specDir = path.join(runDir, 'specs');
   fs.rmSync(specDir, { recursive: true, force: true });
   fs.mkdirSync(specDir, { recursive: true });
@@ -21,9 +22,9 @@ function writeRunFiles(runDir, scripts, baseURL, keys = null) {
 module.exports = {
   testDir: ${JSON.stringify(specDir)},
   testMatch: '**/*.spec.js',${keys ? `\n  grep: new RegExp(${JSON.stringify(`(?:^|\\s)(?:${keys.join('|')})\\s`)}),` : ''}
-  timeout: 20000,
+  timeout: ${services ? 30000 : 20000},
   retries: 0,
-  workers: 2,
+  workers: ${services ? 1 : 2},${services ? `\n  metadata: { services: ${JSON.stringify(services)} },` : ''}
   outputDir: ${JSON.stringify(path.join(runDir, 'test-results'))},
   reporter: [['json', { outputFile: ${JSON.stringify(path.join(runDir, 'playwright-report.json'))} }]],
   use: { baseURL: ${JSON.stringify(baseURL)}, headless: true, screenshot: 'only-on-failure', trace: 'off' },
@@ -128,13 +129,23 @@ function summarise(results) {
 }
 
 /** Starts the SUT, writes specs + config, runs Playwright headless, parses and maps the JSON report. */
+/** The system under test of a build: the bundled commission engine, or the six hotel services. */
+async function startBuild(sutBuild) {
+  if (sutBuild === HOTEL_BRANCH) {
+    const p = await startHotelPlatform();
+    return { ...p, services: p.urls, info: { build: sutBuild, url: p.url, services: p.urls, name: p.name } };
+  }
+  const sut = await startSut({ version: sutBuild });
+  return { ...sut, services: null, info: { build: sutBuild, url: sut.url, name: `Aurora commission engine, bundled copy of branch ${sutBuild} (samples/commission-engine/${BUILDS[sutBuild]})` } };
+}
+
 async function executeSuite({ scripts, testCases, runDir, sutBuild = DEFAULT_BUILD, keys = null }) {
   fs.mkdirSync(runDir, { recursive: true });
-  const sut = await startSut({ version: sutBuild });
+  const sut = await startBuild(sutBuild);
   const startedAt = new Date().toISOString();
   let run;
   try {
-    const configFile = writeRunFiles(runDir, scripts, sut.url, keys);
+    const configFile = writeRunFiles(runDir, scripts, sut.url, keys, sut.services);
     run = await runPlaywright(configFile, runDir);
   } finally {
     await sut.close();
@@ -154,7 +165,7 @@ async function executeSuite({ scripts, testCases, runDir, sutBuild = DEFAULT_BUI
     tool: `Playwright ${PW_VERSION} (headless Chromium, JSON reporter)`,
     command: run.command,
     exitCode: run.exitCode,
-    sut: { build: sutBuild, url: sut.url, name: `Aurora commission engine, bundled copy of branch ${sutBuild} (samples/commission-engine/${BUILDS[sutBuild]})` },
+    sut: sut.info,
     startedAt, finishedAt,
     reportFile: 'playwright-report.json',
     playwrightStats: report.stats || null,

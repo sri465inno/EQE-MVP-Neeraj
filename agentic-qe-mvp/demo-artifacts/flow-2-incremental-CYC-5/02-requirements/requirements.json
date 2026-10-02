@@ -1,0 +1,854 @@
+[
+  {
+    "id": "REQ-001",
+    "title": "Reservation data dictionary",
+    "text": "Every reservation is described by a data dictionary of 1000 attributes.",
+    "values": [
+      {
+        "num": 1000,
+        "unit": "",
+        "raw": "1000"
+      }
+    ],
+    "type": "functional",
+    "sources": [
+      "code",
+      "jira"
+    ],
+    "bucket": "agreed",
+    "origins": [
+      {
+        "statementId": "J1",
+        "source": "jira",
+        "input": "initiative",
+        "kind": "jira-initiative",
+        "ref": "COM-1",
+        "summary": "Travel-advisor commission platform",
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-1",
+        "quote": "Every reservation is described by a data dictionary of 1000 attributes."
+      },
+      {
+        "statementId": "C8",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-readme",
+        "ref": "README.md",
+        "line": 18,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "quote": "- Every reservation is described by a data dictionary of 1000 attributes."
+      }
+    ],
+    "jiraKeys": [
+      "COM-1"
+    ],
+    "resolution": null,
+    "version": 1,
+    "status": "unchanged",
+    "previous": null,
+    "introducedInCycle": "CYC-4",
+    "changedInCycle": "CYC-4"
+  },
+  {
+    "id": "REQ-002",
+    "title": "Advisor commission statement (UI)",
+    "text": "Travel advisors can view the commission breakdown for a reservation online.",
+    "values": [],
+    "type": "functional",
+    "sources": [
+      "jira"
+    ],
+    "bucket": "jira-only",
+    "origins": [
+      {
+        "statementId": "J2",
+        "source": "jira",
+        "input": "initiative",
+        "kind": "jira-initiative",
+        "ref": "COM-1",
+        "summary": "Travel-advisor commission platform",
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-1",
+        "quote": "Travel advisors can view the commission breakdown for a reservation online."
+      }
+    ],
+    "jiraKeys": [
+      "COM-1"
+    ],
+    "resolution": null,
+    "version": 1,
+    "status": "carried over",
+    "previous": null,
+    "introducedInCycle": "CYC-4",
+    "changedInCycle": "CYC-4"
+  },
+  {
+    "id": "REQ-003",
+    "title": "Commission quote response time",
+    "text": "Commission quotes return within 300 ms at the 95th percentile.",
+    "values": [
+      {
+        "num": 300,
+        "unit": "ms",
+        "raw": "300 ms"
+      },
+      {
+        "num": 95,
+        "unit": "percentile",
+        "raw": "95th percentile"
+      }
+    ],
+    "type": "non-functional",
+    "sources": [
+      "jira"
+    ],
+    "bucket": "jira-only",
+    "origins": [
+      {
+        "statementId": "J3",
+        "source": "jira",
+        "input": "initiative",
+        "kind": "jira-initiative",
+        "ref": "COM-1",
+        "summary": "Travel-advisor commission platform",
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-1",
+        "quote": "Commission quotes return within 300 ms at the 95th percentile."
+      }
+    ],
+    "jiraKeys": [
+      "COM-1"
+    ],
+    "resolution": null,
+    "version": 1,
+    "status": "carried over",
+    "previous": null,
+    "introducedInCycle": "CYC-4",
+    "changedInCycle": "CYC-4"
+  },
+  {
+    "id": "REQ-004",
+    "title": "Base commission rate",
+    "text": "Base commission is 10% of commissionable room revenue.",
+    "values": [
+      {
+        "num": 10,
+        "unit": "%",
+        "raw": "10%"
+      }
+    ],
+    "type": "functional",
+    "sources": [
+      "code",
+      "jira"
+    ],
+    "bucket": "agreed",
+    "origins": [
+      {
+        "statementId": "J4",
+        "source": "jira",
+        "input": "epic",
+        "kind": "jira-epic",
+        "ref": "COM-10",
+        "summary": "Commission calculation for transient reservations",
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-10",
+        "quote": "Base commission is 10% of commissionable room revenue."
+      },
+      {
+        "statementId": "C1",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-readme",
+        "ref": "README.md",
+        "line": 11,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "quote": "- Base commission is 10% of commissionable room revenue."
+      },
+      {
+        "statementId": "C12",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-source",
+        "ref": "src/rules.js",
+        "line": 6,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/src/rules.js",
+        "quote": "/** @rule Base commission is 10% of commissionable room revenue. */"
+      }
+    ],
+    "jiraKeys": [
+      "COM-10"
+    ],
+    "resolution": null,
+    "version": 1,
+    "status": "unchanged",
+    "previous": null,
+    "introducedInCycle": "CYC-4",
+    "changedInCycle": "CYC-4"
+  },
+  {
+    "id": "REQ-005",
+    "title": "Commissionable room revenue",
+    "text": "Commissionable room revenue excludes taxes, resort fees and ancillary charges.",
+    "values": [],
+    "type": "functional",
+    "sources": [
+      "code",
+      "jira"
+    ],
+    "bucket": "agreed",
+    "origins": [
+      {
+        "statementId": "J5",
+        "source": "jira",
+        "input": "epic",
+        "kind": "jira-epic",
+        "ref": "COM-10",
+        "summary": "Commission calculation for transient reservations",
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-10",
+        "quote": "Commissionable room revenue excludes taxes, resort fees and ancillary charges."
+      },
+      {
+        "statementId": "C2",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-readme",
+        "ref": "README.md",
+        "line": 12,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "quote": "- Commissionable room revenue excludes taxes, resort fees and ancillary charges."
+      }
+    ],
+    "jiraKeys": [
+      "COM-10"
+    ],
+    "resolution": null,
+    "version": 1,
+    "status": "unchanged",
+    "previous": null,
+    "introducedInCycle": "CYC-4",
+    "changedInCycle": "CYC-4"
+  },
+  {
+    "id": "REQ-006",
+    "title": "GDS channel uplift",
+    "text": "Reservations booked through the GDS channel earn an additional 1.5% channel uplift.",
+    "values": [
+      {
+        "num": 1.5,
+        "unit": "%",
+        "raw": "1.5%"
+      }
+    ],
+    "type": "functional",
+    "sources": [
+      "code",
+      "jira"
+    ],
+    "bucket": "conflict",
+    "origins": [
+      {
+        "statementId": "J6",
+        "source": "jira",
+        "input": "epic",
+        "kind": "jira-epic",
+        "ref": "COM-10",
+        "summary": "Commission calculation for transient reservations",
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-10",
+        "quote": "Reservations booked through the GDS channel earn an additional 2% channel uplift."
+      },
+      {
+        "statementId": "C3",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-readme",
+        "ref": "README.md",
+        "line": 13,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "quote": "- Reservations booked through the GDS channel earn an additional 1.5% channel uplift."
+      },
+      {
+        "statementId": "C13",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-source",
+        "ref": "src/rules.js",
+        "line": 9,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/src/rules.js",
+        "quote": "/** @rule Reservations booked through the GDS channel earn an additional 1.5% channel uplift. */"
+      }
+    ],
+    "jiraKeys": [
+      "COM-10"
+    ],
+    "resolution": {
+      "chosen": {
+        "optionId": "O2",
+        "text": "Reservations booked through the GDS channel earn an additional 1.5% channel uplift.",
+        "sources": [
+          "code"
+        ]
+      },
+      "rejected": [
+        {
+          "optionId": "O1",
+          "text": "Reservations booked through the GDS channel earn an additional 2% channel uplift.",
+          "sources": [
+            "jira"
+          ]
+        }
+      ]
+    },
+    "version": 1,
+    "status": "unchanged",
+    "previous": null,
+    "introducedInCycle": "CYC-4",
+    "changedInCycle": "CYC-4"
+  },
+  {
+    "id": "REQ-007",
+    "title": "Long-stay bonus",
+    "text": "Stays of 7 nights or more earn a long-stay bonus of 1.5%.",
+    "values": [
+      {
+        "num": 1.5,
+        "unit": "%",
+        "raw": "1.5%"
+      },
+      {
+        "num": 7,
+        "unit": "nights",
+        "raw": "7 nights"
+      }
+    ],
+    "type": "functional",
+    "sources": [
+      "code",
+      "jira"
+    ],
+    "bucket": "agreed",
+    "origins": [
+      {
+        "statementId": "J7",
+        "source": "jira",
+        "input": "epic",
+        "kind": "jira-epic",
+        "ref": "COM-10",
+        "summary": "Commission calculation for transient reservations",
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-10",
+        "quote": "Stays of 7 nights or more earn a long-stay bonus of 1.5%."
+      },
+      {
+        "statementId": "C4",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-readme",
+        "ref": "README.md",
+        "line": 14,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "quote": "- Stays of 7 nights or more earn a long-stay bonus of 1.5%."
+      },
+      {
+        "statementId": "C14",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-source",
+        "ref": "src/rules.js",
+        "line": 12,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/src/rules.js",
+        "quote": "/** @rule Stays of 7 nights or more earn a long-stay bonus of 1.5%. */"
+      }
+    ],
+    "jiraKeys": [
+      "COM-10"
+    ],
+    "resolution": null,
+    "version": 1,
+    "status": "unchanged",
+    "previous": null,
+    "introducedInCycle": "CYC-4",
+    "changedInCycle": "CYC-4"
+  },
+  {
+    "id": "REQ-008",
+    "title": "Commission cap per reservation",
+    "text": "Commission per reservation is capped at USD 750.",
+    "values": [
+      {
+        "num": 750,
+        "unit": "USD",
+        "raw": "USD 750"
+      }
+    ],
+    "type": "functional",
+    "sources": [
+      "code",
+      "jira"
+    ],
+    "bucket": "agreed",
+    "origins": [
+      {
+        "statementId": "J1",
+        "source": "jira",
+        "input": "epic",
+        "kind": "jira-epic",
+        "ref": "COM-20",
+        "summary": "Group and package reservation commission",
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-20",
+        "quote": "Commission per reservation is capped at USD 750."
+      },
+      {
+        "statementId": "C5",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-readme",
+        "ref": "README.md",
+        "line": 15,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+        "quote": "- Commission per reservation is capped at USD 750."
+      },
+      {
+        "statementId": "C17",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-source",
+        "ref": "src/rules.js",
+        "line": 16,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/src/rules.js",
+        "quote": "/** @rule Commission per reservation is capped at USD 750. */"
+      }
+    ],
+    "jiraKeys": [
+      "COM-10",
+      "COM-20"
+    ],
+    "resolution": null,
+    "version": 2,
+    "status": "enhanced",
+    "previous": {
+      "text": "Commission per reservation is capped at USD 500.",
+      "values": [
+        {
+          "num": 500,
+          "unit": "USD",
+          "raw": "USD 500"
+        }
+      ],
+      "version": 1,
+      "origins": [
+        {
+          "statementId": "J8",
+          "source": "jira",
+          "input": "epic",
+          "kind": "jira-epic",
+          "ref": "COM-10",
+          "summary": "Commission calculation for transient reservations",
+          "url": "https://aurora-hotels.atlassian.net/browse/COM-10",
+          "quote": "Commission per reservation is capped at USD 500."
+        },
+        {
+          "statementId": "C5",
+          "source": "code",
+          "input": "codebase",
+          "kind": "code-readme",
+          "ref": "README.md",
+          "line": 15,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+          "quote": "- Commission per reservation is capped at USD 500."
+        },
+        {
+          "statementId": "C15",
+          "source": "code",
+          "input": "codebase",
+          "kind": "code-source",
+          "ref": "src/rules.js",
+          "line": 16,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/src/rules.js",
+          "quote": "/** @rule Commission per reservation is capped at USD 500. */"
+        }
+      ]
+    },
+    "introducedInCycle": "CYC-4",
+    "changedInCycle": "CYC-5"
+  },
+  {
+    "id": "REQ-009",
+    "title": "Commission rounding",
+    "text": "Commission is rounded half-up to 2 decimal places.",
+    "values": [
+      {
+        "num": 2,
+        "unit": "decimal places",
+        "raw": "2 decimal places"
+      }
+    ],
+    "type": "functional",
+    "sources": [
+      "code",
+      "jira"
+    ],
+    "bucket": "agreed",
+    "origins": [
+      {
+        "statementId": "J9",
+        "source": "jira",
+        "input": "epic",
+        "kind": "jira-epic",
+        "ref": "COM-10",
+        "summary": "Commission calculation for transient reservations",
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-10",
+        "quote": "Commission is rounded half-up to 2 decimal places."
+      },
+      {
+        "statementId": "C6",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-readme",
+        "ref": "README.md",
+        "line": 16,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "quote": "- Commission is rounded half-up to 2 decimal places."
+      },
+      {
+        "statementId": "C16",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-source",
+        "ref": "src/rules.js",
+        "line": 19,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/src/rules.js",
+        "quote": "/** @rule Commission is rounded half-up to 2 decimal places. */"
+      }
+    ],
+    "jiraKeys": [
+      "COM-10"
+    ],
+    "resolution": null,
+    "version": 1,
+    "status": "unchanged",
+    "previous": null,
+    "introducedInCycle": "CYC-4",
+    "changedInCycle": "CYC-4"
+  },
+  {
+    "id": "REQ-010",
+    "title": "Loyalty-points stays excluded",
+    "text": "Reservations paid with loyalty points are not commissionable.",
+    "values": [],
+    "type": "functional",
+    "sources": [
+      "code",
+      "jira"
+    ],
+    "bucket": "agreed",
+    "origins": [
+      {
+        "statementId": "J10",
+        "source": "jira",
+        "input": "epic",
+        "kind": "jira-story",
+        "ref": "COM-11",
+        "summary": "Exclude non-commissionable reservations",
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-11",
+        "quote": "Reservations paid with loyalty points are not commissionable."
+      },
+      {
+        "statementId": "C7",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-readme",
+        "ref": "README.md",
+        "line": 17,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "quote": "- Reservations paid with loyalty points are not commissionable."
+      }
+    ],
+    "jiraKeys": [
+      "COM-11"
+    ],
+    "resolution": null,
+    "version": 1,
+    "status": "unchanged",
+    "previous": null,
+    "introducedInCycle": "CYC-4",
+    "changedInCycle": "CYC-4"
+  },
+  {
+    "id": "REQ-011",
+    "title": "Cancelled and no-show reservations excluded",
+    "text": "Cancelled and no-show reservations earn no commission.",
+    "values": [],
+    "type": "functional",
+    "sources": [
+      "jira"
+    ],
+    "bucket": "jira-only",
+    "origins": [
+      {
+        "statementId": "J11",
+        "source": "jira",
+        "input": "epic",
+        "kind": "jira-story",
+        "ref": "COM-11",
+        "summary": "Exclude non-commissionable reservations",
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-11",
+        "quote": "Cancelled and no-show reservations earn no commission."
+      }
+    ],
+    "jiraKeys": [
+      "COM-11"
+    ],
+    "resolution": null,
+    "version": 1,
+    "status": "carried over",
+    "previous": null,
+    "introducedInCycle": "CYC-4",
+    "changedInCycle": "CYC-4"
+  },
+  {
+    "id": "REQ-012",
+    "title": "Every commission calculation is written to the",
+    "text": "Every commission calculation is written to the commission audit ledger.",
+    "values": [],
+    "type": "functional",
+    "sources": [
+      "code"
+    ],
+    "bucket": "code-only",
+    "origins": [
+      {
+        "statementId": "C9",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-readme",
+        "ref": "README.md",
+        "line": 19,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "quote": "- Every commission calculation is written to the commission audit ledger."
+      }
+    ],
+    "jiraKeys": [],
+    "resolution": null,
+    "version": 1,
+    "status": "unchanged",
+    "previous": null,
+    "introducedInCycle": "CYC-4",
+    "changedInCycle": "CYC-4"
+  },
+  {
+    "id": "REQ-013",
+    "title": "Advisor IATA number required",
+    "text": "A reservation without an advisor IATA number returns HTTP 422.",
+    "values": [
+      {
+        "num": 422,
+        "unit": "http",
+        "raw": "HTTP 422"
+      }
+    ],
+    "type": "functional",
+    "sources": [
+      "code"
+    ],
+    "bucket": "code-only",
+    "origins": [
+      {
+        "statementId": "C10",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-readme",
+        "ref": "README.md",
+        "line": 23,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "quote": "- A reservation without an advisor IATA number returns HTTP 422."
+      }
+    ],
+    "jiraKeys": [],
+    "resolution": null,
+    "version": 1,
+    "status": "unchanged",
+    "previous": null,
+    "introducedInCycle": "CYC-4",
+    "changedInCycle": "CYC-4"
+  },
+  {
+    "id": "REQ-014",
+    "title": "Unknown reservation",
+    "text": "Unknown reservation IDs return HTTP 404.",
+    "values": [
+      {
+        "num": 404,
+        "unit": "http",
+        "raw": "HTTP 404"
+      }
+    ],
+    "type": "functional",
+    "sources": [
+      "code"
+    ],
+    "bucket": "code-only",
+    "origins": [
+      {
+        "statementId": "C11",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-readme",
+        "ref": "README.md",
+        "line": 24,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+        "quote": "- Unknown reservation IDs return HTTP 404."
+      }
+    ],
+    "jiraKeys": [],
+    "resolution": null,
+    "version": 1,
+    "status": "unchanged",
+    "previous": null,
+    "introducedInCycle": "CYC-4",
+    "changedInCycle": "CYC-4"
+  },
+  {
+    "id": "REQ-015",
+    "title": "Group flat rate",
+    "text": "Group reservations of 10 or more rooms are commissioned at a flat 8%.",
+    "values": [
+      {
+        "num": 8,
+        "unit": "%",
+        "raw": "8%"
+      },
+      {
+        "num": 10,
+        "unit": "rooms",
+        "raw": "10 or more rooms"
+      }
+    ],
+    "type": "functional",
+    "sources": [
+      "code",
+      "jira"
+    ],
+    "bucket": "agreed",
+    "origins": [
+      {
+        "statementId": "J2",
+        "source": "jira",
+        "input": "epic",
+        "kind": "jira-epic",
+        "ref": "COM-20",
+        "summary": "Group and package reservation commission",
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-20",
+        "quote": "Group reservations of 10 or more rooms are commissioned at a flat 8%."
+      },
+      {
+        "statementId": "C10",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-readme",
+        "ref": "README.md",
+        "line": 20,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+        "quote": "- Group reservations of 10 or more rooms are commissioned at a flat 8%."
+      },
+      {
+        "statementId": "C19",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-source",
+        "ref": "src/rules.js",
+        "line": 22,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/src/rules.js",
+        "quote": "/** @rule Group reservations of 10 or more rooms are commissioned at a flat 8%. */"
+      }
+    ],
+    "jiraKeys": [
+      "COM-20"
+    ],
+    "resolution": null,
+    "version": 1,
+    "status": "new",
+    "previous": null,
+    "introducedInCycle": "CYC-5",
+    "changedInCycle": "CYC-5"
+  },
+  {
+    "id": "REQ-016",
+    "title": "Package room component",
+    "text": "Package rates are commissioned on 70% of the package price.",
+    "values": [
+      {
+        "num": 70,
+        "unit": "%",
+        "raw": "70%"
+      }
+    ],
+    "type": "functional",
+    "sources": [
+      "jira"
+    ],
+    "bucket": "jira-only",
+    "origins": [
+      {
+        "statementId": "J3",
+        "source": "jira",
+        "input": "epic",
+        "kind": "jira-epic",
+        "ref": "COM-20",
+        "summary": "Group and package reservation commission",
+        "url": "https://aurora-hotels.atlassian.net/browse/COM-20",
+        "quote": "Package rates are commissioned on 70% of the package price."
+      }
+    ],
+    "jiraKeys": [
+      "COM-20"
+    ],
+    "resolution": null,
+    "version": 1,
+    "status": "new",
+    "previous": null,
+    "introducedInCycle": "CYC-5",
+    "changedInCycle": "CYC-5"
+  },
+  {
+    "id": "REQ-017",
+    "title": "Negotiated corporate rate",
+    "text": "Negotiated corporate rates (rate plan CORP) are commissioned at a flat 5%.",
+    "values": [
+      {
+        "num": 5,
+        "unit": "%",
+        "raw": "5%"
+      }
+    ],
+    "type": "functional",
+    "sources": [
+      "code"
+    ],
+    "bucket": "code-only",
+    "origins": [
+      {
+        "statementId": "C11",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-readme",
+        "ref": "README.md",
+        "line": 21,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/README.md",
+        "quote": "- Negotiated corporate rates (rate plan CORP) are commissioned at a flat 5%."
+      },
+      {
+        "statementId": "C20",
+        "source": "code",
+        "input": "codebase",
+        "kind": "code-source",
+        "ref": "src/rules.js",
+        "line": 26,
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/6ccd8071c77a0d393af3cd653edab348e9cda94d/src/rules.js",
+        "quote": "/** @rule Negotiated corporate rates (rate plan CORP) are commissioned at a flat 5%. */"
+      }
+    ],
+    "jiraKeys": [],
+    "resolution": null,
+    "version": 1,
+    "status": "new",
+    "previous": null,
+    "introducedInCycle": "CYC-5",
+    "changedInCycle": "CYC-5"
+  }
+]

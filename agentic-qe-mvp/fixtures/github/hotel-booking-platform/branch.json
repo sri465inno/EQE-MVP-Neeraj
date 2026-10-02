@@ -1,0 +1,20 @@
+{
+  "name": "demo/hotel-booking-platform",
+  "commit": {
+    "sha": "35af1ef510e2b67f90d326d660ac1c886b194ecf",
+    "url": "https://api.github.com/repos/sri465inno/uc-agentic-quality-engineering/commits/35af1ef510e2b67f90d326d660ac1c886b194ecf",
+    "html_url": "https://github.com/sri465inno/uc-agentic-quality-engineering/commit/35af1ef510e2b67f90d326d660ac1c886b194ecf",
+    "commit": {
+      "message": "hotel-booking-platform: @rule tags on configured business rules and a booking data dictionary"
+    }
+  },
+  "_links": {
+    "self": "https://api.github.com/repos/sri465inno/uc-agentic-quality-engineering/branches/demo%2Fhotel-booking-platform",
+    "html": "https://github.com/sri465inno/uc-agentic-quality-engineering/tree/demo/hotel-booking-platform"
+  },
+  "protected": false,
+  "_recorded": {
+    "at": "2026-10-02T03:26:07.897Z",
+    "with": "git clone --depth 1 --branch demo/hotel-booking-platform https://github.com/sri465inno/uc-agentic-quality-engineering.git"
+  }
+}

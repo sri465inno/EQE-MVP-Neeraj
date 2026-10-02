@@ -1,6 +1,7 @@
 'use strict';
 const { getTestingType } = require('./testing-types');
-const { PLATFORM_AGENTS, INPUT_TYPES, DEMO } = require('./platform');
+const { PLATFORM_AGENTS, INPUT_TYPES } = require('./platform');
+const { domainOf } = require('./agents/domains');
 // Cycle report: every figure is computed here from persisted artifacts; the model (optional) drafts the narrative only.
 const { draftNarrative } = require('./llm');
 
@@ -26,7 +27,8 @@ async function buildCycleReport(cycle, { env = process.env, fetchImpl, guidance 
   const a = cycle.artifacts;
   const exec = a.execution || null;
   const defects = a.defects || [];
-  const tt = getTestingType(cycle.testingType);
+  const dom = domainOf(cycle);
+  const tt = getTestingType(cycle.testingType, dom.id);
   const facts = {
     cycleName: cycle.name,
     cycleType: cycle.type,
@@ -60,7 +62,7 @@ async function buildCycleReport(cycle, { env = process.env, fetchImpl, guidance 
       agents: PLATFORM_AGENTS.map((g) => ({ ...g, status: g.id === 'report' ? 'producing this report' : (cycle.phases.find((p) => p.name === g.id) || {}).status || 'not in this cycle' })),
       inputsImplemented: INPUT_TYPES.filter((t) => t.mvp !== 'platform only').map((t) => `${t.name} (${t.mvp})`),
       inputsPlatformOnly: INPUT_TYPES.filter((t) => t.mvp === 'platform only').map((t) => t.name),
-      capability: DEMO.capability,
+      capability: dom.capability, modelLabel: dom.modelLabel, driversLabel: dom.driversLabel,
     },
     testing: {
       id: tt.id, ids: tt.ids, name: tt.name, focus: tt.focus, approach: cycle.type === 'incremental' ? tt.incremental : tt.baseline,
@@ -143,7 +145,7 @@ function renderReportHtml(r) {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${esc(r.title)} - ${esc(r.cycle.name)}</title><style>${CSS}</style></head><body>
 <h1>${esc(r.title)}</h1>
 <p><b>${esc(r.cycle.name)}</b> (${esc(r.cycle.id)}, ${esc(r.cycle.type)}) &middot; status ${esc(r.cycle.status)} &middot; baseline ${esc(r.cycle.baselineId || '-')} ${r.cycle.baselineVersionAfter ? `v${esc(r.cycle.baselineVersionAfter)}` : ''} &middot; SUT build <code>${esc(r.cycle.sutBuild)}</code> &middot; run by ${esc(r.cycle.ranBy || 'not recorded')} &middot; ${esc(r.cycle.createdAt)} to ${esc(r.cycle.completedAt || '-')} &middot; generated ${esc(r.generatedAt)}</p>
-${r.platform ? `<h2>Platform scope</h2><p>Capability under test: <b>${esc(r.platform.capability)}</b>${r.dataModel ? ` &middot; reservation model <b>${esc(r.dataModel.attributeCount)}</b> attributes in ${esc(r.dataModel.groupCount)} groups, <b>${esc(r.dataModel.drivers.length)}</b> of them commission drivers (${esc(r.dataModel.file)})` : ''}.</p>
+${r.platform ? `<h2>Platform scope</h2><p>Capability under test: <b>${esc(r.platform.capability)}</b>${r.dataModel ? ` &middot; ${esc(r.platform.modelLabel || 'reservation')} model <b>${esc(r.dataModel.attributeCount)}</b> attributes in ${esc(r.dataModel.groupCount)} groups, <b>${esc(r.dataModel.drivers.length)}</b> of them ${esc(r.platform.driversLabel || 'commission-driving attributes')} (${esc(r.dataModel.file)})` : ''}.</p>
 <p>${r.platform.agents.length} platform agents: ${r.platform.agents.map((g) => `${g.no}. ${esc(g.name)} <span class="muted">(${esc(g.status)})</span>`).join(' &middot; ')}</p>
 <p>Inputs implemented in this MVP: ${esc(r.platform.inputsImplemented.join('; '))}. Platform input types not in this MVP: <span class="muted">${esc(r.platform.inputsPlatformOnly.join('; '))}</span>.</p>` : ''}
 <h2>Type of testing</h2>${r.testing ? `<p><b>${esc(r.testing.name)}</b>: ${esc(r.testing.focus)}<br>${esc(r.testing.approach)}</p>${r.testing.selection ? `<p>${kv({ 'cases in the pack': r.testing.selection.designed, 'in this run': r.testing.selection.inRun, reused: r.testing.selection.reused, 're-designed': r.testing.selection.redesigned, added: r.testing.selection.added, 'kept outside this run': r.testing.selection.notInRun })}</p>${r.testing.selection.gaps.length ? `<ul>${r.testing.selection.gaps.map((g) => `<li class="fail">${esc(g.message)}</li>`).join('')}</ul>` : ''}` : ''}` : ''}
@@ -169,7 +171,7 @@ ${table(['Case', 'Requirement', 'Name', 'Result', 'Duration ms', 'Note'], ex.res
 ${table(['ID', 'Title', 'Severity', 'Blocks release', 'Case', 'Rule', 'Requirement', 'Expected', 'Actual', 'Failing assertion', 'Movement'], r.defects.open.map((d) => [esc(d.id), esc(d.title), esc(d.severity), d.blocksRelease === null ? 'not assessed' : d.blocksRelease ? '<b class="fail">yes</b>' : 'no', esc(d.testCaseKey), esc(d.ruleId || '-'), esc(d.requirementId), esc(d.expected), esc(d.actual), `<code>${esc(d.assertion)}</code>`, esc(d.movement)]))}
 <h2>Coverage</h2>${r.coverage ? `<p>${kv({ 'designed %': r.coverage.percent.designed, 'automated %': r.coverage.percent.automated, 'executed %': r.coverage.percent.executed, 'passing %': r.coverage.percent.passing })}</p>
 ${table(['Requirement', 'Cases', 'Automated', 'Executed', 'Failed', 'Status'], r.coverage.rows.map((c) => [esc(c.requirementId), c.cases, c.automated, c.executed, c.failed, esc(c.status)]))}
-${r.coverage.attributes ? `<h3>Commission-driver attribute coverage</h3><p>${esc(r.coverage.attributes.exercised)} of ${esc(r.coverage.attributes.driverCount)} commission-driving attributes (of ${esc(r.coverage.attributes.attributeCount)} reservation attributes) are varied by at least one test case (${esc(r.coverage.attributes.percent)}%).</p>
+${r.coverage.attributes ? `<h3>Driver attribute coverage</h3><p>${esc(r.coverage.attributes.exercised)} of ${esc(r.coverage.attributes.driverCount)} ${esc(r.platform?.driversLabel || 'commission-driving attributes')} (of ${esc(r.coverage.attributes.attributeCount)} ${esc(r.platform?.modelLabel || 'reservation')} attributes) are varied by at least one test case (${esc(r.coverage.attributes.percent)}%).</p>
 ${table(['Attribute', 'Description', 'Varied by cases', 'Status'], r.coverage.attributes.rows.map((x) => [`<code>${esc(x.attribute)}</code>`, esc(x.description), esc(x.cases.join(', ') || '-'), esc(x.status)]))}` : ''}` : '-'}
 <h2>Approvals</h2>${table(['Gate', 'Decision', 'By', 'When', 'Detail'], r.approvals.map((p) => [esc(p.gate), esc(p.decision), esc(p.by), esc(p.at), esc(p.detail)]))}
 <h2>What this cycle reused</h2><p>${r.cycle.type === 'incremental' ? `${r.reuse.carriedOver} of ${r.reuse.total} test cases carried over (${r.reuse.percent}%).` : 'Baseline cycle: nothing reused, every artefact designed in this cycle.'} ${esc(r.reuse.note)}</p>

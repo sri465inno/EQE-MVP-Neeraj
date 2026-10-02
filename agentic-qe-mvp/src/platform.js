@@ -43,4 +43,28 @@ const DEMO = {
   flow2: 'COM-20 epic + codebase branch demo/commission-engine-v2 (release 2.0). Enhanced: cap USD 500 -> USD 750. New: group flat 8% for 10+ rooms, package commission on 70% of the price (Jira only), corporate flat 5% (code only).',
 };
 
-module.exports = { PLATFORM_AGENTS, REVIEW_AGENT, INTAKE_STAGES, INPUT_TYPES, DEMO };
+// Demo examples a presenter can run. The example decides the inputs; the cycle mode (baseline or
+// incremental) and the type of testing are chosen separately on the Run page.
+const DEMO_EXAMPLES = [
+  {
+    id: 'hotel', flow: 1, name: 'Hotel booking platform (AQPI)', short: 'Hotel booking',
+    system: 'Hotel booking platform: six Java 21 Spring Boot WebFlux services (search, hotel, offer, cart, reservation, notification)',
+    about: 'AQPI-1 initiative + its 7 epics and 23 stories from the AQPI Jira space + the Java codebase on demo/hotel-booking-platform. Functional runs the API cases, Regression adds the privacy, security and resilience cases, End-to-end runs the guest journeys from search to the confirmation e-mail.',
+    modes: ['baseline'],
+    testingTypes: ['functional', 'regression', 'e2e'],
+    samples: { initiative: 'AQPI-1', epic: 'AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27', baselineBranch: 'demo/hotel-booking-platform' },
+  },
+  {
+    id: 'commission', flow: 2, name: 'Aurora commission engine (COM)', short: 'Commission engine',
+    system: DEMO.system,
+    about: 'COM-1 + COM-10 + release 1.0 as the baseline, then COM-20 + release 2.0 as the increment merged on top of it.',
+    modes: ['baseline', 'incremental'],
+    testingTypes: ['functional', 'e2e', 'regression', 'smoke', 'performance'],
+    samples: { initiative: 'COM-1', epic: 'COM-10', incrementalEpic: 'COM-20', baselineBranch: 'demo/commission-engine', incrementalBranch: 'demo/commission-engine-v2' },
+  },
+];
+
+/** The demo example a cycle ran on, from its system under test. */
+const exampleOf = (cycle) => DEMO_EXAMPLES.find((e) => e.samples.baselineBranch === cycle?.sutBuild || e.samples.incrementalBranch === cycle?.sutBuild) || null;
+
+module.exports = { PLATFORM_AGENTS, REVIEW_AGENT, INTAKE_STAGES, INPUT_TYPES, DEMO, DEMO_EXAMPLES, exampleOf };

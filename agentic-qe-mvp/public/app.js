@@ -4,7 +4,7 @@ const TITLE = 'Agentic QE Platform - MVP';
 const $view = document.getElementById('view');
 let META = null;
 let pollTimer = null;
-const runState = { type: 'baseline', testingTypes: ['functional'], baselineId: '', inputs: {}, inputsOff: new Set(), skills: null, open: new Set() };
+const runState = { type: 'baseline', example: 'hotel', testingTypes: ['functional'], baselineId: '', inputs: {}, inputsOff: new Set(), skills: null, open: new Set() };
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const pill = (text, cls) => `<span class="pill ${esc(cls || String(text).replace(/\s+/g, '-'))}">${esc(text)}</span>`;
@@ -81,9 +81,10 @@ const selectedSkills = () => runState.skills || META.skills.filter((s) => skillF
 const ownes = (s) => Object.entries(s.delivers).map(([a, keys]) => `${a}: ${keys.join(', ')}`).join(' · ');
 
 /** A single type of testing, or several ticked together (persisted as ids joined with "+"). */
-function testingTypeOf(value) {
+function testingTypeOf(value, domainId) {
   const ids = String(value || META.defaultTestingType).split('+');
-  const parts = META.testingTypes.filter((t) => ids.includes(t.id));
+  const inDomain = (t) => { const o = t.domains?.[domainId]; return o ? { ...t, ...o, agents: { ...t.agents, ...o.agents } } : t; };
+  const parts = META.testingTypes.filter((t) => ids.includes(t.id)).map(inDomain);
   if (!parts.length) return META.testingTypes.find((t) => t.id === META.defaultTestingType);
   if (parts.length === 1) return parts[0];
   const each = (f) => parts.map((p) => `${p.short}: ${p[f]}`).join(' ');
@@ -279,7 +280,7 @@ ${rail('flows', 'How it runs', 'click a flow for a short brief', flowTiles)}`;
 function cycleTile(c) {
   const ex = c.summary;
   return tile({ href: `#/cycle/${c.id}`, art: c.type === 'baseline' ? 'flow1' : 'flow2', tag: c.type === 'baseline' ? 'Flow 1' : 'Flow 2', big: c.id.replace('CYC-', '#'), corner: `<span class="status-dot ${esc(c.status)}"></span>${esc(c.status)}`, title: c.name,
-    lines: [c.delta ? esc(c.delta) : `baseline ${esc(c.baselineId || '(on completion)')}`, ex ? `${ex.passed}/${ex.executed} passed · ${ex.passRate}%` : '<span class="muted">not executed yet</span>'], progress: ex ? ex.passRate : 0 });
+    lines: [`${c.example ? `${esc(exampleShort(c.example))} · ` : ''}${c.delta ? esc(c.delta) : `baseline ${esc(c.baselineId || '(on completion)')}`}`, ex ? `${ex.passed}/${ex.executed} passed · ${ex.passRate}%` : '<span class="muted">not executed yet</span>'], progress: ex ? ex.passRate : 0 });
 }
 
 /* ---------------- Run ---------------- */
@@ -288,6 +289,14 @@ const RUN_SLOTS = {
   incremental: [['epic', 'New Jira epic', 'jira-epic', 'incrementalEpic'], ['codebase', 'Updated codebase', 'codebase', 'incrementalBranch']],
 };
 let DEMO_INPUTS = null;
+
+/** The demo example whose inputs fill the slots: picked for a baseline, the one with an increment otherwise. */
+function exampleFor(type) {
+  const xs = META.platform.examples || [];
+  return type === 'incremental' ? xs.find((e) => e.modes.includes('incremental')) : (xs.find((e) => e.id === runState.example) || xs[0]);
+}
+const exampleIdOf = (c) => c.example || (META.platform.examples || []).find((e) => e.samples.baselineBranch === c.sutBuild || e.samples.incrementalBranch === c.sutBuild)?.id || null;
+const exampleShort = (id) => (META.platform.examples || []).find((e) => e.id === id)?.short || '';
 
 function inputsDropdown(type, slots, active) {
   const inFlow = new Map(slots.map((sl) => [sl[2], sl[0]]));
@@ -307,10 +316,10 @@ function inputsDropdown(type, slots, active) {
 <div class="ms-group">The platform also accepts</div>${types.filter((t) => !inFlow.has(t.id) && t.id !== 'data-model').map(item).join('')}`);
 }
 
-function testingTypesDropdown(type) {
+function testingTypesDropdown(type, domainId) {
   const ids = runState.testingTypes;
-  const parts = META.testingTypes.filter((t) => ids.includes(t.id));
-  const body = META.testingTypes.map((t) => checkItem({ cls: 'tt-on', value: t.id, checked: ids.includes(t.id), title: t.name, sub: t.focus })).join('')
+  const parts = META.testingTypes.filter((t) => ids.includes(t.id)).map((t) => testingTypeOf(t.id, domainId));
+  const body = META.testingTypes.map((t) => checkItem({ cls: 'tt-on', value: t.id, checked: ids.includes(t.id), title: t.name, sub: testingTypeOf(t.id, domainId).focus })).join('')
     + '<div class="ms-foot">Tick more than one to combine them in a single run: the agents design, script and run the cases every ticked type needs.</div>';
   return `${checkDropdown('testing', chips(parts.map((p) => p.short)), body)}
 <ul class="tt-how-list">${parts.map((p) => `<li><b>${esc(p.short)}:</b> ${esc(type === 'baseline' ? p.baseline : p.incremental)}</li>`).join('')}</ul>
@@ -325,8 +334,9 @@ function readSummary(slot, label, st) {
   return `<li><b>${esc(label)}</b><span class="muted small">${esc(where)}</span>${prov}</li>`;
 }
 
-function demoInputsHtml(type) {
-  const flow = (DEMO_INPUTS || []).find((f) => f.flow.startsWith(type === 'baseline' ? 'flow-1' : 'flow-2'));
+function demoInputsHtml(type, ex) {
+  const branch = ex.samples[type === 'baseline' ? 'baselineBranch' : 'incrementalBranch'];
+  const flow = (DEMO_INPUTS || []).find((f) => f.branch === branch);
   if (!flow) return '';
   return `<ul class="downloads">${flow.files.map((f) => `<li><a href="${esc(f.url)}" download>${esc(f.name)}</a></li>`).join('')}</ul>
 <p class="hint">The same Jira and codebase content the agents pull, to read or share. <a href="/demo-inputs/README.md" download>README</a></p>`;
@@ -352,17 +362,20 @@ async function viewRun(params) {
   if (runState.type === 'incremental' && !baselines.some((b) => b.id === runState.baselineId)) runState.baselineId = baselines.length ? baselines[baselines.length - 1].id : '';
   const type = runState.type;
   const slots = RUN_SLOTS[type];
+  const ex = exampleFor(type);
+  const forType = `${type}:${ex.id}`;
   for (const [slot, , , sampleKey] of slots) {
-    const def = META.samples[sampleKey];
+    const def = ex.samples[sampleKey];
     const cur = runState.inputs[slot];
-    if (!cur || cur.forType !== type) runState.inputs[slot] = slot === 'codebase' ? { forType: type, mode: 'github', branch: def, text: '' } : { forType: type, mode: META.jira.mode === 'live' ? 'jira' : 'github', key: def, text: '' };
+    if (!cur || cur.forType !== forType) runState.inputs[slot] = slot === 'codebase' ? { forType, mode: 'github', branch: def, text: '' } : { forType, mode: META.jira.mode === 'live' ? 'jira' : 'github', key: def, text: '' };
   }
+  const exampleOption = (e) => `<label class="mode-option"><input type="radio" name="run-example" value="${esc(e.id)}" ${e.id === ex.id ? 'checked' : ''}><span><b>${esc(e.name)}</b><span class="muted">${esc(e.about)}</span></span></label>`;
   const active = slots.filter(([slot]) => !runState.inputsOff.has(`${type}:${slot}`));
   const flowNo = type === 'baseline' ? 1 : 2;
   const modeOption = (v, title, text) => `<label class="mode-option"><input type="radio" name="run-type" value="${v}" ${type === v ? 'checked' : ''}><span><b>${title}</b><span class="muted">${text}</span></span></label>`;
   const agents = META.platform.agents;
-  const tt = testingTypeOf(runState.testingTypes.join('+'));
-  const ttParts = META.testingTypes.filter((t) => runState.testingTypes.includes(t.id));
+  const tt = testingTypeOf(runState.testingTypes.join('+'), ex.id);
+  const ttParts = runState.testingTypes.map((id) => testingTypeOf(id, ex.id)).filter((t) => t.id);
   const ra = META.platform.reviewAgent;
 
   $view.innerHTML = `${pendingBanner(cycles)}<div class="run-layout">
@@ -375,11 +388,14 @@ async function viewRun(params) {
     ${type === 'incremental' ? (baselines.length
     ? `<label class="field">Baseline to add to<select id="baseline">${baselines.map((b) => `<option value="${esc(b.id)}" ${b.id === runState.baselineId ? 'selected' : ''}>${esc(b.id)} v${b.version} - ${esc(b.name)} (${b.counts.requirements} requirements)</option>`).join('')}</select></label>`
     : '<div class="banner">No approved baseline yet. Run Flow 1 first.</div>') : ''}
+    ${type === 'baseline'
+    ? `<p class="hint"><b>Demo example.</b> Pick the project whose inputs fill the slots below. Flow 2 adds the commission increment, so run the commission engine baseline first for it.</p>${(META.platform.examples || []).map(exampleOption).join('')}`
+    : `<p class="hint"><b>Demo example:</b> ${esc(ex.name)}. ${esc(ex.about)}</p>`}
   </div>
   <div class="step-block">
     <h3><span class="step-num">2</span>Type of testing</h3>
     <p class="hint">Steers what the agents design, script and run. The project inputs, this choice, the skills and the flow together decide the artifacts.</p>
-    ${testingTypesDropdown(type)}
+    ${testingTypesDropdown(type, ex.id)}
   </div>
   <div class="step-block">
     <h3><span class="step-num">3</span>Choose what you are bringing</h3>
@@ -397,7 +413,7 @@ async function viewRun(params) {
     <h3><span class="step-num">5</span>Run the agents</h3>
     <p class="hint">The run reads and normalises the inputs, the review agent suggests what is added or missing, then it stops for your review. Nothing is designed until you approve.</p>
     <label class="field">Your name (recorded on approvals)<input type="text" id="who" value="${esc(localStorage.getItem('aqe-user') || '')}" placeholder="e.g. Priya Shah"></label>
-    <div class="row"><button class="btn" id="go" ${type === 'incremental' && !baselines.length ? 'disabled' : ''}>Start Flow ${flowNo} · ${esc(tt.short)}</button></div>
+    <div class="row"><button class="btn" id="go" ${type === 'incremental' && !baselines.length ? 'disabled' : ''}>Start Flow ${flowNo} · ${esc(ex.short)} · ${esc(tt.short)}</button></div>
     <div id="run-msg"></div>
   </div>
   <div class="step-block">
@@ -415,12 +431,13 @@ async function viewRun(params) {
   <h3 class="panel-title">What the agents will read</h3>
   <ul class="read-list">${active.map(([slot, label]) => readSummary(slot, label, runState.inputs[slot])).join('')}</ul>
   <h3 class="panel-title">Flow ${flowNo} test inputs</h3>
-  ${demoInputsHtml(type)}
+  ${demoInputsHtml(type, ex)}
 </div>
 </div>`;
 
   const rerender = () => viewRun(new URLSearchParams());
   $view.querySelectorAll('input[name=run-type]').forEach((el) => el.onchange = () => { location.hash = `#/run?type=${el.value}`; });
+  $view.querySelectorAll('input[name=run-example]').forEach((el) => el.onchange = () => { runState.example = el.value; rerender(); });
   $view.querySelectorAll('details.ms').forEach((d) => d.ontoggle = () => {
     if (d.open) closeDropdowns(d);
     else runState.open.delete(d.dataset.ms);
@@ -534,7 +551,7 @@ async function viewCycle(id, params) {
   try { body = await renderCycleTab(c, tab); } catch (e) { body = `<div class="banner err">${esc(e.message)}</div>`; }
   $view.innerHTML = `<section class="hero small-hero"><div class="eyebrow">${c.type === 'baseline' ? 'Flow 1 · Baseline cycle' : 'Flow 2 · Incremental cycle'}</div>
 <h1>${esc(c.name)} <span class="muted small">${esc(c.id)}</span> ${statusPill(c.status)}</h1>
-<div class="facts"><div><b>${esc(testingTypeOf(c.testingType).name)}</b>type of testing</div><div><b>${done}/${c.phases.length}</b>phases done</div>${c.delta ? `<div><b>${esc(c.delta.summary)}</b>delta</div>` : ''}${ex ? `<div><b>${ex.passed}/${ex.executed}</b>passed</div><div><b>${ex.passRate}%</b>pass rate</div>` : ''}${c.artifacts && c.artifacts.defects ? `<div><b>${c.artifacts.defects.length}</b>defects</div>` : ''}</div>
+<div class="facts"><div><b>${esc(testingTypeOf(c.testingType, exampleIdOf(c)).name)}</b>type of testing</div><div><b>${done}/${c.phases.length}</b>phases done</div>${c.delta ? `<div><b>${esc(c.delta.summary)}</b>delta</div>` : ''}${ex ? `<div><b>${ex.passed}/${ex.executed}</b>passed</div><div><b>${ex.passRate}%</b>pass rate</div>` : ''}${c.artifacts && c.artifacts.defects ? `<div><b>${c.artifacts.defects.length}</b>defects</div>` : ''}</div>
 <div class="muted small">Baseline: ${esc(c.baselineId || '(created when this cycle completes)')}${c.baselineVersionAtStart ? ` v${c.baselineVersionAtStart} at start` : ''}${c.baselineVersionAfter ? ` → v${c.baselineVersionAfter}` : ''} · SUT build <code>${esc(c.sutBuild)}</code> · created ${fmtTime(c.createdAt)}</div></section>
 ${c.error ? `<div class="banner err">Failed: ${esc(c.error)} <button class="btn secondary" id="resume">Resume</button></div>` : ''}
 ${c.status === 'interrupted' ? `<div class="banner">This cycle was interrupted by a restart. <button class="btn secondary" id="resume">Resume</button></div>` : ''}
@@ -571,7 +588,7 @@ function artifactsView(c) {
 
 function inputsTable(c) {
   return table(['Input', 'Reference', 'Statements', 'Provenance', 'Files / detail'], c.inputs.map((i) => [esc(i.label), `${esc(i.ref)}${i.summary ? `<br><span class="muted">${esc(i.summary)}</span>` : ''}${i.children && i.children.length ? `<br><span class="muted small">child issues: ${esc(i.children.join(', '))}</span>` : ''}`,
-    `${i.statementCount}${i.dataModel ? `<br><span class="small muted">data model: ${esc(i.dataModel.attributeCount)} attributes, ${esc(i.dataModel.drivers.length)} commission drivers</span>` : ''}`, `${provPill(i.provenance)}<br><span class="small">${esc(i.provenance.label)}</span>`, `<span class="small">${esc((i.provenance.files || []).join(', '))}</span>${i.compare ? `<br><span class="small">compare vs ${esc(i.compare.baseBranch || (i.compare.base ? i.compare.base.slice(0, 7) : 'base'))} (${esc(i.compare.status)}): ${esc(i.compare.files.map((f) => `${f.filename} (${f.status})`).join(', '))}</span>` : ''}`]));
+    `${i.statementCount}${i.dataModel ? `<br><span class="small muted">data model: ${esc(i.dataModel.attributeCount)} attributes, ${esc(i.dataModel.drivers.length)} drivers</span>` : ''}`, `${provPill(i.provenance)}<br><span class="small">${esc(i.provenance.label)}</span>`, `<span class="small">${esc((i.provenance.files || []).join(', '))}</span>${i.compare ? `<br><span class="small">compare vs ${esc(i.compare.baseBranch || (i.compare.base ? i.compare.base.slice(0, 7) : 'base'))} (${esc(i.compare.status)}): ${esc(i.compare.files.map((f) => `${f.filename} (${f.status})`).join(', '))}</span>` : ''}`]));
 }
 
 const originCell = (origins) => origins.map((o) => `<div class="quote">"${esc(o.quote)}"</div><div class="small muted">${pill(o.source, o.source === 'jira' ? 'jira-only' : 'code-only')} <a href="${esc(o.url || '#')}" target="_blank" rel="noopener">${esc(o.ref)}${o.line ? `:${o.line}` : ''}</a></div>`).join('');
@@ -894,7 +911,7 @@ async function viewReporting(params) {
   const result = (x) => (x.summary ? `${x.summary.passed}/${x.summary.executed} passed · ${x.summary.passRate}%` : 'not executed');
   const picked = cycles.find((x) => x.id === id);
   const picker = `<section class="panel cycle-picker"><label class="field" for="rep-cycle">Cycle run</label>
-<select id="rep-cycle">${cycles.slice().reverse().map((x) => `<option value="${esc(x.id)}" ${x.id === id ? 'selected' : ''}>${esc(when(x))} · ${esc(x.id)} · ${x.type === 'baseline' ? 'Flow 1 baseline' : 'Flow 2 incremental'} · ${esc(testingTypeOf(x.testingType).short)} · ${esc(result(x))}</option>`).join('')}</select>
+<select id="rep-cycle">${cycles.slice().reverse().map((x) => `<option value="${esc(x.id)}" ${x.id === id ? 'selected' : ''}>${esc(when(x))} · ${esc(x.id)} · ${esc(x.example ? exampleShort(x.example) : '')} ${x.type} · ${esc(testingTypeOf(x.testingType).short)} · ${esc(result(x))}</option>`).join('')}</select>
 <span class="muted small">${cycles.length} completed cycle(s) · run on ${esc(when(picked))}</span></section>`;
   const ex = c.artifacts.execution ? c.artifacts.execution.summary : null;
   const defects = c.artifacts.defects || [];

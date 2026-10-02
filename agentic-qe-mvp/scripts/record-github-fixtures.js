@@ -1,7 +1,7 @@
 'use strict';
-// Records the demo commission-engine branches from GitHub (shallow git clone) into fixtures/github/<dir>
+// Records the demo branches (commission engine, hotel booking platform) from GitHub (shallow git clone) into fixtures/github/<dir>
 // in GitHub REST API shapes (branch, contents, compare), so the MVP also runs offline.
-// Usage: node scripts/record-github-fixtures.js
+// Usage: node scripts/record-github-fixtures.js [branch ...]   (default: every known branch)
 const fs = require('fs');
 const path = require('path');
 const { pullSnapshot, BRANCHES, SOURCE } = require('../src/connectors/codebase');
@@ -39,5 +39,9 @@ async function record(branchName, { dir, compareWith }) {
 }
 
 (async () => {
-  for (const [name, cfg] of Object.entries(BRANCHES)) await record(name, cfg);
+  const names = process.argv.slice(2).length ? process.argv.slice(2) : Object.keys(BRANCHES);
+  for (const name of names) {
+    if (!BRANCHES[name]) throw new Error(`Unknown branch "${name}" (known: ${Object.keys(BRANCHES).join(', ')})`);
+    await record(name, BRANCHES[name]);
+  }
 })().catch((e) => { console.error(e.message); process.exit(1); });

@@ -22,10 +22,32 @@ function adfBullets(node, out = []) {
 }
 
 const ROLE_BY_LEVEL = { 2: 'initiative', 1: 'epic', 0: 'story' };
+const ROLE_BY_LABEL = { initiative: 'initiative', epic: 'epic', 'user-story': 'story', story: 'story' };
+// In a description with sections, only acceptance criteria and business rules are requirement statements.
+const ADF_RULE_HEADING = /(acceptance|business rule|behaviou?r)/i;
+
+/** Role of an issue: an explicit label (spaces without native Initiative/Epic/Story types) wins over the hierarchy level. */
+function issueRole(issue) {
+  const label = (issue.fields?.labels || []).map((l) => ROLE_BY_LABEL[String(l).toLowerCase()]).find(Boolean);
+  return label || ROLE_BY_LEVEL[issue.fields?.issuetype?.hierarchyLevel] || String(issue.fields?.issuetype?.name || 'issue').toLowerCase();
+}
+
+function adfRequirementBullets(doc) {
+  const blocks = doc?.content || [];
+  const isRuleHeading = (n) => n.type === 'heading' && ADF_RULE_HEADING.test(adfText(n));
+  if (!blocks.some(isRuleHeading)) return adfBullets(doc);
+  const out = [];
+  let inRules = false;
+  for (const n of blocks) {
+    if (n.type === 'heading') inRules = isRuleHeading(n);
+    else if (inRules) adfBullets(n, out);
+  }
+  return out;
+}
 
 function statementsFromIssue(issue, { baseUrl, input }) {
-  const role = ROLE_BY_LEVEL[issue.fields?.issuetype?.hierarchyLevel] || String(issue.fields?.issuetype?.name || 'issue').toLowerCase();
-  return adfBullets(issue.fields?.description).map((text) => ({
+  const role = issueRole(issue);
+  return adfRequirementBullets(issue.fields?.description).map((text) => ({
     text, source: 'jira', input,
     origin: { kind: `jira-${role}`, ref: issue.key, summary: issue.fields?.summary, url: `${baseUrl}/browse/${issue.key}` },
     quote: text,
@@ -96,6 +118,6 @@ function statementsFromPastedCodebase(text, { input = 'codebase' } = {}) {
 }
 
 module.exports = {
-  adfText, adfBullets, statementsFromIssue, statementsFromPastedJira,
+  adfText, adfBullets, adfRequirementBullets, issueRole, statementsFromIssue, statementsFromPastedJira,
   statementsFromCodebase, statementsFromPastedCodebase, statementsFromMarkdown, statementsFromSource,
 };

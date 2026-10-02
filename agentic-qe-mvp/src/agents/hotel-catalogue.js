@@ -1,0 +1,1220 @@
+'use strict';
+// Hotel booking catalogue (Flow 1: AQPI-1 backlog + hotel-booking-platform Java services).
+// Each entry turns an AQPI acceptance criterion or a codebase @rule into test cases whose code calls
+// the six real Spring Boot services. Statements without an entry stay manual.
+
+const STANDARD = 'every other booking attribute from the hotel data dictionary examples';
+const data = (o = {}) => {
+  const pairs = Object.entries(o).map(([k, v]) => `${k}=${v}`);
+  return pairs.length ? `${pairs.join('; ')}; ${STANDARD}` : `Standard booking: ${STANDARD}`;
+};
+const STEPS = (...s) => s;
+const body = (...lines) => ['  const b = booking(testInfo);', '  await fresh(request, testInfo);', ...lines.map((l) => `  ${l}`)].join('\n');
+const PRE = 'The six hotel services are running with their seeded catalogue (reset before the case).';
+
+const searchRejected = (field, ruleId) => [
+  'const r = await search(request, testInfo, b);',
+  'expect(r.status).toBe(400);',
+  "expect(r.body.code).toBe('VALIDATION_FAILED');",
+  `expect(r.body.fieldIssues).toEqual(expect.arrayContaining([expect.objectContaining({ field: '${field}', ruleId: '${ruleId}' })]));`,
+  'expect(r.body.fieldIssues.every((i) => i.message && i.message.length > 10)).toBe(true);',
+];
+const searchAccepted = [
+  'const r = await search(request, testInfo, b);',
+  'expect(r.status).toBe(200);',
+  'expect(r.body.searchId).toMatch(/^S-/);',
+];
+const booked = [
+  'const cart = await createCart(request, testInfo, b);',
+  'expect(cart.status).toBe(201);',
+  'const r = await reserve(request, testInfo, cart.body.cartId, b);',
+];
+
+const HOTEL_CATALOGUE = [
+  {
+    kind: 'booking-journey', title: 'Search-to-confirmation journey', journey: true,
+    match: /complete search-to-confirmation flow using valid inputs/i,
+    params: () => ({}),
+    cases: () => [
+      {
+        slot: 'journey-flex', suite: 'journey', name: 'Guest books a pay-at-hotel room with breakfast from search to confirmation e-mail',
+        objective: 'Verify the whole guest journey across all six services: search, hotel details, offers, cart, extra, payment summary, reservation and confirmation e-mail.',
+        precondition: PRE, varies: ['search.destination', 'selection.ratePlanCode', 'extras.code'],
+        steps: STEPS('Search NYC for the standard stay', 'Open the chosen hotel', 'Get recommended extras', 'Create a cart and add breakfast', 'Read the payment summary', 'Submit the reservation', 'Open the confirmation e-mail'),
+        testData: data({ 'search.destination': 'NYC', 'selection.ratePlanCode': 'FLEX', 'extras.code': 'BREAKFAST', 'extras.quantity': 1 }),
+        expected: 'HTTP 201 CONFIRMED with a confirmation number; e-mail generated with the same number and total; cart total = payment summary total = booked total',
+        code: () => body(
+          'const s = await search(request, testInfo, b);',
+          'expect(s.status).toBe(200);',
+          "expect(s.body.page.results.some((h) => h.hotelId === b['selection.hotelId'] && h.bookable)).toBe(true);",
+          "const d = await call(request, testInfo, 'hotel-service', 'GET', `/api/hotels/${b['selection.hotelId']}?checkIn=${criteria(b).checkIn}&checkOut=${criteria(b).checkOut}`);",
+          'expect(d.status).toBe(200);',
+          "const offers = await call(request, testInfo, 'offer-service', 'POST', '/api/offers/recommendations', offerContext(b));",
+          "expect(offers.body.offers.map((o) => o.code)).toContain(b['extras.code']);",
+          'const cart = await createCart(request, testInfo, b);',
+          'expect(cart.status).toBe(201);',
+          "const add = await addExtra(request, testInfo, cart.body.cartId, b['extras.code'], b['extras.quantity']);",
+          'expect(add.status).toBe(200);',
+          "const sum = await call(request, testInfo, 'reservation-service', 'GET', `/api/checkout/${cart.body.cartId}/payment-summary`);",
+          'expect(sum.body.total.amount).toBe(add.body.totals.total.amount);',
+          'const r = await reserve(request, testInfo, cart.body.cartId, b);',
+          'expect(r.status).toBe(201);',
+          "expect(r.body.status).toBe('CONFIRMED');",
+          'expect(r.body.total.amount).toBe(add.body.totals.total.amount);',
+          "const mail = await call(request, testInfo, 'notification-service', 'GET', `/api/confirmations/${r.body.reservationId}`);",
+          'expect(mail.status).toBe(200);',
+          'expect(mail.body.confirmationNumber).toBe(r.body.confirmationNumber);',
+          'expect(mail.body.html).toContain(r.body.confirmationNumber);',
+        ),
+      },
+      {
+        slot: 'journey-saver', suite: 'journey', name: 'Guest books a prepaid non-refundable room in Paris and pays now',
+        objective: 'Verify the prepaid journey: the payment summary asks for the full amount now and the booking confirms.',
+        precondition: PRE, varies: ['search.destination', 'selection.hotelId', 'selection.roomCode', 'selection.ratePlanCode'],
+        steps: STEPS('Search PAR', 'Create a cart for the prepaid rate', 'Check pay-now equals the total', 'Submit the reservation'),
+        testData: data({ 'search.destination': 'PAR', 'selection.hotelId': 'H-PAR-001', 'selection.roomCode': 'STD-K', 'selection.ratePlanCode': 'SAVER' }),
+        expected: 'Payment summary pay-now = total; HTTP 201 CONFIRMED',
+        code: () => body(
+          'const s = await search(request, testInfo, b);',
+          'expect(s.status).toBe(200);',
+          'const cart = await createCart(request, testInfo, b);',
+          'expect(cart.status).toBe(201);',
+          "const sum = await call(request, testInfo, 'reservation-service', 'GET', `/api/checkout/${cart.body.cartId}/payment-summary`);",
+          'expect(sum.body.payNow.amount).toBe(sum.body.total.amount);',
+          'const r = await reserve(request, testInfo, cart.body.cartId, b);',
+          'expect(r.status).toBe(201);',
+          "expect(r.body.status).toBe('CONFIRMED');",
+        ),
+      },
+    ],
+  },
+  {
+    kind: 'bookable-inventory', title: 'Only bookable inventory is offered', journey: true,
+    match: /only bookable inventory and valid rates are presented as available/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'journey-sold-out', suite: 'journey', name: 'A sold-out hotel is shown as unavailable and cannot be put in a cart',
+      objective: 'Verify that a hotel with no rooms left is not offered as bookable and that trying to book it is refused.',
+      precondition: `${PRE} Inventory of the chosen hotel is set to 0.`, varies: ['selection.hotelId'],
+      steps: STEPS('Set the hotel inventory to 0', 'Search', 'Try to create a cart for that hotel'),
+      testData: data({ 'selection.hotelId': 'H-NYC-001' }),
+      expected: 'Result shows availability SOLD_OUT, bookable false, no starting price; cart creation returns HTTP 409 ROOM_NO_LONGER_AVAILABLE',
+      code: () => body(
+        "await setInventory(request, testInfo, b['selection.hotelId'], 0);",
+        'const s = await search(request, testInfo, b);',
+        "const hit = s.body.page.results.find((h) => h.hotelId === b['selection.hotelId']);",
+        "expect(hit.availability).toBe('SOLD_OUT');",
+        'expect(hit.bookable).toBe(false);',
+        'const cart = await createCart(request, testInfo, b);',
+        'expect(cart.status).toBe(409);',
+        "expect(cart.body.code).toBe('ROOM_NO_LONGER_AVAILABLE');",
+      ),
+    }],
+  },
+  {
+    kind: 'price-disclosed', title: 'Total price disclosed before confirmation',
+    match: /total price is disclosed before confirmation/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'disclosed', name: 'The payment summary shows taxes, mandatory fees and the total before booking',
+      objective: 'Verify the guest sees the total including mandatory taxes and fees before confirming.',
+      precondition: PRE, varies: [], steps: STEPS('Create a cart', 'Read the payment summary'), testData: data(),
+      expected: 'Payment summary total = cart total = room + taxes + mandatory fees + extras - discounts; taxes and fees above 0',
+      code: () => body(
+        'const cart = await createCart(request, testInfo, b);',
+        'const t = cart.body.totals;',
+        "const sum = await call(request, testInfo, 'reservation-service', 'GET', `/api/checkout/${cart.body.cartId}/payment-summary`);",
+        'expect(sum.status).toBe(200);',
+        'expect(sum.body.total.amount).toBe(t.total.amount);',
+        'expect(t.taxes.amount).toBeGreaterThan(0);',
+        'expect(t.mandatoryFees.amount).toBeGreaterThan(0);',
+        'expect(t.total.amount).toBeCloseTo(t.roomCharge.amount + t.taxes.amount + t.mandatoryFees.amount + t.optionalExtras.amount - t.discounts.amount, 2);',
+      ),
+    }],
+  },
+  {
+    kind: 'offers-not-blocking', title: 'Offers never block the booking', journey: true,
+    match: /(ancillary offers do not block booking|failure to load offers does not block room booking)/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'journey-unavailable-extra', suite: 'journey', name: 'An unavailable extra is refused and the room still books',
+      objective: 'Verify that an extra that cannot be sold is refused clearly while the room reservation still succeeds.',
+      precondition: `${PRE} LATE_CHECKOUT is marked unavailable.`, varies: ['extras.code'],
+      steps: STEPS('Mark LATE_CHECKOUT unavailable', 'Create a cart', 'Try to add LATE_CHECKOUT', 'Submit the reservation'),
+      testData: data({ 'extras.code': 'LATE_CHECKOUT', 'extras.quantity': 1 }),
+      expected: 'Adding the extra returns HTTP 422 EXTRA_NOT_AVAILABLE; reservation HTTP 201 CONFIRMED',
+      code: () => body(
+        "await call(request, testInfo, 'offer-service', 'PUT', `/api/admin/offers/${b['extras.code']}/availability`, { available: false });",
+        'const cart = await createCart(request, testInfo, b);',
+        "const add = await addExtra(request, testInfo, cart.body.cartId, b['extras.code'], b['extras.quantity']);",
+        'expect(add.status).toBe(422);',
+        "expect(add.body.code).toBe('EXTRA_NOT_AVAILABLE');",
+        'const r = await reserve(request, testInfo, cart.body.cartId, b);',
+        'expect(r.status).toBe(201);',
+        "expect(r.body.status).toBe('CONFIRMED');",
+      ),
+    }],
+  },
+  {
+    kind: 'duplicate-submission', title: 'Duplicate submissions handled safely', journey: true,
+    match: /prevents or safely handles duplicate reservation submissions/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'journey-double-submit', suite: 'journey', name: 'A double-clicked Book button creates one reservation and one payment',
+      objective: 'Verify that two simultaneous submissions with the same idempotency key produce one reservation and one authorisation.',
+      precondition: PRE, varies: ['request.idempotencyKeyPrefix'],
+      steps: STEPS('Create a cart', 'Submit the reservation twice at the same time with one key', 'Read the payments ledger'),
+      testData: data({ 'request.idempotencyKeyPrefix': 'aqe-double' }),
+      expected: 'Both responses name the same reservation; exactly one payment authorisation exists',
+      code: () => body(
+        'const cart = await createCart(request, testInfo, b);',
+        'const key = idempotencyKey(b, testInfo);',
+        'const [one, two] = await Promise.all([reserve(request, testInfo, cart.body.cartId, b, key), reserve(request, testInfo, cart.body.cartId, b, key)]);',
+        'expect([one.status, two.status].sort()).toEqual(expect.arrayContaining([201]));',
+        'expect(two.body.reservationId).toBe(one.body.reservationId);',
+        "const pay = await call(request, testInfo, 'reservation-service', 'GET', '/api/ops/payments', undefined, OPS);",
+        'expect(pay.body).toHaveLength(1);',
+      ),
+    }],
+  },
+  {
+    kind: 'durable-confirmation', title: 'Durable confirmation identifier', journey: true,
+    match: /successful reservation produces a durable confirmation identifier/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'journey-durable', suite: 'journey', name: 'The confirmation number can be looked up again after booking',
+      objective: 'Verify the confirmation identifier is stored with the reservation and returned on later reads.',
+      precondition: PRE, varies: [], steps: STEPS('Book the standard stay', 'Read the reservation back by id'), testData: data(),
+      expected: 'HTTP 201 with a 10-character HB… number; GET /api/reservations/{id} returns the same number and CONFIRMED',
+      code: () => body(...booked,
+        'expect(r.status).toBe(201);',
+        'expect(r.body.confirmationNumber).toMatch(/^HB[A-Z0-9]{8}$/);',
+        "const again = await call(request, testInfo, 'reservation-service', 'GET', `/api/reservations/${r.body.reservationId}`);",
+        'expect(again.body.confirmationNumber).toBe(r.body.confirmationNumber);',
+        "expect(again.body.status).toBe('CONFIRMED');",
+      ),
+    }],
+  },
+  {
+    kind: 'confirmation-shown', title: 'Confirmation shown and e-mail requested', journey: true,
+    match: /confirmation is displayed on screen and an email request is generated/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'journey-confirmation', suite: 'journey', name: 'The guest sees the booking outcome and one confirmation e-mail is created',
+      objective: 'Verify the outcome the guest sees and that exactly one confirmation e-mail request exists.',
+      precondition: PRE, varies: [], steps: STEPS('Book the standard stay', 'Read the outcome', 'List the messages for the reservation'), testData: data(),
+      expected: 'Outcome headline says the booking is confirmed; one CONFIRMATION message for the reservation',
+      code: () => body(...booked,
+        'expect(r.status).toBe(201);',
+        'expect(r.body.headline).toMatch(/confirmed/i);',
+        "const msgs = await call(request, testInfo, 'notification-service', 'GET', `/api/ops/messages?reservationId=${r.body.reservationId}`, undefined, OPS);",
+        "expect(msgs.body.filter((m) => m.kind === 'CONFIRMATION')).toHaveLength(1);",
+      ),
+    }],
+  },
+  {
+    kind: 'hotel-search', title: 'Hotel search',
+    match: /guest submits the search, then a search request is created and matching available hotels are returned/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'search', name: 'A valid search returns available hotels for the destination',
+      objective: 'Verify a valid search creates a search and returns matching hotels.',
+      precondition: PRE, varies: ['search.destination', 'stay.nights'], steps: STEPS('Submit the standard search'),
+      testData: data({ 'search.destination': 'NYC', 'stay.nights': 3 }),
+      expected: 'HTTP 200, status RESULTS, a searchId, nights = 3 and at least one bookable hotel in NYC',
+      code: () => body(...searchAccepted,
+        "expect(r.body.status).toBe('RESULTS');",
+        "expect(r.body.criteria.nights).toBe(b['stay.nights']);",
+        "expect(r.body.page.results.filter((h) => h.bookable).length).toBeGreaterThan(0);",
+      ),
+    }],
+  },
+  {
+    kind: 'search-criteria-kept', title: 'Search criteria stay visible',
+    match: /submitted criteria remain visible and editable/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'criteria', name: 'The results page returns the criteria the guest submitted',
+      objective: 'Verify the results carry the submitted criteria so they can be shown and edited.',
+      precondition: PRE, varies: [], steps: STEPS('Search', 'Open the results page'), testData: data(),
+      expected: 'GET results returns destination, check-in, check-out, rooms, adults and children as submitted',
+      code: () => body(...searchAccepted,
+        "const page = await call(request, testInfo, 'search-service', 'GET', `/api/searches/${r.body.searchId}/results`);",
+        'expect(page.body.criteria).toMatchObject(criteria(b));',
+      ),
+    }],
+  },
+  {
+    kind: 'search-date-validation', title: 'Search date and mandatory field validation',
+    match: /past check-in dates, check-out dates not after check-in, and missing mandatory fields are rejected/i,
+    params: () => ({}),
+    cases: () => [
+      { slot: 'past', name: 'A check-in date in the past is rejected', objective: 'Verify past check-in dates are rejected with an actionable message.',
+        precondition: PRE, varies: ['stay.checkInOffsetDays'], steps: STEPS('Search with check-in yesterday'),
+        testData: data({ 'stay.checkInOffsetDays': -1 }), expected: 'HTTP 400 VALIDATION_FAILED, checkIn.past',
+        code: () => body(...searchRejected('checkIn', 'checkIn.past')) },
+      { slot: 'zero-nights', name: 'A check-out on the check-in day is rejected', objective: 'Verify check-out must be after check-in.',
+        precondition: PRE, varies: ['stay.nights'], steps: STEPS('Search with 0 nights'),
+        testData: data({ 'stay.nights': 0 }), expected: 'HTTP 400 VALIDATION_FAILED, checkOut.notAfterCheckIn',
+        code: () => body(...searchRejected('checkOut', 'checkOut.notAfterCheckIn')) },
+      { slot: 'no-destination', name: 'A search without a destination is rejected', objective: 'Verify the destination is mandatory.',
+        precondition: PRE, varies: ['search.destination'], steps: STEPS('Search with an empty destination'),
+        testData: data({ 'search.destination': '' }), expected: 'HTTP 400 VALIDATION_FAILED, destination.required',
+        code: () => body(...searchRejected('destination', 'destination.required')) },
+    ],
+  },
+  {
+    kind: 'stay-length-limit', title: 'Maximum stay length',
+    match: /stay can be at most (\d+) nights; Paris \(PAR\) allows at most (\d+) nights/i,
+    params: (m) => ({ max: Number(m[1]), par: Number(m[2]) }),
+    cases: ({ max, par }) => [
+      { slot: 'at-max', name: `A ${max}-night stay is accepted`, objective: `Verify the upper boundary of ${max} nights is accepted.`,
+        precondition: PRE, varies: ['stay.nights'], steps: STEPS(`Search NYC for ${max} nights`),
+        testData: data({ 'stay.nights': max }), expected: 'HTTP 200 with a searchId', code: () => body(...searchAccepted) },
+      { slot: 'over-max', name: `A ${max + 1}-night stay is rejected`, objective: `Verify one night over the ${max}-night limit is rejected.`,
+        precondition: PRE, varies: ['stay.nights'], steps: STEPS(`Search NYC for ${max + 1} nights`),
+        testData: data({ 'stay.nights': max + 1 }), expected: 'HTTP 400 VALIDATION_FAILED, stay.tooLong', code: () => body(...searchRejected('checkOut', 'stay.tooLong')) },
+      { slot: 'par-at-max', name: `A ${par}-night stay in Paris is accepted`, objective: `Verify the Paris boundary of ${par} nights is accepted.`,
+        precondition: PRE, varies: ['search.destination', 'stay.nights'], steps: STEPS(`Search PAR for ${par} nights`),
+        testData: data({ 'search.destination': 'PAR', 'stay.nights': par }), expected: 'HTTP 200 with a searchId', code: () => body(...searchAccepted) },
+      { slot: 'par-over-max', name: `A ${par + 1}-night stay in Paris is rejected`, objective: `Verify Paris rejects one night over its ${par}-night limit.`,
+        precondition: PRE, varies: ['search.destination', 'stay.nights'], steps: STEPS(`Search PAR for ${par + 1} nights`),
+        testData: data({ 'search.destination': 'PAR', 'stay.nights': par + 1 }), expected: 'HTTP 400 VALIDATION_FAILED, stay.tooLong', code: () => body(...searchRejected('checkOut', 'stay.tooLong')) },
+    ],
+  },
+  {
+    kind: 'occupancy-limits', title: 'Occupancy and room limits',
+    match: /each room holds at most (\d+) adults and (\d+) children, and one search books 1 to (\d+) rooms/i,
+    params: (m) => ({ adults: Number(m[1]), children: Number(m[2]), rooms: Number(m[3]) }),
+    cases: ({ adults, children, rooms }) => [
+      { slot: 'adults-at-max', name: `${adults} adults in one room are accepted`, objective: `Verify the ${adults}-adult boundary is accepted.`,
+        precondition: PRE, varies: ['occupancy.adults'], steps: STEPS(`Search for ${adults} adults in 1 room`),
+        testData: data({ 'occupancy.adults': adults }), expected: 'HTTP 200 with a searchId', code: () => body(...searchAccepted) },
+      { slot: 'adults-over', name: `${adults + 1} adults in one room are rejected`, objective: `Verify more than ${adults} adults per room is rejected.`,
+        precondition: PRE, varies: ['occupancy.adults'], steps: STEPS(`Search for ${adults + 1} adults in 1 room`),
+        testData: data({ 'occupancy.adults': adults + 1 }), expected: 'HTTP 400 VALIDATION_FAILED, adults.max', code: () => body(...searchRejected('adults', 'adults.max')) },
+      { slot: 'children-over', name: `${children + 1} children in one room are rejected`, objective: `Verify more than ${children} children per room is rejected.`,
+        precondition: PRE, varies: ['occupancy.children'], steps: STEPS(`Search for ${children + 1} children in 1 room`),
+        testData: data({ 'occupancy.children': children + 1 }), expected: 'HTTP 400 VALIDATION_FAILED, children.max', code: () => body(...searchRejected('children', 'children.max')) },
+      { slot: 'rooms-over', name: `${rooms + 1} rooms in one search are rejected`, objective: `Verify one search cannot book more than ${rooms} rooms.`,
+        precondition: PRE, varies: ['occupancy.rooms', 'occupancy.adults'], steps: STEPS(`Search for ${rooms + 1} rooms`),
+        testData: data({ 'occupancy.rooms': rooms + 1, 'occupancy.adults': rooms + 1 }), expected: 'HTTP 400 VALIDATION_FAILED, rooms.range', code: () => body(...searchRejected('rooms', 'rooms.range')) },
+    ],
+  },
+  {
+    kind: 'advance-horizon', title: 'Booking horizon',
+    match: /check-in can be at most (\d+) days ahead/i,
+    params: (m) => ({ days: Number(m[1]) }),
+    cases: ({ days }) => [
+      { slot: 'at-horizon', name: `A check-in ${days} days ahead is accepted`, objective: `Verify the ${days}-day boundary is accepted.`,
+        precondition: PRE, varies: ['stay.checkInOffsetDays'], steps: STEPS(`Search with check-in ${days} days from today`),
+        testData: data({ 'stay.checkInOffsetDays': days }), expected: 'HTTP 200 with a searchId', code: () => body(...searchAccepted) },
+      { slot: 'over-horizon', name: `A check-in ${days + 1} days ahead is rejected`, objective: `Verify check-in more than ${days} days ahead is rejected.`,
+        precondition: PRE, varies: ['stay.checkInOffsetDays'], steps: STEPS(`Search with check-in ${days + 1} days from today`),
+        testData: data({ 'stay.checkInOffsetDays': days + 1 }), expected: 'HTTP 400 VALIDATION_FAILED, checkIn.tooFarAhead', code: () => body(...searchRejected('checkIn', 'checkIn.tooFarAhead')) },
+    ],
+  },
+  {
+    kind: 'search-form', title: 'Search form required fields',
+    match: /required fields are clearly identified/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'form', name: 'The search form marks destination, dates, rooms and adults as required',
+      objective: 'Verify the form contract identifies required fields and gives each an error id for assistive technology.',
+      precondition: PRE, varies: [], steps: STEPS('Read the search form contract'), testData: data(),
+      expected: 'destination, checkIn, checkOut, rooms, adults required; children optional; every field has an errorId',
+      code: () => body(
+        "const f = await call(request, testInfo, 'search-service', 'GET', '/api/searches/form');",
+        'const req = Object.fromEntries(f.body.fields.map((x) => [x.name, x.required]));',
+        "expect(req).toMatchObject({ destination: true, checkIn: true, checkOut: true, rooms: true, adults: true, children: false });",
+        'expect(f.body.fields.every((x) => x.errorId)).toBe(true);',
+      ),
+    }],
+  },
+  {
+    kind: 'field-level-messages', title: 'Field-level validation messages',
+    match: /invalid combinations return field-level messages/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'combination', name: 'Two rooms for one adult return a message on the adults field',
+      objective: 'Verify an invalid combination is reported against the field the guest must change.',
+      precondition: PRE, varies: ['occupancy.rooms', 'occupancy.adults'], steps: STEPS('Search for 2 rooms and 1 adult'),
+      testData: data({ 'occupancy.rooms': 2, 'occupancy.adults': 1 }), expected: 'HTTP 400 VALIDATION_FAILED, adults.perRoom',
+      code: () => body(...searchRejected('adults', 'adults.perRoom')),
+    }],
+  },
+  {
+    kind: 'no-availability', title: 'No availability',
+    match: /(no-availability result explains that no matching inventory was found|zero results provide options to alter dates, occupancy, destination)/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'sold-out', name: 'When every hotel is sold out the guest is told and offered other dates, guests or destination',
+      objective: 'Verify a no-availability result explains itself and offers ways to change the search.',
+      precondition: `${PRE} Every NYC hotel has 0 rooms.`, varies: [], steps: STEPS('Set all NYC inventory to 0', 'Search NYC'), testData: data(),
+      expected: 'HTTP 200, status NO_AVAILABILITY, a plain message and CHANGE_DATES, CHANGE_OCCUPANCY and CHANGE_DESTINATION suggestions',
+      code: () => body(
+        "for (const h of ['H-NYC-001', 'H-NYC-002', 'H-NYC-003', 'H-NYC-004']) await setInventory(request, testInfo, h, 0);",
+        'const r = await search(request, testInfo, b);',
+        'expect(r.status).toBe(200);',
+        "expect(r.body.status).toBe('NO_AVAILABILITY');",
+        'expect(r.body.message).toMatch(/no available rooms/i);',
+        "expect(r.body.suggestions.map((s) => s.action)).toEqual(expect.arrayContaining(['CHANGE_DATES', 'CHANGE_OCCUPANCY', 'CHANGE_DESTINATION']));",
+      ),
+    }],
+  },
+  {
+    kind: 'search-session', title: 'Consistent search sessions',
+    match: /repeated submission does not create inconsistent sessions/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'repeat', name: 'Submitting the same search twice in one session returns the same search',
+      objective: 'Verify a repeated submission reuses the search instead of creating a second one.',
+      precondition: PRE, varies: [], steps: STEPS('Search twice with the same X-Session-Id and criteria'), testData: data(),
+      expected: 'Both responses carry the same searchId and sessionId',
+      code: () => body(
+        "const h = { 'X-Session-Id': `sess-${testInfo.testId.slice(-8)}` };",
+        'const one = await search(request, testInfo, b, h);',
+        'const two = await search(request, testInfo, b, h);',
+        'expect(two.body.searchId).toBe(one.body.searchId);',
+        "expect(two.body.sessionId).toBe(h['X-Session-Id']);",
+      ),
+    }],
+  },
+  {
+    kind: 'result-content', title: 'Result card content',
+    match: /each result shows hotel name, location, representative image, starting price, currency, and availability indicator/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'cards', name: 'Every result has a name, location, image, availability and, when bookable, a starting price in a currency',
+      objective: 'Verify each result card carries the content the story lists.',
+      precondition: PRE, varies: [], steps: STEPS('Search'), testData: data(),
+      expected: 'Every result: name, city, image, availability; bookable ones: startingNightly amount and currency',
+      code: () => body(...searchAccepted,
+        'for (const h of r.body.page.results) {',
+        '  expect(h.name && h.city && h.image && h.availability).toBeTruthy();',
+        '  if (h.bookable) expect(h.startingNightly.amount > 0 && h.startingNightly.currency).toBeTruthy();',
+        '}',
+      ),
+    }],
+  },
+  {
+    kind: 'fee-disclosure', title: 'Pricing qualification disclosed',
+    match: /mandatory fees or pricing qualifications are clearly disclosed/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'qualification', name: 'Every bookable result states what its price includes',
+      objective: 'Verify the starting price carries a pricing qualification about taxes and fees.',
+      precondition: PRE, varies: [], steps: STEPS('Search'), testData: data(),
+      expected: 'Every bookable result has a priceQualification mentioning taxes or fees',
+      code: () => body(...searchAccepted,
+        'for (const h of r.body.page.results.filter((x) => x.bookable)) expect(h.priceQualification).toMatch(/tax|fee/i);',
+      ),
+    }],
+  },
+  {
+    kind: 'unavailable-not-bookable', title: 'Unavailable hotels not bookable',
+    match: /unavailable hotels are not presented as immediately bookable/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'sold-out-card', name: 'A sold-out hotel is listed as SOLD_OUT without a price',
+      objective: 'Verify a hotel with no rooms is not presented as bookable.',
+      precondition: `${PRE} H-NYC-004 has 0 rooms.`, varies: ['selection.hotelId'], steps: STEPS('Set H-NYC-004 inventory to 0', 'Search'),
+      testData: data({ 'selection.hotelId': 'H-NYC-004' }), expected: 'H-NYC-004: availability SOLD_OUT, bookable false, startingNightly null',
+      code: () => body(
+        "await setInventory(request, testInfo, b['selection.hotelId'], 0);",
+        'const r = await search(request, testInfo, b);',
+        "const h = r.body.page.results.find((x) => x.hotelId === b['selection.hotelId']);",
+        "expect(h).toMatchObject({ availability: 'SOLD_OUT', bookable: false });",
+        'expect(h.startingNightly).toBeNull();',
+      ),
+    }],
+  },
+  {
+    kind: 'pagination', title: 'Result pagination',
+    match: /results support pagination or progressive loading/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'page', name: 'Results can be read two at a time',
+      objective: 'Verify results are paginated.', precondition: PRE, varies: [], steps: STEPS('Search', 'Read results with size=2'), testData: data(),
+      expected: 'Page holds 2 results, totalPages >= 2',
+      code: () => body(...searchAccepted,
+        "const p = await call(request, testInfo, 'search-service', 'GET', `/api/searches/${r.body.searchId}/results?size=2`);",
+        'expect(p.body.page.results).toHaveLength(2);',
+        'expect(p.body.page.totalPages).toBeGreaterThanOrEqual(2);',
+      ),
+    }],
+  },
+  {
+    kind: 'starting-price', title: 'Starting price backed by a valid rate',
+    match: /displayed starting price must correspond to a valid rate/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'valid-rate', name: 'The starting price equals the cheapest rate on the hotel page',
+      objective: 'Verify the price shown in the results is a rate the guest can actually choose.',
+      precondition: PRE, varies: ['selection.hotelId'], steps: STEPS('Search', 'Open the hotel for the same dates'), testData: data({ 'selection.hotelId': 'H-NYC-001' }),
+      expected: 'startingNightly = lowest averageNightly over the hotel’s room rate plans',
+      code: () => body(...searchAccepted,
+        "const card = r.body.page.results.find((x) => x.hotelId === b['selection.hotelId']);",
+        "const d = await call(request, testInfo, 'hotel-service', 'GET', `/api/hotels/${b['selection.hotelId']}?checkIn=${criteria(b).checkIn}&checkOut=${criteria(b).checkOut}`);",
+        'const lowest = Math.min(...d.body.rooms.flatMap((room) => room.ratePlans.map((p) => p.averageNightly.amount)));',
+        'expect(card.startingNightly.amount).toBe(lowest);',
+      ),
+    }],
+  },
+  {
+    kind: 'result-filters', title: 'Result filters',
+    match: /apply supported filters such as price range, amenities/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'amenity', name: 'Filtering by the spa amenity returns only hotels with a spa',
+      objective: 'Verify the amenities filter narrows the results.', precondition: PRE, varies: [], steps: STEPS('Search', 'Filter by amenities=spa'), testData: data(),
+      expected: 'Every filtered result lists spa among its amenities',
+      code: () => body(...searchAccepted,
+        "const p = await call(request, testInfo, 'search-service', 'GET', `/api/searches/${r.body.searchId}/results?amenities=spa`);",
+        'expect(p.body.page.results.length).toBeGreaterThan(0);',
+        "for (const h of p.body.page.results) expect(h.amenities).toContain('spa');",
+      ),
+    }],
+  },
+  {
+    kind: 'result-sorting', title: 'Approved sort options',
+    match: /guest can sort using approved options/i,
+    params: () => ({}),
+    cases: () => [
+      { slot: 'price-asc', name: 'Sorting by lowest price orders bookable hotels by starting price',
+        objective: 'Verify PRICE_ASC sorts by starting price.', precondition: PRE, varies: [], steps: STEPS('Search', 'Sort by PRICE_ASC'), testData: data(),
+        expected: 'Starting prices of bookable results are non-decreasing',
+        code: () => body(...searchAccepted,
+          "const p = await call(request, testInfo, 'search-service', 'GET', `/api/searches/${r.body.searchId}/results?sort=PRICE_ASC`);",
+          'const prices = p.body.page.results.filter((h) => h.bookable).map((h) => h.startingNightly.amount);',
+          'expect(prices).toEqual([...prices].sort((x, y) => x - y));') },
+      { slot: 'unsupported', name: 'An unapproved sort option is refused with a clear message',
+        objective: 'Verify only approved sort options are accepted.', precondition: PRE, varies: [], steps: STEPS('Search', 'Sort by NAME'), testData: data(),
+        expected: 'HTTP 400 UNSUPPORTED_SORT',
+        code: () => body(...searchAccepted,
+          "const p = await call(request, testInfo, 'search-service', 'GET', `/api/searches/${r.body.searchId}/results?sort=NAME`);",
+          'expect(p.status).toBe(400);',
+          "expect(p.body.code).toBe('UNSUPPORTED_SORT');") },
+    ],
+  },
+  {
+    kind: 'filter-reset', title: 'Reset after filtering to zero',
+    match: /zero results after filtering offer a reset option/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'reset', name: 'A filter that leaves no hotels offers a reset',
+      objective: 'Verify zero results after filtering suggest resetting the filters.', precondition: PRE, varies: [], steps: STEPS('Search', 'Filter minPrice=99999'), testData: data(),
+      expected: 'Status NO_AVAILABILITY with a RESET_FILTERS suggestion',
+      code: () => body(...searchAccepted,
+        "const p = await call(request, testInfo, 'search-service', 'GET', `/api/searches/${r.body.searchId}/results?minPrice=99999`);",
+        "expect(p.body.status).toBe('NO_AVAILABILITY');",
+        "expect(p.body.suggestions.map((s) => s.action)).toContain('RESET_FILTERS');",
+      ),
+    }],
+  },
+  {
+    kind: 'hotel-details', title: 'Hotel details page',
+    match: /hotel description, images, location, amenities, room options, pricing, major policies/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'details', name: 'The hotel page shows description, images, address, amenities, rooms with prices and policies',
+      objective: 'Verify the hotel details carry the content the story lists.', precondition: PRE, varies: ['selection.hotelId'], steps: STEPS('Open the hotel for the stay dates'),
+      testData: data({ 'selection.hotelId': 'H-NYC-001' }), expected: 'HTTP 200 with description, images, address, amenities, rooms with rate plans and prices, check-in policy',
+      code: () => body(
+        "const d = await call(request, testInfo, 'hotel-service', 'GET', `/api/hotels/${b['selection.hotelId']}?checkIn=${criteria(b).checkIn}&checkOut=${criteria(b).checkOut}`);",
+        'expect(d.status).toBe(200);',
+        'expect(d.body.description && d.body.address).toBeTruthy();',
+        'expect(d.body.images.length).toBeGreaterThan(0);',
+        'expect(d.body.amenities.length).toBeGreaterThan(0);',
+        'expect(d.body.rooms.length).toBeGreaterThan(0);',
+        'expect(d.body.rooms.every((room) => room.ratePlans.every((p) => p.averageNightly.amount > 0))).toBe(true);',
+        'expect(d.body.policies.checkInFrom).toBeTruthy();',
+      ),
+    }],
+  },
+  {
+    kind: 'rate-conditions', title: 'Rate conditions shown before selection',
+    match: /rate conditions and cancellation terms must be shown before selection/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'terms', name: 'Every rate plan states its cancellation terms and payment rule',
+      objective: 'Verify the guest can read the conditions of each rate before choosing it.', precondition: PRE, varies: [], steps: STEPS('Open the hotel'), testData: data(),
+      expected: 'Every rate plan has cancellationTerms, a payment rule and a refundable flag',
+      code: () => body(
+        "const d = await call(request, testInfo, 'hotel-service', 'GET', `/api/hotels/${b['selection.hotelId']}?checkIn=${criteria(b).checkIn}&checkOut=${criteria(b).checkOut}`);",
+        'for (const p of d.body.rooms.flatMap((room) => room.ratePlans)) {',
+        "  expect(p.cancellationTerms).toBeTruthy();",
+        "  expect(p.paymentRule).toBeTruthy();",
+        "  expect(typeof p.refundable).toBe('boolean');",
+        '}',
+      ),
+    }],
+  },
+  {
+    kind: 'offer-exclusion', title: 'Ineligible offers excluded',
+    match: /unavailable or ineligible products are excluded/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'no-spa', name: 'Spa access is not offered at a hotel without a spa',
+      objective: 'Verify an extra the hotel cannot deliver is excluded with a reason.', precondition: PRE, varies: ['selection.hotelId'], steps: STEPS('Get recommendations for H-NYC-001'),
+      testData: data({ 'selection.hotelId': 'H-NYC-001' }), expected: 'SPA_ACCESS not offered; listed as excluded with reason HOTEL_LACKS_SPA',
+      code: () => body(
+        "const d = await call(request, testInfo, 'hotel-service', 'GET', `/api/hotels/${b['selection.hotelId']}?checkIn=${criteria(b).checkIn}&checkOut=${criteria(b).checkOut}`);",
+        "expect(d.body.amenities).not.toContain('spa');",
+        "const r = await call(request, testInfo, 'offer-service', 'POST', '/api/offers/recommendations', { ...offerContext(b), hotelAmenities: d.body.amenities });",
+        "expect(r.body.offers.map((o) => o.code)).not.toContain('SPA_ACCESS');",
+        "expect(r.body.excluded).toEqual(expect.arrayContaining([expect.objectContaining({ code: 'SPA_ACCESS', reason: 'HOTEL_LACKS_SPA' })]));",
+      ),
+    }],
+  },
+  {
+    kind: 'offer-reason-codes', title: 'Reason code per recommendation',
+    match: /returns a reason code for each recommended item/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'reasons', name: 'Every recommended extra carries at least one reason code',
+      objective: 'Verify each recommendation is explainable.', precondition: PRE, varies: [], steps: STEPS('Get recommendations'), testData: data(),
+      expected: 'Every offer has a non-empty reasonCodes list',
+      code: () => body(
+        "const r = await call(request, testInfo, 'offer-service', 'POST', '/api/offers/recommendations', offerContext(b));",
+        'expect(r.body.offers.length).toBeGreaterThan(0);',
+        'for (const o of r.body.offers) expect(o.reasonCodes.length).toBeGreaterThan(0);',
+      ),
+    }],
+  },
+  {
+    kind: 'offer-content', title: 'Offer content and optional-extra label',
+    match: /(each offer shows name, description, price, currency, applicability|offers are clearly distinguished from mandatory fees)/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'content', name: 'Each offer shows name, description, price and currency and is labelled an optional extra',
+      objective: 'Verify offer content and that offers are told apart from mandatory fees.', precondition: PRE, varies: [], steps: STEPS('Get recommendations'), testData: data(),
+      expected: 'Every offer: name, description, price amount and currency, kind OPTIONAL_EXTRA',
+      code: () => body(
+        "const r = await call(request, testInfo, 'offer-service', 'POST', '/api/offers/recommendations', offerContext(b));",
+        'for (const o of r.body.offers) {',
+        '  expect(o.name && o.description && o.unitPrice.currency).toBeTruthy();',
+        "  expect(o.kind).toBe('OPTIONAL_EXTRA');",
+        '}',
+      ),
+    }],
+  },
+  {
+    kind: 'offer-interaction', title: 'Add, skip or dismiss an offer',
+    match: /guest can add, skip, or dismiss an offer/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'dismiss', name: 'The guest can record add, skip and dismiss on an offer',
+      objective: 'Verify the three offer actions are accepted.', precondition: PRE, varies: [], steps: STEPS('Send ADD, SKIP and DISMISS for BREAKFAST'), testData: data(),
+      expected: 'HTTP 202 for each action',
+      code: () => body(
+        "for (const action of ['ADD', 'SKIP', 'DISMISS']) {",
+        "  const r = await call(request, testInfo, 'offer-service', 'POST', '/api/offers/interactions', { sessionId: `sess-${testInfo.testId.slice(-8)}`, offerCode: 'BREAKFAST', action });",
+        '  expect(r.status).toBe(202);',
+        '}',
+      ),
+    }],
+  },
+  {
+    kind: 'proceed-without-offers', title: 'Proceed without extras',
+    match: /guest can proceed without selecting ancillary products/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'no-extras', name: 'A room books without any extra',
+      objective: 'Verify extras are optional.', precondition: PRE, varies: [], steps: STEPS('Create a cart with no extras', 'Submit the reservation'), testData: data(),
+      expected: 'HTTP 201 CONFIRMED with optional extras 0',
+      code: () => body(...booked,
+        'expect(r.status).toBe(201);',
+        'expect(cart.body.totals.optionalExtras.amount).toBe(0);',
+      ),
+    }],
+  },
+  {
+    kind: 'consent-personalization', title: 'Consent drives personalization',
+    match: /consent or preference change affects future eligible recommendations/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'withdraw', name: 'Withdrawing consent stops personalized offers',
+      objective: 'Verify personalization follows the guest’s consent.', precondition: PRE, varies: [], steps: STEPS('Give consent with interest DINING', 'Get offers', 'Withdraw consent', 'Get offers again'), testData: data(),
+      expected: 'With consent: personalized true and a disclosure; after withdrawal: personalized false and no offer marked personalized',
+      code: () => body(
+        "const profileId = `p-${testInfo.testId.slice(-8)}`;",
+        "await call(request, testInfo, 'offer-service', 'PUT', `/api/consents/${profileId}`, { personalization: true, interests: ['DINING'] });",
+        "const on = await call(request, testInfo, 'offer-service', 'POST', '/api/offers/recommendations', { ...offerContext(b), profileId });",
+        'expect(on.body.personalized).toBe(true);',
+        'expect(on.body.disclosure).toBeTruthy();',
+        "await call(request, testInfo, 'offer-service', 'DELETE', `/api/consents/${profileId}`);",
+        "const off = await call(request, testInfo, 'offer-service', 'POST', '/api/offers/recommendations', { ...offerContext(b), profileId });",
+        'expect(off.body.personalized).toBe(false);',
+        'expect(off.body.offers.some((o) => o.personalized)).toBe(false);',
+      ),
+    }],
+  },
+  {
+    kind: 'cart-contents', title: 'Cart contents',
+    match: /cart contains hotel, room, rate plan, stay dates, occupancy, quantity, currency, and price components/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'contents', name: 'The cart holds the selected hotel, room, rate, dates, occupancy and price components',
+      objective: 'Verify the cart content the story lists.', precondition: PRE, varies: [], steps: STEPS('Create a cart'), testData: data(),
+      expected: 'HTTP 201; room matches the selection and dates; totals itemised in one currency',
+      code: () => body(
+        'const cart = await createCart(request, testInfo, b);',
+        'expect(cart.status).toBe(201);',
+        'const sel = selection(b);',
+        'expect(cart.body.room).toMatchObject(sel);',
+        'expect(cart.body.room.currency).toBeTruthy();',
+        "expect(Object.keys(cart.body.totals)).toEqual(expect.arrayContaining(['roomCharge', 'taxes', 'mandatoryFees', 'total']));",
+      ),
+    }],
+  },
+  {
+    kind: 'cart-expiry', title: 'Cart expiry and no implicit reservation',
+    match: /cart expires (\d+) minutes after it is created and never creates a reservation itself/i,
+    params: (m) => ({ minutes: Number(m[1]) }),
+    cases: ({ minutes }) => [{
+      slot: 'expiry', name: `A new cart expires ${minutes} minutes after creation and reserves nothing`,
+      objective: `Verify the ${minutes}-minute hold and that the cart does not create a reservation.`, precondition: PRE, varies: [], steps: STEPS('Create a cart', 'List reservations'), testData: data(),
+      expected: `expiresAt - createdAt = ${minutes} min; timeout behaviour shown; no reservation exists`,
+      code: () => body(
+        'const cart = await createCart(request, testInfo, b);',
+        `expect((Date.parse(cart.body.expiresAt) - Date.parse(cart.body.createdAt)) / 60000).toBeCloseTo(${minutes}, 0);`,
+        'expect(cart.body.timeoutBehaviour).toMatch(/not reserved/i);',
+        "const rec = await call(request, testInfo, 'reservation-service', 'GET', '/api/ops/reconciliation', undefined, OPS);",
+        'expect(rec.body).toHaveLength(0);',
+      ),
+    }],
+  },
+  {
+    kind: 'price-change-ack', title: 'Material price change acknowledgement',
+    match: /price change of more than (\d+(?:\.\d+)?)% must be acknowledged/i,
+    params: (m) => ({ pct: Number(m[1]) }),
+    cases: ({ pct }) => [
+      { slot: 'material', name: `A price rise above ${pct}% blocks booking until the guest acknowledges it`,
+        objective: `Verify a change above ${pct}% needs acknowledgement before checkout.`, precondition: `${PRE} The nightly rate rises 30% after the cart is created.`,
+        varies: ['selection.ratePlanCode'], steps: STEPS('Create a cart', 'Raise the rate', 'Revalidate', 'Submit', 'Acknowledge', 'Submit again'), testData: data({ 'selection.ratePlanCode': 'FLEX' }),
+        expected: 'Revalidation requires acknowledgement; first submit HTTP 409 PRICE_CHANGE_REQUIRES_ACKNOWLEDGEMENT; after acknowledging HTTP 201',
+        code: () => body(
+          'const cart = await createCart(request, testInfo, b);',
+          'const nightly = cart.body.room.roomCharge.amount / cart.body.room.nights / cart.body.room.rooms;',
+          "await setRate(request, testInfo, b['selection.hotelId'], b['selection.roomCode'], b['selection.ratePlanCode'], Math.round(nightly * 130) / 100);",
+          "const rv = await call(request, testInfo, 'cart-service', 'POST', `/api/carts/${cart.body.cartId}/revalidate`);",
+          'expect(rv.body.requiresAcknowledgement).toBe(true);',
+          'const blocked = await reserve(request, testInfo, cart.body.cartId, b);',
+          'expect(blocked.status).toBe(409);',
+          "expect(blocked.body.code).toBe('PRICE_CHANGE_REQUIRES_ACKNOWLEDGEMENT');",
+          "await call(request, testInfo, 'cart-service', 'POST', `/api/carts/${cart.body.cartId}/acknowledge`, { priceVersion: rv.body.priceVersion });",
+          'const ok = await reserve(request, testInfo, cart.body.cartId, b);',
+          'expect(ok.status).toBe(201);') },
+      { slot: 'immaterial', name: `A price change within ${pct}% does not need acknowledgement`,
+        objective: `Verify a change within ${pct}% is applied without blocking the guest.`, precondition: `${PRE} The nightly rate rises 0.5% after the cart is created.`,
+        varies: ['selection.ratePlanCode'], steps: STEPS('Create a cart', 'Raise the rate slightly', 'Revalidate'), testData: data({ 'selection.ratePlanCode': 'FLEX' }),
+        expected: 'Revalidation does not require acknowledgement and the new total is shown',
+        code: () => body(
+          'const cart = await createCart(request, testInfo, b);',
+          'const nightly = cart.body.room.roomCharge.amount / cart.body.room.nights / cart.body.room.rooms;',
+          "await setRate(request, testInfo, b['selection.hotelId'], b['selection.roomCode'], b['selection.ratePlanCode'], Math.round(nightly * 100.5) / 100);",
+          "const rv = await call(request, testInfo, 'cart-service', 'POST', `/api/carts/${cart.body.cartId}/revalidate`);",
+          'expect(rv.body.requiresAcknowledgement).toBe(false);',
+          'expect(rv.body.totals.total.amount).toBeGreaterThan(cart.body.totals.total.amount);') },
+    ],
+  },
+  {
+    kind: 'ancillary-quantity', title: 'Extra quantity limits',
+    match: /supported quantities can be changed within product limits/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'limit', name: 'Breakfast can go to 2 but not above its limit of 4',
+      objective: 'Verify quantity changes respect the product limit.', precondition: PRE, varies: ['extras.code', 'extras.quantity'], steps: STEPS('Add breakfast', 'Set quantity 2', 'Set quantity 5'),
+      testData: data({ 'extras.code': 'BREAKFAST', 'extras.quantity': 2 }), expected: 'Quantity 2 doubles the extra price; quantity 5 returns HTTP 422 EXTRA_QUANTITY_LIMIT',
+      code: () => body(
+        'const cart = await createCart(request, testInfo, b);',
+        "const one = await addExtra(request, testInfo, cart.body.cartId, b['extras.code'], 1);",
+        "const two = await call(request, testInfo, 'cart-service', 'PUT', `/api/carts/${cart.body.cartId}/ancillaries/${b['extras.code']}`, { quantity: b['extras.quantity'] });",
+        'expect(two.body.totals.optionalExtras.amount).toBe(one.body.totals.optionalExtras.amount * 2);',
+        "const five = await call(request, testInfo, 'cart-service', 'PUT', `/api/carts/${cart.body.cartId}/ancillaries/${b['extras.code']}`, { quantity: 5 });",
+        'expect(five.status).toBe(422);',
+        "expect(five.body.code).toBe('EXTRA_QUANTITY_LIMIT');",
+      ),
+    }],
+  },
+  {
+    kind: 'ancillary-removal', title: 'Removing an extra updates totals',
+    match: /removal updates totals immediately/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'remove', name: 'Removing breakfast returns the total to the room-only amount',
+      objective: 'Verify totals update as soon as an extra is removed.', precondition: PRE, varies: ['extras.code'], steps: STEPS('Create a cart', 'Add breakfast', 'Remove breakfast'),
+      testData: data({ 'extras.code': 'BREAKFAST', 'extras.quantity': 1 }), expected: 'Total after removal = total before adding; optional extras 0',
+      code: () => body(
+        'const cart = await createCart(request, testInfo, b);',
+        "await addExtra(request, testInfo, cart.body.cartId, b['extras.code'], b['extras.quantity']);",
+        "const del = await call(request, testInfo, 'cart-service', 'DELETE', `/api/carts/${cart.body.cartId}/ancillaries/${b['extras.code']}`);",
+        'expect(del.body.totals.optionalExtras.amount).toBe(0);',
+        'expect(del.body.totals.total.amount).toBe(cart.body.totals.total.amount);',
+      ),
+    }],
+  },
+  {
+    kind: 'itemized-total', title: 'Itemised cart total',
+    match: /room charges, taxes, mandatory fees, optional products, discounts, and total are itemized/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'itemised', name: 'The cart itemises room, taxes, fees, extras and discounts and they add up to the total',
+      objective: 'Verify the itemised components and their sum.', precondition: PRE, varies: ['extras.code'], steps: STEPS('Create a cart', 'Add breakfast'),
+      testData: data({ 'extras.code': 'BREAKFAST', 'extras.quantity': 1 }), expected: 'total = room + taxes + fees + extras - discounts, all in one currency',
+      code: () => body(
+        'const cart = await createCart(request, testInfo, b);',
+        "const add = await addExtra(request, testInfo, cart.body.cartId, b['extras.code'], b['extras.quantity']);",
+        'const t = add.body.totals;',
+        'expect(new Set(Object.values(t).map((m) => m.currency)).size).toBe(1);',
+        'expect(t.total.amount).toBeCloseTo(t.roomCharge.amount + t.taxes.amount + t.mandatoryFees.amount + t.optionalExtras.amount - t.discounts.amount, 2);',
+      ),
+    }],
+  },
+  {
+    kind: 'checkout-fields', title: 'Required and optional guest fields',
+    match: /required and optional fields are clearly distinguished/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'fields', name: 'Checkout lists name, e-mail, payment and privacy notice as required and phone as optional',
+      objective: 'Verify the checkout contract separates required and optional fields.', precondition: PRE, varies: [], steps: STEPS('Create a cart', 'Read the payment summary'), testData: data(),
+      expected: 'requiredFields include guest.firstName, guest.lastName, guest.email, paymentToken, privacyNoticeAccepted; guest.phone is optional',
+      code: () => body(
+        'const cart = await createCart(request, testInfo, b);',
+        "const s = await call(request, testInfo, 'reservation-service', 'GET', `/api/checkout/${cart.body.cartId}/payment-summary`);",
+        "expect(s.body.requiredFields).toEqual(expect.arrayContaining(['guest.firstName', 'guest.lastName', 'guest.email', 'paymentToken', 'privacyNoticeAccepted']));",
+        "expect(s.body.requiredFields).not.toContain('guest.phone');",
+      ),
+    }],
+  },
+  {
+    kind: 'guest-validation', title: 'Guest input validation',
+    match: /inputs are validated and error messages are accessible/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'bad-email', name: 'An invalid e-mail address is rejected on the e-mail field',
+      objective: 'Verify guest inputs are validated with a field-level message.', precondition: PRE, varies: ['guest.email'], steps: STEPS('Create a cart', 'Submit with e-mail "not-an-email"'),
+      testData: data({ 'guest.email': 'not-an-email' }), expected: 'HTTP 422 VALIDATION_FAILED, EMAIL_FORMAT on guest.email',
+      code: () => body(...booked,
+        'expect(r.status).toBe(422);',
+        "expect(r.body.fieldIssues).toEqual(expect.arrayContaining([expect.objectContaining({ field: 'guest.email', ruleId: 'EMAIL_FORMAT' })]));",
+      ),
+    }],
+  },
+  {
+    kind: 'privacy-consent', title: 'Privacy notice required',
+    match: /guest receives applicable privacy notice and consent controls/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'no-consent', name: 'Booking without accepting the privacy notice is refused',
+      objective: 'Verify the privacy notice must be accepted.', precondition: PRE, varies: ['consent.privacyNoticeAccepted'], steps: STEPS('Create a cart', 'Submit without accepting the privacy notice'),
+      testData: data({ 'consent.privacyNoticeAccepted': false }), expected: 'HTTP 422 VALIDATION_FAILED with PRIVACY_NOTICE_REQUIRED on privacyNoticeAccepted',
+      code: () => body(...booked,
+        'expect(r.status).toBe(422);',
+        "expect(r.body.fieldIssues.map((i) => i.ruleId)).toContain('PRIVACY_NOTICE_REQUIRED');",
+      ),
+    }],
+  },
+  {
+    kind: 'support-masking', title: 'Sensitive values masked for support',
+    match: /(sensitive values must be masked in support tools|access to operational data is role-based)/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'support-view', name: 'Support staff see a masked e-mail and other callers are refused',
+      objective: 'Verify the operational view is role-based and masks personal data.', precondition: PRE, varies: [], steps: STEPS('Book', 'Read the ops view without a role', 'Read it as SUPPORT'), testData: data(),
+      expected: 'Without role HTTP 403; as SUPPORT the e-mail is masked and the full address never appears',
+      code: () => body(...booked,
+        "const anon = await call(request, testInfo, 'reservation-service', 'GET', `/api/ops/reservations/${r.body.reservationId}`);",
+        'expect(anon.status).toBe(403);',
+        "const ops = await call(request, testInfo, 'reservation-service', 'GET', `/api/ops/reservations/${r.body.reservationId}`, undefined, OPS);",
+        'expect(ops.status).toBe(200);',
+        "expect(JSON.stringify(ops.body)).not.toContain(b['guest.email']);",
+        "expect(ops.body.email).toMatch(/\\*/);",
+      ),
+    }],
+  },
+  {
+    kind: 'amount-before-auth', title: 'Payable amount before authorisation',
+    match: /final payable or guarantee amount before authorization/i,
+    params: () => ({}),
+    cases: () => [
+      { slot: 'flex', name: 'A pay-at-hotel rate shows nothing to pay now and the total due at the hotel',
+        objective: 'Verify the guarantee case.', precondition: PRE, varies: ['selection.ratePlanCode'], steps: STEPS('Create a FLEX cart', 'Read the payment summary'),
+        testData: data({ 'selection.ratePlanCode': 'FLEX' }), expected: 'payNow 0 and payAtHotel = total',
+        code: () => body(
+          'const cart = await createCart(request, testInfo, b);',
+          "const s = await call(request, testInfo, 'reservation-service', 'GET', `/api/checkout/${cart.body.cartId}/payment-summary`);",
+          'expect(s.body.payNow.amount).toBe(0);',
+          'expect(s.body.payAtHotel.amount).toBe(s.body.total.amount);') },
+      { slot: 'saver', name: 'A prepaid rate shows the full total to pay now',
+        objective: 'Verify the prepaid case.', precondition: PRE, varies: ['selection.ratePlanCode'], steps: STEPS('Create a SAVER cart', 'Read the payment summary'),
+        testData: data({ 'selection.ratePlanCode': 'SAVER' }), expected: 'payNow = total',
+        code: () => body(
+          'const cart = await createCart(request, testInfo, b);',
+          "const s = await call(request, testInfo, 'reservation-service', 'GET', `/api/checkout/${cart.body.cartId}/payment-summary`);",
+          'expect(s.body.payNow.amount).toBe(s.body.total.amount);') },
+    ],
+  },
+  {
+    kind: 'payment-outcomes', title: 'Distinct payment outcomes',
+    match: /authorization success, decline, timeout, and technical failure are handled distinctly/i,
+    params: () => ({}),
+    cases: () => [
+      { slot: 'decline', name: 'A declined card returns a decline without a booking', objective: 'Verify the decline outcome.', precondition: PRE,
+        varies: ['payment.token'], steps: STEPS('Create a cart', 'Pay with a declined card'), testData: data({ 'payment.token': 'tok_decline' }),
+        expected: 'Status PAYMENT_DECLINED, no confirmation number',
+        code: () => body(...booked, "expect(r.body.status).toBe('PAYMENT_DECLINED');", 'expect(r.body.confirmationNumber).toBeFalsy();') },
+      { slot: 'timeout', name: 'A lost payment response leaves the booking pending and tells the guest not to resubmit', objective: 'Verify the timeout outcome and its reconciliation.', precondition: PRE,
+        varies: ['payment.token'], steps: STEPS('Create a cart', 'Pay with a token whose response is lost', 'Reconcile'), testData: data({ 'payment.token': 'tok_timeout' }),
+        expected: 'Status PENDING_UNKNOWN with doNotResubmit true; reconciliation confirms it',
+        code: () => body(...booked,
+          "expect(r.body.status).toBe('PENDING_UNKNOWN');",
+          'expect(r.body.doNotResubmit).toBe(true);',
+          "const rec = await call(request, testInfo, 'reservation-service', 'POST', `/api/reservations/${r.body.reservationId}/reconcile`);",
+          "expect(rec.body.status).toBe('CONFIRMED');") },
+      { slot: 'error', name: 'A payment provider failure returns a failure without a booking', objective: 'Verify the technical-failure outcome.', precondition: PRE,
+        varies: ['payment.token'], steps: STEPS('Create a cart', 'Pay with a token the provider fails on'), testData: data({ 'payment.token': 'tok_error' }),
+        expected: 'Status FAILED, no confirmation number',
+        code: () => body(...booked, "expect(r.body.status).toBe('FAILED');", 'expect(r.body.confirmationNumber).toBeFalsy();') },
+    ],
+  },
+  {
+    kind: 'no-card-data', title: 'No raw card data accepted',
+    match: /does not store prohibited card data/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'raw-card', name: 'A raw card number is refused and never echoed back',
+      objective: 'Verify only payment tokens are accepted.', precondition: PRE, varies: ['payment.token'], steps: STEPS('Create a cart', 'Submit a raw card number as the token'),
+      testData: data({ 'payment.token': '4111111111111111' }), expected: 'HTTP 422 RAW_CARD_REJECTED and the card number does not appear in the response',
+      code: () => body(...booked,
+        'expect(r.status).toBe(422);',
+        "expect(r.body.fieldIssues.map((i) => i.ruleId)).toContain('RAW_CARD_REJECTED');",
+        "expect(JSON.stringify(r.body)).not.toContain(b['payment.token']);",
+      ),
+    }],
+  },
+  {
+    kind: 'one-reservation', title: 'One reservation per successful request',
+    match: /successful request creates one reservation and returns a confirmation identifier/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'book', name: 'A successful booking creates one reservation with a confirmation number',
+      objective: 'Verify the happy-path booking.', precondition: PRE, varies: [], steps: STEPS('Create a cart', 'Submit the reservation'), testData: data(),
+      expected: 'HTTP 201 CONFIRMED with a confirmation number and doNotResubmit true',
+      code: () => body(...booked,
+        'expect(r.status).toBe(201);',
+        "expect(r.body.status).toBe('CONFIRMED');",
+        'expect(r.body.confirmationNumber).toBeTruthy();',
+        'expect(r.body.doNotResubmit).toBe(true);',
+      ),
+    }],
+  },
+  {
+    kind: 'idempotent-reservation', title: 'Idempotent reservation',
+    match: /repeated submissions with the same idempotency key do not create duplicate reservations/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'replay', name: 'Resubmitting with the same key returns the original reservation',
+      objective: 'Verify a replay does not create a second reservation.', precondition: PRE, varies: [], steps: STEPS('Create a cart', 'Submit', 'Submit again with the same key'), testData: data(),
+      expected: 'Second response HTTP 200 with the same reservation; one payment',
+      code: () => body(
+        'const cart = await createCart(request, testInfo, b);',
+        'const key = idempotencyKey(b, testInfo);',
+        'const one = await reserve(request, testInfo, cart.body.cartId, b, key);',
+        'const two = await reserve(request, testInfo, cart.body.cartId, b, key);',
+        'expect(one.status).toBe(201);',
+        'expect(two.status).toBe(200);',
+        'expect(two.body.reservationId).toBe(one.body.reservationId);',
+        "const pay = await call(request, testInfo, 'reservation-service', 'GET', '/api/ops/payments', undefined, OPS);",
+        'expect(pay.body).toHaveLength(1);',
+      ),
+    }],
+  },
+  {
+    kind: 'idempotency-key', title: 'Idempotency-Key required',
+    match: /Idempotency-Key of (\d+) to (\d+) characters; a replay within (\d+) hours returns the original outcome/i,
+    params: (m) => ({ min: Number(m[1]), max: Number(m[2]), hours: Number(m[3]) }),
+    cases: ({ min }) => [
+      { slot: 'missing', name: 'A reservation without an Idempotency-Key is refused', objective: 'Verify the key is mandatory.', precondition: PRE, varies: [],
+        steps: STEPS('Create a cart', 'Submit without the header'), testData: data(), expected: 'HTTP 400 IDEMPOTENCY_KEY_REQUIRED',
+        code: () => body('const cart = await createCart(request, testInfo, b);', 'const r = await reserve(request, testInfo, cart.body.cartId, b, null);',
+          'expect(r.status).toBe(400);', "expect(r.body.code).toBe('IDEMPOTENCY_KEY_REQUIRED');") },
+      { slot: 'too-short', name: `A key shorter than ${min} characters is refused`, objective: `Verify the ${min}-character minimum.`, precondition: PRE, varies: [],
+        steps: STEPS('Create a cart', `Submit with a ${min - 1}-character key`), testData: data(), expected: 'HTTP 400 IDEMPOTENCY_KEY_REQUIRED',
+        code: () => body('const cart = await createCart(request, testInfo, b);', `const r = await reserve(request, testInfo, cart.body.cartId, b, 'k'.repeat(${min - 1}));`,
+          'expect(r.status).toBe(400);', "expect(r.body.code).toBe('IDEMPOTENCY_KEY_REQUIRED');") },
+      { slot: 'reused', name: 'Reusing a key for a different cart is refused', objective: 'Verify a key cannot be reused for another request.', precondition: PRE, varies: [],
+        steps: STEPS('Book cart A with a key', 'Submit cart B with the same key'), testData: data(), expected: 'HTTP 409 IDEMPOTENCY_KEY_REUSED',
+        code: () => body('const key = idempotencyKey(b, testInfo);', 'const a = await createCart(request, testInfo, b);', 'await reserve(request, testInfo, a.body.cartId, b, key);',
+          'const c = await createCart(request, testInfo, b);', 'const r = await reserve(request, testInfo, c.body.cartId, b, key);',
+          "expect(r.body.code).toBe('IDEMPOTENCY_KEY_REUSED');") },
+    ],
+  },
+  {
+    kind: 'reconcilable', title: 'Outcomes reconcilable',
+    match: /inventory, price, payment, and reservation outcomes remain reconcilable/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'reconcile', name: 'After a booking and a decline the reconciliation report is consistent',
+      objective: 'Verify reservation, payment and inventory outcomes agree.', precondition: PRE, varies: [], steps: STEPS('Book one cart', 'Decline another', 'Read the reconciliation report'), testData: data(),
+      expected: 'Reconciliation lists both reservations and marks each consistent',
+      code: () => body(
+        'const a = await createCart(request, testInfo, b);',
+        'await reserve(request, testInfo, a.body.cartId, b);',
+        'const c = await createCart(request, testInfo, b);',
+        "await reserve(request, testInfo, c.body.cartId, { ...b, 'payment.token': 'tok_decline' });",
+        "const rec = await call(request, testInfo, 'reservation-service', 'GET', '/api/ops/reconciliation', undefined, OPS);",
+        'expect(rec.status).toBe(200);',
+        'expect(rec.body).toHaveLength(2);',
+        'expect(rec.body.every((x) => x.consistent)).toBe(true);',
+      ),
+    }],
+  },
+  {
+    kind: 'booking-outcome', title: 'Booking outcome content',
+    match: /success displays confirmation identifier, hotel, stay summary, selected products, and total/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'outcome', name: 'The success outcome shows confirmation number, hotel, stay, extras and total',
+      objective: 'Verify the outcome content.', precondition: PRE, varies: ['extras.code'], steps: STEPS('Create a cart with breakfast', 'Submit'),
+      testData: data({ 'extras.code': 'BREAKFAST', 'extras.quantity': 1 }), expected: 'Response has confirmationNumber, hotel name, stay dates, the breakfast line and total',
+      code: () => body(
+        'const cart = await createCart(request, testInfo, b);',
+        "await addExtra(request, testInfo, cart.body.cartId, b['extras.code'], b['extras.quantity']);",
+        'const r = await reserve(request, testInfo, cart.body.cartId, b);',
+        'expect(r.status).toBe(201);',
+        'const text = JSON.stringify(r.body);',
+        'expect(r.body.confirmationNumber).toBeTruthy();',
+        "expect(text).toContain(cart.body.room.hotelName);",
+        "expect(text).toContain(criteria(b).checkIn);",
+        "expect(r.body.items.some((i) => /breakfast/i.test(i.label))).toBe(true);",
+        'expect(r.body.total.amount).toBeGreaterThan(0);',
+      ),
+    }],
+  },
+  {
+    kind: 'no-false-confirmation', title: 'No false confirmation',
+    match: /failure does not display a false confirmation/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'declined-outcome', name: 'A declined payment does not say the booking is confirmed',
+      objective: 'Verify failures never look like confirmations.', precondition: PRE, varies: ['payment.token'], steps: STEPS('Create a cart', 'Pay with a declined card'),
+      testData: data({ 'payment.token': 'tok_decline' }), expected: 'No confirmation number and the headline does not say confirmed',
+      code: () => body(...booked,
+        'expect(r.body.confirmationNumber).toBeFalsy();',
+        'expect(r.body.headline).not.toMatch(/confirmed/i);',
+      ),
+    }],
+  },
+  {
+    kind: 'unknown-state', title: 'Safe guidance in unknown states',
+    match: /unknown or timeout states instruct the guest not to resubmit blindly/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'pending', name: 'A pending outcome tells the guest not to resubmit and how to check later',
+      objective: 'Verify the unknown state guidance.', precondition: PRE, varies: ['payment.token'], steps: STEPS('Create a cart', 'Pay with a token whose response is lost'),
+      testData: data({ 'payment.token': 'tok_timeout' }), expected: 'PENDING_UNKNOWN, doNotResubmit true and a recovery instruction',
+      code: () => body(...booked,
+        "expect(r.body.status).toBe('PENDING_UNKNOWN');",
+        'expect(r.body.doNotResubmit).toBe(true);',
+        'expect(r.body.message).toBeTruthy();',
+        'expect(r.body.nextSteps.length).toBeGreaterThan(0);',
+      ),
+    }],
+  },
+  {
+    kind: 'confirmation-content', title: 'Confirmation e-mail content',
+    match: /(message contains guest-safe confirmation details|message content matches the confirmed reservation state|sensitive payment details must not appear)/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'email', name: 'The confirmation e-mail matches the booking and contains no payment token',
+      objective: 'Verify the e-mail content, its match with the booking and the absence of payment data.', precondition: PRE, varies: [], steps: STEPS('Book', 'Open the confirmation e-mail'), testData: data(),
+      expected: 'E-mail has the same confirmation number, hotel and total; no payment token; recipient masked',
+      code: () => body(...booked,
+        "const m = await call(request, testInfo, 'notification-service', 'GET', `/api/confirmations/${r.body.reservationId}`);",
+        'expect(m.body.confirmationNumber).toBe(r.body.confirmationNumber);',
+        'expect(m.body.html).toContain(cart.body.room.hotelName);',
+        "expect(m.body.html + m.body.text).not.toContain(b['payment.token']);",
+        "expect(m.body.recipient).not.toBe(b['guest.email']);",
+      ),
+    }],
+  },
+  {
+    kind: 'email-failure-isolated', title: 'E-mail failure does not undo the booking',
+    match: /send failure does not reverse a valid reservation/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'fail', name: 'When the e-mail cannot be sent the booking stays confirmed',
+      objective: 'Verify e-mail failure is isolated from the reservation.', precondition: PRE, varies: ['guest.email'], steps: STEPS('Book with an address the provider rejects'),
+      testData: data({ 'guest.email': 'jane@fail.test' }), expected: 'HTTP 201 CONFIRMED; the e-mail is recorded as FAILED',
+      code: () => body(...booked,
+        'expect(r.status).toBe(201);',
+        "expect(r.body.status).toBe('CONFIRMED');",
+        "await expect.poll(async () => (await call(request, testInfo, 'notification-service', 'GET', `/api/confirmations/${r.body.reservationId}`)).body.status).toBe('FAILED');",
+      ),
+    }],
+  },
+  {
+    kind: 'resend-generic', title: 'Resend reveals nothing',
+    match: /request verifies sufficient reservation information without exposing data/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'generic', name: 'A resend with the wrong last name gets the same answer as a correct one',
+      objective: 'Verify the resend answer does not reveal whether a booking exists.', precondition: PRE, varies: [], steps: STEPS('Book', 'Resend with the right last name', 'Resend with a wrong last name'), testData: data(),
+      expected: 'Both HTTP 202 with the same message; only the correct request creates a message',
+      code: () => body(...booked,
+        "const ok = await call(request, testInfo, 'notification-service', 'POST', '/api/confirmations/resend', { confirmationNumber: r.body.confirmationNumber, lastName: b['guest.lastName'] });",
+        "const bad = await call(request, testInfo, 'notification-service', 'POST', '/api/confirmations/resend', { confirmationNumber: r.body.confirmationNumber, lastName: 'Nobody' });",
+        'expect(ok.status).toBe(202);',
+        'expect(bad.status).toBe(202);',
+        'expect(bad.body).toEqual(ok.body);',
+        "const msgs = await call(request, testInfo, 'notification-service', 'GET', `/api/ops/messages?reservationId=${r.body.reservationId}`, undefined, OPS);",
+        "expect(msgs.body.filter((m) => m.kind === 'RESEND')).toHaveLength(1);",
+      ),
+    }],
+  },
+  {
+    kind: 'resend-limit', title: 'Resend rate limit',
+    match: /resent at most (\d+) times per booking in (\d+) hours/i,
+    params: (m) => ({ limit: Number(m[1]), hours: Number(m[2]) }),
+    cases: ({ limit, hours }) => [{
+      slot: 'limit', name: `The ${limit + 1}th resend within ${hours} hours is refused`,
+      objective: `Verify at most ${limit} resends per booking.`, precondition: PRE, varies: [], steps: STEPS('Book', `Resend ${limit + 1} times`), testData: data(),
+      expected: `First ${limit} resends HTTP 202, the next HTTP 429; still one reservation`,
+      code: () => body(...booked,
+        `for (let i = 0; i < ${limit}; i += 1) expect((await call(request, testInfo, 'notification-service', 'POST', '/api/confirmations/resend', { confirmationNumber: r.body.confirmationNumber, lastName: b['guest.lastName'] })).status).toBe(202);`,
+        "const over = await call(request, testInfo, 'notification-service', 'POST', '/api/confirmations/resend', { confirmationNumber: r.body.confirmationNumber, lastName: b['guest.lastName'] });",
+        'expect(over.status).toBe(429);',
+        "const pay = await call(request, testInfo, 'reservation-service', 'GET', '/api/ops/payments', undefined, OPS);",
+        'expect(pay.body).toHaveLength(1);',
+      ),
+    }],
+  },
+  {
+    kind: 'correlation-id', title: 'Correlation ID across services',
+    match: /events use a correlation ID across supported services/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'header', name: 'A correlation ID sent by the client is returned by search, cart and reservation',
+      objective: 'Verify the correlation ID travels with the request.', precondition: PRE, varies: [], steps: STEPS('Search, create a cart and book with X-Correlation-Id'), testData: data(),
+      expected: 'Every response echoes the same X-Correlation-Id',
+      code: () => body(
+        "const h = { 'X-Correlation-Id': `corr-${testInfo.testId.slice(-8)}` };",
+        'const s = await search(request, testInfo, b, h);',
+        "const cart = await call(request, testInfo, 'cart-service', 'POST', '/api/carts', selection(b), h);",
+        'const r = await reserve(request, testInfo, cart.body.cartId, b, idempotencyKey(b, testInfo), h);',
+        "for (const res of [s, cart, r]) expect(res.headers['x-correlation-id']).toBe(h['X-Correlation-Id']);",
+      ),
+    }],
+  },
+  {
+    kind: 'email-accessible', title: 'Accessible e-mail template',
+    match: /email templates are readable and structurally accessible/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'markup', name: 'The confirmation e-mail has a language, a heading, a captioned table with scoped headers and a text part',
+      objective: 'Verify the e-mail markup is structurally accessible.', precondition: PRE, varies: [], steps: STEPS('Book', 'Open the confirmation e-mail'), testData: data(),
+      expected: 'html has lang, <h1>, <caption>, <th scope=…>; a plain-text part exists',
+      code: () => body(...booked,
+        "const m = await call(request, testInfo, 'notification-service', 'GET', `/api/confirmations/${r.body.reservationId}`);",
+        'expect(m.body.html).toMatch(/<html[^>]+lang=/);',
+        'expect(m.body.html).toMatch(/<h1/);',
+        'expect(m.body.html).toMatch(/<caption/);',
+        'expect(m.body.html).toMatch(/<th[^>]+scope=/);',
+        'expect(m.body.text.length).toBeGreaterThan(50);',
+      ),
+    }],
+  },
+];
+
+// Helpers every generated hotel spec carries. Service URLs come from the execution agent (config metadata).
+const HOTEL_PRELUDE = `const TEST_DATA = require('path').join(__dirname, '..', 'test-data');
+const SERVICES = ['hotel-service', 'search-service', 'offer-service', 'cart-service', 'reservation-service', 'notification-service'];
+const OPS = { 'X-Operator-Role': 'SUPPORT' };
+
+/** The test data agent's data set for this case (test-data/<case key>.json). */
+function dataSet(testInfo) {
+  const key = testInfo && (testInfo.title.match(/^(TC-[FN]-\\d+)\\s/) || [])[1];
+  const file = key && require('path').join(TEST_DATA, \`\${key}.json\`);
+  return file && require('fs').existsSync(file) ? JSON.parse(require('fs').readFileSync(file, 'utf8')) : null;
+}
+
+/** The complete booking the test data agent generated for this case from the hotel data dictionary. */
+function booking(testInfo) {
+  const set = dataSet(testInfo);
+  if (!set || !set.reservation) throw new Error('No test data set for this case: the test data agent writes test-data/<case key>.json before execution.');
+  return set.reservation;
+}
+
+function serviceUrl(testInfo, name) {
+  const url = (testInfo.config.metadata.services || {})[name];
+  if (!url) throw new Error(\`No URL for \${name}: run this spec against the hotel booking platform.\`);
+  return url;
+}
+
+async function call(request, testInfo, service, method, p, data, headers = {}) {
+  const url = serviceUrl(testInfo, service) + p;
+  const res = await request.fetch(url, { method, data, headers, failOnStatusCode: false });
+  const text = await res.text();
+  let body = null;
+  try { body = JSON.parse(text); } catch { body = text || null; }
+  await testInfo.attach(\`\${method} \${service}\${p}\`, {
+    body: JSON.stringify({ request: { method, url, headers, data: data ?? null }, response: { status: res.status(), correlationId: res.headers()['x-correlation-id'] || null, body } }, null, 2),
+    contentType: 'application/json',
+  });
+  return { status: res.status(), body, headers: res.headers() };
+}
+
+const RESETTABLE = SERVICES.filter((s) => s !== 'search-service');
+
+async function fresh(request, testInfo) {
+  for (const s of RESETTABLE) await request.post(serviceUrl(testInfo, s) + '/api/admin/reset');
+}
+
+const day = (offset) => { const d = new Date(); d.setUTCHours(0, 0, 0, 0); d.setUTCDate(d.getUTCDate() + offset); return d.toISOString().slice(0, 10); };
+
+function criteria(b) {
+  const from = Number(b['stay.checkInOffsetDays']);
+  return { destination: b['search.destination'], checkIn: day(from), checkOut: day(from + Number(b['stay.nights'])),
+    rooms: b['occupancy.rooms'], adults: b['occupancy.adults'], children: b['occupancy.children'] };
+}
+
+function selection(b) {
+  const c = criteria(b);
+  return { hotelId: b['selection.hotelId'], roomCode: b['selection.roomCode'], ratePlanCode: b['selection.ratePlanCode'],
+    checkIn: c.checkIn, checkOut: c.checkOut, rooms: c.rooms, adults: c.adults, children: c.children };
+}
+
+function offerContext(b) {
+  const c = criteria(b);
+  return { hotelId: b['selection.hotelId'], destination: c.destination, checkIn: c.checkIn, checkOut: c.checkOut, roomCode: b['selection.roomCode'],
+    ratePlanCode: b['selection.ratePlanCode'], adults: c.adults, children: c.children, currency: 'USD' };
+}
+
+const search = (request, testInfo, b, headers) => call(request, testInfo, 'search-service', 'POST', '/api/searches', criteria(b), headers);
+const createCart = (request, testInfo, b) => call(request, testInfo, 'cart-service', 'POST', '/api/carts', selection(b));
+const addExtra = (request, testInfo, cartId, code, quantity = 1) => call(request, testInfo, 'cart-service', 'POST', \`/api/carts/\${cartId}/ancillaries\`, { code, quantity: Number(quantity) || 1 });
+const setInventory = (request, testInfo, hotelId, rooms) => call(request, testInfo, 'hotel-service', 'PUT', '/api/admin/inventory', { hotelId, rooms });
+const setRate = (request, testInfo, hotelId, roomCode, ratePlan, nightly) => call(request, testInfo, 'hotel-service', 'PUT', \`/api/admin/hotels/\${hotelId}/rooms/\${roomCode}/rates/\${ratePlan}\`, { nightly });
+
+function reservationRequest(cartId, b) {
+  return { cartId, guest: { firstName: b['guest.firstName'], lastName: b['guest.lastName'], email: b['guest.email'], phone: b['guest.phone'] || null, arrivalTime: b['guest.arrivalTime'] || null },
+    paymentToken: b['payment.token'], privacyNoticeAccepted: b['consent.privacyNoticeAccepted'], marketingOptIn: Boolean(b['consent.marketingOptIn']), locale: b['notification.locale'] || null };
+}
+
+let keySeq = 0;
+const idempotencyKey = (b, testInfo) => \`\${b['request.idempotencyKeyPrefix']}-\${testInfo.testId.slice(-8)}-\${keySeq += 1}\`;
+
+function reserve(request, testInfo, cartId, b, key = idempotencyKey(b, testInfo), headers = {}) {
+  return call(request, testInfo, 'reservation-service', 'POST', '/api/reservations', reservationRequest(cartId, b), { ...(key ? { 'Idempotency-Key': key } : {}), ...headers });
+}`;
+
+const HOTEL_KINDS = new Set(HOTEL_CATALOGUE.map((e) => e.kind));
+// Failures that charge or book the guest wrongly.
+const HOTEL_MONEY_KINDS = ['price-disclosed', 'price-change-ack', 'itemized-total', 'amount-before-auth', 'payment-outcomes', 'idempotent-reservation', 'duplicate-submission', 'one-reservation'];
+// Failures that block a core guest journey.
+const HOTEL_JOURNEY_KINDS = HOTEL_CATALOGUE.filter((e) => e.journey).map((e) => e.kind);
+const HOTEL_SMOKE_SLOTS = ['hotel-search|search', 'one-reservation|book', 'booking-journey|journey-flex'];
+
+module.exports = { HOTEL_CATALOGUE, HOTEL_PRELUDE, HOTEL_KINDS, HOTEL_MONEY_KINDS, HOTEL_JOURNEY_KINDS, HOTEL_SMOKE_SLOTS };

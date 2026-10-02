@@ -1,0 +1,144 @@
+{
+  "title": "Agentic QE Platform - MVP - Cycle comparison",
+  "generatedAt": "2026-10-02T04:13:59.736Z",
+  "a": {
+    "id": "CYC-4",
+    "name": "Commission baseline",
+    "type": "baseline",
+    "baselineVersion": 1
+  },
+  "b": {
+    "id": "CYC-5",
+    "name": "Commission increment (COM-20, engine 2.0)",
+    "type": "incremental",
+    "baselineVersion": 2
+  },
+  "requirements": {
+    "added": [
+      "REQ-015",
+      "REQ-016",
+      "REQ-017"
+    ],
+    "changed": [
+      "REQ-008"
+    ],
+    "unchanged": [
+      "REQ-001",
+      "REQ-002",
+      "REQ-003",
+      "REQ-004",
+      "REQ-005",
+      "REQ-006",
+      "REQ-007",
+      "REQ-009",
+      "REQ-010",
+      "REQ-011",
+      "REQ-012",
+      "REQ-013",
+      "REQ-014"
+    ],
+    "removed": [],
+    "changedDetail": [
+      {
+        "id": "REQ-008",
+        "before": "Commission per reservation is capped at USD 500.",
+        "after": "Commission per reservation is capped at USD 750."
+      }
+    ],
+    "countA": 14,
+    "countB": 17
+  },
+  "testCases": {
+    "added": [
+      "TC-F-015",
+      "TC-F-016",
+      "TC-F-017",
+      "TC-F-018"
+    ],
+    "changed": [
+      "TC-F-008"
+    ],
+    "unchanged": [
+      "TC-F-001",
+      "TC-F-002",
+      "TC-N-001",
+      "TC-F-003",
+      "TC-F-004",
+      "TC-F-005",
+      "TC-F-006",
+      "TC-F-007",
+      "TC-F-009",
+      "TC-F-010",
+      "TC-F-011",
+      "TC-F-012",
+      "TC-F-013",
+      "TC-F-014"
+    ],
+    "removed": [],
+    "countA": 15,
+    "countB": 19
+  },
+  "scripts": {
+    "added": [
+      "br-015-group-flat-rate.spec.js",
+      "br-016-package-room-component.spec.js",
+      "br-017-corporate-flat-rate.spec.js"
+    ],
+    "changed": [
+      "br-008-commission-cap.spec.js"
+    ],
+    "unchanged": [
+      "br-001-reservation-data-dictionary.spec.js",
+      "br-002-commission-statement-ui.spec.js",
+      "br-003-quote-latency.spec.js",
+      "br-004-base-commission-rate.spec.js",
+      "br-005-commissionable-revenue.spec.js",
+      "br-006-gds-channel-uplift.spec.js",
+      "br-007-long-stay-bonus.spec.js",
+      "br-009-commission-rounding.spec.js",
+      "br-010-loyalty-points-exclusion.spec.js",
+      "br-011-status-exclusion.spec.js",
+      "br-013-missing-iata-status.spec.js",
+      "br-014-unknown-reservation-status.spec.js"
+    ],
+    "removed": [],
+    "countA": 13,
+    "countB": 16
+  },
+  "execution": {
+    "a": {
+      "total": 15,
+      "executed": 14,
+      "passed": 13,
+      "failed": 1,
+      "skipped": 0,
+      "notRun": 1,
+      "durationMs": 425,
+      "passRate": 92.9
+    },
+    "b": {
+      "total": 19,
+      "executed": 18,
+      "passed": 17,
+      "failed": 1,
+      "skipped": 0,
+      "notRun": 1,
+      "durationMs": 433,
+      "passRate": 94.4
+    },
+    "passRateDelta": 1.5
+  },
+  "defects": {
+    "a": [
+      "DEF-001"
+    ],
+    "b": [
+      "DEF-001"
+    ],
+    "new": [],
+    "stillOpen": [
+      "DEF-001"
+    ],
+    "resolved": []
+  }
+}

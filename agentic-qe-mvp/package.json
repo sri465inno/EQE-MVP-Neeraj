@@ -12,7 +12,8 @@
     "jira-export": "node scripts/make-jira-export.js",
     "record-github": "node scripts/record-github-fixtures.js",
     "demo:artifacts": "node scripts/export-demo-artifacts.js",
-    "demo:inputs": "node scripts/make-demo-inputs.js"
+    "demo:inputs": "node scripts/make-demo-inputs.js",
+    "build:hotel": "mvn -q -f ../hotel-booking-platform/pom.xml -DskipTests install"
   },
   "engines": {
     "node": ">=20"

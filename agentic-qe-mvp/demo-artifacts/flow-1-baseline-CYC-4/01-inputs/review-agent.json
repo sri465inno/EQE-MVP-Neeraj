@@ -1,0 +1,192 @@
+{
+  "agent": "Review agent",
+  "advisory": true,
+  "status": "suggestions",
+  "generatedAt": "2026-10-02T04:13:55.298Z",
+  "testingType": "regression",
+  "note": "Suggestions only. The human reviewer decides every conflict and approves the requirement set.",
+  "counts": {
+    "added": 3,
+    "missing": 5,
+    "conflicts": 1,
+    "high": 2
+  },
+  "findings": [
+    {
+      "id": "RA-01",
+      "category": "conflict",
+      "severity": "high",
+      "groupId": "G6",
+      "title": "Sources disagree: Jira say 2 %, the codebase say 1.5 %",
+      "detail": "Reservations booked through the GDS channel earn an additional 2% channel uplift. / Reservations booked through the GDS channel earn an additional 1.5% channel uplift.",
+      "suggestion": "The code implements 1.5 % today. Choosing another value means the tests for this rule will fail until the code changes.",
+      "sources": [
+        {
+          "source": "jira",
+          "ref": "COM-10",
+          "line": null,
+          "url": "https://aurora-hotels.atlassian.net/browse/COM-10",
+          "quote": "Reservations booked through the GDS channel earn an additional 2% channel uplift."
+        },
+        {
+          "source": "code",
+          "ref": "README.md",
+          "line": 13,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+          "quote": "- Reservations booked through the GDS channel earn an additional 1.5% channel uplift."
+        },
+        {
+          "source": "code",
+          "ref": "src/rules.js",
+          "line": 9,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/src/rules.js",
+          "quote": "/** @rule Reservations booked through the GDS channel earn an additional 1.5% channel uplift. */"
+        }
+      ]
+    },
+    {
+      "id": "RA-02",
+      "category": "added",
+      "severity": "medium",
+      "groupId": "G12",
+      "title": "In the code but in no Jira story",
+      "detail": "Every commission calculation is written to the commission audit ledger.",
+      "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+      "sources": [
+        {
+          "source": "code",
+          "ref": "README.md",
+          "line": 19,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+          "quote": "- Every commission calculation is written to the commission audit ledger."
+        }
+      ]
+    },
+    {
+      "id": "RA-03",
+      "category": "added",
+      "severity": "medium",
+      "groupId": "G13",
+      "title": "In the code but in no Jira story",
+      "detail": "A reservation without an advisor IATA number returns HTTP 422.",
+      "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+      "sources": [
+        {
+          "source": "code",
+          "ref": "README.md",
+          "line": 23,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+          "quote": "- A reservation without an advisor IATA number returns HTTP 422."
+        }
+      ]
+    },
+    {
+      "id": "RA-04",
+      "category": "added",
+      "severity": "medium",
+      "groupId": "G14",
+      "title": "In the code but in no Jira story",
+      "detail": "Unknown reservation IDs return HTTP 404.",
+      "suggestion": "Ask the product owner to add acceptance criteria for it, or exclude it if the behaviour is unintended.",
+      "sources": [
+        {
+          "source": "code",
+          "ref": "README.md",
+          "line": 24,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+          "quote": "- Unknown reservation IDs return HTTP 404."
+        }
+      ]
+    },
+    {
+      "id": "RA-05",
+      "category": "missing",
+      "severity": "medium",
+      "groupId": "G2",
+      "title": "Asked for in Jira but not mentioned in the code",
+      "detail": "Travel advisors can view the commission breakdown for a reservation online.",
+      "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+      "sources": [
+        {
+          "source": "jira",
+          "ref": "COM-1",
+          "line": null,
+          "url": "https://aurora-hotels.atlassian.net/browse/COM-1",
+          "quote": "Travel advisors can view the commission breakdown for a reservation online."
+        }
+      ]
+    },
+    {
+      "id": "RA-06",
+      "category": "missing",
+      "severity": "medium",
+      "groupId": "G3",
+      "title": "Asked for in Jira but not mentioned in the code",
+      "detail": "Commission quotes return within 300 ms at the 95th percentile.",
+      "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+      "sources": [
+        {
+          "source": "jira",
+          "ref": "COM-1",
+          "line": null,
+          "url": "https://aurora-hotels.atlassian.net/browse/COM-1",
+          "quote": "Commission quotes return within 300 ms at the 95th percentile."
+        }
+      ]
+    },
+    {
+      "id": "RA-07",
+      "category": "missing",
+      "severity": "high",
+      "groupId": "G11",
+      "title": "Asked for in Jira but not mentioned in the code",
+      "detail": "Cancelled and no-show reservations earn no commission.",
+      "suggestion": "Tests are designed from the Jira wording; expect them to fail until it is built, or confirm with the developers where it lives.",
+      "sources": [
+        {
+          "source": "jira",
+          "ref": "COM-11",
+          "line": null,
+          "url": "https://aurora-hotels.atlassian.net/browse/COM-11",
+          "quote": "Cancelled and no-show reservations earn no commission."
+        }
+      ]
+    },
+    {
+      "id": "RA-08",
+      "category": "missing",
+      "severity": "low",
+      "groupId": "G12",
+      "title": "No testable expected value",
+      "detail": "Every commission calculation is written to the commission audit ledger.",
+      "suggestion": "Add an example with an exact expected result (amount, status or error code); until then it can only become a manual case.",
+      "sources": [
+        {
+          "source": "code",
+          "ref": "README.md",
+          "line": 19,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/README.md",
+          "quote": "- Every commission calculation is written to the commission audit ledger."
+        }
+      ]
+    },
+    {
+      "id": "RA-09",
+      "category": "missing",
+      "severity": "medium",
+      "groupId": null,
+      "title": "2 of 11 commission-driving attributes have no rule that varies them",
+      "detail": "room.roomCount (Number of rooms held under the reservation); rate.planCategory (Category of the booked rate plan)",
+      "suggestion": "Ask for a rule or an example per attribute in the epic; until then no test changes these attributes.",
+      "sources": [
+        {
+          "source": "code",
+          "ref": "data-dictionary/reservation-attributes.json",
+          "line": null,
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/df5203e8ab429df868960d985a658967fc8408b8/data-dictionary/reservation-attributes.json",
+          "quote": null
+        }
+      ]
+    }
+  ]
+}

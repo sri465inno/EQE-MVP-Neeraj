@@ -1,12 +1,12 @@
 'use strict';
 // Defect agent: raises defects ONLY from test cases whose real execution result is "failed".
-const { MONEY_KINDS, JOURNEY_KINDS, ADVISORY_KINDS } = require('./agents/catalogue');
+const { DOMAINS, domainOf } = require('./agents/domains');
 
 /** Severity comes from the business impact of the rule at risk, not from how the test failed. */
-function severityOf(kind) {
-  if (MONEY_KINDS.has(kind)) return { severity: 'Critical', impact: 'money moved wrongly' };
-  if (JOURNEY_KINDS.has(kind)) return { severity: 'High', impact: 'a core advisor journey is blocked' };
-  if (ADVISORY_KINDS.has(kind)) return { severity: 'Low', impact: 'advisory (non-functional target missed)' };
+function severityOf(kind, dom = DOMAINS.commission) {
+  if (dom.MONEY_KINDS.has(kind)) return { severity: 'Critical', impact: dom.impacts.money };
+  if (dom.JOURNEY_KINDS.has(kind)) return { severity: 'High', impact: dom.impacts.journey };
+  if (dom.ADVISORY_KINDS.has(kind)) return { severity: 'Low', impact: 'advisory (non-functional target missed)' };
   return { severity: 'Medium', impact: 'wrong value or status with a workaround' };
 }
 
@@ -31,7 +31,7 @@ function raiseDefects({ execution, testCases, requirements, cycle, previousDefec
     if (!id) { n += 1; id = `DEF-${String(n).padStart(3, '0')}`; }
     const expected = r.error?.expected ?? tc.expected;
     const actual = r.error?.actual ?? '(see failing assertion)';
-    const { severity, impact } = severityOf(tc.kind);
+    const { severity, impact } = severityOf(tc.kind, domainOf(cycle));
     const blocksRelease = severity === 'Critical' || severity === 'High';
     const occurrence = { cycleId: cycle.id, executedAt: execution.finishedAt, actual, evidence: r.evidence };
     return {

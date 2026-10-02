@@ -5,11 +5,14 @@
 // Every candidate case has a suite:
 //   api      functional rule checks through the service API
 //   ui       a browser check of a screen described in the inputs
-//   journey  an end-to-end advisor journey in the browser (store reservation -> statement -> total)
+//   journey  an end-to-end user journey (commission: store reservation -> statement -> total;
+//            hotel: search -> details -> offers -> cart -> payment -> reservation -> confirmation e-mail)
 //   nfr      a non-functional check stated in the inputs (e.g. quote latency)
 //   load     the same non-functional target under concurrent users
 
-const SMOKE_SLOTS = new Set(['base-commission-rate|base', 'reservation-data-dictionary|dictionary', 'commission-statement-ui|ui']);
+const { HOTEL_SMOKE_SLOTS } = require('./agents/hotel-catalogue');
+
+const SMOKE_SLOTS = new Set(['base-commission-rate|base', 'reservation-data-dictionary|dictionary', 'commission-statement-ui|ui', ...HOTEL_SMOKE_SLOTS]);
 
 const TESTING_TYPES = [
   {
@@ -37,6 +40,18 @@ const TESTING_TYPES = [
       scripts: 'Browser Playwright specs that drive the statement page',
       execution: 'Runs the journeys in headless Chromium and keeps a screenshot of each',
     },
+    domains: {
+      hotel: {
+        focus: "The guest's booking journey through the six services: search, hotel details, offers, cart, payment, reservation and the confirmation e-mail.",
+        baseline: 'Designs one API journey per guest flow in the inputs and runs it against the six hotel services, keeping every request and response as evidence. The services have no browser screen, so no screenshots are taken.',
+        agents: {
+          testcases: 'Guest-journey cases from search to the confirmation e-mail',
+          testdata: 'A search, stay and guest for each journey',
+          scripts: 'Playwright API specs that call the services in journey order',
+          execution: 'Runs the journeys against the six hotel services and keeps each request and response',
+        },
+      },
+    },
   },
   {
     id: 'regression', name: 'Regression testing', short: 'Regression', suites: ['api', 'ui', 'nfr'], rerunsCarried: true,
@@ -50,6 +65,13 @@ const TESTING_TYPES = [
       scripts: 'Playwright specs for every automatable case',
       execution: 'Re-runs the whole pack, carried-over cases included',
     },
+    domains: {
+      hotel: {
+        focus: 'The full pack: every functional case plus the privacy, security, observability and resilience cases, so nothing that worked before has broken.',
+        baseline: 'No earlier pack exists, so it designs the full regression pack (functional and cross-cutting quality) and runs it.',
+        agents: { testcases: 'The full pack: functional and cross-cutting quality cases (AQPI-28 to AQPI-31)' },
+      },
+    },
   },
   {
     id: 'smoke', name: 'Smoke testing', short: 'Smoke', suites: [], smoke: true,
@@ -62,6 +84,9 @@ const TESTING_TYPES = [
       testdata: 'Data sets for the critical-path cases only',
       scripts: 'Playwright specs for the critical path',
       execution: 'Runs the critical path only, in seconds',
+    },
+    domains: {
+      hotel: { focus: 'A few critical checks that show the build is worth testing further: hotel search, the booking data dictionary and a reservation.' },
     },
   },
   {
@@ -95,10 +120,16 @@ function testingTypeIds(value) {
  * The type of testing for a run. Several types combine into one run: the union of their suites,
  * the smoke critical path if smoke is among them, and carried-over cases re-run if regression is.
  */
-function getTestingType(value) {
+/** A testing type with the wording of one domain (e.g. 'hotel') applied over the default wording. */
+function inDomain(t, domainId) {
+  const o = t.domains?.[domainId];
+  return o ? { ...t, ...o, agents: { ...t.agents, ...o.agents } } : t;
+}
+
+function getTestingType(value, domainId) {
   const ids = testingTypeIds(value);
-  if (ids.length === 1) return { ...BY_ID.get(ids[0]), ids };
-  const parts = ids.map((id) => BY_ID.get(id));
+  if (ids.length === 1) return { ...inDomain(BY_ID.get(ids[0]), domainId), ids };
+  const parts = ids.map((id) => inDomain(BY_ID.get(id), domainId));
   const each = (field) => parts.map((p) => `${p.short}: ${p[field]}`).join(' ');
   const agents = {};
   for (const p of parts) for (const [agent, text] of Object.entries(p.agents)) agents[agent] = [...(agents[agent] ? [agents[agent]] : []), `${p.short}: ${text}`].join(' · ');

@@ -1,0 +1,12 @@
+{
+  "type": "file",
+  "encoding": "base64",
+  "size": 713,
+  "name": "search-service.yml",
+  "path": "search-service/src/main/resources/search-service.yml",
+  "sha": "a2bd14fc5f0310aabd9e6cec48b3512e574f7ed6",
+  "url": "https://api.github.com/repos/sri465inno/uc-agentic-quality-engineering/contents/search-service/src/main/resources/search-service.yml?ref=demo%2Fhotel-booking-platform",
+  "html_url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/search-service/src/main/resources/search-service.yml",
+  "download_url": "https://raw.githubusercontent.com/sri465inno/uc-agentic-quality-engineering/35af1ef510e2b67f90d326d660ac1c886b194ecf/search-service/src/main/resources/search-service.yml",
+  "content": "c2VydmVyOgogIHBvcnQ6IDgwODIKcGxhdGZvcm06CiAgc2VydmljZTogc2VhcmNoLXNlcnZpY2UK\nICBlbnZpcm9ubWVudDogbG9jYWwKICBkZXBlbmRlbmNpZXM6CiAgICBob3RlbC1zZXJ2aWNlOgog\nICAgICBiYXNlLXVybDogaHR0cDovL2xvY2FsaG9zdDo4MDgxCiAgICAgIHRpbWVvdXQ6IDJzCiAg\nICAgIHJldHJpZXM6IDEKICBzZWFyY2g6CiAgICAjIEBydWxlIEEgc3RheSBjYW4gYmUgYXQgbW9z\ndCAzMCBuaWdodHM7IFBhcmlzIChQQVIpIGFsbG93cyBhdCBtb3N0IDIxIG5pZ2h0cy4KICAgICMg\nQHJ1bGUgRWFjaCByb29tIGhvbGRzIGF0IG1vc3QgNCBhZHVsdHMgYW5kIDMgY2hpbGRyZW4sIGFu\nZCBvbmUgc2VhcmNoIGJvb2tzIDEgdG8gOCByb29tcy4KICAgICMgQHJ1bGUgQ2hlY2staW4gY2Fu\nIGJlIGF0IG1vc3QgNTAwIGRheXMgYWhlYWQuCiAgICBkZWZhdWx0czoKICAgICAgbWF4LXN0YXkt\nbmlnaHRzOiAzMAogICAgICBtYXgtYWR2YW5jZS1kYXlzOiA1MDAKICAgICAgbWF4LXJvb21zOiA4\nCiAgICAgIG1heC1hZHVsdHMtcGVyLXJvb206IDQKICAgICAgbWF4LWNoaWxkcmVuLXBlci1yb29t\nOiAzCiAgICBtYXJrZXRzOgogICAgICBQQVI6CiAgICAgICAgbWF4LXN0YXktbmlnaHRzOiAyMQpt\nYW5hZ2VtZW50OgogIGVuZHBvaW50czoKICAgIHdlYjoKICAgICAgZXhwb3N1cmU6CiAgICAgICAg\naW5jbHVkZTogaGVhbHRoLGluZm8sbWV0cmljcwo=\n"
+}

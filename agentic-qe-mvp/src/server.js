@@ -14,7 +14,7 @@ const { modelConfig } = require('./llm');
 const { PW_VERSION } = require('./execution');
 const { dataSetFile } = require('./agents/testdata');
 const { loadSkills } = require('./skills');
-const { PLATFORM_AGENTS, REVIEW_AGENT, INTAKE_STAGES, INPUT_TYPES, DEMO } = require('./platform');
+const { PLATFORM_AGENTS, REVIEW_AGENT, INTAKE_STAGES, INPUT_TYPES, DEMO, DEMO_EXAMPLES, exampleOf } = require('./platform');
 const { TESTING_TYPES, DEFAULT_TESTING_TYPE } = require('./testing-types');
 const { FLOWS: DEMO_INPUT_FLOWS } = require('../scripts/make-demo-inputs');
 const { DEMOS: LAB_DEMOS, EXAMPLES: LAB_EXAMPLES, FIELDS: LAB_FIELDS, generateData, runLabCase } = require('./lab');
@@ -58,7 +58,7 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
       playwright: PW_VERSION,
       skills: skillLib.skills.map(({ body, ...s }) => s),
       skillWarnings: skillLib.warnings,
-      platform: { agents: PLATFORM_AGENTS, reviewAgent: REVIEW_AGENT, intakeStages: INTAKE_STAGES, inputTypes: INPUT_TYPES, demo: DEMO },
+      platform: { agents: PLATFORM_AGENTS, reviewAgent: REVIEW_AGENT, intakeStages: INTAKE_STAGES, inputTypes: INPUT_TYPES, demo: DEMO, examples: DEMO_EXAMPLES },
       testingTypes: TESTING_TYPES,
       defaultTestingType: DEFAULT_TESTING_TYPE,
       samples: { initiative: 'COM-1', epic: 'COM-10', incrementalEpic: 'COM-20', baselineBranch: 'demo/commission-engine', incrementalBranch: 'demo/commission-engine-v2' },
@@ -66,7 +66,7 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
   });
 
   app.get('/api/demo-inputs', (req, res) => res.json(DEMO_INPUT_FLOWS.map((f) => ({
-    flow: f.dir, files: f.files.map(([name, slot]) => ({ name, slot, url: `/demo-inputs/${f.dir}/${name}` })),
+    flow: f.dir, branch: f.branch || null, files: f.files.map(([name, slot]) => ({ name, slot, url: `/demo-inputs/${f.dir}/${name}` })),
   }))));
 
   app.post('/api/reset', (req, res) => {
@@ -101,6 +101,7 @@ function createApp({ dataDir = path.join(__dirname, '..', 'data'), env = process
 
   app.get('/api/cycles', (req, res) => res.json(store.listCycles().map((c) => ({
     id: c.id, name: c.name, type: c.type, testingType: c.testingType || DEFAULT_TESTING_TYPE, testingTypeName: c.testingTypeName || null, status: c.status, createdAt: c.createdAt, completedAt: c.completedAt || null, baselineId: c.baselineId,
+    sutBuild: c.sutBuild || null, example: exampleOf(c)?.id || null,
     summary: c.artifacts?.execution?.summary || null, delta: c.delta?.summary || c.deltaPreview?.summary || null,
   }))));
   app.get('/api/cycles/:id', (req, res) => res.json(cycle(req)));
