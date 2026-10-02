@@ -2426,9 +2426,9 @@
     },
     {
       "jiraKeys": [
-        "cart-service/src/main/resources/cart-service.yml"
+        "AQPI-15"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-122",
       "requirement": "A cart expires 30 minutes after it is created and never creates a reservation itself.",
       "requirementStatus": "new",
@@ -2446,9 +2446,9 @@
     },
     {
       "jiraKeys": [
-        "cart-service/src/main/resources/cart-service.yml"
+        "AQPI-17"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-123",
       "requirement": "A price change of more than 1% must be acknowledged by the guest before checkout.",
       "requirementStatus": "new",
@@ -2466,9 +2466,9 @@
     },
     {
       "jiraKeys": [
-        "cart-service/src/main/resources/cart-service.yml"
+        "AQPI-17"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-123",
       "requirement": "A price change of more than 1% must be acknowledged by the guest before checkout.",
       "requirementStatus": "new",
@@ -2480,15 +2480,17 @@
       "caseStatus": "new",
       "testDataId": "TD-F-114",
       "scriptFile": "br-123-price-change-ack.spec.js",
-      "result": "passed",
-      "defects": [],
+      "result": "failed",
+      "defects": [
+        "DEF-004"
+      ],
       "jiraDefects": []
     },
     {
       "jiraKeys": [
-        "notification-service/src/main/resources/notification-service.yml"
+        "AQPI-26"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-124",
       "requirement": "A confirmation can be resent at most 3 times per booking in 24 hours.",
       "requirementStatus": "new",
@@ -2506,9 +2508,9 @@
     },
     {
       "jiraKeys": [
-        "reservation-service/src/main/resources/reservation-service.yml"
+        "AQPI-21"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-125",
       "requirement": "Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.",
       "requirementStatus": "new",
@@ -2526,9 +2528,9 @@
     },
     {
       "jiraKeys": [
-        "reservation-service/src/main/resources/reservation-service.yml"
+        "AQPI-21"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-125",
       "requirement": "Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.",
       "requirementStatus": "new",
@@ -2540,15 +2542,17 @@
       "caseStatus": "new",
       "testDataId": "TD-F-117",
       "scriptFile": "br-125-idempotency-key.spec.js",
-      "result": "passed",
-      "defects": [],
+      "result": "failed",
+      "defects": [
+        "DEF-005"
+      ],
       "jiraDefects": []
     },
     {
       "jiraKeys": [
-        "reservation-service/src/main/resources/reservation-service.yml"
+        "AQPI-21"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-125",
       "requirement": "Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.",
       "requirementStatus": "new",
@@ -2566,9 +2570,9 @@
     },
     {
       "jiraKeys": [
-        "search-service/src/main/resources/search-service.yml"
+        "AQPI-4"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-126",
       "requirement": "A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights.",
       "requirementStatus": "new",
@@ -2586,9 +2590,9 @@
     },
     {
       "jiraKeys": [
-        "search-service/src/main/resources/search-service.yml"
+        "AQPI-4"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-126",
       "requirement": "A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights.",
       "requirementStatus": "new",
@@ -2606,9 +2610,9 @@
     },
     {
       "jiraKeys": [
-        "search-service/src/main/resources/search-service.yml"
+        "AQPI-4"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-126",
       "requirement": "A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights.",
       "requirementStatus": "new",
@@ -2626,9 +2630,9 @@
     },
     {
       "jiraKeys": [
-        "search-service/src/main/resources/search-service.yml"
+        "AQPI-4"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-126",
       "requirement": "A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights.",
       "requirementStatus": "new",
@@ -2646,9 +2650,9 @@
     },
     {
       "jiraKeys": [
-        "search-service/src/main/resources/search-service.yml"
+        "AQPI-4"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-127",
       "requirement": "Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.",
       "requirementStatus": "new",
@@ -2666,9 +2670,9 @@
     },
     {
       "jiraKeys": [
-        "search-service/src/main/resources/search-service.yml"
+        "AQPI-4"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-127",
       "requirement": "Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.",
       "requirementStatus": "new",
@@ -2686,9 +2690,9 @@
     },
     {
       "jiraKeys": [
-        "search-service/src/main/resources/search-service.yml"
+        "AQPI-4"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-127",
       "requirement": "Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.",
       "requirementStatus": "new",
@@ -2706,9 +2710,9 @@
     },
     {
       "jiraKeys": [
-        "search-service/src/main/resources/search-service.yml"
+        "AQPI-4"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-127",
       "requirement": "Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.",
       "requirementStatus": "new",
@@ -2720,15 +2724,17 @@
       "caseStatus": "new",
       "testDataId": "TD-F-126",
       "scriptFile": "br-127-occupancy-limits.spec.js",
-      "result": "passed",
-      "defects": [],
+      "result": "failed",
+      "defects": [
+        "DEF-006"
+      ],
       "jiraDefects": []
     },
     {
       "jiraKeys": [
-        "search-service/src/main/resources/search-service.yml"
+        "AQPI-4"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-128",
       "requirement": "Check-in can be at most 500 days ahead.",
       "requirementStatus": "new",
@@ -2746,9 +2752,9 @@
     },
     {
       "jiraKeys": [
-        "search-service/src/main/resources/search-service.yml"
+        "AQPI-4"
       ],
-      "jiraLevel": "issue",
+      "jiraLevel": "story",
       "requirementId": "REQ-128",
       "requirement": "Check-in can be at most 500 days ahead.",
       "requirementStatus": "new",
@@ -2810,13 +2816,15 @@
       "level": "story",
       "parent": "AQPI-2",
       "summary": "3.2 Validate occupancy and stay criteria",
-      "requirements": 5,
-      "testCases": 5,
-      "automated": 2,
-      "passed": 2,
-      "failed": 0,
-      "defects": [],
-      "status": "verified"
+      "requirements": 8,
+      "testCases": 15,
+      "automated": 12,
+      "passed": 11,
+      "failed": 1,
+      "defects": [
+        "DEF-006"
+      ],
+      "status": "failing"
     },
     {
       "key": "AQPI-5",
@@ -2953,10 +2961,10 @@
       "level": "story",
       "parent": "AQPI-14",
       "summary": "6.1 Add room selection to cart",
-      "requirements": 5,
-      "testCases": 5,
-      "automated": 1,
-      "passed": 1,
+      "requirements": 6,
+      "testCases": 6,
+      "automated": 2,
+      "passed": 2,
       "failed": 0,
       "defects": [],
       "status": "verified"
@@ -2979,13 +2987,15 @@
       "level": "story",
       "parent": "AQPI-14",
       "summary": "6.3 Review cart and total price",
-      "requirements": 5,
-      "testCases": 5,
-      "automated": 1,
-      "passed": 1,
-      "failed": 0,
-      "defects": [],
-      "status": "verified"
+      "requirements": 6,
+      "testCases": 7,
+      "automated": 3,
+      "passed": 2,
+      "failed": 1,
+      "defects": [
+        "DEF-004"
+      ],
+      "status": "failing"
     },
     {
       "key": "AQPI-18",
@@ -3031,13 +3041,15 @@
       "level": "story",
       "parent": "AQPI-18",
       "summary": "7.3 Create reservation idempotently",
-      "requirements": 6,
-      "testCases": 6,
-      "automated": 3,
-      "passed": 3,
-      "failed": 0,
-      "defects": [],
-      "status": "verified"
+      "requirements": 7,
+      "testCases": 9,
+      "automated": 6,
+      "passed": 5,
+      "failed": 1,
+      "defects": [
+        "DEF-005"
+      ],
+      "status": "failing"
     },
     {
       "key": "AQPI-22",
@@ -3096,10 +3108,10 @@
       "level": "story",
       "parent": "AQPI-23",
       "summary": "8.3 Resend confirmation safely",
-      "requirements": 3,
-      "testCases": 3,
-      "automated": 1,
-      "passed": 1,
+      "requirements": 4,
+      "testCases": 4,
+      "automated": 2,
+      "passed": 2,
       "failed": 0,
       "defects": [],
       "status": "verified"
@@ -3173,8 +3185,8 @@
   "totals": {
     "jiraItems": 31,
     "covered": 31,
-    "verified": 23,
-    "failing": 0,
+    "verified": 20,
+    "failing": 3,
     "testCases": 137,
     "withData": 137,
     "withScript": 74,

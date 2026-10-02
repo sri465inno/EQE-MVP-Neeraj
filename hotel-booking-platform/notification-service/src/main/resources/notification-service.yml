@@ -4,7 +4,7 @@ platform:
   service: notification-service
   environment: local
   notification:
-    # @rule A confirmation can be resent at most 3 times per booking in 24 hours.
+    # @rule [AQPI-26] A confirmation can be resent at most 3 times per booking in 24 hours.
     max-send-attempts: 3
     resend-limit-per-booking: 3
     resend-booking-window: 24h

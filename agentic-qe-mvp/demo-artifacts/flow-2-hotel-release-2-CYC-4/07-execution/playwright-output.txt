@@ -61,15 +61,53 @@ Running 83 tests using 1 worker
 [58/83] specs/br-122-cart-expiry.spec.js:93:1 › TC-F-112 A new cart expires 20 minutes after creation and reserves nothing
 [59/83] specs/br-123-price-change-ack.spec.js:92:1 › TC-F-113 A price rise above 1% blocks booking until the guest acknowledges it
 [60/83] specs/br-123-price-change-ack.spec.js:108:1 › TC-F-114 A price change within 1% does not need acknowledgement
+  1) specs/br-123-price-change-ack.spec.js:108:1 › TC-F-114 A price change within 1% does not need acknowledgement 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      113 |   await setRate(request, testInfo, b['selection.hotelId'], b['selection.roomCode'], b['selection.ratePlanCode'], Math.round(nightly * 100.5) / 100);
+      114 |   const rv = await call(request, testInfo, 'cart-service', 'POST', `/api/carts/${cart.body.cartId}/revalidate`);
+    > 115 |   expect(rv.body.requiresAcknowledgement).toBe(false);
+          |                                           ^
+      116 |   expect(rv.body.totals.total.amount).toBeGreaterThan(cart.body.totals.total.amount);
+      117 | });
+      118 |
+        at /tmp/aqe-demo-4MUalt/runs/CYC-4/specs/br-123-price-change-ack.spec.js:115:43
+
+    Error Context: test-results/br-123-price-change-ack-TC-26374-es-not-need-acknowledgement/error-context.md
+
+
 [61/83] specs/br-124-resend-limit.spec.js:93:1 › TC-F-115 The 6th resend within 24 hours is refused
 [62/83] specs/br-125-idempotency-key.spec.js:92:1 › TC-F-116 A reservation without an Idempotency-Key is refused
 [63/83] specs/br-125-idempotency-key.spec.js:101:1 › TC-F-117 A key shorter than 8 characters is refused
+  2) specs/br-125-idempotency-key.spec.js:101:1 › TC-F-117 A key shorter than 8 characters is refused 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 201
+
+      104 |   const cart = await createCart(request, testInfo, b);
+      105 |   const r = await reserve(request, testInfo, cart.body.cartId, b, 'k'.repeat(7));
+    > 106 |   expect(r.status).toBe(400);
+          |                    ^
+      107 |   expect(r.body.code).toBe('IDEMPOTENCY_KEY_REQUIRED');
+      108 | });
+      109 |
+        at /tmp/aqe-demo-4MUalt/runs/CYC-4/specs/br-125-idempotency-key.spec.js:106:20
+
+    Error Context: test-results/br-125-idempotency-key-TC--7d247-han-8-characters-is-refused/error-context.md
+
+
 [64/83] specs/br-125-idempotency-key.spec.js:110:1 › TC-F-118 Reusing a key for a different cart is refused
 [65/83] specs/br-126-stay-length-limit.spec.js:93:1 › TC-F-119 A 30-night stay is accepted
 [66/83] specs/br-126-stay-length-limit.spec.js:101:1 › TC-F-120 A 31-night stay is rejected
 [67/83] specs/br-126-stay-length-limit.spec.js:111:1 › TC-F-121 A 14-night stay in Paris is accepted
 [68/83] specs/br-126-stay-length-limit.spec.js:119:1 › TC-F-122 A 15-night stay in Paris is rejected
-  1) specs/br-126-stay-length-limit.spec.js:119:1 › TC-F-122 A 15-night stay in Paris is rejected ──
+  3) specs/br-126-stay-length-limit.spec.js:119:1 › TC-F-122 A 15-night stay in Paris is rejected ──
 
     Error: expect(received).toBe(expected) // Object.is equality
 
@@ -83,7 +121,7 @@ Running 83 tests using 1 worker
       124 |   expect(r.body.code).toBe('VALIDATION_FAILED');
       125 |   expect(r.body.fieldIssues).toEqual(expect.arrayContaining([expect.objectContaining({ field: 'checkOut', ruleId: 'stay.tooLong' })]));
       126 |   expect(r.body.fieldIssues.every((i) => i.message && i.message.length > 10)).toBe(true);
-        at /tmp/aqe-demo-b6HW6M/runs/CYC-4/specs/br-126-stay-length-limit.spec.js:123:20
+        at /tmp/aqe-demo-4MUalt/runs/CYC-4/specs/br-126-stay-length-limit.spec.js:123:20
 
     Error Context: test-results/br-126-stay-length-limit-T-52ffe-t-stay-in-Paris-is-rejected/error-context.md
 
@@ -101,8 +139,30 @@ Running 83 tests using 1 worker
 [79/83] specs/br-134-cancellation-deadline-email.spec.js:92:1 › TC-F-135 The confirmation of a flexible booking states free cancellation until 48 hours before check-in
 [80/83] specs/br-134-cancellation-deadline-email.spec.js:106:1 › TC-F-136 The confirmation of a non-refundable booking states no free-cancellation deadline
 [81/83] specs/br-135-ops-retry-limit.spec.js:92:1 › TC-F-137 Operations can retry a failed confirmation e-mail 3 times; retry 4 is refused
+  4) specs/br-135-ops-retry-limit.spec.js:92:1 › TC-F-137 Operations can retry a failed confirmation e-mail 3 times; retry 4 is refused 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 409
+    Received: 200
+
+      101 |   for (let i = 0; i < 3; i += 1) expect((await call(request, testInfo, 'notification-service', 'POST', `/api/ops/messages/${m.body.messageId}/retry`, {})).status).toBe(200);
+      102 |   const over = await call(request, testInfo, 'notification-service', 'POST', `/api/ops/messages/${m.body.messageId}/retry`, {});
+    > 103 |   expect(over.status).toBe(409);
+          |                       ^
+      104 |   expect(over.body.code).toBe('RETRY_LIMIT_REACHED');
+      105 |   const v = await call(request, testInfo, 'reservation-service', 'GET', `/api/reservations/${r.body.reservationId}`);
+      106 |   expect(v.body.status).toBe('CONFIRMED');
+        at /tmp/aqe-demo-4MUalt/runs/CYC-4/specs/br-135-ops-retry-limit.spec.js:103:23
+
+    Error Context: test-results/br-135-ops-retry-limit-TC--d3eb5--3-times-retry-4-is-refused/error-context.md
+
+
 [82/83] specs/br-136-cancellation-email.spec.js:92:1 › TC-F-138 A cancelled booking gets one cancellation e-mail, even when cancelled twice
 [83/83] specs/br-137-cancellation-email-failure.spec.js:92:1 › TC-F-139 When the cancellation e-mail cannot be sent the booking stays cancelled
-  1 failed
+  4 failed
+    specs/br-123-price-change-ack.spec.js:108:1 › TC-F-114 A price change within 1% does not need acknowledgement 
+    specs/br-125-idempotency-key.spec.js:101:1 › TC-F-117 A key shorter than 8 characters is refused 
     specs/br-126-stay-length-limit.spec.js:119:1 › TC-F-122 A 15-night stay in Paris is rejected ───
-  82 passed (6.3s)
+    specs/br-135-ops-retry-limit.spec.js:92:1 › TC-F-137 Operations can retry a failed confirmation e-mail 3 times; retry 4 is refused 
+  79 passed (7.2s)

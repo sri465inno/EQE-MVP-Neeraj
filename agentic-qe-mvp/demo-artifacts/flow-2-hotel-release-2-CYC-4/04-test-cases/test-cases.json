@@ -5576,9 +5576,11 @@
     "automation": "Automated",
     "scriptFile": "br-122-cart-expiry.spec.js",
     "issueLinks": [
+      "AQPI-15",
       "AQPI-33"
     ],
     "sourceRefs": [
+      "AQPI-15",
       "AQPI-33"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
@@ -5632,9 +5634,11 @@
     ],
     "automation": "Automated",
     "scriptFile": "br-123-price-change-ack.spec.js",
-    "issueLinks": [],
+    "issueLinks": [
+      "AQPI-17"
+    ],
     "sourceRefs": [
-      "cart-service/src/main/resources/cart-service.yml"
+      "AQPI-17"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
@@ -5681,9 +5685,11 @@
     ],
     "automation": "Automated",
     "scriptFile": "br-123-price-change-ack.spec.js",
-    "issueLinks": [],
+    "issueLinks": [
+      "AQPI-17"
+    ],
     "sourceRefs": [
-      "cart-service/src/main/resources/cart-service.yml"
+      "AQPI-17"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
@@ -5729,9 +5735,11 @@
     "automation": "Automated",
     "scriptFile": "br-124-resend-limit.spec.js",
     "issueLinks": [
+      "AQPI-26",
       "AQPI-35"
     ],
     "sourceRefs": [
+      "AQPI-26",
       "AQPI-35"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
@@ -5781,9 +5789,11 @@
     ],
     "automation": "Automated",
     "scriptFile": "br-125-idempotency-key.spec.js",
-    "issueLinks": [],
+    "issueLinks": [
+      "AQPI-21"
+    ],
     "sourceRefs": [
-      "reservation-service/src/main/resources/reservation-service.yml"
+      "AQPI-21"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
@@ -5827,9 +5837,11 @@
     ],
     "automation": "Automated",
     "scriptFile": "br-125-idempotency-key.spec.js",
-    "issueLinks": [],
+    "issueLinks": [
+      "AQPI-21"
+    ],
     "sourceRefs": [
-      "reservation-service/src/main/resources/reservation-service.yml"
+      "AQPI-21"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
@@ -5873,9 +5885,11 @@
     ],
     "automation": "Automated",
     "scriptFile": "br-125-idempotency-key.spec.js",
-    "issueLinks": [],
+    "issueLinks": [
+      "AQPI-21"
+    ],
     "sourceRefs": [
-      "reservation-service/src/main/resources/reservation-service.yml"
+      "AQPI-21"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
@@ -5918,9 +5932,11 @@
     "automation": "Automated",
     "scriptFile": "br-126-stay-length-limit.spec.js",
     "issueLinks": [
+      "AQPI-4",
       "AQPI-34"
     ],
     "sourceRefs": [
+      "AQPI-4",
       "AQPI-34"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
@@ -5971,9 +5987,11 @@
     "automation": "Automated",
     "scriptFile": "br-126-stay-length-limit.spec.js",
     "issueLinks": [
+      "AQPI-4",
       "AQPI-34"
     ],
     "sourceRefs": [
+      "AQPI-4",
       "AQPI-34"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
@@ -6024,9 +6042,11 @@
     "automation": "Automated",
     "scriptFile": "br-126-stay-length-limit.spec.js",
     "issueLinks": [
+      "AQPI-4",
       "AQPI-34"
     ],
     "sourceRefs": [
+      "AQPI-4",
       "AQPI-34"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
@@ -6078,9 +6098,11 @@
     "automation": "Automated",
     "scriptFile": "br-126-stay-length-limit.spec.js",
     "issueLinks": [
+      "AQPI-4",
       "AQPI-34"
     ],
     "sourceRefs": [
+      "AQPI-4",
       "AQPI-34"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
@@ -6132,9 +6154,11 @@
     ],
     "automation": "Automated",
     "scriptFile": "br-127-occupancy-limits.spec.js",
-    "issueLinks": [],
+    "issueLinks": [
+      "AQPI-4"
+    ],
     "sourceRefs": [
-      "search-service/src/main/resources/search-service.yml"
+      "AQPI-4"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
@@ -6179,9 +6203,11 @@
     ],
     "automation": "Automated",
     "scriptFile": "br-127-occupancy-limits.spec.js",
-    "issueLinks": [],
+    "issueLinks": [
+      "AQPI-4"
+    ],
     "sourceRefs": [
-      "search-service/src/main/resources/search-service.yml"
+      "AQPI-4"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
@@ -6226,9 +6252,11 @@
     ],
     "automation": "Automated",
     "scriptFile": "br-127-occupancy-limits.spec.js",
-    "issueLinks": [],
+    "issueLinks": [
+      "AQPI-4"
+    ],
     "sourceRefs": [
-      "search-service/src/main/resources/search-service.yml"
+      "AQPI-4"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
@@ -6273,9 +6301,11 @@
     ],
     "automation": "Automated",
     "scriptFile": "br-127-occupancy-limits.spec.js",
-    "issueLinks": [],
+    "issueLinks": [
+      "AQPI-4"
+    ],
     "sourceRefs": [
-      "search-service/src/main/resources/search-service.yml"
+      "AQPI-4"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
@@ -6321,9 +6351,11 @@
     ],
     "automation": "Automated",
     "scriptFile": "br-128-advance-horizon.spec.js",
-    "issueLinks": [],
+    "issueLinks": [
+      "AQPI-4"
+    ],
     "sourceRefs": [
-      "search-service/src/main/resources/search-service.yml"
+      "AQPI-4"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [
@@ -6368,9 +6400,11 @@
     ],
     "automation": "Automated",
     "scriptFile": "br-128-advance-horizon.spec.js",
-    "issueLinks": [],
+    "issueLinks": [
+      "AQPI-4"
+    ],
     "sourceRefs": [
-      "search-service/src/main/resources/search-service.yml"
+      "AQPI-4"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
     "designedWith": [

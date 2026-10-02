@@ -1,6 +1,6 @@
 {
   "title": "Agentic QE Platform - MVP - Cycle report",
-  "generatedAt": "2026-10-02T19:44:11.735Z",
+  "generatedAt": "2026-10-02T20:05:17.777Z",
   "cycle": {
     "id": "CYC-3",
     "name": "Hotel booking baseline · End-to-end",
@@ -8,8 +8,8 @@
     "testingType": "e2e",
     "testingTypeName": "End-to-end testing",
     "status": "completed",
-    "createdAt": "2026-10-02T19:44:02.610Z",
-    "completedAt": "2026-10-02T19:44:11.705Z",
+    "createdAt": "2026-10-02T20:05:09.326Z",
+    "completedAt": "2026-10-02T20:05:17.749Z",
     "baselineId": "BL-3",
     "baselineVersionAtStart": null,
     "baselineVersionAfter": 1,
@@ -274,8 +274,8 @@
             "source": "code",
             "ref": "cart-service/src/main/resources/cart-service.yml",
             "line": 16,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/cart-service/src/main/resources/cart-service.yml",
-            "quote": "# @rule A cart expires 30 minutes after it is created and never creates a reservation itself."
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/cart-service/src/main/resources/cart-service.yml",
+            "quote": "# @rule [AQPI-15] A cart expires 30 minutes after it is created and never creates a reservation itself."
           }
         ]
       },
@@ -292,8 +292,8 @@
             "source": "code",
             "ref": "cart-service/src/main/resources/cart-service.yml",
             "line": 17,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/cart-service/src/main/resources/cart-service.yml",
-            "quote": "# @rule A price change of more than 1% must be acknowledged by the guest before checkout."
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/cart-service/src/main/resources/cart-service.yml",
+            "quote": "# @rule [AQPI-17] A price change of more than 1% must be acknowledged by the guest before checkout."
           }
         ]
       },
@@ -310,8 +310,8 @@
             "source": "code",
             "ref": "notification-service/src/main/resources/notification-service.yml",
             "line": 7,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/notification-service/src/main/resources/notification-service.yml",
-            "quote": "# @rule A confirmation can be resent at most 3 times per booking in 24 hours."
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/notification-service/src/main/resources/notification-service.yml",
+            "quote": "# @rule [AQPI-26] A confirmation can be resent at most 3 times per booking in 24 hours."
           }
         ]
       },
@@ -328,8 +328,8 @@
             "source": "code",
             "ref": "reservation-service/src/main/resources/reservation-service.yml",
             "line": 20,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/reservation-service/src/main/resources/reservation-service.yml",
-            "quote": "# @rule Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome."
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/reservation-service/src/main/resources/reservation-service.yml",
+            "quote": "# @rule [AQPI-21] Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome."
           }
         ]
       },
@@ -346,8 +346,8 @@
             "source": "code",
             "ref": "search-service/src/main/resources/search-service.yml",
             "line": 12,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/search-service/src/main/resources/search-service.yml",
-            "quote": "# @rule A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights."
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/search-service/src/main/resources/search-service.yml",
+            "quote": "# @rule [AQPI-4] A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights."
           }
         ]
       },
@@ -364,8 +364,8 @@
             "source": "code",
             "ref": "search-service/src/main/resources/search-service.yml",
             "line": 13,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/search-service/src/main/resources/search-service.yml",
-            "quote": "# @rule Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms."
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/search-service/src/main/resources/search-service.yml",
+            "quote": "# @rule [AQPI-4] Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms."
           }
         ]
       },
@@ -382,8 +382,8 @@
             "source": "code",
             "ref": "search-service/src/main/resources/search-service.yml",
             "line": 14,
-            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/search-service/src/main/resources/search-service.yml",
-            "quote": "# @rule Check-in can be at most 500 days ahead."
+            "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/search-service/src/main/resources/search-service.yml",
+            "quote": "# @rule [AQPI-4] Check-in can be at most 500 days ahead."
           }
         ]
       },
@@ -4039,7 +4039,7 @@
   },
   "dataModel": {
     "file": "data-dictionary/booking-attributes.json",
-    "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/data-dictionary/booking-attributes.json",
+    "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/data-dictionary/booking-attributes.json",
     "name": "Hotel booking attributes",
     "version": "1.0",
     "attributeCount": 21,
@@ -4695,12 +4695,12 @@
     {
       "slot": "codebase",
       "label": "Codebase",
-      "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef)",
+      "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (452df41)",
       "summary": "AQPI-1 Intelligent Hotel Shopping and Reservation Experience: reactive Spring Boot microservices",
       "children": [],
       "statements": 7,
       "provenance": "github",
-      "provenanceLabel": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef) at 2026-10-02T19:44:01.743Z",
+      "provenanceLabel": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (452df41) at 2026-10-02T20:05:08.555Z",
       "files": [
         "README.md",
         "TRACEABILITY.md",
@@ -6178,7 +6178,9 @@
         "status": "new",
         "version": 1,
         "previous": null,
-        "jiraKeys": []
+        "jiraKeys": [
+          "AQPI-15"
+        ]
       },
       {
         "id": "REQ-123",
@@ -6187,7 +6189,9 @@
         "status": "new",
         "version": 1,
         "previous": null,
-        "jiraKeys": []
+        "jiraKeys": [
+          "AQPI-17"
+        ]
       },
       {
         "id": "REQ-124",
@@ -6196,7 +6200,9 @@
         "status": "new",
         "version": 1,
         "previous": null,
-        "jiraKeys": []
+        "jiraKeys": [
+          "AQPI-26"
+        ]
       },
       {
         "id": "REQ-125",
@@ -6205,7 +6211,9 @@
         "status": "new",
         "version": 1,
         "previous": null,
-        "jiraKeys": []
+        "jiraKeys": [
+          "AQPI-21"
+        ]
       },
       {
         "id": "REQ-126",
@@ -6214,7 +6222,9 @@
         "status": "new",
         "version": 1,
         "previous": null,
-        "jiraKeys": []
+        "jiraKeys": [
+          "AQPI-4"
+        ]
       },
       {
         "id": "REQ-127",
@@ -6223,7 +6233,9 @@
         "status": "new",
         "version": 1,
         "previous": null,
-        "jiraKeys": []
+        "jiraKeys": [
+          "AQPI-4"
+        ]
       },
       {
         "id": "REQ-128",
@@ -6232,7 +6244,9 @@
         "status": "new",
         "version": 1,
         "previous": null,
-        "jiraKeys": []
+        "jiraKeys": [
+          "AQPI-4"
+        ]
       }
     ]
   },
@@ -6275,7 +6289,7 @@
       "name": "Hotel booking attributes",
       "version": "1.0",
       "attributeCount": 21,
-      "source": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/data-dictionary/booking-attributes.json"
+      "source": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/data-dictionary/booking-attributes.json"
     },
     "total": 8,
     "conforming": 8,
@@ -6420,24 +6434,24 @@
   "execution": {
     "executed": true,
     "quarantined": "not measured",
-    "durationMs": 4728,
+    "durationMs": 4583,
     "tool": "Playwright 1.63.0 (headless Chromium, JSON reporter)",
-    "command": "npx playwright test --config ../../../../../tmp/aqe-demo-b6HW6M/runs/CYC-3/playwright.config.js",
+    "command": "npx playwright test --config ../../../../../tmp/aqe-demo-4MUalt/runs/CYC-3/playwright.config.js",
     "sut": {
       "build": "demo/hotel-booking-platform",
-      "url": "http://127.0.0.1:45551",
+      "url": "http://127.0.0.1:34645",
       "services": {
-        "hotel-service": "http://127.0.0.1:38527",
-        "offer-service": "http://127.0.0.1:45837",
-        "notification-service": "http://127.0.0.1:41405",
-        "search-service": "http://127.0.0.1:45551",
-        "cart-service": "http://127.0.0.1:37479",
-        "reservation-service": "http://127.0.0.1:46141"
+        "hotel-service": "http://127.0.0.1:43855",
+        "offer-service": "http://127.0.0.1:34129",
+        "notification-service": "http://127.0.0.1:33105",
+        "search-service": "http://127.0.0.1:34645",
+        "cart-service": "http://127.0.0.1:36621",
+        "reservation-service": "http://127.0.0.1:42599"
       },
       "name": "Hotel booking platform release 1.0, six Spring Boot services built from branch demo/hotel-booking-platform"
     },
-    "startedAt": "2026-10-02T19:44:06.952Z",
-    "finishedAt": "2026-10-02T19:44:11.680Z",
+    "startedAt": "2026-10-02T20:05:13.130Z",
+    "finishedAt": "2026-10-02T20:05:17.713Z",
     "summary": {
       "total": 8,
       "executed": 8,
@@ -6445,7 +6459,7 @@
       "failed": 0,
       "skipped": 0,
       "notRun": 0,
-      "durationMs": 1676,
+      "durationMs": 1638,
       "passRate": 100
     },
     "results": [
@@ -6454,7 +6468,7 @@
         "requirementId": "REQ-001",
         "name": "Guest books a pay-at-hotel room with breakfast from search to confirmation e-mail",
         "status": "passed",
-        "duration": 1160,
+        "duration": 1148,
         "reason": null
       },
       {
@@ -6462,7 +6476,7 @@
         "requirementId": "REQ-001",
         "name": "Guest books a prepaid non-refundable room in Paris and pays now",
         "status": "passed",
-        "duration": 113,
+        "duration": 105,
         "reason": null
       },
       {
@@ -6470,7 +6484,7 @@
         "requirementId": "REQ-002",
         "name": "A sold-out hotel is shown as unavailable and cannot be put in a cart",
         "status": "passed",
-        "duration": 67,
+        "duration": 65,
         "reason": null
       },
       {
@@ -6478,7 +6492,7 @@
         "requirementId": "REQ-004",
         "name": "An unavailable extra is refused and the room still books",
         "status": "passed",
-        "duration": 89,
+        "duration": 91,
         "reason": null
       },
       {
@@ -6494,7 +6508,7 @@
         "requirementId": "REQ-006",
         "name": "The confirmation number can be looked up again after booking",
         "status": "passed",
-        "duration": 57,
+        "duration": 54,
         "reason": null
       },
       {
@@ -6502,7 +6516,7 @@
         "requirementId": "REQ-007",
         "name": "The guest sees the booking outcome and one confirmation e-mail is created",
         "status": "passed",
-        "duration": 52,
+        "duration": 55,
         "reason": null
       },
       {
@@ -6510,7 +6524,7 @@
         "requirementId": "REQ-051",
         "name": "An unavailable extra is refused and the room still books",
         "status": "passed",
-        "duration": 72,
+        "duration": 54,
         "reason": null
       }
     ]
@@ -8389,20 +8403,20 @@
     {
       "gate": "Requirement set review",
       "by": "Priya Shah",
-      "at": "2026-10-02T19:44:02.617Z",
+      "at": "2026-10-02T20:05:09.333Z",
       "decision": "approved",
       "comment": "",
       "detail": "128 requirements approved; 0 excluded; 0 conflict(s) resolved"
     }
   ],
   "narrative": {
-    "text": "Hotel booking baseline · End-to-end (baseline) worked from Jira initiative AQPI-1 (Jira export on GitHub), Jira epic AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27 (Jira export on GitHub), Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef) (pulled live from GitHub). The reviewed requirement set holds 128 requirements. 8 test cases are designed, 8 of them automated in 7 Playwright scripts. Execution ran 8 automated cases for real: 8 passed and 0 failed (pass rate 100%). No defects were raised.",
+    "text": "Hotel booking baseline · End-to-end (baseline) worked from Jira initiative AQPI-1 (Jira export on GitHub), Jira epic AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27 (Jira export on GitHub), Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (452df41) (pulled live from GitHub). The reviewed requirement set holds 128 requirements. 8 test cases are designed, 8 of them automated in 7 Playwright scripts. Execution ran 8 automated cases for real: 8 passed and 0 failed (pass rate 100%). No defects were raised.",
     "draftedBy": "Deterministic template (demo mode - no model API key set)"
   },
   "honesty": [
     "Jira initiative AQPI-1: Jira export on GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export): Jira REST API v3 JSON of AQPI-1, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
     "Jira epic AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27: Jira export on GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export): Jira REST API v3 JSON of AQPI-2, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
-    "Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef): Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef) at 2026-10-02T19:44:01.743Z",
+    "Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (452df41): Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (452df41) at 2026-10-02T20:05:08.555Z",
     "Execution: 8 automated cases really executed by Playwright 1.63.0 (headless Chromium, JSON reporter) against Hotel booking platform release 1.0, six Spring Boot services built from branch demo/hotel-booking-platform (demo/hotel-booking-platform); 0 manual case(s) designed but not executed.",
     "Normalisation, delta classification, coverage, pass/fail and defect raising are computed in code, not by a model."
   ]

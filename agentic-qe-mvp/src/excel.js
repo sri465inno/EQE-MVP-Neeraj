@@ -183,6 +183,7 @@ async function reportWorkbook(report, cycle) {
   addTestCaseSheet(wb, cycle);
   sheetFromRows(wb, 'Execution', [['Case', 'key', 11], ['Requirement', 'requirementId', 12], ['Name', 'name', 60], ['Result', 'status', 10], ['Duration ms', 'duration', 12], ['Note', 'reason', 50]], ex.executed ? ex.results : []);
   sheetFromRows(wb, 'Defects', [['ID', 'id', 9], ['Title', 'title', 50], ['Severity', 'severity', 9], ['Story', 'story', 11], ['Jira defect', 'jira', 40], ['Case', 'testCaseKey', 10], ['Requirement', 'requirementId', 12], ['Expected', 'expected', 14], ['Actual', 'actual', 14], ['Failing assertion', 'assertion', 50], ['Movement', 'movement', 12]], report.defects.open);
+  sheetFromRows(wb, 'Fixed and certified', [['ID', 'id', 9], ['Title', 'title', 50], ['Story', 'story', 11], ['Case', 'testCaseKey', 10], ['First seen', 'firstSeenCycle', 11], ['Retested in', 'resolvedInCycle', 11], ['Result', 'retestResult', 9], ['Status', 'status', 9], ['Certification', 'certification', 80]], report.defects.resolved || []);
   sheetFromRows(wb, 'Coverage', [['Requirement', 'requirementId', 12], ['Text', 'text', 70], ['Cases', 'cases', 8], ['Automated', 'automated', 10], ['Executed', 'executed', 10], ['Failed', 'failed', 8], ['Status', 'status', 24]], report.coverage ? report.coverage.rows : []);
   if (report.coverage && report.coverage.attributes) {
     sheetFromRows(wb, 'Attribute coverage', [['Attribute', 'attribute', 34], ['Description', 'description', 50], ['Varied by cases', 'casesText', 30], ['Status', 'status', 24]],

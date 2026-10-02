@@ -2,7 +2,7 @@
 // Business rule: BR-126 - Maximum stay length
 // Type of testing: Regression testing
 // Statement: A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights.
-// Requirement: REQ-126 v1; sources: search-service/src/main/resources/search-service.yml
+// Requirement: REQ-126 v1; sources: AQPI-4
 // Covers test cases: TC-F-119 (A 30-night stay is accepted); TC-F-120 (A 31-night stay is rejected); TC-F-121 (A 21-night stay in Paris is accepted); TC-F-122 (A 22-night stay in Paris is rejected)
 // Skills applied: automation-script-conventions, incremental-merge, testing-regression, traceability-handover
 // Self-contained: needs only @playwright/test and the hotel service URLs (config metadata.services).

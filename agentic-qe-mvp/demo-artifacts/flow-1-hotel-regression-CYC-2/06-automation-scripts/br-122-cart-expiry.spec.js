@@ -2,7 +2,7 @@
 // Business rule: BR-122 - Cart expiry and no implicit reservation
 // Type of testing: Regression testing
 // Statement: A cart expires 30 minutes after it is created and never creates a reservation itself.
-// Requirement: REQ-122 v1; sources: cart-service/src/main/resources/cart-service.yml
+// Requirement: REQ-122 v1; sources: AQPI-15
 // Covers test cases: TC-F-112 (A new cart expires 30 minutes after creation and reserves nothing)
 // Skills applied: automation-script-conventions, incremental-merge, testing-regression, traceability-handover
 // Self-contained: needs only @playwright/test and the hotel service URLs (config metadata.services).

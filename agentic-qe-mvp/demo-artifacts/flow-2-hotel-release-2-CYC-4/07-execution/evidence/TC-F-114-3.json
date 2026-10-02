@@ -1,18 +1,18 @@
 {
   "request": {
     "method": "POST",
-    "url": "http://127.0.0.1:45787/api/carts/C-2a0ebb01/revalidate",
+    "url": "http://127.0.0.1:38107/api/carts/C-91ac6344/revalidate",
     "headers": {},
     "data": null
   },
   "response": {
     "status": 200,
-    "correlationId": "e7748cef-228a-4260-b799-9d88dc467c56",
+    "correlationId": "e1d1f384-ed92-430e-befa-cc10b8411f38",
     "body": {
-      "cartId": "C-2a0ebb01",
+      "cartId": "C-91ac6344",
       "status": "ACTIVE",
-      "createdAt": "2026-10-02T19:44:31.303634584Z",
-      "expiresAt": "2026-10-02T20:04:31.303634584Z",
+      "createdAt": "2026-10-02T20:05:28.875757292Z",
+      "expiresAt": "2026-10-02T20:25:28.875757292Z",
       "secondsRemaining": 1199,
       "timeoutBehaviour": "Your cart is held for 20 minutes. Rooms are not reserved until you complete booking; after expiry, price and availability are checked again.",
       "room": {
@@ -129,8 +129,24 @@
       },
       "currency": "USD",
       "priceVersion": "c5547797931858a6",
-      "pendingChange": null,
-      "requiresAcknowledgement": false,
+      "pendingChange": {
+        "previousTotal": {
+          "amount": 770.42,
+          "currency": "USD"
+        },
+        "newTotal": {
+          "amount": 773.91,
+          "currency": "USD"
+        },
+        "difference": {
+          "amount": 3.49,
+          "currency": "USD"
+        },
+        "reasons": [
+          "Room price changed from 770.42 to 773.91 USD"
+        ]
+      },
+      "requiresAcknowledgement": true,
       "notices": [
         "Room price changed from 770.42 to 773.91 USD"
       ],

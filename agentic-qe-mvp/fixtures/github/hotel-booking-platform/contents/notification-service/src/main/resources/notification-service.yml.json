@@ -1,12 +1,12 @@
 {
   "type": "file",
   "encoding": "base64",
-  "size": 446,
+  "size": 456,
   "name": "notification-service.yml",
   "path": "notification-service/src/main/resources/notification-service.yml",
-  "sha": "712f10a8e82f4c0d96c2d635b8a1531b9b44cf1f",
+  "sha": "a1012412137f376f310524dc6edfdc9bfeb80467",
   "url": "https://api.github.com/repos/sri465inno/uc-agentic-quality-engineering/contents/notification-service/src/main/resources/notification-service.yml?ref=demo%2Fhotel-booking-platform",
-  "html_url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/notification-service/src/main/resources/notification-service.yml",
-  "download_url": "https://raw.githubusercontent.com/sri465inno/uc-agentic-quality-engineering/35af1ef510e2b67f90d326d660ac1c886b194ecf/notification-service/src/main/resources/notification-service.yml",
-  "content": "c2VydmVyOgogIHBvcnQ6IDgwODYKcGxhdGZvcm06CiAgc2VydmljZTogbm90aWZpY2F0aW9uLXNl\ncnZpY2UKICBlbnZpcm9ubWVudDogbG9jYWwKICBub3RpZmljYXRpb246CiAgICAjIEBydWxlIEEg\nY29uZmlybWF0aW9uIGNhbiBiZSByZXNlbnQgYXQgbW9zdCAzIHRpbWVzIHBlciBib29raW5nIGlu\nIDI0IGhvdXJzLgogICAgbWF4LXNlbmQtYXR0ZW1wdHM6IDMKICAgIHJlc2VuZC1saW1pdC1wZXIt\nYm9va2luZzogMwogICAgcmVzZW5kLWJvb2tpbmctd2luZG93OiAyNGgKICAgIHJlc2VuZC1saW1p\ndC1wZXItY2xpZW50OiAxMAogICAgcmVzZW5kLWNsaWVudC13aW5kb3c6IDFoCiAgICBzaW11bGF0\nZS1kZWxpdmVyeTogdHJ1ZQptYW5hZ2VtZW50OgogIGVuZHBvaW50czoKICAgIHdlYjoKICAgICAg\nZXhwb3N1cmU6CiAgICAgICAgaW5jbHVkZTogaGVhbHRoLGluZm8sbWV0cmljcwo=\n"
+  "html_url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/notification-service/src/main/resources/notification-service.yml",
+  "download_url": "https://raw.githubusercontent.com/sri465inno/uc-agentic-quality-engineering/452df417b95db3cc3064a0f7049b1311ee93684f/notification-service/src/main/resources/notification-service.yml",
+  "content": "c2VydmVyOgogIHBvcnQ6IDgwODYKcGxhdGZvcm06CiAgc2VydmljZTogbm90aWZpY2F0aW9uLXNl\ncnZpY2UKICBlbnZpcm9ubWVudDogbG9jYWwKICBub3RpZmljYXRpb246CiAgICAjIEBydWxlIFtB\nUVBJLTI2XSBBIGNvbmZpcm1hdGlvbiBjYW4gYmUgcmVzZW50IGF0IG1vc3QgMyB0aW1lcyBwZXIg\nYm9va2luZyBpbiAyNCBob3Vycy4KICAgIG1heC1zZW5kLWF0dGVtcHRzOiAzCiAgICByZXNlbmQt\nbGltaXQtcGVyLWJvb2tpbmc6IDMKICAgIHJlc2VuZC1ib29raW5nLXdpbmRvdzogMjRoCiAgICBy\nZXNlbmQtbGltaXQtcGVyLWNsaWVudDogMTAKICAgIHJlc2VuZC1jbGllbnQtd2luZG93OiAxaAog\nICAgc2ltdWxhdGUtZGVsaXZlcnk6IHRydWUKbWFuYWdlbWVudDoKICBlbmRwb2ludHM6CiAgICB3\nZWI6CiAgICAgIGV4cG9zdXJlOgogICAgICAgIGluY2x1ZGU6IGhlYWx0aCxpbmZvLG1ldHJpY3MK\n\n"
 }

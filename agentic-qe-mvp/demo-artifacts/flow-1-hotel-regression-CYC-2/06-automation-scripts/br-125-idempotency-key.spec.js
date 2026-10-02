@@ -2,7 +2,7 @@
 // Business rule: BR-125 - Idempotency-Key required
 // Type of testing: Regression testing
 // Statement: Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.
-// Requirement: REQ-125 v1; sources: reservation-service/src/main/resources/reservation-service.yml
+// Requirement: REQ-125 v1; sources: AQPI-21
 // Covers test cases: TC-F-116 (A reservation without an Idempotency-Key is refused); TC-F-117 (A key shorter than 8 characters is refused); TC-F-118 (Reusing a key for a different cart is refused)
 // Skills applied: automation-script-conventions, incremental-merge, testing-regression, traceability-handover
 // Self-contained: needs only @playwright/test and the hotel service URLs (config metadata.services).

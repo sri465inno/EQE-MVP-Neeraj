@@ -1,16 +1,16 @@
 {
   "request": {
     "method": "DELETE",
-    "url": "http://127.0.0.1:43333/api/consents/p-a1dd46cb",
+    "url": "http://127.0.0.1:34595/api/consents/p-a1dd46cb",
     "headers": {},
     "data": null
   },
   "response": {
     "status": 200,
-    "correlationId": "d09014ec-4413-4065-93d0-0d39e59728d5",
+    "correlationId": "01c8f890-fcd1-4571-b99d-d22b48beb02d",
     "body": {
-      "profileId": "p-a1dd46cb",
-      "deleted": true
+      "deleted": true,
+      "profileId": "p-a1dd46cb"
     }
   }
 }

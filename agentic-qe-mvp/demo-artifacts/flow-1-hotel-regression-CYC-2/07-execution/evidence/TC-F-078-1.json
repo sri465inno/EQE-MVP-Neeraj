@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "POST",
-    "url": "http://127.0.0.1:34209/api/carts",
+    "url": "http://127.0.0.1:36741/api/carts",
     "headers": {},
     "data": {
       "hotelId": "H-NYC-001",
@@ -16,12 +16,12 @@
   },
   "response": {
     "status": 201,
-    "correlationId": "dee083c3-3695-4c07-8cd9-8ca7ee237ad7",
+    "correlationId": "7991fd5a-3465-4e3e-b836-a0fae0480b12",
     "body": {
-      "cartId": "C-f22775cf",
+      "cartId": "C-da8bac76",
       "status": "ACTIVE",
-      "createdAt": "2026-10-02T19:43:56.848612213Z",
-      "expiresAt": "2026-10-02T20:13:56.848612213Z",
+      "createdAt": "2026-10-02T20:05:03.888203390Z",
+      "expiresAt": "2026-10-02T20:35:03.888203390Z",
       "secondsRemaining": 1799,
       "timeoutBehaviour": "Your cart is held for 30 minutes. Rooms are not reserved until you complete booking; after expiry, price and availability are checked again.",
       "room": {

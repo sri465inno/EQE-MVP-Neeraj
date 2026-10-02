@@ -7,6 +7,8 @@ const SOURCE_TEXT = { live: 'Jira (live call)', github: 'pulled from GitHub', 'j
 const date = (iso) => (iso ? new Date(iso).toISOString().replace('T', ' ').slice(0, 16) + ' UTC' : '-');
 const plural = (n, one, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
+const movementText = (defects) => Object.entries(defects.reduce((m, d) => ({ ...m, [d.movement]: (m[d.movement] || 0) + 1 }), {})).map(([k, v]) => `${v} ${k}`).join(', ');
+
 function recommendation(r, defects) {
   const gap = (r.testing?.selection?.gaps || []).find((g) => g.severity === 'high');
   if (!r.execution.executed) return { decision: 'Not ready', tone: 'bad', reason: gap ? gap.message : 'The tests have not been executed yet.', conditions: gap ? [gap.message] : [] };
@@ -28,6 +30,7 @@ function buildLeadReport(cycle) {
   if (!r) return null;
   const a = cycle.artifacts;
   const defects = a.defects || [];
+  const fixed = a.resolvedDefects || [];
   const ex = r.execution.executed ? r.execution.summary : null;
   const n = r.normalisation;
   const rec = recommendation(r, defects);
@@ -47,7 +50,8 @@ function buildLeadReport(cycle) {
     ...(tt ? [`Type of testing: <b>${esc(tt.name)}</b>. ${esc(tt.focus)}${sel && sel.notInRun ? ` This run executed ${plural(sel.inRun, 'case')} of the ${sel.designed} in the pack.` : ''}`] : []),
     `We took ${plural(r.inputs.length, 'input')} (${r.inputs.map((i) => `${esc(i.label)} ${esc(i.ref)}`).join(', ')}) and produced ${plural(r.requirements.total, 'requirement')}, ${plural(r.testCases.total, 'test case')} and ${plural(r.scripts.total, 'automated script')}.`,
     ex ? `We ran ${plural(ex.executed, 'automated test')} for real: <b>${ex.passed} passed, ${ex.failed} failed</b> (pass rate ${ex.passRate}%). ${ex.notRun ? `${plural(ex.notRun, 'manual test')} still to be run by hand.` : ''}` : 'Tests have not been executed yet.',
-    defects.length ? `${plural(defects.length, 'defect')} raised from real failures, ${defects.filter((d) => d.blocksRelease).length} release-blocking: ${defects.map((d) => `${esc(d.id)} ${esc(d.title)} (Jira: ${esc(jiraDefectText(d))})`).join('; ')}.` : 'No defects: nothing failed.',
+    defects.length ? `${plural(defects.length, 'defect')} open from real failures (${movementText(defects)}), ${defects.filter((d) => d.blocksRelease).length} release-blocking: ${defects.map((d) => `${esc(d.id)} ${esc(d.title)} (Jira: ${esc(jiraDefectText(d))})`).join('; ')}.` : 'No defects: nothing failed.',
+    ...(fixed.length ? [`<b>${plural(fixed.length, 'defect')} fixed, retested and certified closed</b>: ${fixed.map((d) => `${esc(d.id)} ${esc(d.title)} (story ${esc((d.jira && d.jira.linkedTo) || (d.jiraKeys || [])[0] || '-')}, first seen in ${esc(d.firstSeenCycle)}; ${esc(d.testCaseKey)} passed on build ${esc((d.retest && d.retest.build) || r.cycle.sutBuild)})`).join('; ')}.`] : []),
     ...(isInc && r.delta ? [`Against the baseline: ${esc(r.delta.summary)}. ${r.reuse.carriedOver} of ${r.reuse.total} test cases were reused unchanged; only new and changed items were redesigned.`] : []),
   ];
 
@@ -77,7 +81,7 @@ function buildLeadReport(cycle) {
     ...(mergeApproval ? [{ name: 'Merge approval', count: 1, note: `${mergeApproval.decision} by ${mergeApproval.by}`, tab: 'merge', file: '10-merge-approval/' }] : []),
     { name: 'Execution results and evidence', count: ex ? ex.executed : 0, note: ex ? `${ex.passed} passed · ${ex.failed} failed · ${ex.notRun} manual` : 'not executed', tab: 'execution', file: '07-execution/' },
     ...(r.traceability ? [{ name: 'Traceability matrix', count: r.traceability.rows.length, note: `${r.traceability.totals.covered} of ${r.traceability.totals.jiraItems} Jira items covered · ${r.traceability.totals.verified} verified · ${r.traceability.totals.failing} failing`, tab: 'traceability', file: '09-report/traceability.json' }] : []),
-    { name: 'Defects', count: defects.length, note: defects.length ? defects.map((d) => `${d.id} ${d.severity}`).join(' · ') : 'none', tab: 'defects', file: '08-defects/' },
+    { name: 'Defects', count: defects.length, note: `${defects.length ? defects.map((d) => `${d.id} ${d.severity} ${d.movement}`).join(' · ') : 'none open'}${fixed.length ? ` · fixed and certified: ${fixed.map((d) => d.id).join(', ')}` : ''}`, tab: 'defects', file: '08-defects/' },
     { name: 'Cycle report (HTML, Excel)', count: 1, note: 'full detail behind this summary', tab: 'report', file: '09-report/' },
   ];
 

@@ -2,7 +2,7 @@
   "agent": "Review agent",
   "advisory": true,
   "status": "suggestions",
-  "generatedAt": "2026-10-02T19:44:02.613Z",
+  "generatedAt": "2026-10-02T20:05:09.329Z",
   "testingType": "e2e",
   "note": "Suggestions only. The human reviewer decides every conflict and approves the requirement set.",
   "counts": {
@@ -25,8 +25,8 @@
           "source": "code",
           "ref": "cart-service/src/main/resources/cart-service.yml",
           "line": 16,
-          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/cart-service/src/main/resources/cart-service.yml",
-          "quote": "# @rule A cart expires 30 minutes after it is created and never creates a reservation itself."
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/cart-service/src/main/resources/cart-service.yml",
+          "quote": "# @rule [AQPI-15] A cart expires 30 minutes after it is created and never creates a reservation itself."
         }
       ]
     },
@@ -43,8 +43,8 @@
           "source": "code",
           "ref": "cart-service/src/main/resources/cart-service.yml",
           "line": 17,
-          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/cart-service/src/main/resources/cart-service.yml",
-          "quote": "# @rule A price change of more than 1% must be acknowledged by the guest before checkout."
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/cart-service/src/main/resources/cart-service.yml",
+          "quote": "# @rule [AQPI-17] A price change of more than 1% must be acknowledged by the guest before checkout."
         }
       ]
     },
@@ -61,8 +61,8 @@
           "source": "code",
           "ref": "notification-service/src/main/resources/notification-service.yml",
           "line": 7,
-          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/notification-service/src/main/resources/notification-service.yml",
-          "quote": "# @rule A confirmation can be resent at most 3 times per booking in 24 hours."
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/notification-service/src/main/resources/notification-service.yml",
+          "quote": "# @rule [AQPI-26] A confirmation can be resent at most 3 times per booking in 24 hours."
         }
       ]
     },
@@ -79,8 +79,8 @@
           "source": "code",
           "ref": "reservation-service/src/main/resources/reservation-service.yml",
           "line": 20,
-          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/reservation-service/src/main/resources/reservation-service.yml",
-          "quote": "# @rule Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome."
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/reservation-service/src/main/resources/reservation-service.yml",
+          "quote": "# @rule [AQPI-21] Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome."
         }
       ]
     },
@@ -97,8 +97,8 @@
           "source": "code",
           "ref": "search-service/src/main/resources/search-service.yml",
           "line": 12,
-          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/search-service/src/main/resources/search-service.yml",
-          "quote": "# @rule A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights."
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/search-service/src/main/resources/search-service.yml",
+          "quote": "# @rule [AQPI-4] A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights."
         }
       ]
     },
@@ -115,8 +115,8 @@
           "source": "code",
           "ref": "search-service/src/main/resources/search-service.yml",
           "line": 13,
-          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/search-service/src/main/resources/search-service.yml",
-          "quote": "# @rule Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms."
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/search-service/src/main/resources/search-service.yml",
+          "quote": "# @rule [AQPI-4] Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms."
         }
       ]
     },
@@ -133,8 +133,8 @@
           "source": "code",
           "ref": "search-service/src/main/resources/search-service.yml",
           "line": 14,
-          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/search-service/src/main/resources/search-service.yml",
-          "quote": "# @rule Check-in can be at most 500 days ahead."
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/search-service/src/main/resources/search-service.yml",
+          "quote": "# @rule [AQPI-4] Check-in can be at most 500 days ahead."
         }
       ]
     },

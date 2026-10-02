@@ -2,7 +2,7 @@
 // Business rule: BR-123 - Material price change acknowledgement
 // Type of testing: Functional testing
 // Statement: A price change of more than 1% must be acknowledged by the guest before checkout.
-// Requirement: REQ-123 v1; sources: cart-service/src/main/resources/cart-service.yml
+// Requirement: REQ-123 v1; sources: AQPI-17
 // Covers test cases: TC-F-113 (A price rise above 1% blocks booking until the guest acknowledges it); TC-F-114 (A price change within 1% does not need acknowledgement)
 // Skills applied: automation-script-conventions, incremental-merge, testing-functional, traceability-handover
 // Self-contained: needs only @playwright/test and the hotel service URLs (config metadata.services).

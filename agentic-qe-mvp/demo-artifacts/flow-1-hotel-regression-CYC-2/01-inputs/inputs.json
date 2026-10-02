@@ -18,7 +18,7 @@
       "system": "jira",
       "label": "Jira export on GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export): Jira REST API v3 JSON of AQPI-1, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
       "ref": "AQPI-1",
-      "fetchedAt": "2026-10-02T19:43:46.986Z",
+      "fetchedAt": "2026-10-02T20:04:55.296Z",
       "files": [
         "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/AQPI-1.json"
       ]
@@ -197,7 +197,7 @@
       "system": "jira",
       "label": "Jira export on GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export): Jira REST API v3 JSON of AQPI-2, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
       "ref": "AQPI-2",
-      "fetchedAt": "2026-10-02T19:43:47.007Z",
+      "fetchedAt": "2026-10-02T20:04:55.319Z",
       "files": [
         "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/AQPI-2.json",
         "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/AQPI-2.children.json"
@@ -209,12 +209,12 @@
     "slot": "codebase",
     "label": "Codebase",
     "mode": "github",
-    "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef)",
+    "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (452df41)",
     "provenance": {
       "kind": "github",
-      "label": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef) at 2026-10-02T19:43:47.135Z",
-      "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef)",
-      "fetchedAt": "2026-10-02T19:43:47.135Z",
+      "label": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (452df41) at 2026-10-02T20:04:55.461Z",
+      "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (452df41)",
+      "fetchedAt": "2026-10-02T20:04:55.461Z",
       "files": [
         "README.md",
         "TRACEABILITY.md",
@@ -308,12 +308,12 @@
     },
     "branch": "demo/hotel-booking-platform",
     "repo": "sri465inno/uc-agentic-quality-engineering",
-    "commit": "35af1ef510e2b67f90d326d660ac1c886b194ecf",
+    "commit": "452df417b95db3cc3064a0f7049b1311ee93684f",
     "compare": null,
     "description": "AQPI-1 Intelligent Hotel Shopping and Reservation Experience: reactive Spring Boot microservices",
     "dataModel": {
       "file": "data-dictionary/booking-attributes.json",
-      "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/data-dictionary/booking-attributes.json",
+      "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/data-dictionary/booking-attributes.json",
       "name": "Hotel booking attributes",
       "version": "1.0",
       "attributeCount": 21,

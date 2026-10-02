@@ -67,7 +67,14 @@ function raiseDefects({ execution, testCases, requirements, cycle, previousDefec
   const failedKeys = new Set(defects.map((d) => d.testCaseKey));
   const resultByKey = new Map(execution.results.map((r) => [r.key, r]));
   const resolved = previousDefects.filter((d) => !failedKeys.has(d.testCaseKey) && resultByKey.get(d.testCaseKey)?.status === 'passed')
-    .map((d) => ({ ...d, status: 'Resolved', movement: 'resolved', resolvedInCycle: cycle.id }));
+    .map((d) => {
+      const r = resultByKey.get(d.testCaseKey);
+      const retest = { cycleId: cycle.id, build: cycle.sutBuild || null, executedAt: execution.finishedAt, result: 'passed', scriptFile: r.scriptFile, evidence: r.evidence };
+      return {
+        ...d, status: 'Closed', movement: 'fixed and retested', resolvedInCycle: cycle.id, retest,
+        certification: `Fixed in build ${retest.build || 'under test'}; ${d.testCaseKey} re-run in ${cycle.id} passed, so ${d.id} (first seen in ${d.firstSeenCycle}) is certified closed.`,
+      };
+    });
   return { defects, resolved, nextNo: n };
 }
 

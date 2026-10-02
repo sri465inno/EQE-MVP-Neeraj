@@ -1,13 +1,13 @@
 {
   "request": {
     "method": "GET",
-    "url": "http://127.0.0.1:33597/api/searches/form",
+    "url": "http://127.0.0.1:44815/api/searches/form",
     "headers": {},
     "data": null
   },
   "response": {
     "status": 200,
-    "correlationId": "c2c09714-4427-47cc-8852-3f0a9e86e675",
+    "correlationId": "f626e893-9cdb-4b75-9715-af81b5e55dbb",
     "body": {
       "fields": [
         {
@@ -42,7 +42,7 @@
           "label": "Rooms",
           "type": "number",
           "required": true,
-          "constraint": "1-8",
+          "constraint": "1-9",
           "hint": null,
           "errorId": "rooms-error"
         },

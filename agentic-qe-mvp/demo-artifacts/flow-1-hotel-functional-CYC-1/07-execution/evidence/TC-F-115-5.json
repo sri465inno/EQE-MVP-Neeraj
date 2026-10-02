@@ -1,16 +1,16 @@
 {
   "request": {
     "method": "POST",
-    "url": "http://127.0.0.1:35951/api/confirmations/resend",
+    "url": "http://127.0.0.1:45353/api/confirmations/resend",
     "headers": {},
     "data": {
-      "confirmationNumber": "HBKNGD8M6P",
+      "confirmationNumber": "HBQPLZ2T48",
       "lastName": "Doe"
     }
   },
   "response": {
     "status": 202,
-    "correlationId": "5974b1b6-921f-43ad-9b18-02f2aeb21a54",
+    "correlationId": "2f5a8484-445e-49ce-b66f-5bbd928f5a7d",
     "body": {
       "message": "If the details match a confirmed booking, we have sent the confirmation to the e-mail address on the booking."
     }

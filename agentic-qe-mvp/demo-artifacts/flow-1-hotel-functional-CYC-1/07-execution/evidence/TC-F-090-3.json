@@ -1,17 +1,17 @@
 {
   "request": {
     "method": "GET",
-    "url": "http://127.0.0.1:35951/api/confirmations/R-d9f93bea",
+    "url": "http://127.0.0.1:45353/api/confirmations/R-13cf61c2",
     "headers": {},
     "data": null
   },
   "response": {
     "status": 200,
-    "correlationId": "460acfe8-46d2-42e7-b424-333e6d77235f",
+    "correlationId": "42fe109d-21ad-4c7e-b542-347e2d0536dc",
     "body": {
-      "messageId": "M-18de925e",
-      "reservationId": "R-d9f93bea",
-      "confirmationNumber": "HBQVNUAEN6",
+      "messageId": "M-522d911f",
+      "reservationId": "R-13cf61c2",
+      "confirmationNumber": "HBM3TRWHTT",
       "kind": "CONFIRMATION",
       "locale": "en-GB",
       "templateVersion": "confirmation-v2",
@@ -21,19 +21,19 @@
       "history": [
         {
           "status": "QUEUED",
-          "at": "2026-10-02T19:43:43.898905850Z",
+          "at": "2026-10-02T20:04:51.085032176Z",
           "detail": "CONFIRMATION"
         },
         {
           "status": "FAILED",
-          "at": "2026-10-02T19:43:43.967515285Z",
+          "at": "2026-10-02T20:04:51.164337445Z",
           "detail": "provider rejected after 3 attempt(s)"
         }
       ],
-      "subject": "Your booking is confirmed - HBQVNUAEN6",
-      "html": "<!DOCTYPE html>\n<html lang=\"en-GB\">\n<head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width\"><title>Your booking is confirmed - HBQVNUAEN6</title></head>\n<body>\n<main role=\"main\" style=\"font-family:Arial,sans-serif;font-size:16px;line-height:1.5;color:#1a1a1a\">\n<h1>Booking confirmed</h1>\n<p>Hello Jane,</p>\n<p>Your reservation is confirmed.</p>\n<p><strong>Confirmation number:</strong> HBQVNUAEN6</p>\n<h2>Your stay</h2>\n<p>Harbor View Hotel<br>12 Pier Street, New York</p>\n<dl><dt>Check-in</dt><dd>1 November 2026 (15:00)</dd><dt>Check-out</dt><dd>4 November 2026 (11:00)</dd><dt>Room</dt><dd>Standard King - Flexible – pay at hotel</dd>\n<dt>Guests</dt><dd>1 room(s), 2 adult(s), 0 child(ren)</dd></dl>\n<h2>What you booked</h2>\n<table>\n<caption>What you booked</caption>\n<thead><tr><th scope=\"col\">Item</th><th scope=\"col\">Qty</th><th scope=\"col\">Amount</th></tr></thead>\n<tbody>\n<tr><td>Standard King - Flexible – pay at hotel x 1 room(s), 3 night(s)</td><td>1</td><td>585.00 USD</td></tr>\n<tr><td>Taxes</td><td>1</td><td>110.42 USD</td></tr>\n<tr><td>Mandatory fees (payable as part of the room price)</td><td>1</td><td>75.00 USD</td></tr>\n</tbody>\n<tfoot><tr><th scope=\"row\" colspan=\"2\">Total</th><td>770.42 USD</td></tr></tfoot>\n</table>\n<p>Payment: Pay at the hotel</p>\n<h2>Policies</h2>\n<p>Free cancellation until 48 hours before check-in; after that the first night is charged.</p>\n</main>\n</body>\n</html>\n",
-      "text": "Booking confirmed\n\nHello Jane,\nYour reservation is confirmed.\n\nConfirmation number: HBQVNUAEN6\n\nHarbor View Hotel, 12 Pier Street, New York\nCheck-in: 1 November 2026 (15:00)\nCheck-out: 4 November 2026 (11:00)\nRoom: Standard King - Flexible – pay at hotel\n\nWhat you booked:\n- Standard King - Flexible – pay at hotel x 1 room(s), 3 night(s) x1: 585.00 USD\n- Taxes x1: 110.42 USD\n- Mandatory fees (payable as part of the room price) x1: 75.00 USD\nTotal: 770.42 USD\nPayment: Pay at the hotel\n\nPolicies: Free cancellation until 48 hours before check-in; after that the first night is charged.\n",
-      "createdAt": "2026-10-02T19:43:43.898903445Z"
+      "subject": "Your booking is confirmed - HBM3TRWHTT",
+      "html": "<!DOCTYPE html>\n<html lang=\"en-GB\">\n<head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width\"><title>Your booking is confirmed - HBM3TRWHTT</title></head>\n<body>\n<main role=\"main\" style=\"font-family:Arial,sans-serif;font-size:16px;line-height:1.5;color:#1a1a1a\">\n<h1>Booking confirmed</h1>\n<p>Hello Jane,</p>\n<p>Your reservation is confirmed.</p>\n<p><strong>Confirmation number:</strong> HBM3TRWHTT</p>\n<h2>Your stay</h2>\n<p>Harbor View Hotel<br>12 Pier Street, New York</p>\n<dl><dt>Check-in</dt><dd>1 November 2026 (15:00)</dd><dt>Check-out</dt><dd>4 November 2026 (11:00)</dd><dt>Room</dt><dd>Standard King - Flexible – pay at hotel</dd>\n<dt>Guests</dt><dd>1 room(s), 2 adult(s), 0 child(ren)</dd></dl>\n<h2>What you booked</h2>\n<table>\n<caption>What you booked</caption>\n<thead><tr><th scope=\"col\">Item</th><th scope=\"col\">Qty</th><th scope=\"col\">Amount</th></tr></thead>\n<tbody>\n<tr><td>Standard King - Flexible – pay at hotel x 1 room(s), 3 night(s)</td><td>1</td><td>585.00 USD</td></tr>\n<tr><td>Taxes</td><td>1</td><td>110.42 USD</td></tr>\n<tr><td>Mandatory fees (payable as part of the room price)</td><td>1</td><td>75.00 USD</td></tr>\n</tbody>\n<tfoot><tr><th scope=\"row\" colspan=\"2\">Total</th><td>770.42 USD</td></tr></tfoot>\n</table>\n<p>Payment: Pay at the hotel</p>\n<h2>Policies</h2>\n<p>Free cancellation until 48 hours before check-in; after that the first night is charged.</p>\n</main>\n</body>\n</html>\n",
+      "text": "Booking confirmed\n\nHello Jane,\nYour reservation is confirmed.\n\nConfirmation number: HBM3TRWHTT\n\nHarbor View Hotel, 12 Pier Street, New York\nCheck-in: 1 November 2026 (15:00)\nCheck-out: 4 November 2026 (11:00)\nRoom: Standard King - Flexible – pay at hotel\n\nWhat you booked:\n- Standard King - Flexible – pay at hotel x 1 room(s), 3 night(s) x1: 585.00 USD\n- Taxes x1: 110.42 USD\n- Mandatory fees (payable as part of the room price) x1: 75.00 USD\nTotal: 770.42 USD\nPayment: Pay at the hotel\n\nPolicies: Free cancellation until 48 hours before check-in; after that the first night is charged.\n",
+      "createdAt": "2026-10-02T20:04:51.085030682Z"
     }
   }
 }

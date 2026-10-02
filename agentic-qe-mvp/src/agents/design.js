@@ -31,7 +31,7 @@ function newRequirement(item, id, cycle) {
     sources: item.sources,
     bucket: item.bucket,
     origins: item.origins,
-    jiraKeys: [...new Set(item.origins.filter((o) => o.source === 'jira' && o.ref && /^[A-Z]+-\d+$/.test(o.ref)).map((o) => o.ref))],
+    jiraKeys: [...new Set([...item.origins.filter((o) => o.source === 'jira' && o.ref && /^[A-Z]+-\d+$/.test(o.ref)).map((o) => o.ref), ...storiesOf(item.origins)])],
     resolution: item.resolution,
     version: 1,
     status: 'new',
@@ -68,7 +68,7 @@ function requirementsAgentIncremental(baselineReqs, delta, { cycle, counters }) 
         type: requirementType(d.incoming.text, dom),
         sources: d.incoming.sources,
         origins: d.incoming.origins,
-        jiraKeys: [...new Set([...old.jiraKeys, ...d.incoming.origins.filter((o) => o.source === 'jira' && /^[A-Z]+-\d+$/.test(o.ref || '')).map((o) => o.ref)])],
+        jiraKeys: [...new Set([...old.jiraKeys, ...d.incoming.origins.filter((o) => o.source === 'jira' && /^[A-Z]+-\d+$/.test(o.ref || '')).map((o) => o.ref), ...storiesOf(d.incoming.origins)])],
         resolution: d.incoming.resolution,
         version: old.version + 1,
         status: 'enhanced',
@@ -104,6 +104,9 @@ function provenanceOf(cycle, slot) {
   const input = (cycle.inputs || []).find((i) => i.slot === slot);
   return input ? input.provenance.kind : null;
 }
+
+/** Jira stories named by codebase @rule tags. */
+const storiesOf = (origins) => origins.filter((o) => o.source === 'code' && o.story).map((o) => o.story);
 
 /** Source references behind a requirement: Jira issue keys, else repository paths. */
 function sourceRefs(req) {

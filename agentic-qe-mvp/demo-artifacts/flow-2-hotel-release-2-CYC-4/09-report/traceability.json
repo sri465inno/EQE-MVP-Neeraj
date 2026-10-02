@@ -2326,9 +2326,10 @@
     },
     {
       "jiraKeys": [
+        "AQPI-15",
         "AQPI-33"
       ],
-      "jiraLevel": "story",
+      "jiraLevel": "issue, story",
       "requirementId": "REQ-122",
       "requirement": "A cart expires 20 minutes after it is created and never creates a reservation itself.",
       "requirementStatus": "enhanced",
@@ -2346,7 +2347,7 @@
     },
     {
       "jiraKeys": [
-        "cart-service/src/main/resources/cart-service.yml"
+        "AQPI-17"
       ],
       "jiraLevel": "issue",
       "requirementId": "REQ-123",
@@ -2366,7 +2367,7 @@
     },
     {
       "jiraKeys": [
-        "cart-service/src/main/resources/cart-service.yml"
+        "AQPI-17"
       ],
       "jiraLevel": "issue",
       "requirementId": "REQ-123",
@@ -2380,12 +2381,15 @@
       "caseStatus": "carried over",
       "testDataId": "TD-F-114",
       "scriptFile": "br-123-price-change-ack.spec.js",
-      "result": "passed",
-      "defects": [],
+      "result": "failed",
+      "defects": [
+        "DEF-001"
+      ],
       "jiraDefects": []
     },
     {
       "jiraKeys": [
+        "AQPI-26",
         "AQPI-35"
       ],
       "jiraLevel": "story",
@@ -2406,7 +2410,7 @@
     },
     {
       "jiraKeys": [
-        "reservation-service/src/main/resources/reservation-service.yml"
+        "AQPI-21"
       ],
       "jiraLevel": "issue",
       "requirementId": "REQ-125",
@@ -2426,7 +2430,7 @@
     },
     {
       "jiraKeys": [
-        "reservation-service/src/main/resources/reservation-service.yml"
+        "AQPI-21"
       ],
       "jiraLevel": "issue",
       "requirementId": "REQ-125",
@@ -2440,13 +2444,15 @@
       "caseStatus": "carried over",
       "testDataId": "TD-F-117",
       "scriptFile": "br-125-idempotency-key.spec.js",
-      "result": "passed",
-      "defects": [],
+      "result": "failed",
+      "defects": [
+        "DEF-002"
+      ],
       "jiraDefects": []
     },
     {
       "jiraKeys": [
-        "reservation-service/src/main/resources/reservation-service.yml"
+        "AQPI-21"
       ],
       "jiraLevel": "issue",
       "requirementId": "REQ-125",
@@ -2466,9 +2472,10 @@
     },
     {
       "jiraKeys": [
+        "AQPI-4",
         "AQPI-34"
       ],
-      "jiraLevel": "story",
+      "jiraLevel": "issue, story",
       "requirementId": "REQ-126",
       "requirement": "A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.",
       "requirementStatus": "enhanced",
@@ -2486,9 +2493,10 @@
     },
     {
       "jiraKeys": [
+        "AQPI-4",
         "AQPI-34"
       ],
-      "jiraLevel": "story",
+      "jiraLevel": "issue, story",
       "requirementId": "REQ-126",
       "requirement": "A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.",
       "requirementStatus": "enhanced",
@@ -2506,9 +2514,10 @@
     },
     {
       "jiraKeys": [
+        "AQPI-4",
         "AQPI-34"
       ],
-      "jiraLevel": "story",
+      "jiraLevel": "issue, story",
       "requirementId": "REQ-126",
       "requirement": "A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.",
       "requirementStatus": "enhanced",
@@ -2526,9 +2535,10 @@
     },
     {
       "jiraKeys": [
+        "AQPI-4",
         "AQPI-34"
       ],
-      "jiraLevel": "story",
+      "jiraLevel": "issue, story",
       "requirementId": "REQ-126",
       "requirement": "A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.",
       "requirementStatus": "enhanced",
@@ -2542,13 +2552,13 @@
       "scriptFile": "br-126-stay-length-limit.spec.js",
       "result": "failed",
       "defects": [
-        "DEF-001"
+        "DEF-007"
       ],
       "jiraDefects": []
     },
     {
       "jiraKeys": [
-        "search-service/src/main/resources/search-service.yml"
+        "AQPI-4"
       ],
       "jiraLevel": "issue",
       "requirementId": "REQ-127",
@@ -2568,7 +2578,7 @@
     },
     {
       "jiraKeys": [
-        "search-service/src/main/resources/search-service.yml"
+        "AQPI-4"
       ],
       "jiraLevel": "issue",
       "requirementId": "REQ-127",
@@ -2588,7 +2598,7 @@
     },
     {
       "jiraKeys": [
-        "search-service/src/main/resources/search-service.yml"
+        "AQPI-4"
       ],
       "jiraLevel": "issue",
       "requirementId": "REQ-127",
@@ -2608,7 +2618,7 @@
     },
     {
       "jiraKeys": [
-        "search-service/src/main/resources/search-service.yml"
+        "AQPI-4"
       ],
       "jiraLevel": "issue",
       "requirementId": "REQ-127",
@@ -2628,7 +2638,7 @@
     },
     {
       "jiraKeys": [
-        "search-service/src/main/resources/search-service.yml"
+        "AQPI-4"
       ],
       "jiraLevel": "issue",
       "requirementId": "REQ-128",
@@ -2648,7 +2658,7 @@
     },
     {
       "jiraKeys": [
-        "search-service/src/main/resources/search-service.yml"
+        "AQPI-4"
       ],
       "jiraLevel": "issue",
       "requirementId": "REQ-128",
@@ -2842,8 +2852,10 @@
       "caseStatus": "new",
       "testDataId": "TD-F-137",
       "scriptFile": "br-135-ops-retry-limit.spec.js",
-      "result": "passed",
-      "defects": [],
+      "result": "failed",
+      "defects": [
+        "DEF-008"
+      ],
       "jiraDefects": []
     },
     {
@@ -2945,7 +2957,7 @@
       "passed": 3,
       "failed": 1,
       "defects": [
-        "DEF-001"
+        "DEF-007"
       ],
       "status": "failing"
     },
@@ -3009,20 +3021,22 @@
       "requirements": 6,
       "testCases": 6,
       "automated": 2,
-      "passed": 2,
-      "failed": 0,
-      "defects": [],
-      "status": "verified"
+      "passed": 1,
+      "failed": 1,
+      "defects": [
+        "DEF-008"
+      ],
+      "status": "failing"
     },
     {
       "key": "AQPI-26",
       "level": "story",
       "parent": "AQPI-23",
       "summary": "8.3 Resend confirmation safely",
-      "requirements": 3,
-      "testCases": 3,
-      "automated": 1,
-      "passed": 1,
+      "requirements": 4,
+      "testCases": 4,
+      "automated": 2,
+      "passed": 2,
       "failed": 0,
       "defects": [],
       "status": "verified"
@@ -3044,8 +3058,8 @@
   "totals": {
     "jiraItems": 10,
     "covered": 10,
-    "verified": 7,
-    "failing": 1,
+    "verified": 6,
+    "failing": 2,
     "testCases": 144,
     "withData": 144,
     "withScript": 83,

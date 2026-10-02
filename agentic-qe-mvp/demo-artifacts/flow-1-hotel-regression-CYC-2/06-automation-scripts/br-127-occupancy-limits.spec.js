@@ -2,7 +2,7 @@
 // Business rule: BR-127 - Occupancy and room limits
 // Type of testing: Regression testing
 // Statement: Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.
-// Requirement: REQ-127 v1; sources: search-service/src/main/resources/search-service.yml
+// Requirement: REQ-127 v1; sources: AQPI-4
 // Covers test cases: TC-F-123 (4 adults in one room are accepted); TC-F-124 (5 adults in one room are rejected); TC-F-125 (4 children in one room are rejected); TC-F-126 (9 rooms in one search are rejected)
 // Skills applied: automation-script-conventions, incremental-merge, testing-regression, traceability-handover
 // Self-contained: needs only @playwright/test and the hotel service URLs (config metadata.services).

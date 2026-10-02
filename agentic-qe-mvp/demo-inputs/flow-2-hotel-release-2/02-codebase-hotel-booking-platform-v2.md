@@ -748,10 +748,10 @@ platform:
       timeout: 800ms
       retries: 0
   cart:
-    # @rule A cart expires 20 minutes after it is created and never creates a reservation itself.
-    # @rule A price change of more than 1% must be acknowledged by the guest before checkout.
+    # @rule [AQPI-33] A cart expires 20 minutes after it is created and never creates a reservation itself.
+    # @rule [AQPI-17] A price change of more than 1% must be acknowledged by the guest before checkout.
     ttl: 20m
-    material-change-percent: 1.0
+    material-change-percent: 0.4
 management:
   endpoints:
     web:
@@ -2894,19 +2894,19 @@ platform:
   service: notification-service
   environment: local
   notification:
-    # @rule A confirmation can be resent at most 5 times per booking in 24 hours.
+    # @rule [AQPI-35] A confirmation can be resent at most 5 times per booking in 24 hours.
     max-send-attempts: 3
     resend-limit-per-booking: 5
     resend-booking-window: 24h
     resend-limit-per-client: 10
     resend-client-window: 1h
     simulate-delivery: true
-    # @rule Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.
-    max-manual-retries: 3
-    # @rule The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.
+    # @rule [AQPI-25] Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.
+    max-manual-retries: 4
+    # @rule [AQPI-24] The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in.
     free-cancellation-window: 48h
-    # @rule A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.
-    # @rule A cancellation e-mail that cannot be sent does not undo the cancellation.
+    # @rule [AQPI-37] A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.
+    # @rule [AQPI-37] A cancellation e-mail that cannot be sent does not undo the cancellation.
 management:
   endpoints:
     web:
@@ -4569,7 +4569,7 @@ Run a service: `mvn -pl hotel-service -am spring-boot:run` (start hotel, offer a
 
 ## Business rules
 
-The rules this code enforces are tagged `@rule` next to their configured values in each service's `src/main/resources/<service>.yml`. The booking attributes, their types, limits and example values are in [data-dictionary/booking-attributes.json](data-dictionary/booking-attributes.json); test data is generated from it.
+The rules this code enforces are tagged `@rule [AQPI-n]` next to their configured values in each service's `src/main/resources/<service>.yml`; the key names the Jira story the rule implements. The booking attributes, their types, limits and example values are in [data-dictionary/booking-attributes.json](data-dictionary/booking-attributes.json); test data is generated from it.
 
 ## Demo switches
 
@@ -5221,7 +5221,7 @@ import reactor.core.scheduler.Schedulers;
 public class ReservationService {
 
     public static final String PAY_NOW = "PAY_NOW";
-    private static final Pattern KEY = Pattern.compile("[A-Za-z0-9._-]{8,64}");
+    private static final Pattern KEY = Pattern.compile("[A-Za-z0-9._-]{7,64}");
     private static final char[] ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".toCharArray();
 
     public record Submission(Outcome outcome, boolean replay) {
@@ -5719,10 +5719,10 @@ platform:
       timeout: 2s
       retries: 1
   reservation:
-    # @rule Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.
+    # @rule [AQPI-21] Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome.
     idempotency-ttl: 24h
-    # @rule A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.
-    # @rule A cancelled reservation shows status CANCELLED, its payment authorisation is voided and its rooms are released.
+    # @rule [AQPI-36] A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed.
+    # @rule [AQPI-36] A cancelled reservation shows status CANCELLED, its payment authorisation is voided and its rooms are released.
     free-cancellation-window: 48h
     retention-days: 365
 management:
@@ -6354,9 +6354,9 @@ platform:
       timeout: 2s
       retries: 1
   search:
-    # @rule A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.
-    # @rule Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.
-    # @rule Check-in can be at most 500 days ahead.
+    # @rule [AQPI-34] A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.
+    # @rule [AQPI-4] Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.
+    # @rule [AQPI-4] Check-in can be at most 500 days ahead.
     defaults:
       max-stay-nights: 30
       max-advance-days: 500
@@ -6397,7 +6397,7 @@ Maps every story in the Jira space AQPI (https://tcs-team-ou6drgfr.atlassian.net
 | [AQPI-21](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-21) | 7.3 Create reservation idempotently | AQPI-18 Checkout and Reservation | 1. A successful request creates one reservation and returns a confirmation identifier.<br>2. Repeated submissions with the same idempotency key do not create duplicate reservations.<br>3. Inventory, price, payment, and reservation outcomes remain reconcilable.<br>4. Partial failures trigger defined recovery or manual-review handling. | reservation-service: ReservationService (Idempotency-Key, inventory commit/void), hotel-service inventory commitments | BookingJourneyTest#happyPathBooking<br>BookingJourneyTest#idempotencyMismatch<br>BookingJourneyTest#lastRoomSoldOnce<br>BookingJourneyTest#lostPaymentResponseReconciled<br>BookingJourneyTest#priceChangeNeedsAcknowledgement<br>CartServiceTest#completedCart<br>HotelServiceTest#inventoryCommitments<br>ReservationServiceTest#inventoryConflictVoidsPayment<br>ReservationServiceTest#inventoryTimeoutRecovered | Idempotency store is in-memory, single instance. |
 | [AQPI-22](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-22) | 7.4 Show booking outcome | AQPI-18 Checkout and Reservation | 1. Success displays confirmation identifier, hotel, stay summary, selected products, and total.<br>2. A failure does not display a false confirmation.<br>3. Unknown or timeout states instruct the guest not to resubmit blindly and provide a safe recovery path. | reservation-service: Outcome, GET /api/reservations/{id}, reconcile, ops manual-review | BookingJourneyTest#happyPathBooking<br>BookingJourneyTest#lostPaymentResponseReconciled<br>BookingJourneyTest#paymentDeclined<br>ReservationServiceTest#failedVoidGoesToManualReview |  |
 | [AQPI-24](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-24) | 8.1 Generate confirmation message | AQPI-23 Confirmation and Notifications | 1. The message contains guest-safe confirmation details, hotel information, stay dates, booked items, pricing summary, and applicable policy information.<br>2. The message content matches the confirmed reservation state.<br>3. Templates support required locale and accessibility standards.<br>4. (release 2.0) The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in. | notification-service: TemplateRenderer, NotificationService.confirm; TemplateRenderer.freeCancellationDeadline, NotificationProperties.freeCancellationWindow (48h) | BookingJourneyTest#happyPathBooking<br>NotificationServiceTest#accessibleTemplate<br>ReservationServiceTest#notificationFailureKeepsBooking<br>NotificationServiceTest#freeCancellationDeadline |  |
-| [AQPI-25](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25) | 8.2 Send and track confirmation email | AQPI-23 Confirmation and Notifications | 1. A successful reservation creates one confirmation-email request.<br>2. Send failure does not reverse a valid reservation.<br>3. (release 2.0) Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.<br>4. Operational users can distinguish queued, sent, delivered, bounced, and failed states when supported by the provider. | notification-service: EmailProvider (simulated), delivery states, webhook, ops retry; NotificationProperties.maxManualRetries (3) | BookingJourneyTest#happyPathBooking<br>NotificationServiceTest#deliveryStates<br>NotificationServiceTest#idempotentConfirmation<br>NotificationServiceTest#retryLimit | E-mail provider is simulated (fail.test, flaky.test, bounce.test domains). |
+| [AQPI-25](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25) | 8.2 Send and track confirmation email | AQPI-23 Confirmation and Notifications | 1. A successful reservation creates one confirmation-email request.<br>2. Send failure does not reverse a valid reservation.<br>3. (release 2.0) Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused.<br>4. Operational users can distinguish queued, sent, delivered, bounced, and failed states when supported by the provider. | notification-service: EmailProvider (simulated), delivery states, webhook, ops retry; NotificationProperties.maxManualRetries, notification-service.yml | BookingJourneyTest#happyPathBooking<br>NotificationServiceTest#deliveryStates<br>NotificationServiceTest#idempotentConfirmation | E-mail provider is simulated (fail.test, flaky.test, bounce.test domains). Known defect in release 2.0: a 4th retry is accepted (see Known defects). |
 | [AQPI-26](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-26) | 8.3 Resend confirmation safely | AQPI-23 Confirmation and Notifications | 1. The request verifies sufficient reservation information without exposing data.<br>2. Rate limits and abuse controls apply.<br>3. The resend creates a new message event without creating a new reservation. | notification-service: POST /api/confirmations/resend (generic answer, rate limits: 5 per booking in 24 hours, AQPI-35) | BookingJourneyTest#resendConfirmation<br>NotificationServiceTest#resendGeneric |  |
 | [AQPI-28](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-28) | 9.1 Protect sensitive data | AQPI-27 Cross-Cutting Quality, Privacy and Observability | 1. Sensitive data is classified and mapped to approved storage and processing locations.<br>2. Data is encrypted in transit and at rest where required.<br>3. Logs and analytics exclude or mask prohibited fields.<br>4. Access to operational data is role-based and auditable.<br>5. Retention and deletion follow approved policy. | platform-common: FieldCipher, Masking, DataMap; reservation ops views and retention purge | BookingJourneyTest#rawCardRejected<br>PlatformCommonTest#fieldCipher<br>PlatformCommonTest#masking<br>ReservationServiceTest#opsViewMasking<br>ReservationServiceTest#retentionPurge | Encryption key comes from configuration; no KMS. |
 | [AQPI-29](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-29) | 9.2 Provide end-to-end observability | AQPI-27 Cross-Cutting Quality, Privacy and Observability | 1. Events use a correlation ID across supported services.<br>2. Business events and technical logs are distinguishable.<br>3. Metrics and alerts exist for agreed critical failures and latency.<br>4. Logging degradation does not expose sensitive payloads or silently block booking unless explicitly required. | platform-common: CorrelationIdWebFilter, CorrelationPropagation, EventPublisher, BusinessEvent | BookingJourneyTest#happyPathBooking<br>PlatformCommonTest#correlationIdSanitised<br>PlatformCommonTest#eventsScrubbed | Events are structured logs and Micrometer counters; no tracing backend. |
@@ -6408,3 +6408,15 @@ Maps every story in the Jira space AQPI (https://tcs-team-ou6drgfr.atlassian.net
 | [AQPI-35](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-35) | 10.3 Allow up to 5 confirmation resends | AQPI-32 Release 2.0 | 1. A guest can resend the confirmation 5 times per booking in 24 hours.<br>2. The 6th resend is refused (HTTP 429). | notification-service: NotificationProperties.resendLimit (5), notification-service.yml | BookingJourneyTest#resendConfirmation |  |
 | [AQPI-36](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-36) | 10.4 Cancel a reservation free of charge | AQPI-32 Release 2.0 | 1. A refundable booking can be cancelled free of charge up to 48 hours before check-in.<br>2. A later cancellation is refused and the booking stays confirmed.<br>3. A non-refundable rate cannot be cancelled free of charge.<br>4. A cancelled booking is CANCELLED, its payment hold voided and its room released. | reservation-service: POST /api/reservations/{id}/cancel, ReservationService.cancel, ReservationProperties.freeCancellationWindow (48h) | BookingJourneyTest#freeCancellation<br>BookingJourneyTest#lateCancellationRefused<br>ReservationServiceTest#freeCancellation<br>ReservationServiceTest#lateCancellationRefused<br>ReservationServiceTest#nonRefundableNotCancelled |  |
 | [AQPI-37](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-37) | 8.4 Send a cancellation e-mail | AQPI-23 Confirmation and Notifications | 1. A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another.<br>2. A cancellation e-mail that cannot be sent does not undo the cancellation.<br>3. Operational users see the cancellation e-mail with its own delivery state, separate from the confirmation. | reservation-service: ReservationService.cancellationEmail, Downstream.requestCancellationEmail; notification-service: POST /api/cancellations, NotificationService.cancellation, TemplateRenderer.renderCancellation | NotificationServiceTest#cancellationEmail<br>ReservationServiceTest#cancellationEmail | E-mail provider is simulated. |
+
+## Known defects
+
+Found by the Agentic QE cycles. None has a unit test, which is why `mvn verify` still passes.
+
+| Story | Rule | Defect | Code | Release 2.0 |
+|---|---|---|---|---|
+| [AQPI-4](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-4) 3.2 Validate occupancy and stay criteria | One search books 1 to 8 rooms | Release 1.0 accepts a search for 9 rooms (Flow 1) | search-service.yml `max-rooms` | Fixed: `max-rooms: 8`; retested by Flow 2 |
+| [AQPI-17](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-17) 6.3 Review cart and total price | A price change of more than 1% must be acknowledged | A 0.5% change already asks for acknowledgement (Flow 1) | cart-service.yml `material-change-percent: 0.4` | Still open |
+| [AQPI-21](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-21) 7.3 Create reservation idempotently | Idempotency-Key of 8 to 64 characters | A 7-character key is accepted (Flow 1) | ReservationService `KEY` pattern `{7,64}` | Still open |
+| [AQPI-34](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-34) 10.2 Limit Paris stays to 14 nights | Paris allows at most 14 nights | A 15-night Paris stay is accepted (Flow 2) | search-service.yml PAR `max-stay-nights: 15` | New in release 2.0 |
+| [AQPI-25](https://tcs-team-ou6drgfr.atlassian.net/browse/AQPI-25) 8.2 Send and track confirmation email | Operations can retry a failed e-mail at most 3 times | A 4th retry is accepted (Flow 2) | notification-service.yml `max-manual-retries: 4` | New in release 2.0 |

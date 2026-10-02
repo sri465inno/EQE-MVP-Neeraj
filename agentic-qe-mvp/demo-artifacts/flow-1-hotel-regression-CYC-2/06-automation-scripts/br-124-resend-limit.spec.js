@@ -2,7 +2,7 @@
 // Business rule: BR-124 - Resend rate limit
 // Type of testing: Regression testing
 // Statement: A confirmation can be resent at most 3 times per booking in 24 hours.
-// Requirement: REQ-124 v1; sources: notification-service/src/main/resources/notification-service.yml
+// Requirement: REQ-124 v1; sources: AQPI-26
 // Covers test cases: TC-F-115 (The 4th resend within 24 hours is refused)
 // Skills applied: automation-script-conventions, incremental-merge, testing-regression, traceability-handover
 // Self-contained: needs only @playwright/test and the hotel service URLs (config metadata.services).

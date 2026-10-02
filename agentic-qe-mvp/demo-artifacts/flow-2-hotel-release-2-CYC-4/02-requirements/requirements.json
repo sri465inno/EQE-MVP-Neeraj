@@ -4170,11 +4170,13 @@
         "kind": "code-source",
         "ref": "cart-service/src/main/resources/cart-service.yml",
         "line": 16,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/cart-service/src/main/resources/cart-service.yml",
-        "quote": "# @rule A cart expires 20 minutes after it is created and never creates a reservation itself."
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4/cart-service/src/main/resources/cart-service.yml",
+        "story": "AQPI-33",
+        "quote": "# @rule [AQPI-33] A cart expires 20 minutes after it is created and never creates a reservation itself."
       }
     ],
     "jiraKeys": [
+      "AQPI-15",
       "AQPI-33"
     ],
     "resolution": null,
@@ -4198,8 +4200,9 @@
           "kind": "code-source",
           "ref": "cart-service/src/main/resources/cart-service.yml",
           "line": 16,
-          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/cart-service/src/main/resources/cart-service.yml",
-          "quote": "# @rule A cart expires 30 minutes after it is created and never creates a reservation itself."
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/cart-service/src/main/resources/cart-service.yml",
+          "story": "AQPI-15",
+          "quote": "# @rule [AQPI-15] A cart expires 30 minutes after it is created and never creates a reservation itself."
         }
       ]
     },
@@ -4230,11 +4233,14 @@
         "kind": "code-source",
         "ref": "cart-service/src/main/resources/cart-service.yml",
         "line": 17,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/cart-service/src/main/resources/cart-service.yml",
-        "quote": "# @rule A price change of more than 1% must be acknowledged by the guest before checkout."
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/cart-service/src/main/resources/cart-service.yml",
+        "story": "AQPI-17",
+        "quote": "# @rule [AQPI-17] A price change of more than 1% must be acknowledged by the guest before checkout."
       }
     ],
-    "jiraKeys": [],
+    "jiraKeys": [
+      "AQPI-17"
+    ],
     "resolution": null,
     "version": 1,
     "status": "unchanged",
@@ -4282,11 +4288,13 @@
         "kind": "code-source",
         "ref": "notification-service/src/main/resources/notification-service.yml",
         "line": 7,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/notification-service/src/main/resources/notification-service.yml",
-        "quote": "# @rule A confirmation can be resent at most 5 times per booking in 24 hours."
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4/notification-service/src/main/resources/notification-service.yml",
+        "story": "AQPI-35",
+        "quote": "# @rule [AQPI-35] A confirmation can be resent at most 5 times per booking in 24 hours."
       }
     ],
     "jiraKeys": [
+      "AQPI-26",
       "AQPI-35"
     ],
     "resolution": null,
@@ -4315,8 +4323,9 @@
           "kind": "code-source",
           "ref": "notification-service/src/main/resources/notification-service.yml",
           "line": 7,
-          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/notification-service/src/main/resources/notification-service.yml",
-          "quote": "# @rule A confirmation can be resent at most 3 times per booking in 24 hours."
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/notification-service/src/main/resources/notification-service.yml",
+          "story": "AQPI-26",
+          "quote": "# @rule [AQPI-26] A confirmation can be resent at most 3 times per booking in 24 hours."
         }
       ]
     },
@@ -4357,11 +4366,14 @@
         "kind": "code-source",
         "ref": "reservation-service/src/main/resources/reservation-service.yml",
         "line": 20,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/reservation-service/src/main/resources/reservation-service.yml",
-        "quote": "# @rule Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome."
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/reservation-service/src/main/resources/reservation-service.yml",
+        "story": "AQPI-21",
+        "quote": "# @rule [AQPI-21] Every reservation request needs an Idempotency-Key of 8 to 64 characters; a replay within 24 hours returns the original outcome."
       }
     ],
-    "jiraKeys": [],
+    "jiraKeys": [
+      "AQPI-21"
+    ],
     "resolution": null,
     "version": 1,
     "status": "unchanged",
@@ -4409,11 +4421,13 @@
         "kind": "code-source",
         "ref": "search-service/src/main/resources/search-service.yml",
         "line": 12,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/search-service/src/main/resources/search-service.yml",
-        "quote": "# @rule A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights."
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4/search-service/src/main/resources/search-service.yml",
+        "story": "AQPI-34",
+        "quote": "# @rule [AQPI-34] A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights."
       }
     ],
     "jiraKeys": [
+      "AQPI-4",
       "AQPI-34"
     ],
     "resolution": null,
@@ -4442,8 +4456,9 @@
           "kind": "code-source",
           "ref": "search-service/src/main/resources/search-service.yml",
           "line": 12,
-          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/search-service/src/main/resources/search-service.yml",
-          "quote": "# @rule A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights."
+          "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/search-service/src/main/resources/search-service.yml",
+          "story": "AQPI-4",
+          "quote": "# @rule [AQPI-4] A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights."
         }
       ]
     },
@@ -4489,11 +4504,14 @@
         "kind": "code-source",
         "ref": "search-service/src/main/resources/search-service.yml",
         "line": 13,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/search-service/src/main/resources/search-service.yml",
-        "quote": "# @rule Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms."
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/search-service/src/main/resources/search-service.yml",
+        "story": "AQPI-4",
+        "quote": "# @rule [AQPI-4] Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms."
       }
     ],
-    "jiraKeys": [],
+    "jiraKeys": [
+      "AQPI-4"
+    ],
     "resolution": null,
     "version": 1,
     "status": "unchanged",
@@ -4525,11 +4543,14 @@
         "kind": "code-source",
         "ref": "search-service/src/main/resources/search-service.yml",
         "line": 14,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/35af1ef510e2b67f90d326d660ac1c886b194ecf/search-service/src/main/resources/search-service.yml",
-        "quote": "# @rule Check-in can be at most 500 days ahead."
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/search-service/src/main/resources/search-service.yml",
+        "story": "AQPI-4",
+        "quote": "# @rule [AQPI-4] Check-in can be at most 500 days ahead."
       }
     ],
-    "jiraKeys": [],
+    "jiraKeys": [
+      "AQPI-4"
+    ],
     "resolution": null,
     "version": 1,
     "status": "unchanged",
@@ -4648,8 +4669,9 @@
         "kind": "code-source",
         "ref": "reservation-service/src/main/resources/reservation-service.yml",
         "line": 22,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/reservation-service/src/main/resources/reservation-service.yml",
-        "quote": "# @rule A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed."
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4/reservation-service/src/main/resources/reservation-service.yml",
+        "story": "AQPI-36",
+        "quote": "# @rule [AQPI-36] A confirmed reservation can be cancelled free of charge up to 48 hours before check-in; a later cancellation is refused and the reservation stays confirmed."
       }
     ],
     "jiraKeys": [
@@ -4691,8 +4713,9 @@
         "kind": "code-source",
         "ref": "reservation-service/src/main/resources/reservation-service.yml",
         "line": 23,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/reservation-service/src/main/resources/reservation-service.yml",
-        "quote": "# @rule A cancelled reservation shows status CANCELLED, its payment authorisation is voided and its rooms are released."
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4/reservation-service/src/main/resources/reservation-service.yml",
+        "story": "AQPI-36",
+        "quote": "# @rule [AQPI-36] A cancelled reservation shows status CANCELLED, its payment authorisation is voided and its rooms are released."
       }
     ],
     "jiraKeys": [
@@ -4772,8 +4795,9 @@
         "kind": "code-source",
         "ref": "notification-service/src/main/resources/notification-service.yml",
         "line": 16,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/notification-service/src/main/resources/notification-service.yml",
-        "quote": "# @rule The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in."
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4/notification-service/src/main/resources/notification-service.yml",
+        "story": "AQPI-24",
+        "quote": "# @rule [AQPI-24] The confirmation e-mail of a refundable booking states its free-cancellation deadline, 48 hours before check-in."
       }
     ],
     "jiraKeys": [
@@ -4821,8 +4845,9 @@
         "kind": "code-source",
         "ref": "notification-service/src/main/resources/notification-service.yml",
         "line": 14,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/notification-service/src/main/resources/notification-service.yml",
-        "quote": "# @rule Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused."
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4/notification-service/src/main/resources/notification-service.yml",
+        "story": "AQPI-25",
+        "quote": "# @rule [AQPI-25] Operations can retry a failed confirmation e-mail at most 3 times; a further retry is refused."
       }
     ],
     "jiraKeys": [
@@ -4864,8 +4889,9 @@
         "kind": "code-source",
         "ref": "notification-service/src/main/resources/notification-service.yml",
         "line": 18,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/notification-service/src/main/resources/notification-service.yml",
-        "quote": "# @rule A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another."
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4/notification-service/src/main/resources/notification-service.yml",
+        "story": "AQPI-37",
+        "quote": "# @rule [AQPI-37] A cancelled reservation gets one cancellation e-mail; cancelling it again does not send another."
       }
     ],
     "jiraKeys": [
@@ -4907,8 +4933,9 @@
         "kind": "code-source",
         "ref": "notification-service/src/main/resources/notification-service.yml",
         "line": 19,
-        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/24215dc33a0deaeb9316d1da74c931285fc5c8ca/notification-service/src/main/resources/notification-service.yml",
-        "quote": "# @rule A cancellation e-mail that cannot be sent does not undo the cancellation."
+        "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4/notification-service/src/main/resources/notification-service.yml",
+        "story": "AQPI-37",
+        "quote": "# @rule [AQPI-37] A cancellation e-mail that cannot be sent does not undo the cancellation."
       }
     ],
     "jiraKeys": [
