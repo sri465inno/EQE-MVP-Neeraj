@@ -13,8 +13,8 @@ platform:
       timeout: 800ms
       retries: 0
   cart:
-    # @rule A cart expires 20 minutes after it is created and never creates a reservation itself.
-    # @rule A price change of more than 1% must be acknowledged by the guest before checkout.
+    # @rule [AQPI-33] A cart expires 20 minutes after it is created and never creates a reservation itself.
+    # @rule [AQPI-17] A price change of more than 1% must be acknowledged by the guest before checkout.
     ttl: 20m
     material-change-percent: 0.4
 management:

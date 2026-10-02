@@ -25,7 +25,7 @@ Run a service: `mvn -pl hotel-service -am spring-boot:run` (start hotel, offer a
 
 ## Business rules
 
-The rules this code enforces are tagged `@rule` next to their configured values in each service's `src/main/resources/<service>.yml`. The booking attributes, their types, limits and example values are in [data-dictionary/booking-attributes.json](data-dictionary/booking-attributes.json); test data is generated from it.
+The rules this code enforces are tagged `@rule [AQPI-n]` next to their configured values in each service's `src/main/resources/<service>.yml`; the key names the Jira story the rule implements. The booking attributes, their types, limits and example values are in [data-dictionary/booking-attributes.json](data-dictionary/booking-attributes.json); test data is generated from it.
 
 ## Demo switches
 
