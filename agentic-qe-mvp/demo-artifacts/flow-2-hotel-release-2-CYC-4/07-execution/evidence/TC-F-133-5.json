@@ -1,13 +1,13 @@
 {
   "request": {
     "method": "GET",
-    "url": "http://127.0.0.1:44143/api/inventory/commitments",
+    "url": "http://127.0.0.1:41227/api/inventory/commitments",
     "headers": {},
     "data": null
   },
   "response": {
     "status": 200,
-    "correlationId": "a4847531-7cb0-4915-be9d-e3a8e782311f",
+    "correlationId": "ec59a196-0ccc-4d37-846e-4810e44b7813",
     "body": []
   }
 }

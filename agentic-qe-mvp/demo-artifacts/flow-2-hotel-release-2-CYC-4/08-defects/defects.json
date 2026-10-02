@@ -39,11 +39,11 @@
         "contentType": "text/markdown"
       }
     ],
-    "executedAt": "2026-10-02T16:18:51.985Z",
+    "executedAt": "2026-10-02T19:28:14.301Z",
     "occurrences": [
       {
         "cycleId": "CYC-4",
-        "executedAt": "2026-10-02T16:18:51.985Z",
+        "executedAt": "2026-10-02T19:28:14.301Z",
         "actual": "200",
         "evidence": [
           {
@@ -58,6 +58,98 @@
           }
         ]
       }
-    ]
+    ],
+    "jira": {
+      "status": "not raised",
+      "reason": "Jira write is not configured (JIRA_BASE_URL, JIRA_EMAIL, JIRA_API_TOKEN): the defect is kept in the platform with its story link and a ready Jira payload",
+      "linkedTo": "AQPI-34",
+      "payload": {
+        "fields": {
+          "project": {
+            "key": "AQPI"
+          },
+          "summary": "[DEF-001] A 15-night stay in Paris is rejected: returns 200 instead of 400",
+          "labels": [
+            "agentic-qe",
+            "defect",
+            "severity-medium",
+            "cyc-4"
+          ],
+          "description": {
+            "type": "doc",
+            "version": 1,
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Raised by the Agentic QE Platform from a real failure in cycle CYC-4 (Hotel booking release 2.0 (AQPI-32))."
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Story: AQPI-34. Requirement REQ-126: A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights."
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Business rule: BR-126. Test case: TC-F-122. Script: br-126-stay-length-limit.spec.js."
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Expected: 400. Actual: 200."
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Failing assertion: expect(r.status).toBe(400); (br-126-stay-length-limit.spec.js:123:20)"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Severity: Medium - wrong value or status with a workaround. Does not block the release: wrong value or status with a workaround."
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Suspected code area: search-service/src/main/resources/search-service.yml:12. Executed at 2026-10-02T19:28:14.301Z."
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "link": {
+          "type": "Relates",
+          "to": "AQPI-34"
+        }
+      }
+    }
   }
 ]

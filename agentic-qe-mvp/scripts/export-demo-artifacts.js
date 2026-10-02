@@ -46,6 +46,7 @@ async function exportCycle(pipeline, store, c, dir) {
   write(path.join(dir, '09-report', `${c.id}-cycle-report.html`), renderReportHtml(c.report));
   write(path.join(dir, '09-report', `${c.id}-cycle-report.xlsx`), await reportWorkbook(c.report, c));
   json(path.join(dir, '09-report', `${c.id}-cycle-report.json`), c.report);
+  if (c.report.traceability) json(path.join(dir, '09-report', 'traceability.json'), c.report.traceability);
   if (c.mergeProposal) json(path.join(dir, '10-merge-approval', 'merge-proposal.json'), { proposal: c.mergeProposal, approvals: c.approvals });
 
   const lead = buildLeadReport(c);

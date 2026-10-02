@@ -1,15 +1,15 @@
 {
   "request": {
     "method": "GET",
-    "url": "http://127.0.0.1:42101/api/checkout/C-b4f54a7d/payment-summary",
+    "url": "http://127.0.0.1:35545/api/checkout/C-0afce71a/payment-summary",
     "headers": {},
     "data": null
   },
   "response": {
     "status": 200,
-    "correlationId": "5b9c54c8-4749-450a-a7f4-c8ce512e3e0e",
+    "correlationId": "cf992873-9c2b-4bcf-93e0-b379c8ebb697",
     "body": {
-      "cartId": "C-b4f54a7d",
+      "cartId": "C-0afce71a",
       "paymentRule": "PAY_NOW",
       "payNow": {
         "amount": 666.11,

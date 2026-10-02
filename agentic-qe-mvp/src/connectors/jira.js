@@ -33,7 +33,10 @@ async function liveRequest(cfg, fetchImpl, method, urlPath, body) {
     body: body ? JSON.stringify(body) : undefined,
   });
   if (!res.ok) throw new Error(`Jira ${method} ${urlPath} failed: HTTP ${res.status}`);
-  return res.json();
+  if (res.status === 204) return {};
+  if (typeof res.text !== 'function') return res.json();
+  const text = await res.text();
+  return text ? JSON.parse(text) : {};
 }
 
 function readFixture(name) {
@@ -103,4 +106,4 @@ async function loadJiraIssue(key, { withChildren = false, env = process.env, fet
   };
 }
 
-module.exports = { loadJiraIssue, jiraLiveConfig, FIXTURE_BASE, EXPORT };
+module.exports = { loadJiraIssue, jiraLiveConfig, liveRequest, FIXTURE_BASE, EXPORT };

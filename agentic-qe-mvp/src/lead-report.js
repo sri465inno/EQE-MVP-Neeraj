@@ -1,6 +1,7 @@
 'use strict';
 // QE lead report: the cycle written up the way a senior QE lead would, computed from the persisted cycle and its report.
 const { esc, table } = require('./report');
+const { jiraDefectText } = require('./connectors/jira-defects');
 
 const SOURCE_TEXT = { live: 'Jira (live call)', github: 'pulled from GitHub', 'jira-export': 'Jira export on GitHub', fixture: 'recorded fixture', pasted: 'pasted by the user' };
 const date = (iso) => (iso ? new Date(iso).toISOString().replace('T', ' ').slice(0, 16) + ' UTC' : '-');
@@ -46,7 +47,7 @@ function buildLeadReport(cycle) {
     ...(tt ? [`Type of testing: <b>${esc(tt.name)}</b>. ${esc(tt.focus)}${sel && sel.notInRun ? ` This run executed ${plural(sel.inRun, 'case')} of the ${sel.designed} in the pack.` : ''}`] : []),
     `We took ${plural(r.inputs.length, 'input')} (${r.inputs.map((i) => `${esc(i.label)} ${esc(i.ref)}`).join(', ')}) and produced ${plural(r.requirements.total, 'requirement')}, ${plural(r.testCases.total, 'test case')} and ${plural(r.scripts.total, 'automated script')}.`,
     ex ? `We ran ${plural(ex.executed, 'automated test')} for real: <b>${ex.passed} passed, ${ex.failed} failed</b> (pass rate ${ex.passRate}%). ${ex.notRun ? `${plural(ex.notRun, 'manual test')} still to be run by hand.` : ''}` : 'Tests have not been executed yet.',
-    defects.length ? `${plural(defects.length, 'defect')} raised from real failures, ${defects.filter((d) => d.blocksRelease).length} release-blocking: ${defects.map((d) => `${esc(d.id)} ${esc(d.title)}`).join('; ')}.` : 'No defects: nothing failed.',
+    defects.length ? `${plural(defects.length, 'defect')} raised from real failures, ${defects.filter((d) => d.blocksRelease).length} release-blocking: ${defects.map((d) => `${esc(d.id)} ${esc(d.title)} (Jira: ${esc(jiraDefectText(d))})`).join('; ')}.` : 'No defects: nothing failed.',
     ...(isInc && r.delta ? [`Against the baseline: ${esc(r.delta.summary)}. ${r.reuse.carriedOver} of ${r.reuse.total} test cases were reused unchanged; only new and changed items were redesigned.`] : []),
   ];
 
@@ -75,6 +76,7 @@ function buildLeadReport(cycle) {
     { name: 'Automation scripts (Playwright)', count: r.scripts.total, note: Object.entries(r.scripts.byStatus).map(([k, v]) => `${v} ${k}`).join(' · '), tab: 'scripts', file: '06-automation-scripts/' },
     ...(mergeApproval ? [{ name: 'Merge approval', count: 1, note: `${mergeApproval.decision} by ${mergeApproval.by}`, tab: 'merge', file: '10-merge-approval/' }] : []),
     { name: 'Execution results and evidence', count: ex ? ex.executed : 0, note: ex ? `${ex.passed} passed · ${ex.failed} failed · ${ex.notRun} manual` : 'not executed', tab: 'execution', file: '07-execution/' },
+    ...(r.traceability ? [{ name: 'Traceability matrix', count: r.traceability.rows.length, note: `${r.traceability.totals.covered} of ${r.traceability.totals.jiraItems} Jira items covered · ${r.traceability.totals.verified} verified · ${r.traceability.totals.failing} failing`, tab: 'traceability', file: '09-report/traceability.json' }] : []),
     { name: 'Defects', count: defects.length, note: defects.length ? defects.map((d) => `${d.id} ${d.severity}`).join(' · ') : 'none', tab: 'defects', file: '08-defects/' },
     { name: 'Cycle report (HTML, Excel)', count: 1, note: 'full detail behind this summary', tab: 'report', file: '09-report/' },
   ];
@@ -83,7 +85,7 @@ function buildLeadReport(cycle) {
     ...(sel ? sel.gaps.map((g) => `${tt.name}: ${g.message}`) : []),
     ...(sel && sel.outOfScope.length ? [`${plural(sel.outOfScope.length, 'requirement')} had no case in this ${tt.name.toLowerCase()} run (${sel.outOfScope.join(', ')}); a ${String(tt.id).split('+').includes('smoke') ? 'passing smoke run is not a release decision' : 'wider run is needed before release'}.`] : []),
     ...(ra ? ra.findings.filter((f) => f.severity === 'high' && f.category === 'missing').map((f) => `Review agent (${f.id}): ${f.title}. ${f.suggestion}`) : []),
-    ...defects.map((d) => `${d.id} (${d.severity}): ${d.impact || d.title}. Expected ${d.expected}, got ${d.actual}. ${d.releaseDecision || ''}`),
+    ...defects.map((d) => `${d.id} (${d.severity}): ${d.impact || d.title}. Expected ${d.expected}, got ${d.actual}. ${d.releaseDecision || ''} Story ${(d.jira && d.jira.linkedTo) || (d.jiraKeys || []).join(', ')}; Jira: ${jiraDefectText(d)}.`),
     ...(manual.length ? [`${plural(manual.length, 'test case')} cannot be automated and ${manual.length === 1 ? 'was' : 'were'} not executed: ${manual.map((t) => `${t.key} ${t.name}`).join('; ')}. Needs a manual run before sign-off.`] : []),
     ...(gaps.length ? [`${plural(gaps.length, 'requirement')} not yet verified by a passing test: ${gaps.map((g) => `${g.requirementId} (${g.status})`).join('; ')}.`] : []),
     ...(conflicts.length ? [`${plural(conflicts.length, 'conflict')} between Jira and the code ${conflicts.length === 1 ? 'was' : 'were'} settled by the reviewer; the losing source (${[...new Set(conflicts.flatMap((q) => q.resolution.rejected.flatMap((x) => x.sources)))].join('/')}) should be corrected so they agree.`] : []),
@@ -107,6 +109,7 @@ function buildLeadReport(cycle) {
     title: `QE lead report - ${cycle.name}`, cycleId: cycle.id, cycleType: cycle.type, preparedBy: 'Agentic QE Platform (QE lead report, computed from the cycle)',
     generatedAt: r.generatedAt, recommendation: rec, kpis, summary, inputs, approach, artifacts, risks, nextSteps,
     coverageNote: r.coverage?.attributes ? `${r.coverage.attributes.exercised} of ${r.coverage.attributes.driverCount} ${r.platform?.driversLabel || 'commission-driving attributes'} (out of ${r.coverage.attributes.attributeCount} ${r.platform?.modelLabel || 'reservation'} attributes) are varied by at least one test.` : null,
+    traceability: r.traceability ? r.traceability.stories.filter((x) => x.level !== 'initiative') : [],
     signoff: r.approvals.map((x) => ({ gate: x.gate, decision: x.decision, by: x.by, at: x.at, detail: x.detail })),
   };
 }
@@ -124,6 +127,7 @@ function renderLeadHtml(L, { cycleLink = null } = {}) {
 <h3>4. Artifacts produced</h3>${table(['Artifact', 'Count', 'Notes'], L.artifacts.map((x) => [link(x), esc(x.count), esc(x.note)]))}
 <h3>5. Risks and open items</h3>${L.risks.length ? `<ul>${L.risks.map((s) => `<li>${esc(s)}</li>`).join('')}</ul>` : '<p>None.</p>'}${L.coverageNote ? `<p class="muted">${esc(L.coverageNote)}</p>` : ''}
 <h3>6. Recommendation and next steps</h3><p><b>${esc(rec.decision)}.</b> ${esc(rec.reason)}</p><ul>${L.nextSteps.map((s) => `<li>${esc(s)}</li>`).join('')}</ul>
+${L.traceability && L.traceability.length ? `<h3>Traceability by story</h3>${table(['Jira item', 'Level', 'Summary', 'Requirements', 'Test cases', 'Passed', 'Failed', 'Defects', 'Status'], L.traceability.map((x) => [esc(x.key), esc(x.level), esc(x.summary || ''), esc(x.requirements), esc(x.testCases), esc(x.passed), esc(x.failed), esc(x.defects.join(', ') || '-'), esc(x.status)]))}` : ''}
 <h3>7. Sign-off</h3>${table(['Gate', 'Decision', 'By', 'When', 'Detail'], L.signoff.map((x) => [esc(x.gate), esc(x.decision), esc(x.by), esc(date(x.at)), esc(x.detail || '')]))}
 <p class="muted small">${esc(L.preparedBy)} · generated ${esc(date(L.generatedAt))}. Every figure comes from the persisted cycle; nothing is estimated.</p>
 </div>`;
@@ -154,6 +158,7 @@ function renderLeadMarkdown(L) {
     '## 4. Artifacts produced', mdTable(['Artifact', 'Count', 'Notes', 'Folder'], L.artifacts.map((x) => [x.name, x.count, x.note, `[${x.file}](${x.file})`])), '',
     '## 5. Risks and open items', ...(L.risks.length ? L.risks.map((s) => `- ${s}`) : ['None.']), ...(L.coverageNote ? ['', `_${L.coverageNote}_`] : []), '',
     '## 6. Recommendation and next steps', `**${rec.decision}.** ${rec.reason}`, '', ...L.nextSteps.map((s) => `- ${s}`), '',
+    ...(L.traceability && L.traceability.length ? ['## Traceability by story', mdTable(['Jira item', 'Level', 'Summary', 'Requirements', 'Test cases', 'Passed', 'Failed', 'Defects', 'Status'], L.traceability.map((x) => [x.key, x.level, x.summary || '', x.requirements, x.testCases, x.passed, x.failed, x.defects.join(', ') || '-', x.status])), ''] : []),
     '## 7. Sign-off', mdTable(['Gate', 'Decision', 'By', 'When', 'Detail'], L.signoff.map((x) => [x.gate, x.decision, x.by, date(x.at), x.detail || ''])), '',
     `_${L.preparedBy} · generated ${date(L.generatedAt)}. Every figure comes from the persisted cycle; nothing is estimated._`, ''].join('\n');
 }

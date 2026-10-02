@@ -33,7 +33,9 @@ async function loadInput(slot, spec, opts = {}) {
   const [first] = all;
   return { slot, label: SLOT_LABEL[slot], mode: spec.mode === 'github' ? 'github' : 'jira', ref: all.map((l) => l.issue.key).join(', '),
     summary: all.length > 1 ? `${all.length} epics: ${all.map((l) => l.issue.fields.summary).join('; ')}` : first.issue.fields.summary,
-    children: all.flatMap((l) => l.children.map((c) => c.key)), statements, provenance: first.provenance };
+    children: all.flatMap((l) => l.children.map((c) => c.key)),
+    hierarchy: all.map((l) => ({ key: l.issue.key, summary: l.issue.fields.summary, children: l.children.map((c) => ({ key: c.key, summary: c.fields.summary })) })),
+    statements, provenance: first.provenance };
 }
 
 async function loadInputs(specs, slots, opts) {

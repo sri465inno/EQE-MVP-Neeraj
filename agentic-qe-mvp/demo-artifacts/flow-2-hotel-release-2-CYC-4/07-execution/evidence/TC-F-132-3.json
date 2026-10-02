@@ -1,18 +1,18 @@
 {
   "request": {
     "method": "POST",
-    "url": "http://127.0.0.1:33757/api/reservations/R-8bd1c9f6/cancel",
+    "url": "http://127.0.0.1:36959/api/reservations/R-3560cdaf/cancel",
     "headers": {},
     "data": {}
   },
   "response": {
     "status": 409,
-    "correlationId": "8f7ea7b2-007a-4d9a-988d-6b8c8e7e5e28",
+    "correlationId": "dffd7620-4680-4ccc-8a97-9e162e2aa917",
     "body": {
       "status": 409,
       "code": "FREE_CANCELLATION_CLOSED",
       "message": "Free cancellation closed 48 hours before check-in. Your booking is still confirmed.",
-      "correlationId": "8f7ea7b2-007a-4d9a-988d-6b8c8e7e5e28",
+      "correlationId": "dffd7620-4680-4ccc-8a97-9e162e2aa917",
       "retryable": false,
       "fieldIssues": []
     }

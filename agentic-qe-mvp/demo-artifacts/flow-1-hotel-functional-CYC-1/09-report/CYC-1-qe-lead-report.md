@@ -9,7 +9,7 @@ CYC-1 · baseline cycle
 | Functional testing | 128 | 132 | 74 | 100% | 0 | 45.3% |
 
 ## 1. Summary
-- Baseline cycle for Guest hotel booking from search to confirmation (AQPI-1) on build demo/hotel-booking-platform, 2026-10-02 16:18 UTC.
+- Baseline cycle for Guest hotel booking from search to confirmation (AQPI-1) on build demo/hotel-booking-platform, 2026-10-02 19:27 UTC.
 - Type of testing: Functional testing. Every business rule and its boundaries, checked through the service API.
 - We took 3 inputs (Jira initiative AQPI-1, Jira epic AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27, Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (35af1ef)) and produced 128 requirements, 132 test cases and 58 automated scripts.
 - We ran 74 automated tests for real: 74 passed, 0 failed (pass rate 100%). 58 manual tests still to be run by hand.
@@ -25,7 +25,7 @@ CYC-1 · baseline cycle
 ## 3. How we ran the cycle
 1. Read 152 statements from the inputs and lined them up into 128 requirement groups: 0 agreed by every source, 121 only in Jira, 7 only in the code, 0 in conflict.
 2. The review agent read the inputs first and suggested 7 addition(s), 184 missing piece(s) and 0 conflict(s) for the reviewer (8 high severity). It approved nothing.
-3. Priya Shah reviewed and approved the requirement set on 2026-10-02 16:18 UTC.
+3. Priya Shah reviewed and approved the requirement set on 2026-10-02 19:27 UTC.
 4. Functional testing steered the design: Designs every functional test case and Playwright script from the inputs and runs them all. Result: 132 case(s) in this run (0 reused, 0 re-designed, 132 new).
 5. Derived 128 business rules (each quoting its source), designed 132 test cases (128 functional, 4 non-functional) and generated 58 Playwright scripts.
 6. Executed the automated suite with Playwright 1.63.0 (headless Chromium, JSON reporter) against Hotel booking platform release 1.0, six Spring Boot services built from branch demo/hotel-booking-platform; defects were raised only for tests that actually failed.
@@ -42,6 +42,7 @@ CYC-1 · baseline cycle
 | Test data (one data set per test case) | 132 | 124 conform to Hotel booking attributes v1.0 (21 attributes) · 8 negative tests | [05-test-data/](05-test-data/) |
 | Automation scripts (Playwright) | 58 | 58 new | [06-automation-scripts/](06-automation-scripts/) |
 | Execution results and evidence | 74 | 74 passed · 0 failed · 58 manual | [07-execution/](07-execution/) |
+| Traceability matrix | 132 | 31 of 31 Jira items covered · 23 verified · 0 failing | [09-report/traceability.json](09-report/traceability.json) |
 | Defects | 0 | none | [08-defects/](08-defects/) |
 | Cycle report (HTML, Excel) | 1 | full detail behind this summary | [09-report/](09-report/) |
 
@@ -67,9 +68,43 @@ _13 of 15 booking-driving attributes (out of 21 booking attributes) are varied b
 - Run TC-F-002, TC-F-003, TC-F-004, TC-F-005, TC-F-006, TC-F-012, TC-F-013, TC-F-014, TC-F-017, TC-F-018, TC-F-020, TC-F-029, TC-F-032, TC-F-033, TC-F-035, TC-F-038, TC-F-039, TC-F-040, TC-F-041, TC-F-045, TC-F-049, TC-F-050, TC-F-051, TC-F-052, TC-F-053, TC-F-056, TC-F-058, TC-F-059, TC-F-060, TC-F-061, TC-F-064, TC-F-065, TC-F-069, TC-F-074, TC-F-075, TC-F-079, TC-F-080, TC-F-081, TC-F-087, TC-F-089, TC-F-091, TC-F-092, TC-F-093, TC-F-095, TC-F-096, TC-F-097, TC-F-098, TC-F-099, TC-F-101, TC-F-103, TC-F-104, TC-F-105, TC-F-106, TC-F-107, TC-F-108, TC-F-109, TC-F-110, TC-F-111 manually and record the result.
 - Use this approved baseline as the reference for the next incremental cycle.
 
+## Traceability by story
+| Jira item | Level | Summary | Requirements | Test cases | Passed | Failed | Defects | Status |
+|---|---|---|---|---|---|---|---|---|
+| AQPI-2 | epic | [Epic 1] Search and Availability | 4 | 4 | 0 | 0 | - | designed, not executed |
+| AQPI-3 | story | 3.1 Search hotels by destination and date range | 7 | 9 | 6 | 0 | - | verified |
+| AQPI-4 | story | 3.2 Validate occupancy and stay criteria | 4 | 4 | 2 | 0 | - | verified |
+| AQPI-5 | story | 3.3 Handle unavailable or failed searches | 3 | 3 | 2 | 0 | - | verified |
+| AQPI-6 | epic | [Epic 2] Hotel Results and Selection | 4 | 4 | 0 | 0 | - | designed, not executed |
+| AQPI-7 | story | 4.1 Display available hotels | 5 | 5 | 5 | 0 | - | verified |
+| AQPI-8 | story | 4.2 Sort and filter hotel results | 4 | 5 | 4 | 0 | - | verified |
+| AQPI-9 | story | 4.3 View hotel and room details | 4 | 4 | 2 | 0 | - | verified |
+| AQPI-10 | epic | [Epic 3] Personalized Ancillary Offers | 4 | 4 | 0 | 0 | - | designed, not executed |
+| AQPI-11 | story | 5.1 Determine eligible ancillary offers | 7 | 7 | 2 | 0 | - | verified |
+| AQPI-12 | story | 5.2 Display ancillary offers | 3 | 3 | 3 | 0 | - | verified |
+| AQPI-13 | story | 5.3 Explain and control personalization | 3 | 3 | 2 | 0 | - | verified |
+| AQPI-14 | epic | [Epic 4] Cart Management | 4 | 4 | 0 | 0 | - | designed, not executed |
+| AQPI-15 | story | 6.1 Add room selection to cart | 5 | 5 | 1 | 0 | - | verified |
+| AQPI-16 | story | 6.2 Add, update, and remove ancillaries | 4 | 4 | 2 | 0 | - | verified |
+| AQPI-17 | story | 6.3 Review cart and total price | 5 | 5 | 1 | 0 | - | verified |
+| AQPI-18 | epic | [Epic 5] Checkout and Reservation | 4 | 4 | 0 | 0 | - | designed, not executed |
+| AQPI-19 | story | 7.1 Capture guest and contact information | 6 | 6 | 4 | 0 | - | verified |
+| AQPI-20 | story | 7.2 Capture and authorize payment | 6 | 9 | 6 | 0 | - | verified |
+| AQPI-21 | story | 7.3 Create reservation idempotently | 6 | 6 | 3 | 0 | - | verified |
+| AQPI-22 | story | 7.4 Show booking outcome | 3 | 3 | 3 | 0 | - | verified |
+| AQPI-23 | epic | [Epic 6] Confirmation and Notifications | 4 | 4 | 0 | 0 | - | designed, not executed |
+| AQPI-24 | story | 8.1 Generate confirmation message | 4 | 4 | 3 | 0 | - | verified |
+| AQPI-25 | story | 8.2 Send and track confirmation email | 5 | 5 | 1 | 0 | - | verified |
+| AQPI-26 | story | 8.3 Resend confirmation safely | 3 | 3 | 1 | 0 | - | verified |
+| AQPI-27 | epic | [Epic 7] Cross-Cutting Quality, Privacy and Observability | 4 | 4 | 0 | 0 | - | designed, not executed |
+| AQPI-28 | story | 9.1 Protect sensitive data | 5 | 5 | 1 | 0 | - | verified |
+| AQPI-29 | story | 9.2 Provide end-to-end observability | 5 | 5 | 1 | 0 | - | verified |
+| AQPI-30 | story | 9.3 Meet accessibility requirements | 3 | 3 | 1 | 0 | - | verified |
+| AQPI-31 | story | 9.4 Meet performance and reliability objectives | 3 | 3 | 0 | 0 | - | designed, not executed |
+
 ## 7. Sign-off
 | Gate | Decision | By | When | Detail |
 |---|---|---|---|---|
-| Requirement set review | approved | Priya Shah | 2026-10-02 16:18 UTC | 128 requirements approved; 0 excluded; 0 conflict(s) resolved |
+| Requirement set review | approved | Priya Shah | 2026-10-02 19:27 UTC | 128 requirements approved; 0 excluded; 0 conflict(s) resolved |
 
-_Agentic QE Platform (QE lead report, computed from the cycle) · generated 2026-10-02 16:18 UTC. Every figure comes from the persisted cycle; nothing is estimated._
+_Agentic QE Platform (QE lead report, computed from the cycle) · generated 2026-10-02 19:27 UTC. Every figure comes from the persisted cycle; nothing is estimated._

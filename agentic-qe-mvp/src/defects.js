@@ -61,6 +61,7 @@ function raiseDefects({ execution, testCases, requirements, cycle, previousDefec
       evidence: r.evidence,
       executedAt: execution.finishedAt,
       occurrences: [...(prev?.occurrences || []), occurrence],
+      jira: prev?.jira || null,
     };
   });
   const failedKeys = new Set(defects.map((d) => d.testCaseKey));

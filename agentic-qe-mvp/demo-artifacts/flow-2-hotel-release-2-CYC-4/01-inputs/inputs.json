@@ -11,12 +11,36 @@
       "AQPI-35",
       "AQPI-36"
     ],
+    "hierarchy": [
+      {
+        "key": "AQPI-32",
+        "summary": "[Epic 8] Release 2.0 – Booking Rule Changes and Free Cancellation",
+        "children": [
+          {
+            "key": "AQPI-33",
+            "summary": "10.1 Shorten the cart hold to 20 minutes"
+          },
+          {
+            "key": "AQPI-34",
+            "summary": "10.2 Limit Paris stays to 14 nights"
+          },
+          {
+            "key": "AQPI-35",
+            "summary": "10.3 Allow up to 5 confirmation resends"
+          },
+          {
+            "key": "AQPI-36",
+            "summary": "10.4 Cancel a reservation free of charge"
+          }
+        ]
+      }
+    ],
     "provenance": {
       "kind": "github",
       "system": "jira",
       "label": "Jira export on GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export): Jira REST API v3 JSON of AQPI-32, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
       "ref": "AQPI-32",
-      "fetchedAt": "2026-10-02T16:18:37.849Z",
+      "fetchedAt": "2026-10-02T19:27:56.968Z",
       "files": [
         "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/AQPI-32.json",
         "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/AQPI-32.children.json"
@@ -31,9 +55,9 @@
     "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (5bd7164)",
     "provenance": {
       "kind": "github",
-      "label": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (5bd7164) at 2026-10-02T16:18:37.849Z",
+      "label": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (5bd7164) at 2026-10-02T19:27:56.968Z",
       "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (5bd7164)",
-      "fetchedAt": "2026-10-02T16:18:37.849Z",
+      "fetchedAt": "2026-10-02T19:27:56.968Z",
       "files": [
         "README.md",
         "TRACEABILITY.md",
