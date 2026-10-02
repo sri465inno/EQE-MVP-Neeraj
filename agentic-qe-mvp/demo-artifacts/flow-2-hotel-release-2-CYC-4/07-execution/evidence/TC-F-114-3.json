@@ -1,18 +1,18 @@
 {
   "request": {
     "method": "POST",
-    "url": "http://127.0.0.1:46175/api/carts/C-e6335ce5/revalidate",
+    "url": "http://127.0.0.1:46261/api/carts/C-df55b7b7/revalidate",
     "headers": {},
     "data": null
   },
   "response": {
     "status": 200,
-    "correlationId": "10529a92-ccca-44ea-b6f7-0b5666c5b8f9",
+    "correlationId": "927fdebf-6909-485f-9c6d-66b471d5d604",
     "body": {
-      "cartId": "C-e6335ce5",
+      "cartId": "C-df55b7b7",
       "status": "ACTIVE",
-      "createdAt": "2026-10-02T20:26:32.399815381Z",
-      "expiresAt": "2026-10-02T20:46:32.399815381Z",
+      "createdAt": "2026-10-02T20:29:15.094269254Z",
+      "expiresAt": "2026-10-02T20:49:15.094269254Z",
       "secondsRemaining": 1199,
       "timeoutBehaviour": "Your cart is held for 20 minutes. Rooms are not reserved until you complete booking; after expiry, price and availability are checked again.",
       "room": {

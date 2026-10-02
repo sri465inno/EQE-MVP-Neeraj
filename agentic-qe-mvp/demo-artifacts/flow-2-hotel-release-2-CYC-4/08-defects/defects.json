@@ -39,7 +39,7 @@
         "contentType": "application/json"
       },
       {
-        "name": "POST cart-service/api/carts/C-e6335ce5/revalidate",
+        "name": "POST cart-service/api/carts/C-df55b7b7/revalidate",
         "file": "TC-F-114-3.json",
         "contentType": "application/json"
       },
@@ -49,11 +49,11 @@
         "contentType": "text/markdown"
       }
     ],
-    "executedAt": "2026-10-02T20:26:37.392Z",
+    "executedAt": "2026-10-02T20:29:20.079Z",
     "occurrences": [
       {
         "cycleId": "CYC-1",
-        "executedAt": "2026-10-02T20:25:59.407Z",
+        "executedAt": "2026-10-02T20:28:41.426Z",
         "actual": "true",
         "evidence": [
           {
@@ -67,7 +67,7 @@
             "contentType": "application/json"
           },
           {
-            "name": "POST cart-service/api/carts/C-cbfe636c/revalidate",
+            "name": "POST cart-service/api/carts/C-1a155a7a/revalidate",
             "file": "TC-F-114-3.json",
             "contentType": "application/json"
           },
@@ -80,7 +80,7 @@
       },
       {
         "cycleId": "CYC-4",
-        "executedAt": "2026-10-02T20:26:37.392Z",
+        "executedAt": "2026-10-02T20:29:20.079Z",
         "actual": "true",
         "evidence": [
           {
@@ -94,7 +94,7 @@
             "contentType": "application/json"
           },
           {
-            "name": "POST cart-service/api/carts/C-e6335ce5/revalidate",
+            "name": "POST cart-service/api/carts/C-df55b7b7/revalidate",
             "file": "TC-F-114-3.json",
             "contentType": "application/json"
           },
@@ -185,7 +185,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Suspected code area: cart-service/src/main/resources/cart-service.yml:17. Executed at 2026-10-02T20:26:37.392Z."
+                    "text": "Suspected code area: cart-service/src/main/resources/cart-service.yml:17. Executed at 2026-10-02T20:29:20.079Z."
                   }
                 ]
               }
@@ -244,11 +244,11 @@
         "contentType": "text/markdown"
       }
     ],
-    "executedAt": "2026-10-02T20:26:37.392Z",
+    "executedAt": "2026-10-02T20:29:20.079Z",
     "occurrences": [
       {
         "cycleId": "CYC-1",
-        "executedAt": "2026-10-02T20:25:59.407Z",
+        "executedAt": "2026-10-02T20:28:41.426Z",
         "actual": "201",
         "evidence": [
           {
@@ -270,7 +270,7 @@
       },
       {
         "cycleId": "CYC-4",
-        "executedAt": "2026-10-02T20:26:37.392Z",
+        "executedAt": "2026-10-02T20:29:20.079Z",
         "actual": "201",
         "evidence": [
           {
@@ -370,7 +370,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Suspected code area: reservation-service/src/main/resources/reservation-service.yml:20. Executed at 2026-10-02T20:26:37.392Z."
+                    "text": "Suspected code area: reservation-service/src/main/resources/reservation-service.yml:20. Executed at 2026-10-02T20:29:20.079Z."
                   }
                 ]
               }
@@ -400,11 +400,9 @@
     "requirementId": "REQ-126",
     "requirementText": "A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.",
     "jiraKeys": [
-      "AQPI-4",
       "AQPI-34"
     ],
     "sourceRefs": [
-      "AQPI-4",
       "AQPI-34"
     ],
     "suspectedCodeArea": "search-service/src/main/resources/search-service.yml:12",
@@ -426,11 +424,11 @@
         "contentType": "text/markdown"
       }
     ],
-    "executedAt": "2026-10-02T20:26:37.392Z",
+    "executedAt": "2026-10-02T20:29:20.079Z",
     "occurrences": [
       {
         "cycleId": "CYC-4",
-        "executedAt": "2026-10-02T20:26:37.392Z",
+        "executedAt": "2026-10-02T20:29:20.079Z",
         "actual": "200",
         "evidence": [
           {
@@ -525,7 +523,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Suspected code area: search-service/src/main/resources/search-service.yml:12. Executed at 2026-10-02T20:26:37.392Z."
+                    "text": "Suspected code area: search-service/src/main/resources/search-service.yml:12. Executed at 2026-10-02T20:29:20.079Z."
                   }
                 ]
               }
@@ -579,27 +577,27 @@
         "contentType": "application/json"
       },
       {
-        "name": "GET notification-service/api/confirmations/R-b84be722",
+        "name": "GET notification-service/api/confirmations/R-5dde3521",
         "file": "TC-F-137-3.json",
         "contentType": "application/json"
       },
       {
-        "name": "POST notification-service/api/ops/messages/M-862d6fda/retry",
+        "name": "POST notification-service/api/ops/messages/M-8f5f5dcc/retry",
         "file": "TC-F-137-4.json",
         "contentType": "application/json"
       },
       {
-        "name": "POST notification-service/api/ops/messages/M-862d6fda/retry",
+        "name": "POST notification-service/api/ops/messages/M-8f5f5dcc/retry",
         "file": "TC-F-137-5.json",
         "contentType": "application/json"
       },
       {
-        "name": "POST notification-service/api/ops/messages/M-862d6fda/retry",
+        "name": "POST notification-service/api/ops/messages/M-8f5f5dcc/retry",
         "file": "TC-F-137-6.json",
         "contentType": "application/json"
       },
       {
-        "name": "POST notification-service/api/ops/messages/M-862d6fda/retry",
+        "name": "POST notification-service/api/ops/messages/M-8f5f5dcc/retry",
         "file": "TC-F-137-7.json",
         "contentType": "application/json"
       },
@@ -609,11 +607,11 @@
         "contentType": "text/markdown"
       }
     ],
-    "executedAt": "2026-10-02T20:26:37.392Z",
+    "executedAt": "2026-10-02T20:29:20.079Z",
     "occurrences": [
       {
         "cycleId": "CYC-4",
-        "executedAt": "2026-10-02T20:26:37.392Z",
+        "executedAt": "2026-10-02T20:29:20.079Z",
         "actual": "200",
         "evidence": [
           {
@@ -627,27 +625,27 @@
             "contentType": "application/json"
           },
           {
-            "name": "GET notification-service/api/confirmations/R-b84be722",
+            "name": "GET notification-service/api/confirmations/R-5dde3521",
             "file": "TC-F-137-3.json",
             "contentType": "application/json"
           },
           {
-            "name": "POST notification-service/api/ops/messages/M-862d6fda/retry",
+            "name": "POST notification-service/api/ops/messages/M-8f5f5dcc/retry",
             "file": "TC-F-137-4.json",
             "contentType": "application/json"
           },
           {
-            "name": "POST notification-service/api/ops/messages/M-862d6fda/retry",
+            "name": "POST notification-service/api/ops/messages/M-8f5f5dcc/retry",
             "file": "TC-F-137-5.json",
             "contentType": "application/json"
           },
           {
-            "name": "POST notification-service/api/ops/messages/M-862d6fda/retry",
+            "name": "POST notification-service/api/ops/messages/M-8f5f5dcc/retry",
             "file": "TC-F-137-6.json",
             "contentType": "application/json"
           },
           {
-            "name": "POST notification-service/api/ops/messages/M-862d6fda/retry",
+            "name": "POST notification-service/api/ops/messages/M-8f5f5dcc/retry",
             "file": "TC-F-137-7.json",
             "contentType": "application/json"
           },
@@ -738,7 +736,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Suspected code area: notification-service/src/main/resources/notification-service.yml:14. Executed at 2026-10-02T20:26:37.392Z."
+                    "text": "Suspected code area: notification-service/src/main/resources/notification-service.yml:14. Executed at 2026-10-02T20:29:20.079Z."
                   }
                 ]
               }

@@ -5576,11 +5576,9 @@
     "automation": "Automated",
     "scriptFile": "br-122-cart-expiry.spec.js",
     "issueLinks": [
-      "AQPI-15",
       "AQPI-33"
     ],
     "sourceRefs": [
-      "AQPI-15",
       "AQPI-33"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
@@ -5735,11 +5733,9 @@
     "automation": "Automated",
     "scriptFile": "br-124-resend-limit.spec.js",
     "issueLinks": [
-      "AQPI-26",
       "AQPI-35"
     ],
     "sourceRefs": [
-      "AQPI-26",
       "AQPI-35"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
@@ -5932,11 +5928,9 @@
     "automation": "Automated",
     "scriptFile": "br-126-stay-length-limit.spec.js",
     "issueLinks": [
-      "AQPI-4",
       "AQPI-34"
     ],
     "sourceRefs": [
-      "AQPI-4",
       "AQPI-34"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
@@ -5987,11 +5981,9 @@
     "automation": "Automated",
     "scriptFile": "br-126-stay-length-limit.spec.js",
     "issueLinks": [
-      "AQPI-4",
       "AQPI-34"
     ],
     "sourceRefs": [
-      "AQPI-4",
       "AQPI-34"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
@@ -6042,11 +6034,9 @@
     "automation": "Automated",
     "scriptFile": "br-126-stay-length-limit.spec.js",
     "issueLinks": [
-      "AQPI-4",
       "AQPI-34"
     ],
     "sourceRefs": [
-      "AQPI-4",
       "AQPI-34"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",
@@ -6098,11 +6088,9 @@
     "automation": "Automated",
     "scriptFile": "br-126-stay-length-limit.spec.js",
     "issueLinks": [
-      "AQPI-4",
       "AQPI-34"
     ],
     "sourceRefs": [
-      "AQPI-4",
       "AQPI-34"
     ],
     "cycle": "Hotel booking release 2.0 (AQPI-32 + AQPI-23)",

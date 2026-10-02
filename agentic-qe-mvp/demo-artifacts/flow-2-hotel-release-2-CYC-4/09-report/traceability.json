@@ -2326,7 +2326,6 @@
     },
     {
       "jiraKeys": [
-        "AQPI-15",
         "AQPI-33"
       ],
       "jiraLevel": "story",
@@ -2389,7 +2388,6 @@
     },
     {
       "jiraKeys": [
-        "AQPI-26",
         "AQPI-35"
       ],
       "jiraLevel": "story",
@@ -2472,7 +2470,6 @@
     },
     {
       "jiraKeys": [
-        "AQPI-4",
         "AQPI-34"
       ],
       "jiraLevel": "story",
@@ -2493,7 +2490,6 @@
     },
     {
       "jiraKeys": [
-        "AQPI-4",
         "AQPI-34"
       ],
       "jiraLevel": "story",
@@ -2514,7 +2510,6 @@
     },
     {
       "jiraKeys": [
-        "AQPI-4",
         "AQPI-34"
       ],
       "jiraLevel": "story",
@@ -2535,7 +2530,6 @@
     },
     {
       "jiraKeys": [
-        "AQPI-4",
         "AQPI-34"
       ],
       "jiraLevel": "story",
@@ -3042,10 +3036,10 @@
       "parent": "AQPI-23",
       "summary": "8.3 Resend confirmation safely",
       "scope": "this cycle",
-      "requirements": 4,
-      "testCases": 4,
-      "automated": 2,
-      "passed": 2,
+      "requirements": 3,
+      "testCases": 3,
+      "automated": 1,
+      "passed": 1,
       "failed": 0,
       "defects": [],
       "status": "verified"
@@ -3112,15 +3106,13 @@
       "parent": "AQPI-2",
       "summary": "3.2 Validate occupancy and stay criteria",
       "scope": "baseline",
-      "requirements": 7,
-      "testCases": 14,
-      "automated": 12,
-      "passed": 11,
-      "failed": 1,
-      "defects": [
-        "DEF-007"
-      ],
-      "status": "failing"
+      "requirements": 6,
+      "testCases": 10,
+      "automated": 8,
+      "passed": 8,
+      "failed": 0,
+      "defects": [],
+      "status": "verified"
     },
     {
       "key": "AQPI-5",
@@ -3268,10 +3260,10 @@
       "parent": "AQPI-14",
       "summary": "6.1 Add room selection to cart",
       "scope": "baseline",
-      "requirements": 6,
-      "testCases": 6,
-      "automated": 2,
-      "passed": 2,
+      "requirements": 5,
+      "testCases": 5,
+      "automated": 1,
+      "passed": 1,
       "failed": 0,
       "defects": [],
       "status": "verified"
@@ -3452,8 +3444,8 @@
   "totals": {
     "jiraItems": 37,
     "covered": 37,
-    "verified": 23,
-    "failing": 5,
+    "verified": 24,
+    "failing": 4,
     "testCases": 144,
     "withData": 144,
     "withScript": 83,

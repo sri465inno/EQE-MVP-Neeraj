@@ -2,7 +2,7 @@
 // Business rule: BR-124 - Resend rate limit
 // Type of testing: Regression testing
 // Statement: A confirmation can be resent at most 5 times per booking in 24 hours.
-// Requirement: REQ-124 v2; sources: AQPI-26, AQPI-35
+// Requirement: REQ-124 v2; sources: AQPI-35
 // Covers test cases: TC-F-115 (The 6th resend within 24 hours is refused)
 // Superseded (v1): A confirmation can be resent at most 3 times per booking in 24 hours.
 // Skills applied: automation-script-conventions, incremental-merge, testing-regression, traceability-handover

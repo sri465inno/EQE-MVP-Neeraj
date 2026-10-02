@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "PUT",
-    "url": "http://127.0.0.1:33865/api/consents/p-a1dd46cb",
+    "url": "http://127.0.0.1:33567/api/consents/p-a1dd46cb",
     "headers": {},
     "data": {
       "personalization": true,
@@ -12,15 +12,15 @@
   },
   "response": {
     "status": 200,
-    "correlationId": "427956aa-f40a-497d-b7b1-620c456cd137",
+    "correlationId": "f1e901c5-fd9b-4199-8c30-74b1af6d666a",
     "body": {
       "profileId": "p-a1dd46cb",
       "personalization": true,
       "interests": [
         "DINING"
       ],
-      "grantedAt": "2026-10-02T20:26:07.287027950Z",
-      "expiresAt": "2027-10-02T20:26:07.287027950Z"
+      "grantedAt": "2026-10-02T20:28:49.536105340Z",
+      "expiresAt": "2027-10-02T20:28:49.536105340Z"
     }
   }
 }

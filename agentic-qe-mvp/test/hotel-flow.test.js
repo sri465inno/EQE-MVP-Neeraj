@@ -152,6 +152,7 @@ test('Flow 2: release 2.0 adds to the hotel baseline, waits for merge approval, 
   const byKey = new Map(computeTraceability(done).stories.map((x) => [x.key, x]));
   for (const k of ['AQPI-17', 'AQPI-21']) assert.deepEqual([byKey.get(k).scope, byKey.get(k).status], ['baseline', 'failing'], k);
   assert.deepEqual([byKey.get('AQPI-34').scope, byKey.get('AQPI-34').status], ['this cycle', 'failing']);
+  assert.deepEqual([byKey.get('AQPI-4').scope, byKey.get('AQPI-4').status], ['baseline', 'verified']);
   const cmp = compareCycles(c1, done);
   assert.doesNotMatch(JSON.stringify(cmp), /commission/i);
   assert.deepEqual([cmp.defects.new.length, cmp.defects.stillOpen.length, cmp.defects.resolved], [2, 2, [fixed.id]]);
