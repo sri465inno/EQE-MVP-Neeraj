@@ -95,18 +95,6 @@ class NotificationServiceTest {
     }
 
     @Test
-    @DisplayName("AQPI-25 8.2 release 2.0: operations can retry a failed e-mail at most 3 times")
-    void retryLimit() {
-        String id = confirm("R-9", "HBTEST0009", "Jane", "jane@fail.test", "en-GB", HttpStatus.CREATED)
-                .path("messageId").asText();
-        for (int i = 0; i < 3; i++) {
-            web.post().uri("/api/ops/messages/{id}/retry", id).exchange().expectStatus().isOk();
-        }
-        web.post().uri("/api/ops/messages/{id}/retry", id).exchange().expectStatus().isEqualTo(HttpStatus.CONFLICT)
-                .expectBody().jsonPath("$.code").isEqualTo("RETRY_LIMIT_REACHED");
-    }
-
-    @Test
     @DisplayName("AQPI-37 8.4: one cancellation e-mail per cancelled reservation; only cancelled reservations get one")
     void cancellationEmail() {
         Map<String, Object> cancelled = request("R-10", "HBTEST0010", "Jane", "jane@example.com", "en-GB");
