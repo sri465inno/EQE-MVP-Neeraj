@@ -1,0 +1,32 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "http://127.0.0.1:34461/api/ops/reconciliation",
+    "headers": {
+      "X-Operator-Role": "SUPPORT"
+    },
+    "data": null
+  },
+  "response": {
+    "status": 200,
+    "correlationId": "89051951-de30-48a1-b5ab-88f671b47a3f",
+    "body": [
+      {
+        "reservationId": "R-5ed690a9",
+        "status": "CANCELLED",
+        "paymentStatus": "VOIDED",
+        "inventoryStatus": "RELEASED",
+        "total": {
+          "amount": 770.42,
+          "currency": "USD"
+        },
+        "authorizedAmount": {
+          "amount": 0,
+          "currency": "USD"
+        },
+        "consistent": true,
+        "note": "Booking, payment and inventory agree"
+      }
+    ]
+  }
+}

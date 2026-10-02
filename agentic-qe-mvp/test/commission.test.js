@@ -28,7 +28,7 @@ test('the reservation model has exactly 1000 attributes in every build, and the 
 });
 
 test('recorded codebase snapshots mirror the GitHub branches and carry the data model summary', () => {
-  assert.deepEqual(Object.keys(BRANCHES), ['demo/commission-engine', 'demo/commission-engine-v2', 'demo/hotel-booking-platform']);
+  assert.deepEqual(Object.keys(BRANCHES), ['demo/commission-engine', 'demo/commission-engine-v2', 'demo/hotel-booking-platform', 'demo/hotel-booking-platform-v2']);
   const base = loadCodebaseFixture('demo/commission-engine');
   const v2 = loadCodebaseFixture('demo/commission-engine-v2');
   assert.equal(base.provenance.kind, 'fixture');

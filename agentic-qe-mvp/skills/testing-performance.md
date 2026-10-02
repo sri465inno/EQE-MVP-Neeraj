@@ -12,7 +12,7 @@ delivers:
 Only measure targets the inputs state (for example "p95 within 300 ms"). Never invent a target: if the inputs state
 none, report the gap and name the input that should carry it.
 
-For each target design two checks: the latency of one advisor quoting a full reservation repeatedly, and the same
-target with several advisors quoting at once.
+For each target design two checks: the latency of one user repeating the timed request with a full data set, and
+the same target with several users sending it at once.
 
 Attach the raw timing samples to every result so the numbers can be checked.

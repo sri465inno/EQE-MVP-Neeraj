@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
 const { startSut, BUILDS, DEFAULT_BUILD } = require('../sut/server');
-const { startHotelPlatform, HOTEL_BRANCH } = require('../sut/hotel');
+const { startHotelPlatform, isHotelBranch } = require('../sut/hotel');
 
 const ROOT = path.join(__dirname, '..');
 const PW_CLI = require.resolve('@playwright/test/cli');
@@ -131,8 +131,8 @@ function summarise(results) {
 /** Starts the SUT, writes specs + config, runs Playwright headless, parses and maps the JSON report. */
 /** The system under test of a build: the bundled commission engine, or the six hotel services. */
 async function startBuild(sutBuild) {
-  if (sutBuild === HOTEL_BRANCH) {
-    const p = await startHotelPlatform();
+  if (isHotelBranch(sutBuild)) {
+    const p = await startHotelPlatform({ branch: sutBuild });
     return { ...p, services: p.urls, info: { build: sutBuild, url: p.url, services: p.urls, name: p.name } };
   }
   const sut = await startSut({ version: sutBuild });

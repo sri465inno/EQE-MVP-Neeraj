@@ -1092,6 +1092,79 @@ const HOTEL_CATALOGUE = [
     }],
   },
   {
+    kind: 'free-cancellation', title: 'Free cancellation window', journey: true,
+    match: /cancelled free of charge up to (\d+) hours before check-in; a later cancellation is refused/i,
+    params: (m) => ({ hours: Number(m[1]) }),
+    cases: ({ hours }) => {
+      const late = Math.max(0, Math.floor(hours / 24) - 1);
+      return [
+        { slot: 'before-cutoff', name: `A flexible booking cancelled more than ${hours} hours before check-in is cancelled free of charge`,
+          objective: `Verify a refundable booking can be cancelled while the ${hours}-hour window is open.`, precondition: PRE, varies: ['selection.ratePlanCode'],
+          steps: STEPS('Book a FLEX rate 30 days ahead', 'Cancel the reservation'), testData: data({ 'selection.ratePlanCode': 'FLEX' }),
+          expected: 'Cancel returns HTTP 200 with status CANCELLED',
+          code: () => body(...booked,
+            'expect(r.status).toBe(201);',
+            "const c = await call(request, testInfo, 'reservation-service', 'POST', `/api/reservations/${r.body.reservationId}/cancel`, {});",
+            'expect(c.status).toBe(200);',
+            "expect(c.body.status).toBe('CANCELLED');",
+          ) },
+        { slot: 'after-cutoff', name: `A cancellation within ${hours} hours of check-in is refused and the booking stays confirmed`,
+          objective: `Verify cancellation is refused once the ${hours}-hour window has closed.`, precondition: PRE, varies: ['stay.checkInOffsetDays', 'selection.ratePlanCode'],
+          steps: STEPS(`Book a FLEX rate with check-in in ${late} day(s)`, 'Cancel the reservation', 'View the reservation'),
+          testData: data({ 'stay.checkInOffsetDays': late, 'selection.ratePlanCode': 'FLEX' }),
+          expected: 'Cancel returns HTTP 409 FREE_CANCELLATION_CLOSED; the reservation is still CONFIRMED',
+          code: () => body(...booked,
+            'expect(r.status).toBe(201);',
+            "const c = await call(request, testInfo, 'reservation-service', 'POST', `/api/reservations/${r.body.reservationId}/cancel`, {});",
+            'expect(c.status).toBe(409);',
+            "expect(c.body.code).toBe('FREE_CANCELLATION_CLOSED');",
+            "const v = await call(request, testInfo, 'reservation-service', 'GET', `/api/reservations/${r.body.reservationId}`);",
+            "expect(v.body.status).toBe('CONFIRMED');",
+          ) },
+      ];
+    },
+  },
+  {
+    kind: 'cancellation-outcome', title: 'Cancellation voids payment and releases rooms',
+    match: /cancelled reservation shows status CANCELLED, its payment authori[sz]ation is voided and its rooms are released/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'voided-released', name: 'A cancelled booking shows CANCELLED, its payment hold is voided and its room is released',
+      objective: 'Verify the state, payment and inventory after a free cancellation.', precondition: PRE, varies: ['selection.ratePlanCode'],
+      steps: STEPS('Book a FLEX rate', 'Cancel the reservation', 'Check payments, inventory and reconciliation'), testData: data({ 'selection.ratePlanCode': 'FLEX' }),
+      expected: 'Status CANCELLED, payment VOIDED, no committed inventory, reconciliation consistent',
+      code: () => body(...booked,
+        'expect(r.status).toBe(201);',
+        "const c = await call(request, testInfo, 'reservation-service', 'POST', `/api/reservations/${r.body.reservationId}/cancel`, {});",
+        "expect(c.body.status).toBe('CANCELLED');",
+        "expect(c.body.paymentStatus).toBe('VOIDED');",
+        "const pay = await call(request, testInfo, 'reservation-service', 'GET', '/api/ops/payments', undefined, OPS);",
+        'expect(pay.body[0].voided).toBe(true);',
+        "const inv = await call(request, testInfo, 'hotel-service', 'GET', '/api/inventory/commitments');",
+        'expect(inv.body).toHaveLength(0);',
+        "const rec = await call(request, testInfo, 'reservation-service', 'GET', '/api/ops/reconciliation', undefined, OPS);",
+        'expect(rec.body.every((x) => x.consistent)).toBe(true);',
+      ),
+    }],
+  },
+  {
+    kind: 'non-refundable-cancellation', title: 'Non-refundable rates are not cancelled free of charge',
+    match: /non-refundable rates? (?:can ?not|cannot|can't) be cancelled free of charge/i,
+    params: () => ({}),
+    cases: () => [{
+      slot: 'saver-refused', name: 'A non-refundable booking cannot be cancelled free of charge',
+      objective: 'Verify a SAVER (prepaid, non-refundable) booking is refused and stays confirmed.', precondition: PRE, varies: ['selection.ratePlanCode'],
+      steps: STEPS('Book a SAVER rate', 'Cancel the reservation'), testData: data({ 'selection.ratePlanCode': 'SAVER' }),
+      expected: 'Cancel returns HTTP 409 NON_REFUNDABLE_RATE; the reservation is still CONFIRMED',
+      code: () => body(...booked,
+        'expect(r.status).toBe(201);',
+        "const c = await call(request, testInfo, 'reservation-service', 'POST', `/api/reservations/${r.body.reservationId}/cancel`, {});",
+        'expect(c.status).toBe(409);',
+        "expect(c.body.code).toBe('NON_REFUNDABLE_RATE');",
+      ),
+    }],
+  },
+  {
     kind: 'correlation-id', title: 'Correlation ID across services',
     match: /events use a correlation ID across supported services/i,
     params: () => ({}),
@@ -1212,7 +1285,7 @@ function reserve(request, testInfo, cartId, b, key = idempotencyKey(b, testInfo)
 
 const HOTEL_KINDS = new Set(HOTEL_CATALOGUE.map((e) => e.kind));
 // Failures that charge or book the guest wrongly.
-const HOTEL_MONEY_KINDS = ['price-disclosed', 'price-change-ack', 'itemized-total', 'amount-before-auth', 'payment-outcomes', 'idempotent-reservation', 'duplicate-submission', 'one-reservation'];
+const HOTEL_MONEY_KINDS = ['cancellation-outcome', 'non-refundable-cancellation', 'price-disclosed', 'price-change-ack', 'itemized-total', 'amount-before-auth', 'payment-outcomes', 'idempotent-reservation', 'duplicate-submission', 'one-reservation'];
 // Failures that block a core guest journey.
 const HOTEL_JOURNEY_KINDS = HOTEL_CATALOGUE.filter((e) => e.journey).map((e) => e.kind);
 const HOTEL_SMOKE_SLOTS = ['hotel-search|search', 'one-reservation|book', 'booking-journey|journey-flex'];

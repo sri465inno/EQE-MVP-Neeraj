@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "POST",
-    "url": "http://127.0.0.1:42769/api/searches",
+    "url": "http://127.0.0.1:46287/api/searches",
     "headers": {},
     "data": {
       "destination": "PAR",
@@ -14,10 +14,10 @@
   },
   "response": {
     "status": 200,
-    "correlationId": "bd67a979-3520-48df-bd0f-e647d2d23e72",
+    "correlationId": "d2271118-ac2e-43f9-b2f9-e8829d83b6e7",
     "body": {
-      "searchId": "S-31544b2a",
-      "sessionId": "a3ed5f68-0a14-462e-84fe-2ee5b8e71986",
+      "searchId": "S-e8005c7e",
+      "sessionId": "2a61c442-5c76-43bd-9b7e-91d7378b4bf2",
       "status": "RESULTS",
       "criteria": {
         "destination": "PAR",

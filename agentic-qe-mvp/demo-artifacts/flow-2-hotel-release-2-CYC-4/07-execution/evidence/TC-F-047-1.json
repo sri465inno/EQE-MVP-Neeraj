@@ -1,0 +1,26 @@
+{
+  "request": {
+    "method": "PUT",
+    "url": "http://127.0.0.1:41207/api/consents/p-a1dd46cb",
+    "headers": {},
+    "data": {
+      "personalization": true,
+      "interests": [
+        "DINING"
+      ]
+    }
+  },
+  "response": {
+    "status": 200,
+    "correlationId": "e76b8198-1fe9-4bde-9399-9d16ba74dad3",
+    "body": {
+      "profileId": "p-a1dd46cb",
+      "personalization": true,
+      "interests": [
+        "DINING"
+      ],
+      "grantedAt": "2026-10-02T15:30:02.293861331Z",
+      "expiresAt": "2027-10-02T15:30:02.293861331Z"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "file",
+  "encoding": "base64",
+  "size": 205,
+  "name": "DataClass.java",
+  "path": "platform-common/src/main/java/com/hotelbooking/common/privacy/DataClass.java",
+  "sha": "33b5dc6b4d162faf01107d8ccc161533d43d42d5",
+  "url": "https://api.github.com/repos/sri465inno/uc-agentic-quality-engineering/contents/platform-common/src/main/java/com/hotelbooking/common/privacy/DataClass.java?ref=demo%2Fhotel-booking-platform-v2",
+  "html_url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/5bd716475c9c55aed4d5f822bd0536f7e81767b7/platform-common/src/main/java/com/hotelbooking/common/privacy/DataClass.java",
+  "download_url": "https://raw.githubusercontent.com/sri465inno/uc-agentic-quality-engineering/5bd716475c9c55aed4d5f822bd0536f7e81767b7/platform-common/src/main/java/com/hotelbooking/common/privacy/DataClass.java",
+  "content": "cGFja2FnZSBjb20uaG90ZWxib29raW5nLmNvbW1vbi5wcml2YWN5OwoKLyoqIERhdGEgY2xhc3Np\nZmljYXRpb24gdXNlZCBpbiB0aGUgZGF0YSBtYXAgKHN0b3J5IDkuMSkuICovCnB1YmxpYyBlbnVt\nIERhdGFDbGFzcyB7CiAgICBQVUJMSUMsCiAgICBJTlRFUk5BTCwKICAgIFBFUlNPTkFMLAogICAg\nU0VOU0lUSVZFX1BFUlNPTkFMLAogICAgUEFZTUVOVAp9Cg==\n"
+}

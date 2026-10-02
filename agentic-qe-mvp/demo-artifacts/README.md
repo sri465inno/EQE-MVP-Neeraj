@@ -1,6 +1,6 @@
 # Agentic QE Platform - demo artifacts
 
-Generated 2026-10-02T04:13:59.739Z by `node scripts/export-demo-artifacts.js`. Every cycle was run end to end; the Playwright results are real runs against the system under test.
+Generated 2026-10-02T15:30:07.318Z by `node scripts/export-demo-artifacts.js`. Every cycle was run end to end; the Playwright results are real runs against the system under test.
 
 ## Flow 1: hotel booking platform (AQPI)
 
@@ -12,14 +12,13 @@ Inputs: the AQPI-1 initiative, its 7 epics and 23 stories (Jira REST v3 export o
 | CYC-2 | baseline · regression | 128 | 137 | 58 | 74/74 | 100% | 0 |
 | CYC-3 | baseline · e2e | 128 | 8 | 7 | 8/8 | 100% | 0 |
 
-## Flow 2: commission engine (COM)
+## Flow 2: hotel booking release 2.0 (AQPI-32)
 
-Inputs: Jira REST v3 exports (synthetic issues COM-1, COM-10/COM-11, COM-20) and the commission-engine codebase, pulled from GitHub branches `demo/jira-export`, `demo/commission-engine` and `demo/commission-engine-v2`. The commission baseline is run first so Flow 2 has a baseline to add to. No live Jira call was made.
+Inputs: the AQPI-32 "Release 2.0" epic and its stories AQPI-33 to AQPI-36 and the release 2.0 codebase on branch `demo/hotel-booking-platform-v2`, added on top of the functional baseline CYC-1. Changed: cart hold 30 -> 20 minutes, Paris stay 21 -> 14 nights, resends 3 -> 5. New: free cancellation up to 48 hours before check-in. The merge was approved before execution; the cases ran against the six release 2.0 services. The one real defect: release 2.0 still accepts a 15-night Paris stay.
 
 | Cycle | Mode · testing | Requirements | Test cases | Scripts | Passed | Pass rate | Defects |
 |---|---|---|---|---|---|---|---|
-| CYC-4 | baseline · regression | 14 | 15 | 13 | 13/14 | 92.9% | 1 |
-| CYC-5 | incremental · regression | 17 | 19 | 16 | 17/18 | 94.4% | 1 |
+| CYC-4 | incremental · regression | 132 | 137 | 60 | 76/77 | 98.7% | 1 |
 
 Each cycle folder's README is its QE lead report: inputs taken, how the cycle was run, artifacts produced, risks, a go/no-go recommendation and sign-off.
 
@@ -35,5 +34,5 @@ Each cycle folder's README is its QE lead report: inputs taken, how the cycle wa
 - `09-report/` QE lead report (HTML, Markdown) and full cycle report (HTML, Excel, JSON)
 - `10-merge-approval/` (Flow 2) merge proposal and approvals
 
-`comparison/` holds the commission CYC-4 vs CYC-5 comparison (HTML, Excel, JSON).
+`comparison/` holds the hotel release 1.0 (CYC-1) vs release 2.0 (CYC-4) comparison (HTML, Excel, JSON).
 Open the `.html` files in a browser (download them or clone the repo; GitHub shows HTML as source).

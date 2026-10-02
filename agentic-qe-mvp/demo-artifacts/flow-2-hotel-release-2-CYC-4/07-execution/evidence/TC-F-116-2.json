@@ -1,0 +1,33 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "http://127.0.0.1:34461/api/reservations",
+    "headers": {},
+    "data": {
+      "cartId": "C-9358d32f",
+      "guest": {
+        "firstName": "Jane",
+        "lastName": "Doe",
+        "email": "jane.doe@example.com",
+        "phone": "+1 212 555 0100",
+        "arrivalTime": "18:00"
+      },
+      "paymentToken": "tok_visa_ok",
+      "privacyNoticeAccepted": true,
+      "marketingOptIn": false,
+      "locale": "en"
+    }
+  },
+  "response": {
+    "status": 400,
+    "correlationId": "0a1c8e6e-6288-4991-a3e0-ba431d3ee2e5",
+    "body": {
+      "status": 400,
+      "code": "IDEMPOTENCY_KEY_REQUIRED",
+      "message": "An Idempotency-Key header of 8-64 letters, digits, dots, dashes or underscores is required.",
+      "correlationId": "0a1c8e6e-6288-4991-a3e0-ba431d3ee2e5",
+      "retryable": false,
+      "fieldIssues": []
+    }
+  }
+}

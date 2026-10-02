@@ -7,6 +7,10 @@ const { createApp } = require('../src/server');
 const BASELINE_INPUTS = { initiative: { mode: 'jira', key: 'COM-1' }, epic: { mode: 'jira', key: 'COM-10' }, codebase: { mode: 'sample', branch: 'demo/commission-engine' } };
 const INCREMENT_INPUTS = { epic: { mode: 'jira', key: 'COM-20' }, codebase: { mode: 'sample', branch: 'demo/commission-engine-v2' } };
 
+const HOTEL_EPICS = 'AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27';
+const HOTEL_INPUTS = { initiative: { mode: 'jira', key: 'AQPI-1' }, epic: { mode: 'jira', key: HOTEL_EPICS }, codebase: { mode: 'sample', branch: 'demo/hotel-booking-platform' } };
+const HOTEL_V2_INPUTS = { epic: { mode: 'jira', key: 'AQPI-32' }, codebase: { mode: 'sample', branch: 'demo/hotel-booking-platform-v2' } };
+
 const tmpDir = (label) => fs.mkdtempSync(path.join(os.tmpdir(), `aqe-${label}-`));
 
 async function baselineCycle(pipeline, store, { reviewer = 'Priya Shah', pick = '1.5 %', testingType } = {}) {
@@ -38,4 +42,4 @@ async function bothFlows(dataDir = tmpDir('flows')) {
   return { ...ctx, dataDir, c1, designed, c2, baselineBeforeMerge };
 }
 
-module.exports = { BASELINE_INPUTS, INCREMENT_INPUTS, tmpDir, baselineCycle, incrementalDesign, bothFlows };
+module.exports = { BASELINE_INPUTS, INCREMENT_INPUTS, HOTEL_EPICS, HOTEL_INPUTS, HOTEL_V2_INPUTS, tmpDir, baselineCycle, incrementalDesign, bothFlows };

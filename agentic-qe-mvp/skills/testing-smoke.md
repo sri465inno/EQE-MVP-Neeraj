@@ -9,8 +9,8 @@ delivers:
   execution: [results]
 ---
 
-A smoke run is deliberately small. Select only the critical path: the base commission of a standard reservation, a
-quote that carries the full 1,000-attribute reservation, and the commission statement page.
+A smoke run is deliberately small. Select only the critical path: a standard search, a booking built from the full
+data dictionary, and one reservation through to its confirmation.
 
 Do not design the rest of the suite. List every other requirement as out of scope for this run, so nobody reads a
 passing smoke run as a release decision.

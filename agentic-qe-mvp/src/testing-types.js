@@ -101,6 +101,12 @@ const TESTING_TYPES = [
       scripts: 'Playwright specs that time real requests and attach the samples',
       execution: 'Measures p95 response times against the build',
     },
+    domains: {
+      hotel: {
+        focus: 'The response-time targets stated in the inputs, measured for one guest and under concurrent guests.',
+        agents: { testdata: 'One full booking reused for every timed request' },
+      },
+    },
   },
 ];
 

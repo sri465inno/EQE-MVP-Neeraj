@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "POST",
-    "url": "http://127.0.0.1:42045/api/offers/interactions",
+    "url": "http://127.0.0.1:40607/api/offers/interactions",
     "headers": {},
     "data": {
       "sessionId": "sess-9bd01ce0",
@@ -11,7 +11,7 @@
   },
   "response": {
     "status": 202,
-    "correlationId": "4c55e879-7273-4379-bcd2-41a07dde6b23",
+    "correlationId": "7406e0c5-2c06-4650-a2d8-c8af97e00e28",
     "body": null
   }
 }

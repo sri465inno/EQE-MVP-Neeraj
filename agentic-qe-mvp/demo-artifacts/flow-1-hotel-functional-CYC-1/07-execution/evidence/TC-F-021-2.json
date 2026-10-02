@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "POST",
-    "url": "http://127.0.0.1:40095/api/searches",
+    "url": "http://127.0.0.1:39809/api/searches",
     "headers": {
       "X-Session-Id": "sess-55c93423"
     },
@@ -16,9 +16,9 @@
   },
   "response": {
     "status": 200,
-    "correlationId": "073011fe-c6df-4610-b539-baffba859e01",
+    "correlationId": "4ae643c3-14e0-4e17-9e28-ea463d8fb980",
     "body": {
-      "searchId": "S-1bc7977c",
+      "searchId": "S-9468d001",
       "sessionId": "sess-55c93423",
       "status": "RESULTS",
       "criteria": {

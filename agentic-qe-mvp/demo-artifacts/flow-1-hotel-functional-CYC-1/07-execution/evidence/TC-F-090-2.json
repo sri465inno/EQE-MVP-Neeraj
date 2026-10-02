@@ -1,12 +1,12 @@
 {
   "request": {
     "method": "POST",
-    "url": "http://127.0.0.1:43613/api/reservations",
+    "url": "http://127.0.0.1:42629/api/reservations",
     "headers": {
       "Idempotency-Key": "aqe-booking-f3cbf900-1"
     },
     "data": {
-      "cartId": "C-db2b5834",
+      "cartId": "C-514f16ad",
       "guest": {
         "firstName": "Jane",
         "lastName": "Doe",
@@ -22,20 +22,20 @@
   },
   "response": {
     "status": 201,
-    "correlationId": "0ab5fe19-c8d2-4c7b-8e64-e3f653b60f4d",
+    "correlationId": "ccbad56f-40af-4e52-bd0d-b7a867e8c322",
     "body": {
-      "reservationId": "R-1f947cff",
+      "reservationId": "R-486449d2",
       "status": "CONFIRMED",
-      "confirmationNumber": "HBKLWAQT9D",
+      "confirmationNumber": "HBC4CQFLWP",
       "headline": "Your booking is confirmed",
-      "message": "Your confirmation number is HBKLWAQT9D. We've sent the details to your e-mail.",
+      "message": "Your confirmation number is HBC4CQFLWP. We've sent the details to your e-mail.",
       "doNotResubmit": true,
       "nextSteps": [
         "Save your confirmation number",
         "Check your e-mail for the confirmation",
         "Contact the hotel for special requests"
       ],
-      "statusUrl": "/api/reservations/R-1f947cff",
+      "statusUrl": "/api/reservations/R-486449d2",
       "hotelName": "Harbor View Hotel",
       "roomName": "Standard King",
       "ratePlanName": "Flexible – pay at hotel",
@@ -80,7 +80,7 @@
       "cancellationTerms": "Free cancellation until 48 hours before check-in; after that the first night is charged.",
       "guestFirstName": "Jane",
       "notificationStatus": "FAILED",
-      "updatedAt": "2026-10-02T04:13:30.747945789Z"
+      "updatedAt": "2026-10-02T15:29:24.652384789Z"
     }
   }
 }

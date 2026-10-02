@@ -50,7 +50,7 @@ function buildLeadReport(cycle) {
     ...(isInc && r.delta ? [`Against the baseline: ${esc(r.delta.summary)}. ${r.reuse.carriedOver} of ${r.reuse.total} test cases were reused unchanged; only new and changed items were redesigned.`] : []),
   ];
 
-  const inputs = r.inputs.map((i) => ({ label: i.label, ref: i.ref, summary: i.summary, statements: i.statements, source: SOURCE_TEXT[i.provenance] || i.provenance, files: i.files }));
+  const inputs = r.inputs.map((i) => ({ label: i.label, ref: i.ref, summary: i.summary, children: i.children || [], statements: i.statements, source: SOURCE_TEXT[i.provenance] || i.provenance, files: i.files }));
 
   const approach = [
     `Read ${n.statements} statements from the inputs and lined them up into ${n.groups} requirement groups: ${n.agreed} agreed by every source, ${n['jira-only'] || 0} only in Jira, ${n['code-only'] || 0} only in the code, ${n.conflict || 0} in conflict.`,
@@ -119,7 +119,7 @@ function renderLeadHtml(L, { cycleLink = null } = {}) {
 <div class="lead-rec ${esc(rec.tone)}"><span class="lead-decision">${esc(rec.decision)}</span><span>${esc(rec.reason)}</span></div>
 <div class="kpis">${L.kpis.map(([k, v]) => `<div class="kpi">${esc(k)}<b>${esc(v)}</b></div>`).join('')}</div>
 <h3>1. Summary</h3><ul>${L.summary.map((s) => `<li>${s}</li>`).join('')}</ul>
-<h3>2. Inputs taken</h3>${table(['Input', 'Reference', 'What we took from it', 'Source'], L.inputs.map((i) => [esc(i.label), esc(i.ref), `${esc(i.summary || '')}${i.summary ? '<br>' : ''}<span class="muted">${esc(i.statements)} statements</span>`, esc(i.source)]))}
+<h3>2. Inputs taken</h3>${table(['Input', 'Reference', 'What we took from it', 'Source'], L.inputs.map((i) => [esc(i.label), esc(i.ref), `${esc(i.summary || '')}${i.summary ? '<br>' : ''}${i.children.length ? `Stories: ${esc(i.children.join(', '))}<br>` : ''}<span class="muted">${esc(i.statements)} statements</span>`, esc(i.source)]))}
 <h3>3. How we ran the cycle</h3><ol>${L.approach.map((s) => `<li>${s}</li>`).join('')}</ol>
 <h3>4. Artifacts produced</h3>${table(['Artifact', 'Count', 'Notes'], L.artifacts.map((x) => [link(x), esc(x.count), esc(x.note)]))}
 <h3>5. Risks and open items</h3>${L.risks.length ? `<ul>${L.risks.map((s) => `<li>${esc(s)}</li>`).join('')}</ul>` : '<p>None.</p>'}${L.coverageNote ? `<p class="muted">${esc(L.coverageNote)}</p>` : ''}
@@ -149,7 +149,7 @@ function renderLeadMarkdown(L) {
   return [`# ${L.title}`, '', `${L.cycleId} · ${L.cycleType} cycle`, '', `> **Recommendation: ${rec.decision}.** ${rec.reason}`, '',
     mdTable(L.kpis.map(([k]) => k), [L.kpis.map(([, v]) => v)]), '',
     '## 1. Summary', ...L.summary.map((s) => `- ${strip(s)}`), '',
-    '## 2. Inputs taken', mdTable(['Input', 'Reference', 'What we took from it', 'Source'], L.inputs.map((i) => [i.label, i.ref, `${i.summary ? `${i.summary}; ` : ''}${i.statements} statements`, i.source])), '',
+    '## 2. Inputs taken', mdTable(['Input', 'Reference', 'What we took from it', 'Source'], L.inputs.map((i) => [i.label, i.ref, `${i.summary ? `${i.summary}; ` : ''}${i.children.length ? `stories ${i.children.join(', ')}; ` : ''}${i.statements} statements`, i.source])), '',
     '## 3. How we ran the cycle', ...L.approach.map((s, i) => `${i + 1}. ${strip(s)}`), '',
     '## 4. Artifacts produced', mdTable(['Artifact', 'Count', 'Notes', 'Folder'], L.artifacts.map((x) => [x.name, x.count, x.note, `[${x.file}](${x.file})`])), '',
     '## 5. Risks and open items', ...(L.risks.length ? L.risks.map((s) => `- ${s}`) : ['None.']), ...(L.coverageNote ? ['', `_${L.coverageNote}_`] : []), '',

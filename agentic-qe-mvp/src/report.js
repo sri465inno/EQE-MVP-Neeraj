@@ -73,7 +73,7 @@ async function buildCycleReport(cycle, { env = process.env, fetchImpl, guidance 
     skills: (cycle.skills || []).map((k) => ({ id: k.id, name: k.name, description: k.description, file: k.file, sha256: k.sha256, appliesTo: k.appliesTo, delivers: k.delivers })),
     handovers,
     handoverStatus: handovers.some((h) => h.status === 'incomplete') ? 'incomplete' : 'complete',
-    inputs: cycle.inputs.map((i) => ({ slot: i.slot, label: i.label, ref: i.ref, summary: i.summary || i.description || null, statements: i.statementCount,
+    inputs: cycle.inputs.map((i) => ({ slot: i.slot, label: i.label, ref: i.ref, summary: i.summary || i.description || null, children: i.children || [], statements: i.statementCount,
       provenance: i.provenance.kind, provenanceLabel: i.provenance.label, files: i.provenance.files || [] })),
     normalisation: cycle.normalisation.counts,
     delta: cycle.delta ? { ...cycle.delta.counts, summary: cycle.delta.summary } : null,

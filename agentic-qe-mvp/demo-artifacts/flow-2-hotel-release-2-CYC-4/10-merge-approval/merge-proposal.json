@@ -1,0 +1,62 @@
+{
+  "proposal": {
+    "baselineId": "BL-1",
+    "baselineVersion": 1,
+    "requirements": [
+      "REQ-122",
+      "REQ-124",
+      "REQ-126",
+      "REQ-129",
+      "REQ-130",
+      "REQ-131",
+      "REQ-132"
+    ],
+    "rules": [
+      "BR-122",
+      "BR-124",
+      "BR-126",
+      "BR-129",
+      "BR-130",
+      "BR-131",
+      "BR-132"
+    ],
+    "testCases": [
+      "TC-F-112",
+      "TC-F-115",
+      "TC-F-119",
+      "TC-F-120",
+      "TC-F-121",
+      "TC-F-122",
+      "TC-F-129",
+      "TC-F-130",
+      "TC-F-131",
+      "TC-F-132",
+      "TC-F-133"
+    ],
+    "scripts": [
+      "br-122-cart-expiry.spec.js",
+      "br-124-resend-limit.spec.js",
+      "br-126-stay-length-limit.spec.js",
+      "br-131-free-cancellation.spec.js",
+      "br-132-cancellation-outcome.spec.js"
+    ]
+  },
+  "approvals": [
+    {
+      "gate": "Requirement set review",
+      "by": "Priya Shah",
+      "at": "2026-10-02T15:29:54.637Z",
+      "decision": "approved",
+      "comment": "",
+      "detail": "13 requirements approved; 0 excluded; 0 conflict(s) resolved"
+    },
+    {
+      "gate": "Merge into baseline",
+      "by": "Sam Lee",
+      "at": "2026-10-02T15:29:54.670Z",
+      "decision": "approved",
+      "comment": "",
+      "detail": "7 requirements, 11 test cases, 5 scripts merged: BL-1 v1 -> v2"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+[
+  {
+    "id": "DEF-001",
+    "title": "A 15-night stay in Paris is rejected: returns 200 instead of 400",
+    "severity": "Medium",
+    "impact": "wrong value or status with a workaround",
+    "blocksRelease": false,
+    "releaseDecision": "Does not block the release: wrong value or status with a workaround.",
+    "status": "Open",
+    "movement": "new",
+    "firstSeenCycle": "CYC-4",
+    "cycleId": "CYC-4",
+    "testCaseKey": "TC-F-122",
+    "ruleId": "BR-126",
+    "requirementId": "REQ-126",
+    "requirementText": "A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.",
+    "jiraKeys": [
+      "AQPI-34"
+    ],
+    "sourceRefs": [
+      "AQPI-34"
+    ],
+    "suspectedCodeArea": "search-service/src/main/resources/search-service.yml:12",
+    "scriptFile": "br-126-stay-length-limit.spec.js",
+    "expected": "400",
+    "actual": "200",
+    "assertion": "expect(r.status).toBe(400);",
+    "location": "br-126-stay-length-limit.spec.js:123:20",
+    "errorMessage": "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: 400\nReceived: 200",
+    "evidence": [
+      {
+        "name": "POST search-service/api/searches",
+        "file": "TC-F-122-1.json",
+        "contentType": "application/json"
+      },
+      {
+        "name": "error-context",
+        "file": "TC-F-122-2.txt",
+        "contentType": "text/markdown"
+      }
+    ],
+    "executedAt": "2026-10-02T15:30:06.958Z",
+    "occurrences": [
+      {
+        "cycleId": "CYC-4",
+        "executedAt": "2026-10-02T15:30:06.958Z",
+        "actual": "200",
+        "evidence": [
+          {
+            "name": "POST search-service/api/searches",
+            "file": "TC-F-122-1.json",
+            "contentType": "application/json"
+          },
+          {
+            "name": "error-context",
+            "file": "TC-F-122-2.txt",
+            "contentType": "text/markdown"
+          }
+        ]
+      }
+    ]
+  }
+]
