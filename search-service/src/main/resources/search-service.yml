@@ -15,7 +15,7 @@ platform:
     defaults:
       max-stay-nights: 30
       max-advance-days: 500
-      max-rooms: 8
+      max-rooms: 9
       max-adults-per-room: 4
       max-children-per-room: 3
     markets:
