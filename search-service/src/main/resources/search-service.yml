@@ -9,9 +9,9 @@ platform:
       timeout: 2s
       retries: 1
   search:
-    # @rule A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights.
-    # @rule Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.
-    # @rule Check-in can be at most 500 days ahead.
+    # @rule [AQPI-4] A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights.
+    # @rule [AQPI-4] Each room holds at most 4 adults and 3 children, and one search books 1 to 8 rooms.
+    # @rule [AQPI-4] Check-in can be at most 500 days ahead.
     defaults:
       max-stay-nights: 30
       max-advance-days: 500
