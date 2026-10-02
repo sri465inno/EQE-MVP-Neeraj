@@ -9,6 +9,7 @@ import org.springframework.web.util.UriBuilder;
 import com.hotelbooking.common.PlatformAutoConfiguration;
 import com.hotelbooking.common.resilience.DependencyCalls;
 import com.hotelbooking.common.resilience.PlatformProperties;
+import com.hotelbooking.common.web.DownstreamErrors;
 import com.hotelbooking.search.SearchApi.Criteria;
 import com.hotelbooking.search.SearchApi.HotelPage;
 
@@ -39,6 +40,6 @@ public class HotelClient {
                     .queryParam("children", c.children());
             refinements.forEach(u::queryParam);
             return u.build();
-        }).retrieve().bodyToMono(HotelPage.class));
+        }).retrieve().bodyToMono(HotelPage.class)).onErrorMap(DownstreamErrors::translate);
     }
 }
