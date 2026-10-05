@@ -9,6 +9,7 @@
   let config = null;
   let inFlight = false;
   let retries = 0;
+  let lastRequest = { key: null, id: null };
 
   const criteria = () => Object.fromEntries(new FormData(form).entries());
   function clearErrors() {
@@ -53,10 +54,12 @@
     const clientErrors = window.DemoValidate.validateCriteria(c, config, { withMarketRules: false });
     if (clientErrors.length) { showErrors(clientErrors); outcome.innerHTML = ''; return; }
     clearErrors();
+    const key = JSON.stringify(c);
+    if (lastRequest.key !== key) lastRequest = { key, id: crypto.randomUUID() };
     inFlight = true;
     $('submit').disabled = true;
     try {
-      const res = await fetch('/api/search', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Retry-Count': String(retries) }, body: JSON.stringify({ ...c, requestId: crypto.randomUUID() }) });
+      const res = await fetch('/api/search', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Retry-Count': String(retries) }, body: JSON.stringify({ ...c, requestId: lastRequest.id }) });
       if (res.status === 422) { showErrors((await res.json()).errors); outcome.innerHTML = ''; return; }
       if (!res.ok) { renderFailure(); return; }
       retries = 0;
