@@ -136,6 +136,19 @@ function buildRule(req, id, cycle) {
   };
 }
 
+/** Folds each business rule into its requirement, so the reviewed requirement set carries its rule, values and quotes. */
+function attachBusinessRules(requirements, rules) {
+  const byReq = new Map(rules.map((r) => [r.requirementId, r]));
+  for (const req of requirements) {
+    const r = byReq.get(req.id);
+    req.businessRule = r ? {
+      id: r.id, kind: r.kind, title: r.title, parameters: r.parameters, executable: r.executable, status: r.status, version: r.version,
+      previousParameters: r.previous ? r.previous.parameters : null,
+    } : null;
+  }
+  return requirements;
+}
+
 function manualCase(req) {
   return {
     slot: 'manual', priority: 'Low', manual: true,
@@ -166,7 +179,7 @@ function caseLabels(type, suite, kind, slot, automated, tt) {
 }
 
 /**
- * Agents 2-4: business rules, test cases and scripts, steered by the type of testing.
+ * The business rule behind each requirement (owned by the requirements agent), then the test design and automation agents, steered by the type of testing.
  * With `previous` (incremental), unaffected artifacts are carried over untouched and
  * affected ones are re-designed, keeping their keys and the superseded version.
  * Cases the type of testing asks for but the pack lacks are added; cases it does not run stay in the pack with inRun=false.
@@ -263,7 +276,7 @@ function designAgents(requirements, { cycle, counters, previous = null, skills =
     const prevRule = prevRules.get(req.id);
     let ruleId = prevRule?.id;
     if (!ruleId) { counters.rule += 1; ruleId = `BR-${pad(counters.rule)}`; }
-    const rule = { ...buildRule(req, ruleId, cycle), designedWith: used('rules'), status: redesign ? 're-designed' : 'new', version: redesign ? prevRule.version + 1 : 1,
+    const rule = { ...buildRule(req, ruleId, cycle), designedWith: used('requirements'), status: redesign ? 're-designed' : 'new', version: redesign ? prevRule.version + 1 : 1,
       previous: redesign ? { statement: prevRule.statement, parameters: prevRule.parameters, version: prevRule.version } : null };
     rules.push(rule);
 
@@ -339,4 +352,4 @@ ${tests}
 `;
 }
 
-module.exports = { requirementsAgentBaseline, requirementsAgentIncremental, designAgents, affectedRequirementIds, renderSpec };
+module.exports = { requirementsAgentBaseline, requirementsAgentIncremental, designAgents, attachBusinessRules, affectedRequirementIds, renderSpec };

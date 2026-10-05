@@ -1,0 +1,35 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "http://127.0.0.1:40225/api/reservations",
+    "headers": {
+      "Idempotency-Key": "aqe-booking-c9694d63-1"
+    },
+    "data": {
+      "cartId": "C-43590585",
+      "guest": {
+        "firstName": "Jane",
+        "lastName": "Doe",
+        "email": "jane.doe@example.com",
+        "phone": "+1 212 555 0100",
+        "arrivalTime": "18:00"
+      },
+      "paymentToken": "tok_visa_ok",
+      "privacyNoticeAccepted": true,
+      "marketingOptIn": false,
+      "locale": "en"
+    }
+  },
+  "response": {
+    "status": 409,
+    "correlationId": "e2140ea6-f7b3-4352-92ba-26b2034d9162",
+    "body": {
+      "status": 409,
+      "code": "PRICE_CHANGE_REQUIRES_ACKNOWLEDGEMENT",
+      "message": "Your total has changed. Please review and accept the new total before paying.",
+      "correlationId": "e2140ea6-f7b3-4352-92ba-26b2034d9162",
+      "retryable": false,
+      "fieldIssues": []
+    }
+  }
+}

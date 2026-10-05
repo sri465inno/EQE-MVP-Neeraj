@@ -1,0 +1,86 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "http://127.0.0.1:36387/api/reservations",
+    "headers": {
+      "Idempotency-Key": "aqe-booking-79b45dbb-2"
+    },
+    "data": {
+      "cartId": "C-82b3b10b",
+      "guest": {
+        "firstName": "Jane",
+        "lastName": "Doe",
+        "email": "jane.doe@example.com",
+        "phone": "+1 212 555 0100",
+        "arrivalTime": "18:00"
+      },
+      "paymentToken": "tok_visa_ok",
+      "privacyNoticeAccepted": true,
+      "marketingOptIn": false,
+      "locale": "en"
+    }
+  },
+  "response": {
+    "status": 201,
+    "correlationId": "f9eb974e-3ff1-4586-bf4f-4353699fdb47",
+    "body": {
+      "reservationId": "R-a0c29cc3",
+      "status": "CONFIRMED",
+      "confirmationNumber": "HBEK6R7N42",
+      "headline": "Your booking is confirmed",
+      "message": "Your confirmation number is HBEK6R7N42. We've sent the details to your e-mail.",
+      "doNotResubmit": true,
+      "nextSteps": [
+        "Save your confirmation number",
+        "Check your e-mail for the confirmation",
+        "Contact the hotel for special requests"
+      ],
+      "statusUrl": "/api/reservations/R-a0c29cc3",
+      "hotelName": "Hotel Lumiere",
+      "roomName": "Standard King",
+      "ratePlanName": "Advance saver – pay now",
+      "checkIn": "2026-11-04",
+      "checkOut": "2026-11-07",
+      "nights": 3,
+      "rooms": 1,
+      "adults": 2,
+      "children": 0,
+      "items": [
+        {
+          "label": "Standard King - Advance saver – pay now x 1 room(s), 3 night(s)",
+          "quantity": 1,
+          "amount": {
+            "amount": 615.83,
+            "currency": "EUR"
+          }
+        },
+        {
+          "label": "Taxes",
+          "quantity": 1,
+          "amount": {
+            "amount": 61.58,
+            "currency": "EUR"
+          }
+        },
+        {
+          "label": "Mandatory fees (payable as part of the room price)",
+          "quantity": 1,
+          "amount": {
+            "amount": 10.5,
+            "currency": "EUR"
+          }
+        }
+      ],
+      "total": {
+        "amount": 687.91,
+        "currency": "EUR"
+      },
+      "paymentRule": "PAY_NOW",
+      "paymentStatus": "AUTHORIZED",
+      "cancellationTerms": "Non-refundable. Changes are not permitted.",
+      "guestFirstName": "Jane",
+      "notificationStatus": "DELIVERED",
+      "updatedAt": "2026-10-05T16:04:27.109768569Z"
+    }
+  }
+}

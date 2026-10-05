@@ -1,0 +1,108 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "http://127.0.0.1:40059/api/searches",
+    "headers": {},
+    "data": {
+      "destination": "PAR",
+      "checkIn": "2026-11-04",
+      "checkOut": "2026-11-07",
+      "rooms": 1,
+      "adults": 2,
+      "children": 0
+    }
+  },
+  "response": {
+    "status": 200,
+    "correlationId": "0acf1217-83b9-43cf-9234-a88ec0f9ab34",
+    "body": {
+      "searchId": "S-c57c8f6b",
+      "sessionId": "d65713f3-2664-4bb9-b695-6827a2a8ea49",
+      "status": "RESULTS",
+      "criteria": {
+        "destination": "PAR",
+        "checkIn": "2026-11-04",
+        "checkOut": "2026-11-07",
+        "rooms": 1,
+        "adults": 2,
+        "children": 0,
+        "nights": 3
+      },
+      "message": null,
+      "retryable": false,
+      "suggestions": [],
+      "page": {
+        "results": [
+          {
+            "hotelId": "H-PAR-001",
+            "name": "Hotel Lumiere",
+            "city": "Paris",
+            "distanceKm": 0.5,
+            "category": 4,
+            "image": "https://img.example.test/H-PAR-001/exterior.jpg",
+            "amenities": [
+              "wifi",
+              "restaurant",
+              "spa"
+            ],
+            "startingNightly": {
+              "amount": 205.28,
+              "currency": "EUR"
+            },
+            "startingStayTotal": {
+              "amount": 687.91,
+              "currency": "EUR"
+            },
+            "currency": "EUR",
+            "availability": "AVAILABLE",
+            "bookable": true,
+            "priceQualification": "From 205.28 EUR per room per night before taxes (10%); Destination fee per room per night: 3.50 EUR, payable on top of the room rate"
+          },
+          {
+            "hotelId": "H-PAR-002",
+            "name": "Montmartre Maison",
+            "city": "Paris",
+            "distanceKm": 3.2,
+            "category": 3,
+            "image": "https://img.example.test/H-PAR-002/exterior.jpg",
+            "amenities": [
+              "wifi"
+            ],
+            "startingNightly": {
+              "amount": 133.88,
+              "currency": "EUR"
+            },
+            "startingStayTotal": {
+              "amount": 447.79,
+              "currency": "EUR"
+            },
+            "currency": "EUR",
+            "availability": "AVAILABLE",
+            "bookable": true,
+            "priceQualification": "From 133.88 EUR per room per night before taxes (10%); Destination fee per room per night: 2.00 EUR, payable on top of the room rate"
+          }
+        ],
+        "page": 0,
+        "size": 10,
+        "totalResults": 2,
+        "totalPages": 1,
+        "unfilteredResults": 2,
+        "sort": "RECOMMENDED",
+        "sortOptions": [
+          "RECOMMENDED",
+          "PRICE_ASC",
+          "PRICE_DESC",
+          "DISTANCE",
+          "CATEGORY"
+        ],
+        "appliedFilters": [],
+        "resetAvailable": false,
+        "availableAmenities": [
+          "restaurant",
+          "spa",
+          "wifi"
+        ]
+      }
+    }
+  }
+}

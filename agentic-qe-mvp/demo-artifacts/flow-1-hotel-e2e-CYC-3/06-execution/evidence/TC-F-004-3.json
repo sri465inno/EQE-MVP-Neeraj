@@ -1,0 +1,23 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "http://127.0.0.1:34969/api/carts/C-49e3d874/ancillaries",
+    "headers": {},
+    "data": {
+      "code": "LATE_CHECKOUT",
+      "quantity": 1
+    }
+  },
+  "response": {
+    "status": 422,
+    "correlationId": "4b78ec7b-1f87-4636-a415-7a12f0b205a6",
+    "body": {
+      "status": 422,
+      "code": "EXTRA_NOT_AVAILABLE",
+      "message": "Late check-out (2 pm) can't be added: it is sold out",
+      "correlationId": "4b78ec7b-1f87-4636-a415-7a12f0b205a6",
+      "retryable": false,
+      "fieldIssues": []
+    }
+  }
+}

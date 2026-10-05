@@ -1,0 +1,20 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "http://127.0.0.1:46557/api/searches/S-42ee57ad/results?sort=NAME",
+    "headers": {},
+    "data": null
+  },
+  "response": {
+    "status": 400,
+    "correlationId": "18aac9f1-64c8-48a0-9d96-5523256d3e85",
+    "body": {
+      "status": 400,
+      "code": "UNSUPPORTED_SORT",
+      "message": "Sort by one of: [RECOMMENDED, PRICE_ASC, PRICE_DESC, DISTANCE, CATEGORY]",
+      "correlationId": "18aac9f1-64c8-48a0-9d96-5523256d3e85",
+      "retryable": false,
+      "fieldIssues": []
+    }
+  }
+}

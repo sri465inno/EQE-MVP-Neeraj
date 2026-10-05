@@ -1,0 +1,32 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "http://127.0.0.1:40225/api/ops/reservations/R-244ed104",
+    "headers": {
+      "X-Operator-Role": "SUPPORT"
+    },
+    "data": null
+  },
+  "response": {
+    "status": 200,
+    "correlationId": "5ffeafda-ee1a-4130-bbdd-55ca53e1fa69",
+    "body": {
+      "reservationId": "R-244ed104",
+      "status": "CONFIRMED",
+      "confirmationNumber": "HB4JRZFD9B",
+      "guestName": "J. D***",
+      "email": "j***@e***.com",
+      "phone": "***00",
+      "privacyNoticeVersion": "privacy-2026-09",
+      "marketingOptIn": false,
+      "paymentStatus": "AUTHORIZED",
+      "inventoryStatus": "COMMITTED",
+      "history": [
+        "2026-10-05T16:04:01.887257051Z cart C-76400f0a revalidated at 805.19",
+        "2026-10-05T16:04:01.887663566Z payment authorised (GUARANTEE)",
+        "2026-10-05T16:04:01.891571692Z status CONFIRMED",
+        "2026-10-05T16:04:01.899095356Z confirmation M-d67de4a8 DELIVERED"
+      ]
+    }
+  }
+}

@@ -9,8 +9,7 @@ const AGENTS = {
   normalise: 'Normalise (3-way compare)',
   'review-agent': 'Review agent (added / missing pieces)',
   delta: 'Delta classification',
-  requirements: 'Requirements repository agent',
-  rules: 'Business rules agent',
+  requirements: 'Requirements agent (requirements with their business rules)',
   testcases: 'Test case agent',
   testdata: 'Test data agent',
   scripts: 'Automation script agent',
@@ -61,14 +60,21 @@ function parseYaml(src) {
   return out;
 }
 
+// The business rules agent was folded into the requirements agent; skills written for it still load.
+const AGENT_ALIASES = { rules: 'requirements' };
+const agentId = (a) => AGENT_ALIASES[a] || a;
+
 function parseSkill(text, file = '(inline)') {
   const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
   if (!m) throw new Error(`${file}: missing YAML front matter`);
   const meta = parseYaml(m[1]);
   for (const f of ['id', 'name', 'description']) if (!meta[f] || typeof meta[f] !== 'string') throw new Error(`${file}: front matter needs "${f}"`);
-  const appliesTo = [].concat(meta.appliesTo || []);
+  const appliesTo = [...new Set([].concat(meta.appliesTo || []).map(agentId))];
   if (!appliesTo.length) throw new Error(`${file}: "appliesTo" must list at least one agent id`);
-  const delivers = meta.delivers && typeof meta.delivers === 'object' && !Array.isArray(meta.delivers) ? meta.delivers : {};
+  const delivers = {};
+  if (meta.delivers && typeof meta.delivers === 'object' && !Array.isArray(meta.delivers)) {
+    for (const [a, keys] of Object.entries(meta.delivers)) delivers[agentId(a)] = [...new Set([...(delivers[agentId(a)] || []), ...[].concat(keys)])];
+  }
   const body = m[2].trim();
   return {
     id: meta.id, name: meta.name, description: meta.description, appliesTo, delivers, body, testingType: typeof meta.testingType === 'string' ? meta.testingType : null,

@@ -16,8 +16,7 @@ const OUTPUTS = {
   },
   'review-agent': (c) => ({ suggestions: { value: present(c.reviewAgent?.findings), allowEmpty: true } }),
   delta: (c) => ({ delta: { value: present(c.delta?.items) } }),
-  requirements: (c) => ({ requirements: { value: present(c.artifacts?.requirements) } }),
-  rules: (c) => ({ businessRules: { value: present(c.artifacts?.rules) } }),
+  requirements: (c) => ({ requirements: { value: present(c.artifacts?.requirements) }, businessRules: { value: present(c.artifacts?.rules) } }),
   testcases: (c) => {
     const t = c.artifacts?.testCases;
     const tt = getTestingType(c.testingType);

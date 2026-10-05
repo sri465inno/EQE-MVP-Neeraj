@@ -2,10 +2,10 @@
 id: incremental-merge
 name: Incremental load and merge rules
 description: How an addition is classified against the baseline and what a human must see before it merges.
-appliesTo: [delta, rules, testcases, scripts]
+appliesTo: [delta, requirements, testcases, scripts]
 delivers:
   delta: [delta]
-  rules: [businessRules]
+  requirements: [businessRules]
   testcases: [functional, nonFunctional]
   scripts: [specs]
 ---

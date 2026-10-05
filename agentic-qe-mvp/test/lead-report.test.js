@@ -15,7 +15,7 @@ test('QE lead report: baseline lists inputs taken, artifacts produced, the real 
   assert.match(L.recommendation.reason, /DEF-001/);
   assert.ok(L.recommendation.conditions.some((x) => /Fix DEF-001 and re-run TC-/.test(x)));
   const names = L.artifacts.map((x) => x.name);
-  for (const n of ['Requirements repository', 'Business rules', 'Test cases (Excel, Zephyr Scale format)', 'Automation scripts (Playwright)', 'Execution results and evidence', 'Defects', 'Cycle report (HTML, Excel)']) assert.ok(names.includes(n), n);
+  for (const n of ['Requirement set (with business rules)', 'Test cases (Excel, Zephyr Scale format)', 'Automation scripts (Playwright)', 'Execution results and evidence', 'Defects', 'Cycle report (HTML, Excel)']) assert.ok(names.includes(n), n);
   assert.equal(L.artifacts.find((x) => x.name === 'Test cases (Excel, Zephyr Scale format)').count, F.c1.artifacts.testCases.length);
   assert.ok(L.approach.some((s) => /GDS channel uplift/.test(s) && /1\.5%/.test(s)), 'the settled conflict is written up');
   assert.ok(L.risks.some((s) => /not executed/.test(s)), 'manual cases are called out');

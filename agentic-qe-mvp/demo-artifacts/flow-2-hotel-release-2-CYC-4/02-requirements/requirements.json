@@ -29,7 +29,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-001",
+      "kind": "booking-journey",
+      "title": "Search-to-confirmation journey",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-002",
@@ -61,7 +71,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-002",
+      "kind": "bookable-inventory",
+      "title": "Only bookable inventory is offered",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-003",
@@ -93,7 +113,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-003",
+      "kind": "price-disclosed",
+      "title": "Total price disclosed before confirmation",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-004",
@@ -125,7 +155,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-004",
+      "kind": "offers-not-blocking",
+      "title": "Offers never block the booking",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-005",
@@ -157,7 +197,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-005",
+      "kind": "duplicate-submission",
+      "title": "Duplicate submissions handled safely",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-006",
@@ -189,7 +239,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-006",
+      "kind": "durable-confirmation",
+      "title": "Durable confirmation identifier",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-007",
@@ -221,7 +281,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-007",
+      "kind": "confirmation-shown",
+      "title": "Confirmation shown and e-mail requested",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-008",
@@ -253,7 +323,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-008",
+      "kind": "unclassified",
+      "title": "Required business and technical events are logged",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-009",
@@ -351,7 +431,17 @@
     "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-009",
+      "kind": "unclassified",
+      "title": "All child user stories meet their acceptance",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-010",
@@ -449,7 +539,17 @@
     "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-010",
+      "kind": "unclassified",
+      "title": "Negative and error paths for each story",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-011",
@@ -547,7 +647,17 @@
     "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-011",
+      "kind": "unclassified",
+      "title": "Required logging is in place and verified",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-012",
@@ -645,7 +755,17 @@
     "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-012",
+      "kind": "unclassified",
+      "title": "The Product Owner has accepted the capability",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-013",
@@ -677,7 +797,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-013",
+      "kind": "hotel-search",
+      "title": "Hotel search",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-014",
@@ -709,7 +839,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-014",
+      "kind": "search-criteria-kept",
+      "title": "Search criteria stay visible",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-015",
@@ -741,7 +881,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-015",
+      "kind": "search-date-validation",
+      "title": "Search date and mandatory field validation",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-016",
@@ -773,7 +923,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-016",
+      "kind": "no-availability",
+      "title": "No availability",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-017",
@@ -805,7 +965,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-017",
+      "kind": "unclassified",
+      "title": "Check-in must precede check-out",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-018",
@@ -837,7 +1007,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-018",
+      "kind": "unclassified",
+      "title": "Occupancy must comply with configured room limits",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-019",
@@ -869,7 +1049,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-019",
+      "kind": "unclassified",
+      "title": "Maximum stay length must be configurable",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-020",
@@ -901,7 +1091,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-020",
+      "kind": "search-form",
+      "title": "Search form required fields",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-021",
@@ -933,7 +1133,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-021",
+      "kind": "field-level-messages",
+      "title": "Field-level validation messages",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-022",
@@ -965,7 +1175,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-022",
+      "kind": "unclassified",
+      "title": "Server validation is authoritative when client and",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-023",
@@ -997,7 +1217,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-023",
+      "kind": "unclassified",
+      "title": "Validation messages are accessible to assistive technology",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-024",
@@ -1029,7 +1259,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-024",
+      "kind": "unclassified",
+      "title": "Validation rules must be configurable where market",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-025",
@@ -1061,7 +1301,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-025",
+      "kind": "no-availability",
+      "title": "No availability",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-026",
@@ -1093,7 +1343,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-026",
+      "kind": "unclassified",
+      "title": "Technical failures display a non-technical message and",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-027",
@@ -1125,7 +1385,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-027",
+      "kind": "search-session",
+      "title": "Consistent search sessions",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-028",
@@ -1157,7 +1427,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-028",
+      "kind": "result-content",
+      "title": "Result card content",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-029",
@@ -1189,7 +1469,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-029",
+      "kind": "fee-disclosure",
+      "title": "Pricing qualification disclosed",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-030",
@@ -1221,7 +1511,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-030",
+      "kind": "unavailable-not-bookable",
+      "title": "Unavailable hotels not bookable",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-031",
@@ -1253,7 +1553,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-031",
+      "kind": "pagination",
+      "title": "Result pagination",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-032",
@@ -1285,7 +1595,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-032",
+      "kind": "starting-price",
+      "title": "Starting price backed by a valid rate",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-033",
@@ -1317,7 +1637,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-033",
+      "kind": "result-filters",
+      "title": "Result filters",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-034",
@@ -1349,7 +1679,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-034",
+      "kind": "result-sorting",
+      "title": "Approved sort options",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-035",
@@ -1381,7 +1721,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-035",
+      "kind": "unclassified",
+      "title": "Selected criteria are visible and removable",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-036",
@@ -1413,7 +1763,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-036",
+      "kind": "filter-reset",
+      "title": "Reset after filtering to zero",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-037",
@@ -1445,7 +1805,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-037",
+      "kind": "hotel-details",
+      "title": "Hotel details page",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-038",
@@ -1477,7 +1847,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-038",
+      "kind": "unclassified",
+      "title": "The guest can select a valid room",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-039",
@@ -1509,7 +1889,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-039",
+      "kind": "unclassified",
+      "title": "If inventory changes, the guest is informed",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-040",
@@ -1541,7 +1931,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-040",
+      "kind": "rate-conditions",
+      "title": "Rate conditions shown before selection",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-041",
@@ -1573,7 +1973,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-041",
+      "kind": "unclassified",
+      "title": "The service considers available context such as",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-042",
@@ -1605,7 +2015,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-042",
+      "kind": "offer-exclusion",
+      "title": "Ineligible offers excluded",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-043",
@@ -1637,7 +2057,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-043",
+      "kind": "offer-reason-codes",
+      "title": "Reason code per recommendation",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-044",
@@ -1669,7 +2099,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-044",
+      "kind": "unclassified",
+      "title": "When personalization data is unavailable, safe contextual",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-045",
@@ -1701,7 +2141,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-045",
+      "kind": "unclassified",
+      "title": "Sensitive traits must not be inferred or",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-046",
@@ -1733,7 +2183,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-046",
+      "kind": "unclassified",
+      "title": "Personalization must honor consent and data-retention rules",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-047",
@@ -1765,7 +2225,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-047",
+      "kind": "unclassified",
+      "title": "Business rules and model versions must be",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-048",
@@ -1797,7 +2267,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-048",
+      "kind": "offer-content",
+      "title": "Offer content and optional-extra label",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-049",
@@ -1829,7 +2309,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-049",
+      "kind": "offer-interaction",
+      "title": "Add, skip or dismiss an offer",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-050",
@@ -1861,7 +2351,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-050",
+      "kind": "offer-content",
+      "title": "Offer content and optional-extra label",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-051",
@@ -1893,7 +2393,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-051",
+      "kind": "offers-not-blocking",
+      "title": "Offers never block the booking",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-052",
@@ -1925,7 +2435,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-052",
+      "kind": "unclassified",
+      "title": "The interface identifies when offers are personalized",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-053",
@@ -1957,7 +2477,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-053",
+      "kind": "proceed-without-offers",
+      "title": "Proceed without extras",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-054",
@@ -1989,7 +2519,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-054",
+      "kind": "consent-personalization",
+      "title": "Consent drives personalization",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-055",
@@ -2021,7 +2561,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-055",
+      "kind": "cart-contents",
+      "title": "Cart contents",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-056",
@@ -2053,7 +2603,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-056",
+      "kind": "unclassified",
+      "title": "Inventory and price are revalidated when required",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-057",
@@ -2085,7 +2645,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-057",
+      "kind": "unclassified",
+      "title": "The cart has a defined expiration and",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-058",
@@ -2117,7 +2687,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-058",
+      "kind": "unclassified",
+      "title": "A cart must not itself create a",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-059",
@@ -2149,7 +2729,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-059",
+      "kind": "unclassified",
+      "title": "Price-change handling must require guest acknowledgement when",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-060",
@@ -2181,7 +2771,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-060",
+      "kind": "unclassified",
+      "title": "The guest can add an available ancillary",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-061",
@@ -2213,7 +2813,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-061",
+      "kind": "ancillary-quantity",
+      "title": "Extra quantity limits",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-062",
@@ -2245,7 +2855,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-062",
+      "kind": "ancillary-removal",
+      "title": "Removing an extra updates totals",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-063",
@@ -2277,7 +2897,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-063",
+      "kind": "unclassified",
+      "title": "Ineligible or sold-out products cannot be retained",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-064",
@@ -2309,7 +2939,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-064",
+      "kind": "itemized-total",
+      "title": "Itemised cart total",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-065",
@@ -2341,7 +2981,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-065",
+      "kind": "unclassified",
+      "title": "Currency is consistently displayed",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-066",
@@ -2373,7 +3023,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-066",
+      "kind": "unclassified",
+      "title": "Material changes are highlighted and require acknowledgement",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-067",
@@ -2405,7 +3065,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-067",
+      "kind": "unclassified",
+      "title": "The guest can return to edit supported",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-068",
@@ -2437,7 +3107,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-068",
+      "kind": "unclassified",
+      "title": "The final payable total must be revalidated",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-069",
@@ -2469,7 +3149,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-069",
+      "kind": "checkout-fields",
+      "title": "Required and optional guest fields",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-070",
@@ -2501,7 +3191,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-070",
+      "kind": "guest-validation",
+      "title": "Guest input validation",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-071",
@@ -2533,7 +3233,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-071",
+      "kind": "privacy-consent",
+      "title": "Privacy notice required",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-072",
@@ -2565,7 +3275,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-072",
+      "kind": "unclassified",
+      "title": "Data is transmitted securely and is not",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-073",
@@ -2597,7 +3317,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-073",
+      "kind": "unclassified",
+      "title": "Data minimization applies",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-074",
@@ -2629,7 +3359,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-074",
+      "kind": "support-masking",
+      "title": "Sensitive values masked for support",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-075",
@@ -2661,7 +3401,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-075",
+      "kind": "amount-before-auth",
+      "title": "Payable amount before authorisation",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-076",
@@ -2693,7 +3443,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-076",
+      "kind": "unclassified",
+      "title": "Payment data is handled through approved secure",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-077",
@@ -2725,7 +3485,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-077",
+      "kind": "payment-outcomes",
+      "title": "Distinct payment outcomes",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-078",
@@ -2757,7 +3527,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-078",
+      "kind": "no-card-data",
+      "title": "No raw card data accepted",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-079",
@@ -2789,7 +3569,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-079",
+      "kind": "unclassified",
+      "title": "Payment requirements depend on rate conditions",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-080",
@@ -2821,7 +3611,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-080",
+      "kind": "unclassified",
+      "title": "Retry behavior must avoid duplicate authorization",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-081",
@@ -2853,7 +3653,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-081",
+      "kind": "one-reservation",
+      "title": "One reservation per successful request",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-082",
@@ -2885,7 +3695,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-082",
+      "kind": "idempotent-reservation",
+      "title": "Idempotent reservation",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-083",
@@ -2917,7 +3737,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-083",
+      "kind": "reconcilable",
+      "title": "Outcomes reconcilable",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-084",
@@ -2949,7 +3779,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-084",
+      "kind": "unclassified",
+      "title": "Partial failures trigger defined recovery or manual-review",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-085",
@@ -2981,7 +3821,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-085",
+      "kind": "unclassified",
+      "title": "Reservation submission must use an idempotency mechanism",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-086",
@@ -3013,7 +3863,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-086",
+      "kind": "unclassified",
+      "title": "The source of truth for confirmation status",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-087",
@@ -3045,7 +3905,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-087",
+      "kind": "booking-outcome",
+      "title": "Booking outcome content",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-088",
@@ -3077,7 +3947,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-088",
+      "kind": "no-false-confirmation",
+      "title": "No false confirmation",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-089",
@@ -3109,7 +3989,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-089",
+      "kind": "unknown-state",
+      "title": "Safe guidance in unknown states",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-090",
@@ -3141,7 +4031,17 @@
     "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-090",
+      "kind": "confirmation-content",
+      "title": "Confirmation e-mail content",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-091",
@@ -3173,7 +4073,17 @@
     "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-091",
+      "kind": "confirmation-content",
+      "title": "Confirmation e-mail content",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-092",
@@ -3205,7 +4115,17 @@
     "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-092",
+      "kind": "unclassified",
+      "title": "Templates support required locale and accessibility standards",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-093",
@@ -3237,7 +4157,17 @@
     "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-093",
+      "kind": "unclassified",
+      "title": "Only necessary personal data may be included",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-094",
@@ -3269,7 +4199,17 @@
     "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-094",
+      "kind": "confirmation-content",
+      "title": "Confirmation e-mail content",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-095",
@@ -3301,7 +4241,17 @@
     "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-095",
+      "kind": "unclassified",
+      "title": "A successful reservation creates one confirmation-email request",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-096",
@@ -3333,7 +4283,17 @@
     "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-096",
+      "kind": "email-failure-isolated",
+      "title": "E-mail failure does not undo the booking",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-097",
@@ -3365,7 +4325,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-097",
+      "kind": "unclassified",
+      "title": "Permitted retries avoid duplicate or excessive messages",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-098",
@@ -3397,7 +4367,17 @@
     "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-098",
+      "kind": "unclassified",
+      "title": "Operational users can distinguish queued, sent, delivered,",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-099",
@@ -3429,7 +4409,17 @@
     "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-099",
+      "kind": "unclassified",
+      "title": "Email addresses must be masked outside authorized",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-100",
@@ -3461,7 +4451,17 @@
     "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-100",
+      "kind": "resend-generic",
+      "title": "Resend reveals nothing",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-101",
@@ -3493,7 +4493,17 @@
     "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-101",
+      "kind": "unclassified",
+      "title": "Rate limits and abuse controls apply",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-102",
@@ -3525,7 +4535,17 @@
     "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-102",
+      "kind": "unclassified",
+      "title": "The resend creates a new message event",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-103",
@@ -3557,7 +4577,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-103",
+      "kind": "unclassified",
+      "title": "Sensitive data is classified and mapped to",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-104",
@@ -3589,7 +4619,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-104",
+      "kind": "unclassified",
+      "title": "Data is encrypted in transit and at",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-105",
@@ -3621,7 +4661,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-105",
+      "kind": "unclassified",
+      "title": "Logs and analytics exclude or mask prohibited",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-106",
@@ -3653,7 +4703,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-106",
+      "kind": "support-masking",
+      "title": "Sensitive values masked for support",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-107",
@@ -3685,7 +4745,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-107",
+      "kind": "unclassified",
+      "title": "Retention and deletion follow approved policy",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-108",
@@ -3717,7 +4787,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-108",
+      "kind": "correlation-id",
+      "title": "Correlation ID across services",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-109",
@@ -3749,7 +4829,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-109",
+      "kind": "unclassified",
+      "title": "Business events and technical logs are distinguishable",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-110",
@@ -3781,7 +4871,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-110",
+      "kind": "unclassified",
+      "title": "Metrics and alerts exist for agreed critical",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-111",
@@ -3813,7 +4913,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-111",
+      "kind": "unclassified",
+      "title": "Logging degradation does not expose sensitive payloads",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-112",
@@ -3845,7 +4955,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-112",
+      "kind": "unclassified",
+      "title": "Event schemas must be versioned",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-113",
@@ -3877,7 +4997,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-113",
+      "kind": "unclassified",
+      "title": "Production log access must be controlled and",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-114",
@@ -3909,7 +5039,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-114",
+      "kind": "unclassified",
+      "title": "Keyboard navigation, focus order, labels, instructions, status",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-115",
@@ -3941,7 +5081,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-115",
+      "kind": "unclassified",
+      "title": "Visual information is not conveyed by color",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-116",
@@ -3973,7 +5123,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-116",
+      "kind": "unclassified",
+      "title": "Dynamic updates are announced appropriately",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-117",
@@ -4005,7 +5165,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-117",
+      "kind": "email-accessible",
+      "title": "Accessible e-mail template",
+      "parameters": {},
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-118",
@@ -4037,7 +5207,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-118",
+      "kind": "unclassified",
+      "title": "Search, pricing, cart, checkout, reservation, and email",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-119",
@@ -4069,7 +5249,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-119",
+      "kind": "unclassified",
+      "title": "Timeout, retry, circuit-breaker, and fallback behavior are",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-120",
@@ -4101,7 +5291,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-120",
+      "kind": "unclassified",
+      "title": "Load, resilience, and recovery tests cover critical",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-121",
@@ -4133,7 +5333,17 @@
     "status": "carried over",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-121",
+      "kind": "unclassified",
+      "title": "Reservation integrity is prioritized over non-critical personalization",
+      "parameters": {},
+      "executable": false,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-122",
@@ -4206,7 +5416,21 @@
       ]
     },
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-4"
+    "changedInCycle": "CYC-4",
+    "businessRule": {
+      "id": "BR-122",
+      "kind": "cart-expiry",
+      "title": "Cart expiry and no implicit reservation",
+      "parameters": {
+        "minutes": 20
+      },
+      "executable": true,
+      "status": "re-designed",
+      "version": 2,
+      "previousParameters": {
+        "minutes": 30
+      }
+    }
   },
   {
     "id": "REQ-123",
@@ -4245,7 +5469,19 @@
     "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-123",
+      "kind": "price-change-ack",
+      "title": "Material price change acknowledgement",
+      "parameters": {
+        "pct": 1
+      },
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-124",
@@ -4328,7 +5564,23 @@
       ]
     },
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-4"
+    "changedInCycle": "CYC-4",
+    "businessRule": {
+      "id": "BR-124",
+      "kind": "resend-limit",
+      "title": "Resend rate limit",
+      "parameters": {
+        "limit": 5,
+        "hours": 24
+      },
+      "executable": true,
+      "status": "re-designed",
+      "version": 2,
+      "previousParameters": {
+        "limit": 3,
+        "hours": 24
+      }
+    }
   },
   {
     "id": "REQ-125",
@@ -4377,7 +5629,21 @@
     "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-125",
+      "kind": "idempotency-key",
+      "title": "Idempotency-Key required",
+      "parameters": {
+        "min": 8,
+        "max": 64,
+        "hours": 24
+      },
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-126",
@@ -4460,7 +5726,23 @@
       ]
     },
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-4"
+    "changedInCycle": "CYC-4",
+    "businessRule": {
+      "id": "BR-126",
+      "kind": "stay-length-limit",
+      "title": "Maximum stay length",
+      "parameters": {
+        "max": 30,
+        "par": 14
+      },
+      "executable": true,
+      "status": "re-designed",
+      "version": 2,
+      "previousParameters": {
+        "max": 30,
+        "par": 21
+      }
+    }
   },
   {
     "id": "REQ-127",
@@ -4514,7 +5796,21 @@
     "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-127",
+      "kind": "occupancy-limits",
+      "title": "Occupancy and room limits",
+      "parameters": {
+        "adults": 4,
+        "children": 3,
+        "rooms": 8
+      },
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-128",
@@ -4553,7 +5849,19 @@
     "status": "unchanged",
     "previous": null,
     "introducedInCycle": "CYC-1",
-    "changedInCycle": "CYC-1"
+    "changedInCycle": "CYC-1",
+    "businessRule": {
+      "id": "BR-128",
+      "kind": "advance-horizon",
+      "title": "Booking horizon",
+      "parameters": {
+        "days": 500
+      },
+      "executable": true,
+      "status": "carried over",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-129",
@@ -4591,7 +5899,19 @@
     "status": "new",
     "previous": null,
     "introducedInCycle": "CYC-4",
-    "changedInCycle": "CYC-4"
+    "changedInCycle": "CYC-4",
+    "businessRule": {
+      "id": "BR-129",
+      "kind": "unclassified",
+      "title": "Release 1.0 behaviour not named in this",
+      "parameters": {
+        "value1": "1"
+      },
+      "executable": false,
+      "status": "new",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-130",
@@ -4629,7 +5949,19 @@
     "status": "new",
     "previous": null,
     "introducedInCycle": "CYC-4",
-    "changedInCycle": "CYC-4"
+    "changedInCycle": "CYC-4",
+    "businessRule": {
+      "id": "BR-130",
+      "kind": "unclassified",
+      "title": "The Product Owner has accepted the release",
+      "parameters": {
+        "value1": "2"
+      },
+      "executable": false,
+      "status": "new",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-131",
@@ -4679,7 +6011,19 @@
     "status": "new",
     "previous": null,
     "introducedInCycle": "CYC-4",
-    "changedInCycle": "CYC-4"
+    "changedInCycle": "CYC-4",
+    "businessRule": {
+      "id": "BR-131",
+      "kind": "free-cancellation",
+      "title": "Free cancellation window",
+      "parameters": {
+        "hours": 48
+      },
+      "executable": true,
+      "status": "new",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-132",
@@ -4723,7 +6067,17 @@
     "status": "new",
     "previous": null,
     "introducedInCycle": "CYC-4",
-    "changedInCycle": "CYC-4"
+    "changedInCycle": "CYC-4",
+    "businessRule": {
+      "id": "BR-132",
+      "kind": "cancellation-outcome",
+      "title": "Cancellation voids payment and releases rooms",
+      "parameters": {},
+      "executable": true,
+      "status": "new",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-133",
@@ -4755,7 +6109,17 @@
     "status": "new",
     "previous": null,
     "introducedInCycle": "CYC-4",
-    "changedInCycle": "CYC-4"
+    "changedInCycle": "CYC-4",
+    "businessRule": {
+      "id": "BR-133",
+      "kind": "non-refundable-cancellation",
+      "title": "Non-refundable rates are not cancelled free of charge",
+      "parameters": {},
+      "executable": true,
+      "status": "new",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-134",
@@ -4805,7 +6169,19 @@
     "status": "new",
     "previous": null,
     "introducedInCycle": "CYC-4",
-    "changedInCycle": "CYC-4"
+    "changedInCycle": "CYC-4",
+    "businessRule": {
+      "id": "BR-134",
+      "kind": "cancellation-deadline-email",
+      "title": "Confirmation states the free-cancellation deadline",
+      "parameters": {
+        "hours": 48
+      },
+      "executable": true,
+      "status": "new",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-135",
@@ -4855,7 +6231,19 @@
     "status": "new",
     "previous": null,
     "introducedInCycle": "CYC-4",
-    "changedInCycle": "CYC-4"
+    "changedInCycle": "CYC-4",
+    "businessRule": {
+      "id": "BR-135",
+      "kind": "ops-retry-limit",
+      "title": "Operational e-mail retry limit",
+      "parameters": {
+        "limit": 3
+      },
+      "executable": true,
+      "status": "new",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-136",
@@ -4899,7 +6287,17 @@
     "status": "new",
     "previous": null,
     "introducedInCycle": "CYC-4",
-    "changedInCycle": "CYC-4"
+    "changedInCycle": "CYC-4",
+    "businessRule": {
+      "id": "BR-136",
+      "kind": "cancellation-email",
+      "title": "One cancellation e-mail per cancelled booking",
+      "parameters": {},
+      "executable": true,
+      "status": "new",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-137",
@@ -4943,7 +6341,17 @@
     "status": "new",
     "previous": null,
     "introducedInCycle": "CYC-4",
-    "changedInCycle": "CYC-4"
+    "changedInCycle": "CYC-4",
+    "businessRule": {
+      "id": "BR-137",
+      "kind": "cancellation-email-failure",
+      "title": "Cancellation e-mail failure does not undo the cancellation",
+      "parameters": {},
+      "executable": true,
+      "status": "new",
+      "version": 1,
+      "previousParameters": null
+    }
   },
   {
     "id": "REQ-138",
@@ -4975,6 +6383,16 @@
     "status": "new",
     "previous": null,
     "introducedInCycle": "CYC-4",
-    "changedInCycle": "CYC-4"
+    "changedInCycle": "CYC-4",
+    "businessRule": {
+      "id": "BR-138",
+      "kind": "unclassified",
+      "title": "Operational users see the cancellation e-mail with",
+      "parameters": {},
+      "executable": false,
+      "status": "new",
+      "version": 1,
+      "previousParameters": null
+    }
   }
 ]

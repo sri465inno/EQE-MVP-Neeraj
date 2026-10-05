@@ -2,11 +2,10 @@
 id: traceability-handover
 name: Traceability hand-over
 description: What each phase owes the next one so the chain from input to defect never breaks in any cycle.
-appliesTo: [normalise, requirements, rules, testcases, testdata, scripts, execution, defects, report]
+appliesTo: [normalise, requirements, testcases, testdata, scripts, execution, defects, report]
 delivers:
   normalise: [statements]
-  requirements: [requirements]
-  rules: [businessRules]
+  requirements: [requirements, businessRules]
   testcases: [functional, nonFunctional]
   testdata: [dataSets]
   scripts: [specs]

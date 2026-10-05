@@ -1,0 +1,33 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "http://127.0.0.1:46557/api/searches",
+    "headers": {},
+    "data": {
+      "destination": "NYC",
+      "checkIn": "2028-02-18",
+      "checkOut": "2028-02-21",
+      "rooms": 1,
+      "adults": 2,
+      "children": 0
+    }
+  },
+  "response": {
+    "status": 400,
+    "correlationId": "d07f148c-e62b-4ef5-93fd-907fd723c78a",
+    "body": {
+      "status": 400,
+      "code": "VALIDATION_FAILED",
+      "message": "Please correct the highlighted search details.",
+      "correlationId": "d07f148c-e62b-4ef5-93fd-907fd723c78a",
+      "retryable": false,
+      "fieldIssues": [
+        {
+          "field": "checkIn",
+          "ruleId": "checkIn.tooFarAhead",
+          "message": "Bookings can be made up to 500 days ahead. Choose an earlier check-in date."
+        }
+      ]
+    }
+  }
+}

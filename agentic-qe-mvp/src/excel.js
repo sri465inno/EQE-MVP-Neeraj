@@ -179,7 +179,7 @@ async function reportWorkbook(report, cycle) {
     { k: 'Narrative', v: report.narrative.text }, { k: 'Narrative drafted by', v: report.narrative.draftedBy },
   ]);
   sheetFromRows(wb, 'Inputs', [['Input', 'label', 18], ['Reference', 'ref', 40], ['Statements', 'statements', 12], ['Provenance', 'provenance', 12], ['Provenance detail', 'provenanceLabel', 80]], report.inputs);
-  sheetFromRows(wb, 'Requirements', [['ID', 'id', 10], ['Requirement', 'text', 70], ['Type', 'type', 16], ['Status', 'status', 14], ['Version', 'version', 8], ['Superseded value', 'previous', 60]], report.requirements.list);
+  sheetFromRows(wb, 'Requirements', [['ID', 'id', 10], ['Jira', 'jira', 16], ['Requirement', 'text', 70], ['Type', 'type', 16], ['Source', 'source', 12], ['Business rule', 'ruleId', 10], ['Rule', 'rule', 34], ['Exact values', 'ruleValues', 40], ['Test approach', 'approach', 13], ['Status', 'status', 14], ['Version', 'version', 8], ['Superseded value', 'previous', 60]], report.requirements.list);
   addTestCaseSheet(wb, cycle);
   sheetFromRows(wb, 'Execution', [['Case', 'key', 11], ['Requirement', 'requirementId', 12], ['Name', 'name', 60], ['Result', 'status', 10], ['Duration ms', 'duration', 12], ['Note', 'reason', 50]], ex.executed ? ex.results : []);
   sheetFromRows(wb, 'Defects', [['ID', 'id', 9], ['Title', 'title', 50], ['Severity', 'severity', 9], ['Story', 'story', 11], ['Jira defect', 'jira', 40], ['Case', 'testCaseKey', 10], ['Requirement', 'requirementId', 12], ['Expected', 'expected', 14], ['Actual', 'actual', 14], ['Failing assertion', 'assertion', 50], ['Movement', 'movement', 12]], report.defects.open);
