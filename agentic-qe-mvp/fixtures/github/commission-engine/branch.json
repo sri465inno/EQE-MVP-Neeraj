@@ -2,19 +2,19 @@
   "name": "demo/commission-engine",
   "commit": {
     "sha": "df5203e8ab429df868960d985a658967fc8408b8",
-    "url": "https://api.github.com/repos/sri465inno/uc-agentic-quality-engineering/commits/df5203e8ab429df868960d985a658967fc8408b8",
-    "html_url": "https://github.com/sri465inno/uc-agentic-quality-engineering/commit/df5203e8ab429df868960d985a658967fc8408b8",
+    "url": "https://api.github.com/repos/sri465inno/EQE-MVP-Neeraj/commits/df5203e8ab429df868960d985a658967fc8408b8",
+    "html_url": "https://github.com/sri465inno/EQE-MVP-Neeraj/commit/df5203e8ab429df868960d985a658967fc8408b8",
     "commit": {
       "message": "Aurora commission engine 1.0: transient reservation commission over the 1000-attribute reservation model"
     }
   },
   "_links": {
-    "self": "https://api.github.com/repos/sri465inno/uc-agentic-quality-engineering/branches/demo%2Fcommission-engine",
-    "html": "https://github.com/sri465inno/uc-agentic-quality-engineering/tree/demo/commission-engine"
+    "self": "https://api.github.com/repos/sri465inno/EQE-MVP-Neeraj/branches/demo%2Fcommission-engine",
+    "html": "https://github.com/sri465inno/EQE-MVP-Neeraj/tree/demo/commission-engine"
   },
   "protected": false,
   "_recorded": {
-    "at": "2026-09-28T20:28:38.828Z",
-    "with": "git clone --depth 1 --branch demo/commission-engine https://github.com/sri465inno/uc-agentic-quality-engineering.git"
+    "at": "2026-10-05T17:08:22.035Z",
+    "with": "git clone --depth 1 --branch demo/commission-engine https://github.com/sri465inno/EQE-MVP-Neeraj.git"
   }
 }

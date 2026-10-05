@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "http://127.0.0.1:39015/api/ops/payments",
+    "url": "http://127.0.0.1:35905/api/ops/payments",
     "headers": {
       "X-Operator-Role": "SUPPORT"
     },
@@ -9,11 +9,11 @@
   },
   "response": {
     "status": 200,
-    "correlationId": "1204e675-e2f3-4e24-9749-42a5a1499de2",
+    "correlationId": "78d10d4f-0a2e-4d5a-a0d8-c386fc9e3e69",
     "body": [
       {
         "key": "aqe-booking-dc342c3a-1",
-        "authorizationId": "auth_ac0cb784-533",
+        "authorizationId": "auth_5b0913c9-ea7",
         "result": "AUTHORIZED",
         "amount": {
           "amount": 0,

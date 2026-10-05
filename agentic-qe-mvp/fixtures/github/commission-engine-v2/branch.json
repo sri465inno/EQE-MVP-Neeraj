@@ -2,19 +2,19 @@
   "name": "demo/commission-engine-v2",
   "commit": {
     "sha": "6ccd8071c77a0d393af3cd653edab348e9cda94d",
-    "url": "https://api.github.com/repos/sri465inno/uc-agentic-quality-engineering/commits/6ccd8071c77a0d393af3cd653edab348e9cda94d",
-    "html_url": "https://github.com/sri465inno/uc-agentic-quality-engineering/commit/6ccd8071c77a0d393af3cd653edab348e9cda94d",
+    "url": "https://api.github.com/repos/sri465inno/EQE-MVP-Neeraj/commits/6ccd8071c77a0d393af3cd653edab348e9cda94d",
+    "html_url": "https://github.com/sri465inno/EQE-MVP-Neeraj/commit/6ccd8071c77a0d393af3cd653edab348e9cda94d",
     "commit": {
       "message": "Commission engine 2.0: cap USD 750, group flat 8%, corporate 5%, package room component 70%"
     }
   },
   "_links": {
-    "self": "https://api.github.com/repos/sri465inno/uc-agentic-quality-engineering/branches/demo%2Fcommission-engine-v2",
-    "html": "https://github.com/sri465inno/uc-agentic-quality-engineering/tree/demo/commission-engine-v2"
+    "self": "https://api.github.com/repos/sri465inno/EQE-MVP-Neeraj/branches/demo%2Fcommission-engine-v2",
+    "html": "https://github.com/sri465inno/EQE-MVP-Neeraj/tree/demo/commission-engine-v2"
   },
   "protected": false,
   "_recorded": {
-    "at": "2026-09-28T20:28:39.779Z",
-    "with": "git clone --depth 1 --branch demo/commission-engine-v2 https://github.com/sri465inno/uc-agentic-quality-engineering.git"
+    "at": "2026-10-05T17:08:23.170Z",
+    "with": "git clone --depth 1 --branch demo/commission-engine-v2 https://github.com/sri465inno/EQE-MVP-Neeraj.git"
   }
 }

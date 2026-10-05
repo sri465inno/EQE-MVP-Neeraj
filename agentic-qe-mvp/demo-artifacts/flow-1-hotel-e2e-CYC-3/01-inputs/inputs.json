@@ -18,7 +18,7 @@
       "system": "jira",
       "label": "Jira export on GitHub (sri465inno/EQE-MVP-Neeraj@demo/jira-export): Jira REST API v3 JSON of AQPI-1, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
       "ref": "AQPI-1",
-      "fetchedAt": "2026-10-05T16:57:40.597Z",
+      "fetchedAt": "2026-10-05T17:10:44.925Z",
       "files": [
         "https://github.com/sri465inno/EQE-MVP-Neeraj/blob/demo/jira-export/jira/AQPI-1.json"
       ]
@@ -197,7 +197,7 @@
       "system": "jira",
       "label": "Jira export on GitHub (sri465inno/EQE-MVP-Neeraj@demo/jira-export): Jira REST API v3 JSON of AQPI-2, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
       "ref": "AQPI-2",
-      "fetchedAt": "2026-10-05T16:57:40.619Z",
+      "fetchedAt": "2026-10-05T17:10:44.949Z",
       "files": [
         "https://github.com/sri465inno/EQE-MVP-Neeraj/blob/demo/jira-export/jira/AQPI-2.json",
         "https://github.com/sri465inno/EQE-MVP-Neeraj/blob/demo/jira-export/jira/AQPI-2.children.json"
@@ -212,9 +212,9 @@
     "ref": "sri465inno/EQE-MVP-Neeraj@demo/hotel-booking-platform (452df41)",
     "provenance": {
       "kind": "github",
-      "label": "Pulled live from GitHub: git clone of sri465inno/EQE-MVP-Neeraj@demo/hotel-booking-platform (452df41) at 2026-10-05T16:57:40.753Z",
+      "label": "Pulled live from GitHub: git clone of sri465inno/EQE-MVP-Neeraj@demo/hotel-booking-platform (452df41) at 2026-10-05T17:10:45.098Z",
       "ref": "sri465inno/EQE-MVP-Neeraj@demo/hotel-booking-platform (452df41)",
-      "fetchedAt": "2026-10-05T16:57:40.753Z",
+      "fetchedAt": "2026-10-05T17:10:45.098Z",
       "files": [
         "README.md",
         "TRACEABILITY.md",

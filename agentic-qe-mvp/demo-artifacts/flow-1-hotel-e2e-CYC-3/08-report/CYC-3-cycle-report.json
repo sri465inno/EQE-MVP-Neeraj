@@ -1,6 +1,6 @@
 {
   "title": "Agentic QE Platform - MVP - Cycle report",
-  "generatedAt": "2026-10-05T16:57:50.243Z",
+  "generatedAt": "2026-10-05T17:10:54.433Z",
   "cycle": {
     "id": "CYC-3",
     "name": "Hotel booking baseline · End-to-end",
@@ -8,8 +8,8 @@
     "testingType": "e2e",
     "testingTypeName": "End-to-end testing",
     "status": "completed",
-    "createdAt": "2026-10-05T16:57:41.722Z",
-    "completedAt": "2026-10-05T16:57:50.226Z",
+    "createdAt": "2026-10-05T17:10:45.916Z",
+    "completedAt": "2026-10-05T17:10:54.415Z",
     "baselineId": "BL-3",
     "baselineVersionAtStart": null,
     "baselineVersionAfter": 1,
@@ -4679,7 +4679,7 @@
       "children": [],
       "statements": 7,
       "provenance": "github",
-      "provenanceLabel": "Pulled live from GitHub: git clone of sri465inno/EQE-MVP-Neeraj@demo/hotel-booking-platform (452df41) at 2026-10-05T16:57:40.753Z",
+      "provenanceLabel": "Pulled live from GitHub: git clone of sri465inno/EQE-MVP-Neeraj@demo/hotel-booking-platform (452df41) at 2026-10-05T17:10:45.098Z",
       "files": [
         "README.md",
         "TRACEABILITY.md",
@@ -7182,24 +7182,24 @@
   "execution": {
     "executed": true,
     "quarantined": "not measured",
-    "durationMs": 4570,
+    "durationMs": 4548,
     "tool": "Playwright 1.63.0 (headless Chromium, JSON reporter)",
-    "command": "npx playwright test --config ../../../../../tmp/aqe-demo-EMyHal/runs/CYC-3/playwright.config.js",
+    "command": "npx playwright test --config ../../../../../tmp/aqe-demo-aPPboC/runs/CYC-3/playwright.config.js",
     "sut": {
       "build": "demo/hotel-booking-platform",
-      "url": "http://127.0.0.1:40701",
+      "url": "http://127.0.0.1:37903",
       "services": {
-        "hotel-service": "http://127.0.0.1:33575",
-        "offer-service": "http://127.0.0.1:39037",
-        "notification-service": "http://127.0.0.1:46603",
-        "search-service": "http://127.0.0.1:40701",
-        "cart-service": "http://127.0.0.1:46137",
-        "reservation-service": "http://127.0.0.1:40729"
+        "hotel-service": "http://127.0.0.1:35547",
+        "offer-service": "http://127.0.0.1:46397",
+        "notification-service": "http://127.0.0.1:35371",
+        "search-service": "http://127.0.0.1:37903",
+        "cart-service": "http://127.0.0.1:42173",
+        "reservation-service": "http://127.0.0.1:33439"
       },
       "name": "Hotel booking platform release 1.0, six Spring Boot services built from branch demo/hotel-booking-platform"
     },
-    "startedAt": "2026-10-05T16:57:45.638Z",
-    "finishedAt": "2026-10-05T16:57:50.208Z",
+    "startedAt": "2026-10-05T17:10:49.850Z",
+    "finishedAt": "2026-10-05T17:10:54.398Z",
     "summary": {
       "total": 8,
       "executed": 8,
@@ -7207,7 +7207,7 @@
       "failed": 0,
       "skipped": 0,
       "notRun": 0,
-      "durationMs": 1627,
+      "durationMs": 1616,
       "passRate": 100
     },
     "results": [
@@ -7216,7 +7216,7 @@
         "requirementId": "REQ-001",
         "name": "Guest books a pay-at-hotel room with breakfast from search to confirmation e-mail",
         "status": "passed",
-        "duration": 1091,
+        "duration": 1084,
         "reason": null
       },
       {
@@ -7224,7 +7224,7 @@
         "requirementId": "REQ-001",
         "name": "Guest books a prepaid non-refundable room in Paris and pays now",
         "status": "passed",
-        "duration": 110,
+        "duration": 116,
         "reason": null
       },
       {
@@ -7232,7 +7232,7 @@
         "requirementId": "REQ-002",
         "name": "A sold-out hotel is shown as unavailable and cannot be put in a cart",
         "status": "passed",
-        "duration": 65,
+        "duration": 58,
         "reason": null
       },
       {
@@ -7240,7 +7240,7 @@
         "requirementId": "REQ-004",
         "name": "An unavailable extra is refused and the room still books",
         "status": "passed",
-        "duration": 96,
+        "duration": 84,
         "reason": null
       },
       {
@@ -7248,7 +7248,7 @@
         "requirementId": "REQ-005",
         "name": "A double-clicked Book button creates one reservation and one payment",
         "status": "passed",
-        "duration": 78,
+        "duration": 74,
         "reason": null
       },
       {
@@ -7256,7 +7256,7 @@
         "requirementId": "REQ-006",
         "name": "The confirmation number can be looked up again after booking",
         "status": "passed",
-        "duration": 59,
+        "duration": 63,
         "reason": null
       },
       {
@@ -7264,7 +7264,7 @@
         "requirementId": "REQ-007",
         "name": "The guest sees the booking outcome and one confirmation e-mail is created",
         "status": "passed",
-        "duration": 65,
+        "duration": 72,
         "reason": null
       },
       {
@@ -7272,7 +7272,7 @@
         "requirementId": "REQ-051",
         "name": "An unavailable extra is refused and the room still books",
         "status": "passed",
-        "duration": 63,
+        "duration": 65,
         "reason": null
       }
     ]
@@ -9182,7 +9182,7 @@
     {
       "gate": "Requirement set review",
       "by": "Priya Shah",
-      "at": "2026-10-05T16:57:41.730Z",
+      "at": "2026-10-05T17:10:45.923Z",
       "decision": "approved",
       "comment": "",
       "detail": "128 requirements approved; 0 excluded; 0 conflict(s) resolved"
@@ -9195,7 +9195,7 @@
   "honesty": [
     "Jira initiative AQPI-1: Jira export on GitHub (sri465inno/EQE-MVP-Neeraj@demo/jira-export): Jira REST API v3 JSON of AQPI-1, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
     "Jira epic AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27: Jira export on GitHub (sri465inno/EQE-MVP-Neeraj@demo/jira-export): Jira REST API v3 JSON of AQPI-2, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
-    "Codebase sri465inno/EQE-MVP-Neeraj@demo/hotel-booking-platform (452df41): Pulled live from GitHub: git clone of sri465inno/EQE-MVP-Neeraj@demo/hotel-booking-platform (452df41) at 2026-10-05T16:57:40.753Z",
+    "Codebase sri465inno/EQE-MVP-Neeraj@demo/hotel-booking-platform (452df41): Pulled live from GitHub: git clone of sri465inno/EQE-MVP-Neeraj@demo/hotel-booking-platform (452df41) at 2026-10-05T17:10:45.098Z",
     "Execution: 8 automated cases really executed by Playwright 1.63.0 (headless Chromium, JSON reporter) against Hotel booking platform release 1.0, six Spring Boot services built from branch demo/hotel-booking-platform (demo/hotel-booking-platform); 0 manual case(s) designed but not executed.",
     "Normalisation, delta classification, coverage, pass/fail and defect raising are computed in code, not by a model."
   ]
