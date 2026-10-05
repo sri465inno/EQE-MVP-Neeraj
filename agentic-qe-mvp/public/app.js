@@ -360,14 +360,6 @@ function testingTypesDropdown(type, domainId) {
 <p class="hint" id="tt-msg"></p>`;
 }
 
-function readSummary(slot, label, st) {
-  const where = st.mode === 'paste' ? (st.fileName ? `uploaded file ${st.fileName}` : st.text ? 'pasted text' : 'nothing pasted yet')
-    : slot === 'codebase' ? `${META.codebase.repo} @ ${st.branch}` : `${st.key}${st.snapshot && st.mode !== 'jira' ? ` (${st.snapshot} snapshot)` : ''}`;
-  const prov = st.mode === 'paste' ? pill('pasted', 'pasted') : st.mode === 'github' ? pill(slot === 'codebase' ? 'pulled live from GitHub' : 'Jira export on GitHub', 'github')
-    : st.mode === 'jira' && META.jira.mode === 'live' ? pill('live Jira call', 'live') : pill('recorded fixture', 'fixture');
-  return `<li><b>${esc(label)}</b><span class="muted small">${esc(where)}</span>${prov}</li>`;
-}
-
 function demoInputsHtml(type, ex) {
   const branch = ex.samples[type === 'baseline' ? 'baselineBranch' : 'incrementalBranch'];
   const flow = (DEMO_INPUTS || []).find((f) => f.branch === branch);
@@ -463,8 +455,6 @@ async function viewRun(params) {
   <h3 class="panel-title">Agents, and what each one produces for ${esc(tt.name.toLowerCase())}</h3>
   <div class="agent-grid">${agents.map((a) => `<div class="agent-card ${a.no === 1 || (a.id === 'execution' && type === 'incremental') ? 'gate' : ''}"><div class="agent-head"><span class="step-num small">${a.no}</span><b>${esc(a.name)}</b><span class="state">pending</span></div><p>${esc(a.produces)}</p>${ttParts.filter((p) => p.agents[a.id]).map((p) => `<p class="tt-steer small"><b>${esc(p.short)}:</b> ${esc(p.agents[a.id])}</p>`).join('')}<p class="muted small">${a.no === 1 ? 'You approve the requirement set first' : a.id === 'execution' && type === 'incremental' ? 'Runs after you approve the merge into the baseline' : 'Runs after your approval'}</p></div>`).join('')}</div>
   <div class="legend"><span class="l-agent">AI agent</span><span class="l-human">Human approval before this agent</span></div>
-  <h3 class="panel-title">What the agents will read</h3>
-  <ul class="read-list">${active.map(([slot, label]) => readSummary(slot, label, runState.inputs[slot])).join('')}</ul>
   <h3 class="panel-title">Flow ${flowNo} test inputs</h3>
   ${demoInputsHtml(type, ex)}
 </div>
