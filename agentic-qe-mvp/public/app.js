@@ -749,6 +749,11 @@ function bindCycleTab(c, tab) {
 }
 
 const SOURCE_LABEL = { agreed: 'Jira + code', 'jira-only': 'Jira only', 'code-only': 'Code only', conflict: 'Conflict settled by reviewer' };
+const sourceOf = (r) => {
+  if (r.bucket === 'conflict') return 'conflict';
+  const s = new Set((r.origins || []).map((o) => o.source));
+  return s.has('jira') && s.has('code') ? 'agreed' : s.has('jira') ? 'jira-only' : s.has('code') ? 'code-only' : r.bucket;
+};
 const ruleValues = (p) => Object.entries(p || {}).map(([k, v]) => `${k} = ${typeof v === 'object' ? JSON.stringify(v) : v}`).join(', ');
 
 /** Epic -> story -> requirement grouping, from the Jira hierarchy the cycle read (plus the baseline's for carried requirements). */
@@ -766,9 +771,11 @@ function requirementGroups(c, reqs) {
     if (x.level === 'epic' && !epics.has(x.key)) epics.set(x.key, x.summary);
     if (x.level === 'story' && !storyEpic.has(x.key)) { storyEpic.set(x.key, x.parent); summary.set(x.key, x.summary); }
   }
-  const groups = new Map();
+  const initiatives = new Map();
+  for (const i of c.inputs.filter((x) => x.slot === 'initiative')) for (const h of i.hierarchy || []) initiatives.set(h.key, h.summary);
+  const groups = new Map([...epics.keys()].map((k) => [k, null]));
   const add = (epic, story, r) => {
-    if (!groups.has(epic)) groups.set(epic, { key: epic, summary: epics.get(epic) || null, stories: new Map() });
+    if (!groups.get(epic)) groups.set(epic, { key: epic, epic: epics.has(epic), summary: epics.get(epic) || null, stories: new Map() });
     const g = groups.get(epic);
     if (!g.stories.has(story)) g.stories.set(story, { key: story, summary: summary.get(story) || null, reqs: [] });
     g.stories.get(story).reqs.push(r);
@@ -778,10 +785,12 @@ function requirementGroups(c, reqs) {
     const story = keys.find((k) => storyEpic.has(k));
     if (story) add(storyEpic.get(story), story, r);
     else if (keys.some((k) => epics.has(k))) add(keys.find((k) => epics.has(k)), '(epic level)', r);
+    else if (keys.some((k) => initiatives.has(k))) { const k = keys.find((x) => initiatives.has(x)); summary.set(k, initiatives.get(k)); add('(initiative level)', k, r); }
     else if (keys.length) add('(other Jira items)', keys[0], r);
     else add('(not tied to a Jira story)', '(code only)', r);
   }
-  return [...groups.values()].map((g) => ({ ...g, stories: [...g.stories.values()] }));
+  const ordered = [...groups.values()].filter(Boolean).sort((x, y) => Number(y.epic) - Number(x.epic));
+  return ordered.map((g) => ({ ...g, stories: [...g.stories.values()] }));
 }
 
 function requirementsView(c) {
@@ -791,7 +800,7 @@ function requirementsView(c) {
   const ruleOf = (r) => ruleByReq.get(r.id) || r.businessRule || null;
   const automatable = reqs.filter((r) => (ruleOf(r) || {}).executable).length;
   const cnt = (f) => reqs.reduce((m, r) => { const k = f(r); m[k] = (m[k] || 0) + 1; return m; }, {});
-  const bySource = cnt((r) => r.bucket);
+  const bySource = cnt(sourceOf);
   const byStatus = cnt((r) => r.status || 'new');
   const changed = (r) => ['new', 'enhanced'].includes(r.status);
   const groups = requirementGroups(c, reqs);
@@ -802,14 +811,14 @@ function requirementsView(c) {
       `<b>${esc(r.title || '')}</b><br>${esc(r.text)}${r.previous ? `<br><span class="old">${esc(r.previous.text)}</span> <span class="small muted">v${r.previous.version}</span>` : ''}`,
       b ? `<b>${esc(b.id)}</b> <span class="small muted">${esc(b.kind)}</span><br>${b.executable ? `<code>${esc(ruleValues(b.parameters))}</code>` : '<span class="muted small">no testable value</span>'}${b.previous ? `<br><span class="old"><code>${esc(ruleValues(b.previous.parameters))}</code></span>` : ''}` : '<span class="muted">-</span>',
       b ? pill(b.executable ? 'automatable' : 'manual', b.executable ? 'passed' : 'pending') : '',
-      `${esc(r.type)}<br><span class="small muted">${esc(SOURCE_LABEL[r.bucket] || r.bucket || '')}</span>`,
+      `${esc(r.type)}<br><span class="small muted">${esc(SOURCE_LABEL[sourceOf(r)] || sourceOf(r) || '')}</span>`,
       originCell(r.origins), artPill(r.status || 'new')];
   };
   const head = ['ID', 'Requirement', 'Business rule and exact values', 'Test approach', 'Type and source', 'Where it is stated', 'Status'];
   const epicBlock = (g, i) => {
     const n = g.stories.reduce((s, x) => s + x.reqs.length, 0);
     const delta = c.type === 'incremental' ? g.stories.flatMap((x) => x.reqs).filter(changed).length : 0;
-    const open = c.type === 'incremental' ? delta > 0 : i === 0;
+    const open = c.type === 'incremental' ? delta > 0 : g.epic && i === 0;
     return `<details class="guidance req-epic" ${open ? 'open' : ''}><summary>${link(g.key)}${g.summary ? ` ${esc(g.summary)}` : ''} <span class="muted small">· ${g.stories.length} ${g.stories.length === 1 ? 'story' : 'stories'} · ${n} requirement${n === 1 ? '' : 's'}${delta ? ` · ${delta} new or enhanced` : ''}</span></summary>
 ${g.stories.map((s) => `<h3>${link(s.key)}${s.summary ? ` ${esc(s.summary)}` : ''} <span class="muted small">(${s.reqs.length})</span></h3>${table(head, s.reqs.map(row), (k) => `row-${s.reqs[k].status}`)}`).join('')}</details>`;
   };

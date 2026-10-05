@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "PUT",
-    "url": "http://127.0.0.1:40943/api/admin/hotels/H-NYC-001/rooms/STD-K/rates/FLEX",
+    "url": "http://127.0.0.1:43677/api/admin/hotels/H-NYC-001/rooms/STD-K/rates/FLEX",
     "headers": {},
     "data": {
       "nightly": 266.18
@@ -9,7 +9,7 @@
   },
   "response": {
     "status": 200,
-    "correlationId": "84e220a2-2017-4b08-8d99-2a6b77fe832f",
+    "correlationId": "5ff99940-fac0-470b-a05e-10858c56fb8a",
     "body": {
       "code": "FLEX",
       "name": "Flexible – pay at hotel",

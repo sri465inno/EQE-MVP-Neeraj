@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "POST",
-    "url": "http://127.0.0.1:46557/api/searches",
+    "url": "http://127.0.0.1:34077/api/searches",
     "headers": {},
     "data": {
       "destination": "",
@@ -14,12 +14,12 @@
   },
   "response": {
     "status": 400,
-    "correlationId": "fedd50c8-e650-4f3f-9306-465ab5432ddd",
+    "correlationId": "7fcaba3a-51c4-42b5-9d11-3f6ff3a4d7a9",
     "body": {
       "status": 400,
       "code": "VALIDATION_FAILED",
       "message": "Please correct the highlighted search details.",
-      "correlationId": "fedd50c8-e650-4f3f-9306-465ab5432ddd",
+      "correlationId": "7fcaba3a-51c4-42b5-9d11-3f6ff3a4d7a9",
       "retryable": false,
       "fieldIssues": [
         {

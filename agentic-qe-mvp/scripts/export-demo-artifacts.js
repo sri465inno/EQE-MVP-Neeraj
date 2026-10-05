@@ -25,6 +25,11 @@ const cell = (v) => String(v ?? '').replace(/\|/g, '\\|').replace(/\n/g, ' ');
 const mdTable = (head, rows) => [`| ${head.join(' | ')} |`, `|${head.map(() => '---').join('|')}|`, ...rows.map((r) => `| ${r.map(cell).join(' | ')} |`)].join('\n');
 
 const SOURCE_LABEL = { agreed: 'Jira + code', 'jira-only': 'Jira only', 'code-only': 'Code only', conflict: 'Conflict settled by reviewer' };
+const sourceOf = (r) => {
+  if (r.bucket === 'conflict') return 'conflict';
+  const s = new Set((r.origins || []).map((o) => o.source));
+  return s.has('jira') && s.has('code') ? 'agreed' : s.has('jira') ? 'jira-only' : s.has('code') ? 'code-only' : r.bucket;
+};
 const ruleValues = (p) => Object.entries(p || {}).map(([k, v]) => `${k} = ${typeof v === 'object' ? JSON.stringify(v) : v}`).join(', ');
 
 /** The reviewer-facing requirement set: one section per Jira story, each requirement with its business rule and sources. */
@@ -47,7 +52,7 @@ function requirementSetMarkdown(c) {
     lines.push(`## ${k}`, '', mdTable(['ID', 'Requirement', 'Business rule', 'Exact values', 'Test approach', 'Source', 'Where stated', 'Status'], reqs.map((r) => {
       const b = rules.get(r.id);
       return [r.id, r.text, b ? `${b.id} ${b.kind}` : '-', b && b.executable ? ruleValues(b.parameters) : '-', b ? (b.executable ? 'automatable' : 'manual') : '-',
-        SOURCE_LABEL[r.bucket] || r.bucket, r.origins.map((o) => `${o.ref}${o.line ? `:${o.line}` : ''}`).join('; '), r.status];
+        SOURCE_LABEL[sourceOf(r)] || r.bucket, r.origins.map((o) => `${o.ref}${o.line ? `:${o.line}` : ''}`).join('; '), r.status];
     })), '');
   }
   return lines.join('\n');

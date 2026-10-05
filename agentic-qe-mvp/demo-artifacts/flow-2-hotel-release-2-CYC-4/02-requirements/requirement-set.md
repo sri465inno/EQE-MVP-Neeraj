@@ -265,19 +265,19 @@
 
 | ID | Requirement | Business rule | Exact values | Test approach | Source | Where stated | Status |
 |---|---|---|---|---|---|---|---|
-| REQ-122 | A cart expires 20 minutes after it is created and never creates a reservation itself. | BR-122 cart-expiry | minutes = 20 | automatable | Code only | AQPI-33; cart-service/src/main/resources/cart-service.yml:16 | enhanced |
+| REQ-122 | A cart expires 20 minutes after it is created and never creates a reservation itself. | BR-122 cart-expiry | minutes = 20 | automatable | Jira + code | AQPI-33; cart-service/src/main/resources/cart-service.yml:16 | enhanced |
 
 ## AQPI-34
 
 | ID | Requirement | Business rule | Exact values | Test approach | Source | Where stated | Status |
 |---|---|---|---|---|---|---|---|
-| REQ-126 | A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights. | BR-126 stay-length-limit | max = 30, par = 14 | automatable | Code only | AQPI-34; search-service/src/main/resources/search-service.yml:12 | enhanced |
+| REQ-126 | A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights. | BR-126 stay-length-limit | max = 30, par = 14 | automatable | Jira + code | AQPI-34; search-service/src/main/resources/search-service.yml:12 | enhanced |
 
 ## AQPI-35
 
 | ID | Requirement | Business rule | Exact values | Test approach | Source | Where stated | Status |
 |---|---|---|---|---|---|---|---|
-| REQ-124 | A confirmation can be resent at most 5 times per booking in 24 hours. | BR-124 resend-limit | limit = 5, hours = 24 | automatable | Code only | AQPI-35; notification-service/src/main/resources/notification-service.yml:7 | enhanced |
+| REQ-124 | A confirmation can be resent at most 5 times per booking in 24 hours. | BR-124 resend-limit | limit = 5, hours = 24 | automatable | Jira + code | AQPI-35; notification-service/src/main/resources/notification-service.yml:7 | enhanced |
 
 ## AQPI-36
 

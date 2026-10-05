@@ -9,7 +9,7 @@ CYC-4 · incremental cycle
 | Regression testing | 138 | 144 | 83 | 95.2% | 4 | 44.2% |
 
 ## 1. Summary
-- Incremental cycle for Guest hotel booking from search to confirmation (AQPI-1) on build demo/hotel-booking-platform-v2, 2026-10-05 16:04 UTC.
+- Incremental cycle for Guest hotel booking from search to confirmation (AQPI-1) on build demo/hotel-booking-platform-v2, 2026-10-05 16:27 UTC.
 - Type of testing: Regression testing. The full pack: every functional case plus the privacy, security, observability and resilience cases, so nothing that worked before has broken.
 - We took 2 inputs (Jira epic AQPI-32, AQPI-23, Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform-v2 (fe1ce44)) and produced 138 requirements, 144 test cases and 65 automated scripts.
 - We ran 83 automated tests for real: 79 passed, 4 failed (pass rate 95.2%). 61 manual tests still to be run by hand.
@@ -26,11 +26,11 @@ CYC-4 · incremental cycle
 ## 3. How we ran the cycle
 1. Read 46 statements from the inputs and lined them up into 33 requirement groups: 9 agreed by every source, 20 only in Jira, 4 only in the code, 0 in conflict.
 2. The review agent read the inputs first and suggested 17 addition(s), 33 missing piece(s) and 0 conflict(s) for the reviewer (2 high severity). It approved nothing.
-3. Priya Shah reviewed and approved the requirement set on 2026-10-05 16:04 UTC.
+3. Priya Shah reviewed and approved the requirement set on 2026-10-05 16:27 UTC.
 4. Compared every statement with baseline BL-1 v1: 20 unchanged · 3 enhanced · 10 new. Changed: REQ-122 "A cart expires 30 minutes after it is created and never creates a reservation itself." → "A cart expires 20 minutes after it is created and never creates a reservation itself."; REQ-124 "A confirmation can be resent at most 3 times per booking in 24 hours." → "A confirmation can be resent at most 5 times per booking in 24 hours."; REQ-126 "A stay can be at most 30 nights; Paris (PAR) allows at most 21 nights." → "A stay can be at most 30 nights; Paris (PAR) allows at most 14 nights.".
 5. Regression testing steered the design: Re-runs every case carried over from the baseline alongside the new and re-designed ones. Result: 144 case(s) in this run (126 reused, 6 re-designed, 12 new).
 6. The requirements agent wrote 138 requirements, each with its business rule, exact values and source quotes (72 automatable, 66 manual); the agents then designed 144 test cases (140 functional, 4 non-functional) and generated 65 Playwright scripts.
-7. Sam Lee approved the merge into the baseline on 2026-10-05 16:04 UTC.
+7. Sam Lee approved the merge into the baseline on 2026-10-05 16:27 UTC.
 8. Executed the automated suite with Playwright 1.63.0 (headless Chromium, JSON reporter) against Hotel booking platform release 2.0, six Spring Boot services built from branch demo/hotel-booking-platform-v2; defects were raised only for tests that actually failed.
 
 ## 4. Artifacts produced
@@ -113,7 +113,7 @@ _13 of 15 booking-driving attributes (out of 21 booking attributes) are varied b
 ## 7. Sign-off
 | Gate | Decision | By | When | Detail |
 |---|---|---|---|---|
-| Requirement set review | approved | Priya Shah | 2026-10-05 16:04 UTC | 33 requirements approved; 0 excluded; 0 conflict(s) resolved |
-| Merge into baseline | approved | Sam Lee | 2026-10-05 16:04 UTC | 13 requirements, 18 test cases, 10 scripts merged: BL-1 v1 -> v2 |
+| Requirement set review | approved | Priya Shah | 2026-10-05 16:27 UTC | 33 requirements approved; 0 excluded; 0 conflict(s) resolved |
+| Merge into baseline | approved | Sam Lee | 2026-10-05 16:27 UTC | 13 requirements, 18 test cases, 10 scripts merged: BL-1 v1 -> v2 |
 
-_Agentic QE Platform (QE lead report, computed from the cycle) · generated 2026-10-05 16:04 UTC. Every figure comes from the persisted cycle; nothing is estimated._
+_Agentic QE Platform (QE lead report, computed from the cycle) · generated 2026-10-05 16:27 UTC. Every figure comes from the persisted cycle; nothing is estimated._

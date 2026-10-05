@@ -1,15 +1,15 @@
 {
   "request": {
     "method": "GET",
-    "url": "http://127.0.0.1:43789/api/checkout/C-3db68831/payment-summary",
+    "url": "http://127.0.0.1:40369/api/checkout/C-f9d7a58f/payment-summary",
     "headers": {},
     "data": null
   },
   "response": {
     "status": 200,
-    "correlationId": "4ab26993-58f6-463b-95b7-688e2dab570d",
+    "correlationId": "118ce6ab-4ddc-4632-ba09-7e5d6a9ada82",
     "body": {
-      "cartId": "C-3db68831",
+      "cartId": "C-f9d7a58f",
       "paymentRule": "PAY_AT_HOTEL",
       "payNow": {
         "amount": 0,
