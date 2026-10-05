@@ -186,8 +186,7 @@ details.guidance summary{cursor:pointer;font-weight:600;font-size:13px;color:var
 .agent-head .state{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;border:1px solid var(--line2);border-radius:10px;padding:1px 8px;color:var(--mut)}
 .legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.legend span{font-size:11.5px;border-radius:999px;padding:2px 10px;border:1px solid var(--line)}
 .legend .l-agent{background:var(--navy-soft);color:var(--navy);border-color:#b9cbe0}.legend .l-human{background:var(--gold-soft);color:#7d5c1c;border-color:#e2cd9f}
-.read-list,.downloads{list-style:none;margin:0;padding:0}
-.read-list li{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:8px 10px;border:1px dashed var(--line2);border-radius:3px;margin-bottom:6px;background:var(--s2)}.read-list li b{color:var(--tx);min-width:130px}.read-list li .muted{flex:1}
+.downloads{list-style:none;margin:0;padding:0}
 .downloads li{padding:6px 0;border-bottom:1px solid var(--s3)}.downloads a{font-family:"JetBrains Mono",Consolas,monospace;font-size:12.5px}
 @media (max-width:1000px){.run-layout{grid-template-columns:1fr}.panel.wide{position:static}}
 .cycle-picker{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 20px}
