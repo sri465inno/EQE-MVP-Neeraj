@@ -294,9 +294,9 @@ async function viewHome() {
   ];
   const lifecycle = [
     ['Bring', 'Enterprise inputs', 'Jira, code, APIs, data models and business documents.'],
-    ['Design', 'Agents 1–5', 'Requirements, business rules, test cases, test data and automated tests.'],
+    ['Design', 'Agents 1–4', 'Requirements with their business rules, test cases, test data and automated tests.'],
     ['Govern', 'Human approval', 'People settle disagreements and approve every baseline change.'],
-    ['Validate', 'Agents 6–8', 'Real execution, evidence-backed defects and the cycle report.'],
+    ['Validate', 'Agents 5–7', 'Real execution, evidence-backed defects and the cycle report.'],
     ['Release', 'Quality evidence', 'A traceable, release-ready report for sign-off.'],
   ];
   $view.innerHTML = `<section class="hero home-hero"><div class="eyebrow">Quality Engineering at Scale</div><h1>Agentic Quality Engineering Platform</h1>
