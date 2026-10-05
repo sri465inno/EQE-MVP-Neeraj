@@ -32,12 +32,12 @@ const clone = (x) => JSON.parse(JSON.stringify(x));
 const now = () => new Date().toISOString();
 
 const PHASES = {
-  baseline: ['ingest', 'normalise', 'review-agent', 'review', 'requirements', 'rules', 'testcases', 'testdata', 'scripts', 'execution', 'defects', 'report'],
-  incremental: ['ingest', 'normalise', 'review-agent', 'review', 'delta', 'requirements', 'rules', 'testcases', 'testdata', 'scripts', 'merge-approval', 'execution', 'defects', 'report'],
+  baseline: ['ingest', 'normalise', 'review-agent', 'review', 'requirements', 'testcases', 'testdata', 'scripts', 'execution', 'defects', 'report'],
+  incremental: ['ingest', 'normalise', 'review-agent', 'review', 'delta', 'requirements', 'testcases', 'testdata', 'scripts', 'merge-approval', 'execution', 'defects', 'report'],
 };
 const PHASE_LABEL = {
   ingest: 'Ingest inputs', normalise: 'Normalise (3-way compare)', review: 'Human review of requirement set', delta: 'Delta classification',
-  requirements: 'Requirements repository agent', rules: 'Business rules agent', testcases: 'Test case agent', testdata: 'Test data agent', scripts: 'Automation script agent',
+  requirements: 'Requirements agent (requirements with their business rules)', testcases: 'Test case agent', testdata: 'Test data agent', scripts: 'Automation script agent',
   'merge-approval': 'Human approval to merge', execution: 'Execution agent (Playwright, real run)', defects: 'Defect agent', report: 'Cycle report agent',
 };
 
@@ -237,15 +237,16 @@ class Pipeline {
 
   runDesignPhases(cycle, requirements, previous) {
     const counters = cycle.counters;
-    this.skillContext(cycle, 'requirements');
-    setPhase(cycle, 'requirements', 'done', `${requirements.length} requirements`);
-    const skills = Object.fromEntries(['rules', 'testcases', 'testdata', 'scripts'].map((a) => [a, this.skillContext(cycle, a)]));
+    const skills = Object.fromEntries(['requirements', 'testcases', 'testdata', 'scripts'].map((a) => [a, this.skillContext(cycle, a)]));
     const out = design.designAgents(requirements, { cycle, counters, previous, skills, testingType: cycle.testingType });
+    design.attachBusinessRules(requirements, out.rules);
     const count = (arr, st) => arr.filter((x) => x.status === st).length;
     const split = (arr) => (previous ? ` (${count(arr, 'new') + count(arr, 'added')} new · ${count(arr, 're-designed')} re-designed · ${count(arr, 'carried over')} carried over)` : '');
     const sel = out.selection;
     const scope = sel.notInRun ? ` · ${sel.inRun} in this ${sel.name.toLowerCase()} run` : '';
-    setPhase(cycle, 'rules', 'done', `${out.rules.length} business rules${split(out.rules)}`);
+    const automatable = out.rules.filter((r) => r.executable).length;
+    const reqSplit = previous ? ` (${count(requirements, 'new')} new · ${count(requirements, 'enhanced')} enhanced · ${count(requirements, 'unchanged') + count(requirements, 'carried over')} unchanged)` : '';
+    setPhase(cycle, 'requirements', 'done', `${requirements.length} requirements${reqSplit}, each with its business rule: ${automatable} automatable · ${out.rules.length - automatable} manual`);
     setPhase(cycle, 'testcases', 'done', `${out.testCases.length} test cases${split(out.testCases)}${scope}`);
     const dict = this.dictionaryOf(cycle);
     const td = testDataAgent(out.testCases, dict.dictionary, { previous: previous?.testData, source: dict.source });
@@ -255,7 +256,7 @@ class Pipeline {
     setPhase(cycle, 'testdata', 'done', `${tds.total} data sets of ${tds.dictionary.attributeCount} attributes · ${tds.conforming} conform to the data dictionary · ${tds.negative} deliberately invalid (negative tests)${tds.nonConforming ? ` · ${tds.nonConforming} do not conform` : ''}${previous ? ` (${tds.byStatus.new || 0} new · ${tds.byStatus['re-generated'] || 0} re-generated · ${tds.byStatus['carried over'] || 0} carried over)` : ''}`);
     setPhase(cycle, 'scripts', 'done', `${out.scripts.length} Playwright specs${split(out.scripts)}`);
     cycle.artifacts = { ...cycle.artifacts, requirements, rules: out.rules, testCases: out.testCases, testData: td.dataSets, testDataSummary: tds, scripts: out.scripts, affected: out.affected, selection: sel };
-    for (const a of ['requirements', 'rules', 'testcases', 'testdata', 'scripts']) this.handover(cycle, a);
+    for (const a of ['requirements', 'testcases', 'testdata', 'scripts']) this.handover(cycle, a);
   }
 
   async runBaseline(cycleId) {
@@ -356,7 +357,7 @@ class Pipeline {
     a.testCases = a.testCases.filter((t) => !drop.has(t.requirementId));
     a.testData = a.testData.filter((d) => !drop.has(d.requirementId));
     a.scripts = a.scripts.filter((x) => !drop.has(x.requirementId));
-    for (const x of ['requirements', 'rules', 'testcases', 'testdata', 'scripts']) this.handover(cycle, x);
+    for (const x of ['requirements', 'testcases', 'testdata', 'scripts']) this.handover(cycle, x);
     this.proposeMerge(cycle, baseline);
   }
 

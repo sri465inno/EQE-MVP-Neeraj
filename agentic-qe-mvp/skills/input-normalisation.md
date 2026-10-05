@@ -2,10 +2,10 @@
 id: input-normalisation
 name: Input normalisation and provenance
 description: How several inputs become one requirement set, and what must be visible about where each statement came from.
-appliesTo: [normalise, rules]
+appliesTo: [normalise, requirements]
 delivers:
   normalise: [statements, gaps, conflicts]
-  rules: [businessRules]
+  requirements: [businessRules]
 ---
 
 Every statement kept after normalisation names every input that states it. A statement with no source is

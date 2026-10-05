@@ -9,7 +9,7 @@ CYC-3 · baseline cycle
 | End-to-end testing | 128 | 8 | 8 | 100% | 0 | 5.5% |
 
 ## 1. Summary
-- Baseline cycle for Guest hotel booking from search to confirmation (AQPI-1) on build demo/hotel-booking-platform, 2026-10-02 20:28 UTC.
+- Baseline cycle for Guest hotel booking from search to confirmation (AQPI-1) on build demo/hotel-booking-platform, 2026-10-05 16:27 UTC.
 - Type of testing: End-to-end testing. The guest's booking journey through the six services: search, hotel details, offers, cart, payment, reservation and the confirmation e-mail.
 - We took 3 inputs (Jira initiative AQPI-1, Jira epic AQPI-2, AQPI-6, AQPI-10, AQPI-14, AQPI-18, AQPI-23, AQPI-27, Codebase sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (452df41)) and produced 128 requirements, 8 test cases and 7 automated scripts.
 - We ran 8 automated tests for real: 8 passed, 0 failed (pass rate 100%). 
@@ -25,9 +25,9 @@ CYC-3 · baseline cycle
 ## 3. How we ran the cycle
 1. Read 152 statements from the inputs and lined them up into 128 requirement groups: 0 agreed by every source, 121 only in Jira, 7 only in the code, 0 in conflict.
 2. The review agent read the inputs first and suggested 7 addition(s), 184 missing piece(s) and 0 conflict(s) for the reviewer (8 high severity). It approved nothing.
-3. Priya Shah reviewed and approved the requirement set on 2026-10-02 20:28 UTC.
+3. Priya Shah reviewed and approved the requirement set on 2026-10-05 16:27 UTC.
 4. End-to-end testing steered the design: Designs one API journey per guest flow in the inputs and runs it against the six hotel services, keeping every request and response as evidence. The services have no browser screen, so no screenshots are taken. Result: 8 case(s) in this run (0 reused, 0 re-designed, 8 new).
-5. Derived 128 business rules (each quoting its source), designed 8 test cases (8 functional) and generated 7 Playwright scripts.
+5. The requirements agent wrote 128 requirements, each with its business rule, exact values and source quotes (65 automatable, 63 manual); the agents then designed 8 test cases (8 functional) and generated 7 Playwright scripts.
 6. Executed the automated suite with Playwright 1.63.0 (headless Chromium, JSON reporter) against Hotel booking platform release 1.0, six Spring Boot services built from branch demo/hotel-booking-platform; defects were raised only for tests that actually failed.
 
 ## 4. Artifacts produced
@@ -36,15 +36,14 @@ CYC-3 · baseline cycle
 | Inputs and provenance | 3 | what was taken from each source, and where from | [01-inputs/](01-inputs/) |
 | Review agent suggestions | 191 | 7 added · 184 missing · 0 conflicts (advisory) | [01-inputs/review-agent.json](01-inputs/review-agent.json) |
 | Normalised requirement set | 128 | 0 agreed · 121 Jira-only · 7 code-only · 0 conflicts | [01-inputs/normalisation.json](01-inputs/normalisation.json) |
-| Requirements repository | 128 | 128 new | [02-requirements/](02-requirements/) |
-| Business rules | 128 | 65 executable, each with a source quote | [03-business-rules/](03-business-rules/) |
-| Test cases (Excel, Zephyr Scale format) | 8 | 8 automated | [04-test-cases/](04-test-cases/) |
-| Test data (one data set per test case) | 8 | 8 conform to Hotel booking attributes v1.0 (21 attributes) · 0 negative tests | [05-test-data/](05-test-data/) |
-| Automation scripts (Playwright) | 7 | 7 new | [06-automation-scripts/](06-automation-scripts/) |
-| Execution results and evidence | 8 | 8 passed · 0 failed · 0 manual | [07-execution/](07-execution/) |
-| Traceability matrix | 8 | 2 of 31 Jira items covered · 2 verified · 0 failing | [09-report/traceability.json](09-report/traceability.json) |
-| Defects | 0 | none open | [08-defects/](08-defects/) |
-| Cycle report (HTML, Excel) | 1 | full detail behind this summary | [09-report/](09-report/) |
+| Requirement set (with business rules) | 128 | 128 new · 128 business rules with exact values and source quotes (65 automatable · 63 manual) | [02-requirements/](02-requirements/) |
+| Test cases (Excel, Zephyr Scale format) | 8 | 8 automated | [03-test-cases/](03-test-cases/) |
+| Test data (one data set per test case) | 8 | 8 conform to Hotel booking attributes v1.0 (21 attributes) · 0 negative tests | [04-test-data/](04-test-data/) |
+| Automation scripts (Playwright) | 7 | 7 new | [05-automation-scripts/](05-automation-scripts/) |
+| Execution results and evidence | 8 | 8 passed · 0 failed · 0 manual | [06-execution/](06-execution/) |
+| Traceability matrix | 8 | 2 of 31 Jira items covered · 2 verified · 0 failing | [08-report/traceability.json](08-report/traceability.json) |
+| Defects | 0 | none open | [07-defects/](07-defects/) |
+| Cycle report (HTML, Excel) | 1 | full detail behind this summary | [08-report/](08-report/) |
 
 ## 5. Risks and open items
 - End-to-end testing: The hotel services have no browser screen, so the journeys run through the service APIs; screen checks such as keyboard and focus order stay manual.
@@ -105,21 +104,21 @@ _6 of 15 booking-driving attributes (out of 21 booking attributes) are varied by
 ## 7. Sign-off
 | Gate | Decision | By | When | Detail |
 |---|---|---|---|---|
-| Requirement set review | approved | Priya Shah | 2026-10-02 20:28 UTC | 128 requirements approved; 0 excluded; 0 conflict(s) resolved |
+| Requirement set review | approved | Priya Shah | 2026-10-05 16:27 UTC | 128 requirements approved; 0 excluded; 0 conflict(s) resolved |
 
-_Agentic QE Platform (QE lead report, computed from the cycle) · generated 2026-10-02 20:29 UTC. Every figure comes from the persisted cycle; nothing is estimated._
+_Agentic QE Platform (QE lead report, computed from the cycle) · generated 2026-10-05 16:27 UTC. Every figure comes from the persisted cycle; nothing is estimated._
 
 ## Appendix A: test results (real Playwright run)
 | Key | Test | Result | ms |
 |---|---|---|---|
-| TC-F-001 | Guest books a pay-at-hotel room with breakfast from search to confirmation e-mail | passed | 1078 |
-| TC-F-002 | Guest books a prepaid non-refundable room in Paris and pays now | passed | 112 |
-| TC-F-003 | A sold-out hotel is shown as unavailable and cannot be put in a cart | passed | 70 |
+| TC-F-001 | Guest books a pay-at-hotel room with breakfast from search to confirmation e-mail | passed | 1149 |
+| TC-F-002 | Guest books a prepaid non-refundable room in Paris and pays now | passed | 111 |
+| TC-F-003 | A sold-out hotel is shown as unavailable and cannot be put in a cart | passed | 75 |
 | TC-F-004 | An unavailable extra is refused and the room still books | passed | 89 |
-| TC-F-005 | A double-clicked Book button creates one reservation and one payment | passed | 67 |
-| TC-F-006 | The confirmation number can be looked up again after booking | passed | 62 |
-| TC-F-007 | The guest sees the booking outcome and one confirmation e-mail is created | passed | 64 |
-| TC-F-008 | An unavailable extra is refused and the room still books | passed | 66 |
+| TC-F-005 | A double-clicked Book button creates one reservation and one payment | passed | 65 |
+| TC-F-006 | The confirmation number can be looked up again after booking | passed | 54 |
+| TC-F-007 | The guest sees the booking outcome and one confirmation e-mail is created | passed | 52 |
+| TC-F-008 | An unavailable extra is refused and the room still books | passed | 62 |
 
 ## Appendix B: requirements
 | ID | Requirement | Status |

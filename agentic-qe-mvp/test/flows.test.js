@@ -62,6 +62,14 @@ test('defects are raised only from real failures, with expected/actual/assertion
   assert.equal(d.actual, '80');
   assert.match(d.assertion, /toBe\(92\)/);
   assert.ok(c.artifacts.requirements.some((r) => r.id === d.requirementId));
+  for (const r of c.artifacts.requirements) {
+    const rule = c.artifacts.rules.find((x) => x.requirementId === r.id);
+    assert.equal(r.businessRule.id, rule.id, `${r.id} carries its business rule`);
+    assert.deepEqual(r.businessRule.parameters, rule.parameters);
+    assert.equal(r.businessRule.executable, rule.executable);
+  }
+  assert.ok(!c.phases.some((p) => p.name === 'rules'), 'no separate business rules phase');
+  assert.match(c.phases.find((p) => p.name === 'requirements').summary, /each with its business rule: \d+ automatable · \d+ manual/);
   assert.ok(c.artifacts.testCases.some((t) => t.key === d.testCaseKey));
   assert.deepEqual(d.jiraKeys, ['COM-10']);
   assert.throws(() => raiseDefects({ execution: { executed: false, results: [] }, testCases: [], requirements: [], cycle: c }), /real execution/);
@@ -176,13 +184,13 @@ test('cycle report contains provenance, counts by type and phase tag, execution,
   assert.match(html, /Agentic QE Platform - MVP/);
   assert.match(html, /recorded|fixture/i);
   assert.match(html, /toBe\(92\)/);
-  assert.match(html, /8 platform agents: .*4\. Test data agent/);
+  assert.match(html, /7 platform agents: .*3\. Test data agent/);
   assert.match(html, /1000<\/b> attributes/);
   assert.equal(r.coverage.attributes.attributeCount, 1000);
   assert.ok(r.coverage.attributes.exercised >= 8, 'most commission drivers are varied by some case');
   assert.equal(r.coverage.attributes.rows.find((x) => x.attribute === 'stay.nights').status, 'exercised - failing', 'the seeded 7-night defect shows on its driver');
-  assert.equal(r.platform.agents.length, 8);
-  assert.deepEqual(r.platform.agents.map((g) => g.status), [...Array(7).fill('done'), 'producing this report']);
+  assert.equal(r.platform.agents.length, 7);
+  assert.deepEqual(r.platform.agents.map((g) => g.status), [...Array(6).fill('done'), 'producing this report']);
   assert.deepEqual(r.platform.inputsImplemented.slice(0, 3), ['Jira initiative (implemented)', 'Jira epic (+ child stories) (implemented)', 'Codebase (GitHub branch) (implemented)']);
   const r2 = F.c2.report;
   assert.match(r2.delta.summary, /unchanged · \d+ enhanced · \d+ new/);
@@ -244,6 +252,7 @@ test('merge gate: rejecting one row keeps the baseline value for it and merges t
   const sla = d.artifacts.requirements.find((r) => r.status === 'enhanced');
   assert.match(sla.text, /USD 750/);
   const added = d.artifacts.requirements.filter((r) => r.status === 'new').map((r) => r.id);
+  assert.ok(d.artifacts.requirements.every((r) => r.businessRule && r.businessRule.status), 'incremental requirements carry their re-designed or carried-over rule');
   assert.throws(() => pipeline.decideMerge(d.id, { decision: 'approve', approver: 'Sam', rejectedRows: ['REQ-999'] }), /Not a row/);
   await pipeline.decideMerge(d.id, { decision: 'approve', approver: 'Sam Lee', rejectedRows: [sla.id] }).done;
   const c2 = store.getCycle(d.id);

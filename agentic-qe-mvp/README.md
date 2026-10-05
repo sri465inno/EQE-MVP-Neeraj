@@ -1,6 +1,6 @@
 # Agentic QE Platform - MVP
 
-A standalone MVP of the Agentic QE Platform. The platform chains **eight agents** (requirements, business rules, test design, test data, automation, execution, defects, reporting) and is built to take many input types (Jira, Confluence/BRDs, API contracts, existing test suites, defect history, designs...). This MVP implements exactly **three inputs** - a Jira initiative, a Jira epic and a codebase - and demonstrates two flows on one complex capability:
+A standalone MVP of the Agentic QE Platform. The platform chains **seven agents** (requirements, test design, test data, automation, execution, defects, reporting). The requirements agent normalises every input into one common requirement set, each requirement carrying its business rule, exact values and source quotes, so a BA, PO or QE reviews the functionality in one place and is built to take many input types (Jira, Confluence/BRDs, API contracts, existing test suites, defect history, designs...). This MVP implements exactly **three inputs** - a Jira initiative, a Jira epic and a codebase - and demonstrates two flows on one complex capability:
 
 **Demo capability: travel-advisor commission for Aurora Hotels**, calculated from a reservation that carries **1000 attributes** (20 groups x 50, 11 of them commission drivers: status, nights, revenue parts, channel, IATA, loyalty payment, rate plan, room count).
 
@@ -33,11 +33,11 @@ Node 20+.
 
 ## Layout
 
-- `src/platform.js` - the eight agents, platform input types vs the three MVP inputs, demo scenario
+- `src/platform.js` - the seven agents, platform input types vs the three MVP inputs, demo scenario
 - `src/connectors` - Jira (live Jira, GitHub-hosted export, or fixture) and codebase (git clone of a GitHub branch, or recorded snapshot)
 - `src/extract.js`, `src/text.js` - statement extraction and value parsing
 - `src/normalise.js`, `src/delta.js` - deterministic comparison engines
-- `src/agents` - requirements, business rules, test design and Playwright script generation
+- `src/agents` - requirements (with their business rules), test design and Playwright script generation
 - `src/execution.js`, `src/defects.js`, `src/coverage.js` - real execution and its consequences
 - `src/pipeline.js` - fixed-order cycle orchestration with review and merge gates
 - `src/report.js`, `src/compare.js`, `src/excel.js` - report, comparison, xlsx exports
@@ -48,7 +48,7 @@ Node 20+.
 
 `skills/*.md` are markdown skill files with YAML front matter (`id`, `name`, `description`, `appliesTo`, `delivers`), loaded at startup by `src/skills.js`. Adding a file adds a skill; no code change is needed.
 
-- A skill's body is handed only to the agents listed in `appliesTo` (`normalise`, `delta`, `requirements`, `rules`, `testcases`, `scripts`, `execution`, `defects`, `report`).
+- A skill's body is handed only to the agents listed in `appliesTo` (`normalise`, `delta`, `requirements`, `testcases`, `scripts`, `execution`, `defects`, `report`). Skills written for the former `rules` agent load as `requirements`.
 - After a phase runs, `src/handover.js` reads what it actually produced from the persisted cycle and checks it against every active skill's `delivers[phase]`. A missing or empty artefact makes the hand-over `incomplete`, and the phase card and cycle report show it. A comparison on a baseline cycle is reported as `n/a`, not as delivered.
 - Skills are selected per run on the Run page, and all are on by default. The selected skills (text and hash) are stored on the cycle.
 - The test case Excel column order comes from the report-targeted skill that declares one (`test-case-authoring.md`).

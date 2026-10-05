@@ -24,6 +24,40 @@ function write(f, body) { fs.mkdirSync(path.dirname(f), { recursive: true }); fs
 const cell = (v) => String(v ?? '').replace(/\|/g, '\\|').replace(/\n/g, ' ');
 const mdTable = (head, rows) => [`| ${head.join(' | ')} |`, `|${head.map(() => '---').join('|')}|`, ...rows.map((r) => `| ${r.map(cell).join(' | ')} |`)].join('\n');
 
+const SOURCE_LABEL = { agreed: 'Jira + code', 'jira-only': 'Jira only', 'code-only': 'Code only', conflict: 'Conflict settled by reviewer' };
+const sourceOf = (r) => {
+  if (r.bucket === 'conflict') return 'conflict';
+  const s = new Set((r.origins || []).map((o) => o.source));
+  return s.has('jira') && s.has('code') ? 'agreed' : s.has('jira') ? 'jira-only' : s.has('code') ? 'code-only' : r.bucket;
+};
+const ruleValues = (p) => Object.entries(p || {}).map(([k, v]) => `${k} = ${typeof v === 'object' ? JSON.stringify(v) : v}`).join(', ');
+
+/** The reviewer-facing requirement set: one section per Jira story, each requirement with its business rule and sources. */
+function requirementSetMarkdown(c) {
+  const rules = new Map(c.artifacts.rules.map((r) => [r.requirementId, r]));
+  const level = new Map();
+  for (const i of c.inputs.filter((x) => x.slot === 'epic')) {
+    for (const h of i.hierarchy || []) { level.set(h.key, 1); for (const ch of h.children || []) level.set(ch.key, 2); }
+  }
+  for (const x of c.baselineJiraItems || []) if (!level.has(x.key)) level.set(x.key, x.level === 'story' ? 2 : 1);
+  const byStory = new Map();
+  for (const r of c.artifacts.requirements) {
+    const keys = r.jiraKeys || [];
+    const k = [...keys].sort((x, y) => (level.get(y) || 0) - (level.get(x) || 0))[0] || '(not tied to a Jira story)';
+    byStory.set(k, [...(byStory.get(k) || []), r]);
+  }
+  const lines = [`# Requirement set: ${c.name} (${c.id})`, '',
+    `${c.artifacts.requirements.length} requirements, each with its business rule, exact values and where it is stated. Reviewed by ${(c.review && c.review.reviewer) || 'not reviewed yet'}.`, ''];
+  for (const [k, reqs] of [...byStory].sort(([a], [b]) => a.localeCompare(b, 'en', { numeric: true }))) {
+    lines.push(`## ${k}`, '', mdTable(['ID', 'Requirement', 'Business rule', 'Exact values', 'Test approach', 'Source', 'Where stated', 'Status'], reqs.map((r) => {
+      const b = rules.get(r.id);
+      return [r.id, r.text, b ? `${b.id} ${b.kind}` : '-', b && b.executable ? ruleValues(b.parameters) : '-', b ? (b.executable ? 'automatable' : 'manual') : '-',
+        SOURCE_LABEL[sourceOf(r)] || r.bucket, r.origins.map((o) => `${o.ref}${o.line ? `:${o.line}` : ''}`).join('; '), r.status];
+    })), '');
+  }
+  return lines.join('\n');
+}
+
 async function exportCycle(pipeline, store, c, dir) {
   const a = c.artifacts;
   const run = store.runDir(c.id);
@@ -32,26 +66,27 @@ async function exportCycle(pipeline, store, c, dir) {
   if (c.reviewAgent) json(path.join(dir, '01-inputs', 'review-agent.json'), c.reviewAgent);
   if (c.delta) json(path.join(dir, '01-inputs', 'delta-classification.json'), c.delta);
   json(path.join(dir, '02-requirements', 'requirements.json'), a.requirements);
-  json(path.join(dir, '03-business-rules', 'business-rules.json'), a.rules);
-  json(path.join(dir, '04-test-cases', 'test-cases.json'), a.testCases);
-  write(path.join(dir, '04-test-cases', `${c.id}-test-cases.xlsx`), await testCasesWorkbook(c));
+  json(path.join(dir, '02-requirements', 'business-rules.json'), a.rules);
+  write(path.join(dir, '02-requirements', 'requirement-set.md'), requirementSetMarkdown(c));
+  json(path.join(dir, '03-test-cases', 'test-cases.json'), a.testCases);
+  write(path.join(dir, '03-test-cases', `${c.id}-test-cases.xlsx`), await testCasesWorkbook(c));
   const { dictionary } = pipeline.dictionaryOf(c);
-  json(path.join(dir, '05-test-data', 'test-data-summary.json'), { ...a.testDataSummary, sets: a.testData });
-  for (const d of a.testData) json(path.join(dir, '05-test-data', `${d.testCaseKey}.json`), dataSetFile(d, dictionary));
-  for (const s of a.scripts) write(path.join(dir, '06-automation-scripts', s.file), s.code);
-  json(path.join(dir, '07-execution', 'results.json'), a.execution);
-  for (const f of ['playwright-report.json', 'playwright-output.txt']) fs.copyFileSync(path.join(run, f), path.join(dir, '07-execution', f));
-  fs.cpSync(path.join(run, 'evidence'), path.join(dir, '07-execution', 'evidence'), { recursive: true });
-  json(path.join(dir, '08-defects', 'defects.json'), a.defects);
-  write(path.join(dir, '09-report', `${c.id}-cycle-report.html`), renderReportHtml(c.report));
-  write(path.join(dir, '09-report', `${c.id}-cycle-report.xlsx`), await reportWorkbook(c.report, c));
-  json(path.join(dir, '09-report', `${c.id}-cycle-report.json`), c.report);
-  if (c.report.traceability) json(path.join(dir, '09-report', 'traceability.json'), c.report.traceability);
-  if (c.mergeProposal) json(path.join(dir, '10-merge-approval', 'merge-proposal.json'), { proposal: c.mergeProposal, approvals: c.approvals });
+  json(path.join(dir, '04-test-data', 'test-data-summary.json'), { ...a.testDataSummary, sets: a.testData });
+  for (const d of a.testData) json(path.join(dir, '04-test-data', `${d.testCaseKey}.json`), dataSetFile(d, dictionary));
+  for (const s of a.scripts) write(path.join(dir, '05-automation-scripts', s.file), s.code);
+  json(path.join(dir, '06-execution', 'results.json'), a.execution);
+  for (const f of ['playwright-report.json', 'playwright-output.txt']) fs.copyFileSync(path.join(run, f), path.join(dir, '06-execution', f));
+  fs.cpSync(path.join(run, 'evidence'), path.join(dir, '06-execution', 'evidence'), { recursive: true });
+  json(path.join(dir, '07-defects', 'defects.json'), a.defects);
+  write(path.join(dir, '08-report', `${c.id}-cycle-report.html`), renderReportHtml(c.report));
+  write(path.join(dir, '08-report', `${c.id}-cycle-report.xlsx`), await reportWorkbook(c.report, c));
+  json(path.join(dir, '08-report', `${c.id}-cycle-report.json`), c.report);
+  if (c.report.traceability) json(path.join(dir, '08-report', 'traceability.json'), c.report.traceability);
+  if (c.mergeProposal) json(path.join(dir, '09-merge-approval', 'merge-proposal.json'), { proposal: c.mergeProposal, approvals: c.approvals });
 
   const lead = buildLeadReport(c);
-  write(path.join(dir, '09-report', `${c.id}-qe-lead-report.html`), renderLeadPage(lead));
-  write(path.join(dir, '09-report', `${c.id}-qe-lead-report.md`), renderLeadMarkdown(lead));
+  write(path.join(dir, '08-report', `${c.id}-qe-lead-report.html`), renderLeadPage(lead));
+  write(path.join(dir, '08-report', `${c.id}-qe-lead-report.md`), renderLeadMarkdown(lead));
   const ex = a.execution.summary;
   const md = [renderLeadMarkdown(lead),
     '## Appendix A: test results (real Playwright run)', mdTable(['Key', 'Test', 'Result', 'ms'], a.execution.results.map((r) => [r.key, r.name, r.status, r.duration ?? ''])), '',
@@ -114,15 +149,14 @@ async function main() {
     'Each cycle folder\'s README is its QE lead report: inputs taken, how the cycle was run, artifacts produced, risks, a go/no-go recommendation and sign-off.', '',
     '## Folder layout (per cycle)',
     '- `01-inputs/` inputs with provenance, normalisation (agreed / single-source / conflicts) and, for Flow 2, the delta classification',
-    '- `02-requirements/` reviewed requirements repository',
-    '- `03-business-rules/` business rules with source quotes',
-    '- `04-test-cases/` test cases (JSON and Zephyr Scale Excel export)',
-    '- `05-test-data/` one data set per test case, generated by the test data agent from the data dictionary and checked against it',
-    '- `06-automation-scripts/` generated Playwright specs (each loads its case\'s data set)',
-    '- `07-execution/` real Playwright JSON report, console output, mapped results and per-test evidence',
-    '- `08-defects/` defects raised from real failures only',
-    '- `09-report/` QE lead report (HTML, Markdown) and full cycle report (HTML, Excel, JSON)',
-    '- `10-merge-approval/` (Flow 2) merge proposal and approvals', '',
+    '- `02-requirements/` the common requirement set from the requirements agent: `requirement-set.md` story by story for BA, PO and QE review, `requirements.json` (each requirement with its business rule) and `business-rules.json` (exact values and source quotes)',
+    '- `03-test-cases/` test cases (JSON and Zephyr Scale Excel export)',
+    '- `04-test-data/` one data set per test case, generated by the test data agent from the data dictionary and checked against it',
+    '- `05-automation-scripts/` generated Playwright specs (each loads its case\'s data set)',
+    '- `06-execution/` real Playwright JSON report, console output, mapped results and per-test evidence',
+    '- `07-defects/` defects raised from real failures only',
+    '- `08-report/` QE lead report (HTML, Markdown) and full cycle report (HTML, Excel, JSON)',
+    '- `09-merge-approval/` (Flow 2) merge proposal and approvals', '',
     `\`comparison/\` holds the hotel release 1.0 (${c1.id}) vs release 2.0 (${c2.id}) comparison (HTML, Excel, JSON).`,
     'Open the `.html` files in a browser (download them or clone the repo; GitHub shows HTML as source).', '',
   ].join('\n'));

@@ -28,6 +28,12 @@ const provKind = (p) => (p.kind === 'github' && p.system === 'jira' ? 'jira-expo
 
 async function buildCycleReport(cycle, { env = process.env, fetchImpl, guidance = '' } = {}) {
   const a = cycle.artifacts;
+  const sourceOf = (r) => {
+    if (r.bucket === 'conflict') return 'conflict';
+    const s = new Set((r.origins || []).map((o) => o.source));
+    return s.has('jira') && s.has('code') ? 'agreed' : s.has('jira') ? 'jira-only' : s.has('code') ? 'code-only' : r.bucket;
+  };
+  const ruleByReq = new Map((a.rules || []).map((b) => [b.requirementId, b]));
   const exec = a.execution || null;
   const defects = a.defects || [];
   const dom = domainOf(cycle);
@@ -85,9 +91,15 @@ async function buildCycleReport(cycle, { env = process.env, fetchImpl, guidance 
       byType: countBy(a.requirements, (r) => r.type),
       byStatus: countBy(a.requirements, (r) => r.status),
       bySource: countBy(a.requirements, (r) => r.bucket),
-      list: a.requirements.map((r) => ({ id: r.id, text: r.text, type: r.type, status: r.status, version: r.version, previous: r.previous ? r.previous.text : null, jiraKeys: r.jiraKeys })),
+      list: a.requirements.map((r) => {
+        const b = ruleByReq.get(r.id);
+        return { id: r.id, text: r.text, type: r.type, status: r.status, version: r.version, previous: r.previous ? r.previous.text : null, jiraKeys: r.jiraKeys,
+          jira: (r.jiraKeys || []).join(', '), source: sourceOf(r), ruleId: b ? b.id : null, rule: b ? b.title : null,
+          ruleValues: b ? Object.entries(b.parameters).map(([k, v]) => `${k}=${typeof v === 'object' ? JSON.stringify(v) : v}`).join('; ') : null,
+          approach: b ? (b.executable ? 'Automatable' : 'Manual') : null };
+      }),
     },
-    rules: { total: a.rules.length, executable: a.rules.filter((r) => r.executable).length },
+    rules: { total: a.rules.length, executable: a.rules.filter((r) => r.executable).length, manual: a.rules.filter((r) => !r.executable).length },
     testCases: {
       total: a.testCases.length,
       byType: countBy(a.testCases, (t) => t.type),

@@ -128,7 +128,7 @@ function skillsDropdown() {
 function skillUploadBox() {
   const uploaded = META.skills.filter((s) => s.source === 'enterprise upload');
   return `<details class="card" id="skill-upload-box"><summary><b>Upload an enterprise skill</b> <span class="small muted">${uploaded.length ? `${uploaded.length} uploaded: ${esc(uploaded.map((s) => s.id).join(', '))}` : 'your organisation\'s QE standards as a Markdown skill'}</span></summary>
-<p class="small">A skill is a Markdown file with YAML front matter: <code>id</code>, <code>name</code>, <code>description</code>, <code>appliesTo</code> (agent ids: ${esc(['requirements', 'rules', 'testcases', 'testdata', 'scripts', 'execution', 'defects', 'report'].join(', '))}), optional <code>testingType</code> and <code>delivers</code>. The body is the standard the named agents must follow.</p>
+<p class="small">A skill is a Markdown file with YAML front matter: <code>id</code>, <code>name</code>, <code>description</code>, <code>appliesTo</code> (agent ids: ${esc(['requirements', 'testcases', 'testdata', 'scripts', 'execution', 'defects', 'report'].join(', '))}), optional <code>testingType</code> and <code>delivers</code>. The body is the standard the named agents must follow.</p>
 <div class="row"><input type="file" id="skill-file" accept=".md,text/markdown"><button class="btn secondary" id="skill-upload">Upload skill</button></div>
 ${uploaded.length ? `<p class="small">${uploaded.map((s) => `${pill(s.id, 'designed')} ${esc(s.name)} <button class="btn secondary small skill-remove" data-id="${esc(s.id)}">Remove</button>`).join('<br>')}</p>` : ''}
 <div id="skill-msg" class="small"></div></details>`;
@@ -215,7 +215,7 @@ document.addEventListener('click', (ev) => {
 /* ---------------- Home ---------------- */
 let HOME_DETAIL = {};
 const PHASE_ICON = { ingest: '⇢', normalise: '≡', 'review-agent': '⚑', review: '✎', delta: 'Δ', 'merge-approval': '⊕' };
-const PHASE_CAT = { ingest: 'intake', normalise: 'intake', 'review-agent': 'intake', review: 'gate', delta: 'intake', 'merge-approval': 'gate', requirements: 'design', rules: 'design', testcases: 'design', testdata: 'design', scripts: 'design', execution: 'run', defects: 'run', report: 'run' };
+const PHASE_CAT = { ingest: 'intake', normalise: 'intake', 'review-agent': 'intake', review: 'gate', delta: 'intake', 'merge-approval': 'gate', requirements: 'design', testcases: 'design', testdata: 'design', scripts: 'design', execution: 'run', defects: 'run', report: 'run' };
 const agentNo = (id) => (META.platform.agents.find((g) => g.id === id) || {}).no;
 
 const EXEC_INPUT = {
@@ -231,8 +231,7 @@ const EXEC_INPUT = {
   regulatory: ['Policies and regulations', 'Rules the business must comply with.', 'Makes sure mandatory rules are tested and reported.'],
 };
 const EXEC_AGENT = {
-  requirements: ['Combines every input into one agreed list of requirements.', 'Everyone tests against the same approved scope.'],
-  rules: ['Pulls out the business rules and the exact values behind them.', 'Every rule can be traced back to where it was stated.'],
+  requirements: ['Combines every input into one common requirement set, story by story, each requirement with its business rule, exact values and sources.', 'A BA, PO or QE can read and approve the functionality in one place before tests are designed at scale.'],
   testcases: ['Writes the test cases, ready for the test management tool.', 'Every requirement gets a consistent, reviewable test case.'],
   testdata: ['Builds complete, realistic test data for every test case from the data specs.', 'Every test runs on valid data that can be traced to the spec, never on copied production records.'],
   scripts: ['Turns the test cases into automated tests.', 'The same tests can be re-run on every release.'],
@@ -281,7 +280,7 @@ async function viewHome() {
     const [does, value] = EXEC_AGENT[g.id] || [g.produces, ''];
     const from = P.inputTypes.filter((t) => (t.usedBy || []).includes(g.id)).map(inName);
     HOME_DETAIL[`agent-${g.id}`] = `<h2>${esc(g.name)}</h2><ul class="brief"><li><b>What it does:</b> ${esc(does)}</li><li><b>Why it matters:</b> ${esc(value)}</li><li><b>Works from:</b> ${esc([...from, ...(g.no > 1 ? ['the output of the agent before it'] : [])].join(', '))}</li></ul>`;
-    return tile({ detail: `agent-${g.id}`, art: g.no <= 5 ? 'design' : 'run', tag: `Agent ${g.no}`, big: g.no, title: g.name, lines: [esc(does)] });
+    return tile({ detail: `agent-${g.id}`, art: g.no <= 4 ? 'design' : 'run', tag: `Agent ${g.no}`, big: g.no, title: g.name, lines: [esc(does)] });
   });
   const flowTiles = Object.entries(FLOW_BRIEF).map(([id, [name, intro, points, href, cta]], i) => {
     HOME_DETAIL[`flow-${id}`] = `<h2>${esc(name)}</h2><p>${esc(intro)}</p><ul class="brief">${points.map((x) => `<li>${esc(x)}</li>`).join('')}</ul><a class="btn" href="${href}">${esc(cta)}</a>`;
@@ -295,9 +294,9 @@ async function viewHome() {
   ];
   const lifecycle = [
     ['Bring', 'Enterprise inputs', 'Jira, code, APIs, data models and business documents.'],
-    ['Design', 'Agents 1–5', 'Requirements, business rules, test cases, test data and automated tests.'],
+    ['Design', 'Agents 1–4', 'Requirements with their business rules, test cases, test data and automated tests.'],
     ['Govern', 'Human approval', 'People settle disagreements and approve every baseline change.'],
-    ['Validate', 'Agents 6–8', 'Real execution, evidence-backed defects and the cycle report.'],
+    ['Validate', 'Agents 5–7', 'Real execution, evidence-backed defects and the cycle report.'],
     ['Release', 'Quality evidence', 'A traceable, release-ready report for sign-off.'],
   ];
   $view.innerHTML = `<section class="hero home-hero"><div class="eyebrow">Quality Engineering at Scale</div><h1>Agentic Quality Engineering Platform</h1>
@@ -534,13 +533,13 @@ ${pendingBanner(cycles)}${cycles.length ? '' : '<p class="muted">No cycles yet.<
 const statusPill = (s) => pill(s, { completed: 'passed', failed: 'failed', rejected: 'failed', 'awaiting-review': 'designed', 'awaiting-merge': 'designed', running: 'enhanced', interrupted: 'failed' }[s] || 'pending');
 
 function phaseArtifactTab(name, c) {
-  return { ingest: 'inputs', normalise: 'normalise', 'review-agent': 'review-agent', review: c.status === 'awaiting-review' ? 'review' : 'normalise', delta: 'delta', requirements: 'requirements', rules: 'rules', testcases: 'testcases', testdata: 'testdata', scripts: 'scripts', 'merge-approval': 'merge', execution: 'execution', defects: 'defects', report: 'report' }[name];
+  return { ingest: 'inputs', normalise: 'normalise', 'review-agent': 'review-agent', review: c.status === 'awaiting-review' ? 'review' : 'normalise', delta: 'delta', requirements: 'requirements', rules: 'requirements', testcases: 'testcases', testdata: 'testdata', scripts: 'scripts', 'merge-approval': 'merge', execution: 'execution', defects: 'defects', report: 'report' }[name];
 }
 
 const PHASE_GROUPS = [
   ['intake', 'Intake and review', 'deterministic code, the review agent and the human gate', ['ingest', 'normalise', 'review-agent', 'review', 'delta']],
-  ['design', 'Design agents 1-5', 'requirements, rules, test cases, test data, scripts', ['requirements', 'rules', 'testcases', 'testdata', 'scripts', 'merge-approval']],
-  ['run', 'Run and results · agents 6-8', 'real execution, defects from real failures, report', ['execution', 'defects', 'report']],
+  ['design', 'Design agents 1-4', 'requirements with their business rules, test cases, test data, scripts', ['requirements', 'testcases', 'testdata', 'scripts', 'merge-approval']],
+  ['run', 'Run and results · agents 5-7', 'real execution, defects from real failures, report', ['execution', 'defects', 'report']],
 ];
 const PHASE_PROGRESS = { done: 100, running: 50, waiting: 50, failed: 100, pending: 0, skipped: 0 };
 
@@ -691,8 +690,8 @@ ${normaliseView(c, true)}
 <button class="btn good" id="approve-review">Approve requirement set</button></div><div id="review-msg"></div></div>`;
     }
     case 'delta': return c.delta ? deltaView(c.delta) : deltaView(c.deltaPreview, { title: 'Delta preview (not yet reviewed)' });
-    case 'requirements': return a.requirements ? requirementsView(c) : notYet('Requirements');
-    case 'rules': return a.rules ? rulesView(c) : notYet('Business rules');
+    case 'requirements':
+    case 'rules': return a.requirements ? requirementsView(c) : notYet('Requirements');
     case 'testcases': return a.testCases ? testCasesView(c) : notYet('Test cases');
     case 'testdata': return a.testData ? testDataView(c) : notYet('Test data');
     case 'scripts': return a.scripts ? scriptsView(c) : notYet('Scripts');
@@ -749,16 +748,85 @@ function bindCycleTab(c, tab) {
   };
 }
 
-function requirementsView(c) {
-  const reqs = c.artifacts.requirements;
-  return `<h2>Requirements repository (${reqs.length})</h2>${table(['ID', 'Requirement', 'Type', 'Status', 'Superseded value', 'Sources and quotes', 'Jira'], reqs.map((r) => [esc(r.id), esc(r.text), esc(r.type), artPill(r.status || 'new'),
-    r.previous ? `<span class="old">${esc(r.previous.text)}</span> <span class="small muted">v${r.previous.version}</span>` : '', originCell(r.origins), esc((r.jiraKeys || []).join(', '))]), (i) => `row-${reqs[i].status}`)}`;
+const SOURCE_LABEL = { agreed: 'Jira + code', 'jira-only': 'Jira only', 'code-only': 'Code only', conflict: 'Conflict settled by reviewer' };
+const sourceOf = (r) => {
+  if (r.bucket === 'conflict') return 'conflict';
+  const s = new Set((r.origins || []).map((o) => o.source));
+  return s.has('jira') && s.has('code') ? 'agreed' : s.has('jira') ? 'jira-only' : s.has('code') ? 'code-only' : r.bucket;
+};
+const ruleValues = (p) => Object.entries(p || {}).map(([k, v]) => `${k} = ${typeof v === 'object' ? JSON.stringify(v) : v}`).join(', ');
+
+/** Epic -> story -> requirement grouping, from the Jira hierarchy the cycle read (plus the baseline's for carried requirements). */
+function requirementGroups(c, reqs) {
+  const epics = new Map();
+  const storyEpic = new Map();
+  const summary = new Map();
+  for (const i of c.inputs.filter((x) => x.slot === 'epic')) {
+    for (const h of i.hierarchy || []) {
+      epics.set(h.key, h.summary);
+      for (const s of h.children || []) { storyEpic.set(s.key, h.key); summary.set(s.key, s.summary); }
+    }
+  }
+  for (const x of c.baselineJiraItems || []) {
+    if (x.level === 'epic' && !epics.has(x.key)) epics.set(x.key, x.summary);
+    if (x.level === 'story' && !storyEpic.has(x.key)) { storyEpic.set(x.key, x.parent); summary.set(x.key, x.summary); }
+  }
+  const initiatives = new Map();
+  for (const i of c.inputs.filter((x) => x.slot === 'initiative')) for (const h of i.hierarchy || []) initiatives.set(h.key, h.summary);
+  const groups = new Map([...epics.keys()].map((k) => [k, null]));
+  const add = (epic, story, r) => {
+    if (!groups.get(epic)) groups.set(epic, { key: epic, epic: epics.has(epic), summary: epics.get(epic) || null, stories: new Map() });
+    const g = groups.get(epic);
+    if (!g.stories.has(story)) g.stories.set(story, { key: story, summary: summary.get(story) || null, reqs: [] });
+    g.stories.get(story).reqs.push(r);
+  };
+  for (const r of reqs) {
+    const keys = r.jiraKeys || [];
+    const story = keys.find((k) => storyEpic.has(k));
+    if (story) add(storyEpic.get(story), story, r);
+    else if (keys.some((k) => epics.has(k))) add(keys.find((k) => epics.has(k)), '(epic level)', r);
+    else if (keys.some((k) => initiatives.has(k))) { const k = keys.find((x) => initiatives.has(x)); summary.set(k, initiatives.get(k)); add('(initiative level)', k, r); }
+    else if (keys.length) add('(other Jira items)', keys[0], r);
+    else add('(not tied to a Jira story)', '(code only)', r);
+  }
+  const ordered = [...groups.values()].filter(Boolean).sort((x, y) => Number(y.epic) - Number(x.epic));
+  return ordered.map((g) => ({ ...g, stories: [...g.stories.values()] }));
 }
 
-function rulesView(c) {
-  const rules = c.artifacts.rules;
-  return `<h2>Business rules (${rules.length})</h2>${table(['ID', 'Req', 'Rule', 'Parameters', 'Status', 'Source quotes'], rules.map((r) => [esc(r.id), esc(r.requirementId), `<b>${esc(r.title)}</b><br>${esc(r.statement)}${r.previous ? `<br><span class="old">${esc(r.previous.statement)}</span>` : ''}`,
-    `<code>${esc(JSON.stringify(r.parameters))}</code>${r.executable ? '' : '<br><span class="muted small">no executable check</span>'}`, artPill(r.status), r.quotes.map((q) => `<div class="quote">"${esc(q.text)}"</div><div class="small"><a href="${esc(q.url || '#')}" target="_blank" rel="noopener">${esc(q.ref)}${q.line ? `:${q.line}` : ''}</a> (${esc(q.source)})</div>`).join('')]), (i) => `row-${rules[i].status}`)}`;
+function requirementsView(c) {
+  const a = c.artifacts;
+  const reqs = a.requirements;
+  const ruleByReq = new Map((a.rules || []).map((b) => [b.requirementId, b]));
+  const ruleOf = (r) => ruleByReq.get(r.id) || r.businessRule || null;
+  const automatable = reqs.filter((r) => (ruleOf(r) || {}).executable).length;
+  const cnt = (f) => reqs.reduce((m, r) => { const k = f(r); m[k] = (m[k] || 0) + 1; return m; }, {});
+  const bySource = cnt(sourceOf);
+  const byStatus = cnt((r) => r.status || 'new');
+  const changed = (r) => ['new', 'enhanced'].includes(r.status);
+  const groups = requirementGroups(c, reqs);
+  const link = (k) => (/^[A-Z]+-\d+$/.test(k) ? `<a href="${esc(jiraBrowse(c, k))}" target="_blank" rel="noopener">${esc(k)}</a>` : esc(k));
+  const row = (r) => {
+    const b = ruleOf(r);
+    return [esc(r.id),
+      `<b>${esc(r.title || '')}</b><br>${esc(r.text)}${r.previous ? `<br><span class="old">${esc(r.previous.text)}</span> <span class="small muted">v${r.previous.version}</span>` : ''}`,
+      b ? `<b>${esc(b.id)}</b> <span class="small muted">${esc(b.kind)}</span><br>${b.executable ? `<code>${esc(ruleValues(b.parameters))}</code>` : '<span class="muted small">no testable value</span>'}${b.previous ? `<br><span class="old"><code>${esc(ruleValues(b.previous.parameters))}</code></span>` : ''}` : '<span class="muted">-</span>',
+      b ? pill(b.executable ? 'automatable' : 'manual', b.executable ? 'passed' : 'pending') : '',
+      `${esc(r.type)}<br><span class="small muted">${esc(SOURCE_LABEL[sourceOf(r)] || sourceOf(r) || '')}</span>`,
+      originCell(r.origins), artPill(r.status || 'new')];
+  };
+  const head = ['ID', 'Requirement', 'Business rule and exact values', 'Test approach', 'Type and source', 'Where it is stated', 'Status'];
+  const epicBlock = (g, i) => {
+    const n = g.stories.reduce((s, x) => s + x.reqs.length, 0);
+    const delta = c.type === 'incremental' ? g.stories.flatMap((x) => x.reqs).filter(changed).length : 0;
+    const open = c.type === 'incremental' ? delta > 0 : g.epic && i === 0;
+    return `<details class="guidance req-epic" ${open ? 'open' : ''}><summary>${link(g.key)}${g.summary ? ` ${esc(g.summary)}` : ''} <span class="muted small">· ${g.stories.length} ${g.stories.length === 1 ? 'story' : 'stories'} · ${n} requirement${n === 1 ? '' : 's'}${delta ? ` · ${delta} new or enhanced` : ''}</span></summary>
+${g.stories.map((s) => `<h3>${link(s.key)}${s.summary ? ` ${esc(s.summary)}` : ''} <span class="muted small">(${s.reqs.length})</span></h3>${table(head, s.reqs.map(row), (k) => `row-${s.reqs[k].status}`)}`).join('')}</details>`;
+  };
+  return `<div class="banner info">The requirements agent turned the approved inputs into one common requirement set. Each requirement carries its business rule with the exact values to test, where it is stated (Jira and code, with links and line numbers) and whether it can be automated. A BA, PO or QE can read the functionality here, story by story, before any test case is designed.</div>
+<div class="kpis"><div class="kpi">Requirements<b>${reqs.length}</b></div><div class="kpi">Jira stories<b>${groups.reduce((s, g) => s + g.stories.filter((x) => /^[A-Z]+-\d+$/.test(x.key)).length, 0)}</b></div><div class="kpi">Automatable rules<b>${automatable}</b></div><div class="kpi">Manual<b>${reqs.length - automatable}</b></div>${Object.entries(bySource).map(([k, v]) => `<div class="kpi">${esc(SOURCE_LABEL[k] || k)}<b>${v}</b></div>`).join('')}</div>
+${c.type === 'incremental' ? `<p class="small">Against the baseline: ${Object.entries(byStatus).map(([k, v]) => `${esc(k)}: <b>${v}</b>`).join(' · ')}. Enhanced requirements show the superseded text and values struck through.</p>` : ''}
+${c.report ? `<div class="row"><a class="btn secondary" href="/api/cycles/${esc(c.id)}/report.xlsx">Download Excel (Requirements sheet)</a></div>` : ''}
+${groups.map(epicBlock).join('')}`;
 }
 
 function testCasesView(c) {

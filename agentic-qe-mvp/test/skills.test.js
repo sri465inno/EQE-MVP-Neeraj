@@ -29,7 +29,7 @@ let D;
 test.before(async () => {
   const skillsDir = skillsDirWith({
     'probe.md': '---\nid: probe\nname: Probe\ndescription: Only the automation script agent may see this.\nappliesTo: [scripts]\ndelivers:\n  scripts: [specs]\n---\nPROBE-SENTINEL-7f3a\n',
-    'risk-register.md': '---\nid: risk-register\nname: Risk register\ndescription: Business rules agent owes a risk register.\nappliesTo: [rules]\ndelivers:\n  rules: [businessRules, riskRegister]\n---\nList the risks.\n',
+    'risk-register.md': '---\nid: risk-register\nname: Risk register\ndescription: Requirements agent owes a risk register.\nappliesTo: [requirements]\ndelivers:\n  requirements: [businessRules, riskRegister]\n---\nList the risks.\n',
   });
   const ctx = createApp({ dataDir: tmpDir('skills-run'), env: {}, skillsDir });
   const all = await baselineCycle(ctx.pipeline, ctx.store);
@@ -48,7 +48,7 @@ test('skills/ is loaded at startup: every shipped skill parses with id, name, de
     for (const [agent, keys] of Object.entries(s.delivers)) assert.ok(s.appliesTo.includes(agent) && keys.length, `${s.id} delivers for ${agent}`);
   }
   const inc = lib.skills.find((s) => s.id === 'incremental-merge');
-  assert.deepEqual(inc.delivers, { delta: ['delta'], rules: ['businessRules'], testcases: ['functional', 'nonFunctional'], scripts: ['specs'] });
+  assert.deepEqual(inc.delivers, { delta: ['delta'], requirements: ['businessRules'], testcases: ['functional', 'nonFunctional'], scripts: ['specs'] });
   assert.equal(D.shipped.skills.skills.length, SHIPPED.length, 'createApp loads skills/');
   assert.deepEqual(D.ctx.skills.skills.map((s) => s.id).sort(), [...SHIPPED, 'probe', 'risk-register'].sort(), 'a new file adds a skill without a code change');
   assert.throws(() => parseSkill('no front matter'), /front matter/);
@@ -74,12 +74,12 @@ test('a skill body reaches only the agents named in appliesTo', () => {
 });
 
 test('a phase that drops a declared artefact is reported as an incomplete hand-over', () => {
-  const rules = D.all.phases.find((p) => p.name === 'rules');
-  assert.equal(rules.handover.status, 'incomplete');
-  assert.deepEqual(rules.handover.missing, ['riskRegister']);
-  assert.equal(rules.handover.items.find((i) => i.key === 'businessRules').status, 'delivered');
+  const reqs = D.all.phases.find((p) => p.name === 'requirements');
+  assert.equal(reqs.handover.status, 'incomplete');
+  assert.deepEqual(reqs.handover.missing, ['riskRegister']);
+  assert.equal(reqs.handover.items.find((i) => i.key === 'businessRules').status, 'delivered');
   assert.equal(D.all.report.handoverStatus, 'incomplete');
-  assert.deepEqual(D.all.report.handovers.find((h) => h.phase === 'rules').missing, ['riskRegister']);
+  assert.deepEqual(D.all.report.handovers.find((h) => h.phase === 'requirements').missing, ['riskRegister']);
   assert.match(renderReportHtml(D.all.report), /missing: riskRegister/);
 
   const lib = loadSkills(SKILLS_DIR).skills.filter((s) => DEFAULT_ON.includes(s.id));
@@ -135,4 +135,11 @@ test('Excel export columns match the order written in skills/test-case-authoring
   assert.deepEqual(headers.slice(0, declared.length), declared);
   assert.deepEqual(D.def.artifacts.exports.testCases.columns.slice(0, declared.length), declared);
   assert.ok(D.def.artifacts.testCases.every((t) => /^TC-[FN]-\d{3}$/.test(t.key) && (t.type === 'functional') === t.key.startsWith('TC-F')));
+});
+
+test('a skill written for the former business rules agent is handed to the requirements agent', () => {
+  const k = parseSkill('---\nid: legacy-rules\nname: Legacy rules skill\ndescription: Written before rules merged into requirements.\nappliesTo: [rules, requirements]\ndelivers:\n  rules: [riskRegister]\n  requirements: [requirements]\n---\nBody.', 'legacy.md');
+  assert.deepEqual(k.appliesTo, ['requirements']);
+  assert.deepEqual(k.delivers, { requirements: ['riskRegister', 'requirements'] });
+  assert.ok(!('rules' in AGENTS));
 });

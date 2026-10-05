@@ -22,7 +22,7 @@ test('testing types are exposed in /api/meta, validated and persisted on the cyc
     assert.deepEqual(meta.testingTypes.map((t) => t.id), ['functional', 'e2e', 'regression', 'smoke', 'performance']);
     assert.ok(meta.testingTypes.every((t) => t.name && t.focus && t.baseline && t.incremental));
     assert.equal(meta.platform.reviewAgent.id, 'review-agent');
-    assert.equal(meta.platform.agents.length, 8, 'the review agent is not one of the eight');
+    assert.equal(meta.platform.agents.length, 7, 'the review agent is not one of the seven');
     const bad = await post({ type: 'baseline', testingType: 'load-soak', inputs: BASELINE_INPUTS });
     assert.equal(bad.status, 400);
     assert.match(bad.body.error, /testingType must be one of: functional, e2e, regression, smoke, performance/);

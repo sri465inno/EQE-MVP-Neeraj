@@ -62,10 +62,11 @@ test('the MVP accepts exactly three input types for a baseline; the platform lis
   assert.deepEqual(loaded[1].children, ['COM-11']);
 });
 
-test('the eight platform agents are exactly the design phases the pipeline runs, in order', () => {
-  assert.equal(PLATFORM_AGENTS.length, 8);
+test('the seven platform agents are exactly the design phases the pipeline runs, in order', () => {
+  assert.equal(PLATFORM_AGENTS.length, 7);
   for (const type of ['baseline', 'incremental']) {
     assert.deepEqual(PHASES[type].filter((p) => PLATFORM_AGENTS.some((g) => g.id === p)), PLATFORM_AGENTS.map((g) => g.id), type);
+    assert.ok(!PHASES[type].includes('rules'), `${type}: business rules belong to the requirements agent`);
   }
 });
 
