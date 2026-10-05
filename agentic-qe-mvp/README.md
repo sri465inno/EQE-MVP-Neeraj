@@ -26,7 +26,7 @@ In the browser, click **Reset the demo** first, then run Flow 1 and Flow 2 from 
 To refresh the recorded copies after changing the demo branches:
 
 ```bash
-npm run record-github -- demo/hotel-booking-platform demo/hotel-booking-platform-v2
+npm run record-github    # fixtures/github/* from every demo branch (hotel 1.0/2.0 and the retired commission engine used by the tests)
 npm run demo:inputs      # demo-inputs/ (downloadable Flow 1 / Flow 2 inputs)
 npm run demo:artifacts   # demo-artifacts/ (sample reports, traceability, Excel)
 ```
