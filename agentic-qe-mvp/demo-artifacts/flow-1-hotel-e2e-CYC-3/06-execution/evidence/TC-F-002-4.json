@@ -1,12 +1,12 @@
 {
   "request": {
     "method": "POST",
-    "url": "http://127.0.0.1:37653/api/reservations",
+    "url": "http://127.0.0.1:40729/api/reservations",
     "headers": {
       "Idempotency-Key": "aqe-booking-79b45dbb-2"
     },
     "data": {
-      "cartId": "C-8119e362",
+      "cartId": "C-61bb53f6",
       "guest": {
         "firstName": "Jane",
         "lastName": "Doe",
@@ -22,20 +22,20 @@
   },
   "response": {
     "status": 201,
-    "correlationId": "d6abe4d2-05b6-451a-aaa5-491cefe0de76",
+    "correlationId": "98cf72dc-af7c-4120-9ecd-12d3aa3d660b",
     "body": {
-      "reservationId": "R-2d066b97",
+      "reservationId": "R-a97ccb20",
       "status": "CONFIRMED",
-      "confirmationNumber": "HB6C4K8TXE",
+      "confirmationNumber": "HBJRC3UXDX",
       "headline": "Your booking is confirmed",
-      "message": "Your confirmation number is HB6C4K8TXE. We've sent the details to your e-mail.",
+      "message": "Your confirmation number is HBJRC3UXDX. We've sent the details to your e-mail.",
       "doNotResubmit": true,
       "nextSteps": [
         "Save your confirmation number",
         "Check your e-mail for the confirmation",
         "Contact the hotel for special requests"
       ],
-      "statusUrl": "/api/reservations/R-2d066b97",
+      "statusUrl": "/api/reservations/R-a97ccb20",
       "hotelName": "Hotel Lumiere",
       "roomName": "Standard King",
       "ratePlanName": "Advance saver – pay now",
@@ -80,7 +80,7 @@
       "cancellationTerms": "Non-refundable. Changes are not permitted.",
       "guestFirstName": "Jane",
       "notificationStatus": "DELIVERED",
-      "updatedAt": "2026-10-05T16:27:12.472308573Z"
+      "updatedAt": "2026-10-05T16:57:47.635167682Z"
     }
   }
 }

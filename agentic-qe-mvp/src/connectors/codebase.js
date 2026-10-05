@@ -1,6 +1,6 @@
 'use strict';
 // Codebase connector (Node demo branches and the Maven/Java hotel platform). Two sources, same result shape:
-//  - live: `git clone` of the demo branch from GitHub (sri465inno/uc-agentic-quality-engineering);
+//  - live: `git clone` of the demo branch from GitHub (sri465inno/EQE-MVP-Neeraj);
 //  - recorded: a snapshot of the same branch stored in GitHub REST API shapes under fixtures/github/<dir>.
 const fs = require('fs');
 const os = require('os');
@@ -9,9 +9,9 @@ const { execFile } = require('child_process');
 
 const FIXTURE_DIR = path.join(__dirname, '..', '..', 'fixtures', 'github');
 const SOURCE = {
-  fullName: 'sri465inno/uc-agentic-quality-engineering',
-  htmlUrl: 'https://github.com/sri465inno/uc-agentic-quality-engineering',
-  cloneUrl: 'https://github.com/sri465inno/uc-agentic-quality-engineering.git',
+  fullName: 'sri465inno/EQE-MVP-Neeraj',
+  htmlUrl: 'https://github.com/sri465inno/EQE-MVP-Neeraj',
+  cloneUrl: 'https://github.com/sri465inno/EQE-MVP-Neeraj.git',
 };
 const DICTIONARY_FILE = /^data-dictionary\/.+\.json$/;
 const SNAPSHOT_FILE = (p) => p === 'README.md' || p === 'package.json' || /^src\/.+\.js$/.test(p) || DICTIONARY_FILE.test(p);

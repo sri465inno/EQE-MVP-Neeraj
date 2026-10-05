@@ -16,11 +16,11 @@
     "provenance": {
       "kind": "github",
       "system": "jira",
-      "label": "Jira export on GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export): Jira REST API v3 JSON of AQPI-1, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
+      "label": "Jira export on GitHub (sri465inno/EQE-MVP-Neeraj@demo/jira-export): Jira REST API v3 JSON of AQPI-1, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
       "ref": "AQPI-1",
-      "fetchedAt": "2026-10-05T16:26:36.768Z",
+      "fetchedAt": "2026-10-05T16:57:09.805Z",
       "files": [
-        "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/AQPI-1.json"
+        "https://github.com/sri465inno/EQE-MVP-Neeraj/blob/demo/jira-export/jira/AQPI-1.json"
       ]
     },
     "statementCount": 8
@@ -195,12 +195,12 @@
     "provenance": {
       "kind": "github",
       "system": "jira",
-      "label": "Jira export on GitHub (sri465inno/uc-agentic-quality-engineering@demo/jira-export): Jira REST API v3 JSON of AQPI-2, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
+      "label": "Jira export on GitHub (sri465inno/EQE-MVP-Neeraj@demo/jira-export): Jira REST API v3 JSON of AQPI-2, exported from https://tcs-team-ou6drgfr.atlassian.net; no live Jira call was made",
       "ref": "AQPI-2",
-      "fetchedAt": "2026-10-05T16:26:36.994Z",
+      "fetchedAt": "2026-10-05T16:57:10.045Z",
       "files": [
-        "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/AQPI-2.json",
-        "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira/AQPI-2.children.json"
+        "https://github.com/sri465inno/EQE-MVP-Neeraj/blob/demo/jira-export/jira/AQPI-2.json",
+        "https://github.com/sri465inno/EQE-MVP-Neeraj/blob/demo/jira-export/jira/AQPI-2.children.json"
       ]
     },
     "statementCount": 137
@@ -209,12 +209,12 @@
     "slot": "codebase",
     "label": "Codebase",
     "mode": "github",
-    "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (452df41)",
+    "ref": "sri465inno/EQE-MVP-Neeraj@demo/hotel-booking-platform (452df41)",
     "provenance": {
       "kind": "github",
-      "label": "Pulled live from GitHub: git clone of sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (452df41) at 2026-10-05T16:26:38.592Z",
-      "ref": "sri465inno/uc-agentic-quality-engineering@demo/hotel-booking-platform (452df41)",
-      "fetchedAt": "2026-10-05T16:26:38.592Z",
+      "label": "Pulled live from GitHub: git clone of sri465inno/EQE-MVP-Neeraj@demo/hotel-booking-platform (452df41) at 2026-10-05T16:57:11.522Z",
+      "ref": "sri465inno/EQE-MVP-Neeraj@demo/hotel-booking-platform (452df41)",
+      "fetchedAt": "2026-10-05T16:57:11.522Z",
       "files": [
         "README.md",
         "TRACEABILITY.md",
@@ -307,13 +307,13 @@
       ]
     },
     "branch": "demo/hotel-booking-platform",
-    "repo": "sri465inno/uc-agentic-quality-engineering",
+    "repo": "sri465inno/EQE-MVP-Neeraj",
     "commit": "452df417b95db3cc3064a0f7049b1311ee93684f",
     "compare": null,
     "description": "AQPI-1 Intelligent Hotel Shopping and Reservation Experience: reactive Spring Boot microservices",
     "dataModel": {
       "file": "data-dictionary/booking-attributes.json",
-      "url": "https://github.com/sri465inno/uc-agentic-quality-engineering/blob/452df417b95db3cc3064a0f7049b1311ee93684f/data-dictionary/booking-attributes.json",
+      "url": "https://github.com/sri465inno/EQE-MVP-Neeraj/blob/452df417b95db3cc3064a0f7049b1311ee93684f/data-dictionary/booking-attributes.json",
       "name": "Hotel booking attributes",
       "version": "1.0",
       "attributeCount": 21,

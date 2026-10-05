@@ -2,19 +2,19 @@
   "name": "demo/hotel-booking-platform-v2",
   "commit": {
     "sha": "fe1ce449d9a5fa0682ced74d98edc633ba2a57e4",
-    "url": "https://api.github.com/repos/sri465inno/uc-agentic-quality-engineering/commits/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4",
-    "html_url": "https://github.com/sri465inno/uc-agentic-quality-engineering/commit/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4",
+    "url": "https://api.github.com/repos/sri465inno/EQE-MVP-Neeraj/commits/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4",
+    "html_url": "https://github.com/sri465inno/EQE-MVP-Neeraj/commit/fe1ce449d9a5fa0682ced74d98edc633ba2a57e4",
     "commit": {
       "message": "hotel-booking-platform 2.0: @rule tags name the Jira story each rule implements"
     }
   },
   "_links": {
-    "self": "https://api.github.com/repos/sri465inno/uc-agentic-quality-engineering/branches/demo%2Fhotel-booking-platform-v2",
-    "html": "https://github.com/sri465inno/uc-agentic-quality-engineering/tree/demo/hotel-booking-platform-v2"
+    "self": "https://api.github.com/repos/sri465inno/EQE-MVP-Neeraj/branches/demo%2Fhotel-booking-platform-v2",
+    "html": "https://github.com/sri465inno/EQE-MVP-Neeraj/tree/demo/hotel-booking-platform-v2"
   },
   "protected": false,
   "_recorded": {
-    "at": "2026-10-02T19:57:36.539Z",
-    "with": "git clone --depth 1 --branch demo/hotel-booking-platform-v2 https://github.com/sri465inno/uc-agentic-quality-engineering.git"
+    "at": "2026-10-05T16:57:07.212Z",
+    "with": "git clone --depth 1 --branch demo/hotel-booking-platform-v2 https://github.com/sri465inno/EQE-MVP-Neeraj.git"
   }
 }

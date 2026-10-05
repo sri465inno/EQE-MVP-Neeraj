@@ -1,12 +1,12 @@
 {
   "request": {
     "method": "POST",
-    "url": "http://127.0.0.1:40369/api/reservations",
+    "url": "http://127.0.0.1:39015/api/reservations",
     "headers": {
       "Idempotency-Key": "aqe-booking-13d07eea-1"
     },
     "data": {
-      "cartId": "C-630e4e22",
+      "cartId": "C-f59b013f",
       "guest": {
         "firstName": "Jane",
         "lastName": "Doe",
@@ -22,12 +22,12 @@
   },
   "response": {
     "status": 422,
-    "correlationId": "fa47c294-cfcf-482c-a9e4-d7a1eeec052f",
+    "correlationId": "a2a956c2-4486-4795-81d6-189c9a780e26",
     "body": {
       "status": 422,
       "code": "VALIDATION_FAILED",
       "message": "Please correct the highlighted fields.",
-      "correlationId": "fa47c294-cfcf-482c-a9e4-d7a1eeec052f",
+      "correlationId": "a2a956c2-4486-4795-81d6-189c9a780e26",
       "retryable": false,
       "fieldIssues": [
         {
