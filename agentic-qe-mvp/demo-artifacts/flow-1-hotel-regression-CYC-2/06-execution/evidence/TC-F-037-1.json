@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "POST",
-    "url": "http://127.0.0.1:36651/api/offers/recommendations",
+    "url": "http://127.0.0.1:46627/api/offers/recommendations",
     "headers": {},
     "data": {
       "hotelId": "H-NYC-001",
@@ -17,7 +17,7 @@
   },
   "response": {
     "status": 200,
-    "correlationId": "0975d314-ec7b-454a-b90d-d24411b81739",
+    "correlationId": "6a955260-f25e-48b6-ac76-f4e739cc832e",
     "body": {
       "offers": [
         {

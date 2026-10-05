@@ -21,7 +21,7 @@ test('three inputs are ingested from recorded fixtures and labelled honestly', a
   }
   assert.equal(inputs[0].ref, 'COM-1');
   assert.equal(inputs[1].ref, 'COM-10');
-  assert.match(inputs[2].ref, /sri465inno\/uc-agentic-quality-engineering@demo\/commission-engine \(df5203e\)/);
+  assert.match(inputs[2].ref, /sri465inno\/EQE-MVP-Neeraj@demo\/commission-engine \(df5203e\)/);
   assert.equal(inputs[2].dataModel.attributeCount, 1000);
 });
 

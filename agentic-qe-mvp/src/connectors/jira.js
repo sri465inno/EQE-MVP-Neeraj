@@ -6,10 +6,10 @@ const FIXTURE_DIR = path.join(__dirname, '..', '..', 'fixtures', 'jira');
 const FIXTURE_BASE = 'https://aurora-hotels.atlassian.net';
 // The same Jira REST v3 export, published on a branch of the repo so the MVP can pull it from GitHub.
 const EXPORT = {
-  repo: 'sri465inno/uc-agentic-quality-engineering',
+  repo: 'sri465inno/EQE-MVP-Neeraj',
   branch: 'demo/jira-export',
-  rawBase: 'https://raw.githubusercontent.com/sri465inno/uc-agentic-quality-engineering/demo/jira-export/jira',
-  htmlBase: 'https://github.com/sri465inno/uc-agentic-quality-engineering/blob/demo/jira-export/jira',
+  rawBase: 'https://raw.githubusercontent.com/sri465inno/EQE-MVP-Neeraj/demo/jira-export/jira',
+  htmlBase: 'https://github.com/sri465inno/EQE-MVP-Neeraj/blob/demo/jira-export/jira',
   // Projects exported from a real Jira site; other keys in the export are synthetic test issues.
   sites: { AQPI: 'https://tcs-team-ou6drgfr.atlassian.net' },
 };
