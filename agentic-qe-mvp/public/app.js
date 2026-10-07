@@ -539,12 +539,18 @@ const PHASE_GROUPS = [
 ];
 const PHASE_PROGRESS = { done: 100, running: 50, waiting: 50, failed: 100, pending: 0, skipped: 0 };
 
+/** A passed human gate shows its approval as a green badge, like a complete hand-over. */
+function phaseSummary(p) {
+  const m = p.status === 'done' && PHASE_CAT[p.name] === 'gate' && /^(Approved by [^;]+)(?:;\s*(.*))?$/.exec(p.summary);
+  return m ? `<span class="hand ok">${esc(m[1])}</span>${m[2] ? `<br>${esc(m[2])}` : ''}` : esc(p.summary);
+}
+
 function phaseTile(c, p, tab) {
   const t = phaseArtifactTab(p.name, c);
   const no = agentNo(p.name);
   const cat = PHASE_CAT[p.name];
   return tile({ href: p.name === 'report' ? `#/reporting?cycle=${c.id}` : `#/cycle/${c.id}?tab=${t}`, art: cat, tag: no ? `Agent ${no}` : cat === 'gate' ? 'Human gate' : p.name === 'review-agent' ? 'Review agent' : 'Intake', big: no || PHASE_ICON[p.name] || '•',
-    corner: `<span class="status-dot ${esc(p.status)}"></span>${esc(p.status)}`, title: p.label, lines: [p.summary ? esc(p.summary) : '<span class="muted">not run yet</span>'], extra: handoverBadge(p),
+    corner: `<span class="status-dot ${esc(p.status)}"></span>${esc(p.status)}`, title: p.label, lines: [p.summary ? phaseSummary(p) : '<span class="muted">not run yet</span>'], extra: handoverBadge(p),
     cls: `${p.status} ${t === tab && (p.name !== 'review' || tab === 'review') ? 'sel' : ''}`, progress: PHASE_PROGRESS[p.status] ?? 0 });
 }
 
