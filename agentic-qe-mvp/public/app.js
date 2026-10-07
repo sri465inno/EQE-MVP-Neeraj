@@ -100,8 +100,8 @@ function testingTypeOf(value, domainId) {
 function checkDropdown(id, summaryHtml, bodyHtml) {
   return `<details class="ms" data-ms="${id}" ${runState.open.has(id) ? 'open' : ''}><summary><span class="ms-value">${summaryHtml}</span><span class="ms-caret" aria-hidden="true">▾</span></summary><div class="ms-menu">${bodyHtml}</div></details>`;
 }
-function checkItem({ cls, value, checked, disabled = false, title, tag = '', sub = '', extra = '' }) {
-  return `<label class="ms-item ${checked ? 'on' : ''} ${disabled ? 'off' : ''}"><input type="checkbox" class="${cls}" value="${esc(value)}" ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''}><span><b>${esc(title)}</b>${tag}${sub ? `<span class="muted">${esc(sub)}</span>` : ''}${extra}</span></label>`;
+function checkItem({ cls, value, checked, disabled = false, title, tag = '', sub = '', extra = '', radio = '' }) {
+  return `<label class="ms-item ${checked ? 'on' : ''} ${disabled ? 'off' : ''}"><input type="${radio ? 'radio' : 'checkbox'}" ${radio ? `name="${esc(radio)}"` : ''} class="${cls}" value="${esc(value)}" ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''}><span><b>${esc(title)}</b>${tag}${sub ? `<span class="muted">${esc(sub)}</span>` : ''}${extra}</span></label>`;
 }
 const closeDropdowns = (except = null) => {
   document.querySelectorAll('details.ms[open]').forEach((d) => { if (d !== except) d.open = false; });
@@ -352,8 +352,8 @@ function inputsDropdown(type, slots, active) {
 function testingTypesDropdown(type, domainId) {
   const ids = runState.testingTypes;
   const parts = META.testingTypes.filter((t) => ids.includes(t.id)).map((t) => testingTypeOf(t.id, domainId));
-  const body = META.testingTypes.map((t) => checkItem({ cls: 'tt-on', value: t.id, checked: ids.includes(t.id), title: t.name, sub: testingTypeOf(t.id, domainId).focus })).join('')
-    + '<div class="ms-foot">Tick more than one to combine them in a single run: the agents design, script and run the cases every ticked type needs.</div>';
+  const body = META.testingTypes.map((t) => checkItem({ cls: 'tt-on', radio: 'testing-type', value: t.id, checked: ids.includes(t.id), title: t.name, sub: testingTypeOf(t.id, domainId).focus })).join('')
+    + '<div class="ms-foot">Pick one type of testing per run: the agents design, script and run the cases that type needs.</div>';
   return `${checkDropdown('testing', chips(parts.map((p) => p.short)), body)}
 <ul class="tt-how-list">${parts.map((p) => `<li><b>${esc(p.short)}:</b> ${esc(type === 'baseline' ? p.baseline : p.incremental)}</li>`).join('')}</ul>
 <p class="hint" id="tt-msg"></p>`;
@@ -467,12 +467,7 @@ async function viewRun(params) {
     else runState.open.delete(d.dataset.ms);
   });
   $view.querySelectorAll('.tt-on').forEach((el) => el.onchange = () => {
-    const ids = [...$view.querySelectorAll('.tt-on')].filter((x) => x.checked).map((x) => x.value);
-    if (!ids.length) {
-      el.checked = true;
-      document.getElementById('tt-msg').textContent = 'Keep at least one type of testing ticked.';
-      return;
-    }
+    const ids = [el.value];
     const prev = runState.testingTypes;
     runState.testingTypes = ids;
     if (runState.skills) {
