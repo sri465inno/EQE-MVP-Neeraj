@@ -100,8 +100,8 @@ function testingTypeOf(value, domainId) {
 function checkDropdown(id, summaryHtml, bodyHtml) {
   return `<details class="ms" data-ms="${id}" ${runState.open.has(id) ? 'open' : ''}><summary><span class="ms-value">${summaryHtml}</span><span class="ms-caret" aria-hidden="true">▾</span></summary><div class="ms-menu">${bodyHtml}</div></details>`;
 }
-function checkItem({ cls, value, checked, disabled = false, title, tag = '', sub = '', extra = '' }) {
-  return `<label class="ms-item ${checked ? 'on' : ''} ${disabled ? 'off' : ''}"><input type="checkbox" class="${cls}" value="${esc(value)}" ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''}><span><b>${esc(title)}</b>${tag}${sub ? `<span class="muted">${esc(sub)}</span>` : ''}${extra}</span></label>`;
+function checkItem({ cls, value, checked, disabled = false, title, tag = '', sub = '', extra = '', radio = '' }) {
+  return `<label class="ms-item ${checked ? 'on' : ''} ${disabled ? 'off' : ''}"><input type="${radio ? 'radio' : 'checkbox'}" ${radio ? `name="${esc(radio)}"` : ''} class="${cls}" value="${esc(value)}" ${checked ? 'checked' : ''} ${disabled ? 'disabled' : ''}><span><b>${esc(title)}</b>${tag}${sub ? `<span class="muted">${esc(sub)}</span>` : ''}${extra}</span></label>`;
 }
 const closeDropdowns = (except = null) => {
   document.querySelectorAll('details.ms[open]').forEach((d) => { if (d !== except) d.open = false; });
@@ -214,6 +214,7 @@ document.addEventListener('click', (ev) => {
 
 /* ---------------- Home ---------------- */
 let HOME_DETAIL = {};
+const PHASE_LABEL_FALLBACK = { 'review-agent': 'Suggested for the Reviewer' };
 const PHASE_ICON = { ingest: '⇢', normalise: '≡', 'review-agent': '⚑', review: '✎', delta: 'Δ', 'merge-approval': '⊕' };
 const PHASE_CAT = { ingest: 'intake', normalise: 'intake', 'review-agent': 'intake', review: 'gate', delta: 'intake', 'merge-approval': 'gate', requirements: 'design', testcases: 'design', testdata: 'design', scripts: 'design', execution: 'run', defects: 'run', report: 'run' };
 const agentNo = (id) => (META.platform.agents.find((g) => g.id === id) || {}).no;
@@ -352,8 +353,8 @@ function inputsDropdown(type, slots, active) {
 function testingTypesDropdown(type, domainId) {
   const ids = runState.testingTypes;
   const parts = META.testingTypes.filter((t) => ids.includes(t.id)).map((t) => testingTypeOf(t.id, domainId));
-  const body = META.testingTypes.map((t) => checkItem({ cls: 'tt-on', value: t.id, checked: ids.includes(t.id), title: t.name, sub: testingTypeOf(t.id, domainId).focus })).join('')
-    + '<div class="ms-foot">Tick more than one to combine them in a single run: the agents design, script and run the cases every ticked type needs.</div>';
+  const body = META.testingTypes.map((t) => checkItem({ cls: 'tt-on', radio: 'testing-type', value: t.id, checked: ids.includes(t.id), title: t.name, sub: testingTypeOf(t.id, domainId).focus })).join('')
+    + '<div class="ms-foot">Pick one type of testing per run: the agents design, script and run the cases that type needs.</div>';
   return `${checkDropdown('testing', chips(parts.map((p) => p.short)), body)}
 <ul class="tt-how-list">${parts.map((p) => `<li><b>${esc(p.short)}:</b> ${esc(type === 'baseline' ? p.baseline : p.incremental)}</li>`).join('')}</ul>
 <p class="hint" id="tt-msg"></p>`;
@@ -467,12 +468,7 @@ async function viewRun(params) {
     else runState.open.delete(d.dataset.ms);
   });
   $view.querySelectorAll('.tt-on').forEach((el) => el.onchange = () => {
-    const ids = [...$view.querySelectorAll('.tt-on')].filter((x) => x.checked).map((x) => x.value);
-    if (!ids.length) {
-      el.checked = true;
-      document.getElementById('tt-msg').textContent = 'Keep at least one type of testing ticked.';
-      return;
-    }
+    const ids = [el.value];
     const prev = runState.testingTypes;
     runState.testingTypes = ids;
     if (runState.skills) {
@@ -543,33 +539,47 @@ const PHASE_GROUPS = [
 ];
 const PHASE_PROGRESS = { done: 100, running: 50, waiting: 50, failed: 100, pending: 0, skipped: 0 };
 
+/** A passed human gate shows its approval as a green badge, like a complete hand-over. */
+function phaseSummary(p) {
+  const m = p.status === 'done' && PHASE_CAT[p.name] === 'gate' && /^(Approved by [^;]+)(?:;\s*(.*))?$/.exec(p.summary);
+  return m ? `<span class="hand ok">${esc(m[1])}</span>${m[2] ? `<br>${esc(m[2])}` : ''}` : esc(p.summary);
+}
+
 function phaseTile(c, p, tab) {
   const t = phaseArtifactTab(p.name, c);
   const no = agentNo(p.name);
   const cat = PHASE_CAT[p.name];
   return tile({ href: p.name === 'report' ? `#/reporting?cycle=${c.id}` : `#/cycle/${c.id}?tab=${t}`, art: cat, tag: no ? `Agent ${no}` : cat === 'gate' ? 'Human gate' : p.name === 'review-agent' ? 'Review agent' : 'Intake', big: no || PHASE_ICON[p.name] || '•',
-    corner: `<span class="status-dot ${esc(p.status)}"></span>${esc(p.status)}`, title: p.label, lines: [p.summary ? esc(p.summary) : '<span class="muted">not run yet</span>'], extra: handoverBadge(p),
+    corner: `<span class="status-dot ${esc(p.status)}"></span>${esc(p.status)}`, title: p.label, lines: [p.summary ? phaseSummary(p) : '<span class="muted">not run yet</span>'], extra: handoverBadge(p),
     cls: `${p.status} ${t === tab && (p.name !== 'review' || tab === 'review') ? 'sel' : ''}`, progress: PHASE_PROGRESS[p.status] ?? 0 });
+}
+
+/** One labelled line per cycle input, e.g. "Jira epics: AQPI-2, AQPI-6" or "Codebase: demo/hotel-booking-platform (452df41)". */
+function inputLine(i) {
+  const many = String(i.ref).includes(',');
+  const label = many && !/s$/.test(i.label) ? `${i.label}s` : i.label;
+  const ref = i.slot === 'codebase' ? String(i.ref).replace(/^[^@\s]+@/, '') : i.ref;
+  return `<b>${esc(label)}:</b> ${esc(ref)}`;
 }
 
 async function viewCycle(id, params) {
   const c = await api(`/api/cycles/${id}`);
+  for (const p of c.phases) p.label = p.label || PHASE_LABEL_FALLBACK[p.name] || p.name;
   setTitle(c.name);
   const tab = params.get('tab') || (c.status === 'awaiting-review' ? 'review' : c.status === 'awaiting-merge' ? 'merge' : c.status === 'completed' ? 'artifacts' : 'inputs');
   const present = new Set(c.phases.map((p) => p.name));
   const rails = PHASE_GROUPS.map(([gid, title, note, names]) => {
     const tiles = names.filter((n) => present.has(n)).map((n) => phaseTile(c, c.phases.find((p) => p.name === n), tab));
-    if (gid === 'run') tiles.push(tile({ href: `#/cycle/${c.id}?tab=skills`, art: 'skill', tag: 'Skills', big: (c.skills || []).length, title: 'Skills and hand-overs', lines: ['Which skills each agent read and what it handed over'], cls: tab === 'skills' ? 'sel' : '' }));
+    if (gid === 'run' && c.type !== 'baseline') tiles.push(tile({ href: `#/cycle/${c.id}?tab=skills`, art: 'skill', tag: 'Skills', big: (c.skills || []).length, title: 'Skills and hand-overs', lines: ['Which skills each agent read and what it handed over'], cls: tab === 'skills' ? 'sel' : '' }));
     return rail(gid, title, note, tiles);
   }).join('');
   const ex0 = c.artifacts && c.artifacts.execution ? c.artifacts.execution.summary : null;
   const summaryRail = rail('summary', 'Cycle summary', 'what went in, what came out, and the QE lead report', [
-    tile({ href: `#/cycle/${c.id}?tab=inputs`, art: 'input', tag: 'Inputs taken', big: c.inputs.length, title: 'Inputs taken', lines: [esc(c.inputs.map((i) => `${i.label} ${i.ref}`).join(' · '))], cls: tab === 'inputs' ? 'sel' : '' }),
+    tile({ href: `#/cycle/${c.id}?tab=inputs`, art: 'input', tag: 'Inputs taken', big: c.inputs.length, title: 'Inputs taken', lines: c.inputs.map(inputLine), cls: tab === 'inputs' ? 'sel' : '' }),
     tile({ href: `#/cycle/${c.id}?tab=artifacts`, art: 'design', tag: 'Artifacts produced', big: c.phases.filter((p) => p.status === 'done').length, title: 'Artifacts produced', lines: ['Every artifact of this cycle, with links and downloads'], cls: tab === 'artifacts' ? 'sel' : '' }),
     tile({ href: `#/cycle/${c.id}?tab=traceability`, art: 'design', tag: 'Traceability', big: c.report && c.report.traceability ? c.report.traceability.totals.jiraItems : '…', title: 'Traceability matrix', lines: [c.report && c.report.traceability ? `${c.report.traceability.totals.covered} Jira items covered · ${c.report.traceability.totals.verified} verified · ${c.report.traceability.totals.failing} failing` : '<span class="muted">available when the cycle completes</span>'], cls: tab === 'traceability' ? 'sel' : '' }),
     tile({ href: `#/reporting?cycle=${c.id}`, art: 'run', tag: 'Reporting', big: c.report ? '✔' : '…', title: 'QE lead report', lines: [c.report ? `${ex0 ? `${ex0.passed}/${ex0.executed} passed · ` : ''}${(c.artifacts.defects || []).length} defect(s) · opens in Reporting` : '<span class="muted">available in Reporting when the cycle completes</span>'] }),
   ]);
-  const done = c.phases.filter((p) => p.status === 'done').length;
   const ex = c.artifacts && c.artifacts.execution ? c.artifacts.execution.summary : null;
   const current = c.phases.find((p) => phaseArtifactTab(p.name, c) === tab);
   const label = tab === 'overview' ? 'QE lead report' : tab === 'artifacts' ? 'Artifacts produced' : tab === 'inputs' ? 'Inputs taken' : tab === 'skills' ? 'Skills and hand-overs' : tab === 'traceability' ? 'Traceability: Jira to defect' : tab === 'merge' ? 'Human approval to merge' : tab === 'review' ? 'Human review of requirement set' : tab === 'review-agent' ? 'Review agent suggestions' : current ? current.label : tab;
@@ -577,7 +587,7 @@ async function viewCycle(id, params) {
   try { body = await renderCycleTab(c, tab); } catch (e) { body = `<div class="banner err">${esc(e.message)}</div>`; }
   $view.innerHTML = `<section class="hero small-hero"><div class="eyebrow">${c.type === 'baseline' ? 'Flow 1 · Baseline cycle' : 'Flow 2 · Incremental cycle'}</div>
 <h1>${esc(c.name)} <span class="muted small">${esc(c.id)}</span> ${statusPill(c.status)}</h1>
-<div class="facts"><div><b>${esc(testingTypeOf(c.testingType, exampleIdOf(c)).name)}</b>type of testing</div><div><b>${done}/${c.phases.length}</b>phases done</div>${c.delta ? `<div><b>${esc(c.delta.summary)}</b>delta</div>` : ''}${ex ? `<div><b>${ex.passed}/${ex.executed}</b>passed</div><div><b>${ex.passRate}%</b>pass rate</div>` : ''}${c.artifacts && c.artifacts.defects ? `<div><b>${c.artifacts.defects.length}</b>defects</div>` : ''}</div>
+<div class="facts"><div><b>${esc(testingTypeOf(c.testingType, exampleIdOf(c)).name)}</b>type of testing</div>${c.delta ? `<div><b>${esc(c.delta.summary)}</b>delta</div>` : ''}${ex ? `<div><b>${ex.passed}/${ex.executed}</b>passed</div><div><b>${ex.passRate}%</b>pass rate</div>` : ''}${c.artifacts && c.artifacts.defects ? `<div><b>${c.artifacts.defects.length}</b>defects</div>` : ''}</div>
 <div class="muted small">Baseline: ${esc(c.baselineId || '(created when this cycle completes)')}${c.baselineVersionAtStart ? ` v${c.baselineVersionAtStart} at start` : ''}${c.baselineVersionAfter ? ` → v${c.baselineVersionAfter}` : ''} · SUT build <code>${esc(c.sutBuild)}</code> · created ${fmtTime(c.createdAt)}</div></section>
 ${c.error ? `<div class="banner err">Failed: ${esc(c.error)} <button class="btn secondary" id="resume">Resume</button></div>` : ''}
 ${c.status === 'interrupted' ? `<div class="banner">This cycle was interrupted by a restart. <button class="btn secondary" id="resume">Resume</button></div>` : ''}

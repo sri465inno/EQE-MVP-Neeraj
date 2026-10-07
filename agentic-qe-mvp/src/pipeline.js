@@ -36,7 +36,7 @@ const PHASES = {
   incremental: ['ingest', 'normalise', 'review-agent', 'review', 'delta', 'requirements', 'testcases', 'testdata', 'scripts', 'merge-approval', 'execution', 'defects', 'report'],
 };
 const PHASE_LABEL = {
-  ingest: 'Ingest inputs', normalise: 'Normalise (3-way compare)', review: 'Human review of requirement set', delta: 'Delta classification',
+  ingest: 'Ingest inputs', normalise: 'Normalise (3-way compare)', 'review-agent': 'Suggested for the Reviewer', review: 'Human review of requirement set', delta: 'Delta classification',
   requirements: 'Requirements agent (requirements with their business rules)', testcases: 'Test case agent', testdata: 'Test data agent', scripts: 'Automation script agent',
   'merge-approval': 'Human approval to merge', execution: 'Execution agent (Playwright, real run)', defects: 'Defect agent', report: 'Cycle report agent',
 };
