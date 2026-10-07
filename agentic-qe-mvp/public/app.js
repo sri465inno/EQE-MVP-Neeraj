@@ -547,6 +547,14 @@ function phaseTile(c, p, tab) {
     cls: `${p.status} ${t === tab && (p.name !== 'review' || tab === 'review') ? 'sel' : ''}`, progress: PHASE_PROGRESS[p.status] ?? 0 });
 }
 
+/** One labelled line per cycle input, e.g. "Jira epics: AQPI-2, AQPI-6" or "Codebase: demo/hotel-booking-platform (452df41)". */
+function inputLine(i) {
+  const many = String(i.ref).includes(',');
+  const label = many && !/s$/.test(i.label) ? `${i.label}s` : i.label;
+  const ref = i.slot === 'codebase' ? String(i.ref).replace(/^[^@\s]+@/, '') : i.ref;
+  return `<b>${esc(label)}:</b> ${esc(ref)}`;
+}
+
 async function viewCycle(id, params) {
   const c = await api(`/api/cycles/${id}`);
   setTitle(c.name);
@@ -559,7 +567,7 @@ async function viewCycle(id, params) {
   }).join('');
   const ex0 = c.artifacts && c.artifacts.execution ? c.artifacts.execution.summary : null;
   const summaryRail = rail('summary', 'Cycle summary', 'what went in, what came out, and the QE lead report', [
-    tile({ href: `#/cycle/${c.id}?tab=inputs`, art: 'input', tag: 'Inputs taken', big: c.inputs.length, title: 'Inputs taken', lines: [esc(c.inputs.map((i) => `${i.label} ${i.ref}`).join(' · '))], cls: tab === 'inputs' ? 'sel' : '' }),
+    tile({ href: `#/cycle/${c.id}?tab=inputs`, art: 'input', tag: 'Inputs taken', big: c.inputs.length, title: 'Inputs taken', lines: c.inputs.map(inputLine), cls: tab === 'inputs' ? 'sel' : '' }),
     tile({ href: `#/cycle/${c.id}?tab=artifacts`, art: 'design', tag: 'Artifacts produced', big: c.phases.filter((p) => p.status === 'done').length, title: 'Artifacts produced', lines: ['Every artifact of this cycle, with links and downloads'], cls: tab === 'artifacts' ? 'sel' : '' }),
     tile({ href: `#/cycle/${c.id}?tab=traceability`, art: 'design', tag: 'Traceability', big: c.report && c.report.traceability ? c.report.traceability.totals.jiraItems : '…', title: 'Traceability matrix', lines: [c.report && c.report.traceability ? `${c.report.traceability.totals.covered} Jira items covered · ${c.report.traceability.totals.verified} verified · ${c.report.traceability.totals.failing} failing` : '<span class="muted">available when the cycle completes</span>'], cls: tab === 'traceability' ? 'sel' : '' }),
     tile({ href: `#/reporting?cycle=${c.id}`, art: 'run', tag: 'Reporting', big: c.report ? '✔' : '…', title: 'QE lead report', lines: [c.report ? `${ex0 ? `${ex0.passed}/${ex0.executed} passed · ` : ''}${(c.artifacts.defects || []).length} defect(s) · opens in Reporting` : '<span class="muted">available in Reporting when the cycle completes</span>'] }),
