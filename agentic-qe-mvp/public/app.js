@@ -214,6 +214,7 @@ document.addEventListener('click', (ev) => {
 
 /* ---------------- Home ---------------- */
 let HOME_DETAIL = {};
+const PHASE_LABEL_FALLBACK = { 'review-agent': 'Suggested for the Reviewer' };
 const PHASE_ICON = { ingest: '⇢', normalise: '≡', 'review-agent': '⚑', review: '✎', delta: 'Δ', 'merge-approval': '⊕' };
 const PHASE_CAT = { ingest: 'intake', normalise: 'intake', 'review-agent': 'intake', review: 'gate', delta: 'intake', 'merge-approval': 'gate', requirements: 'design', testcases: 'design', testdata: 'design', scripts: 'design', execution: 'run', defects: 'run', report: 'run' };
 const agentNo = (id) => (META.platform.agents.find((g) => g.id === id) || {}).no;
@@ -557,6 +558,7 @@ function inputLine(i) {
 
 async function viewCycle(id, params) {
   const c = await api(`/api/cycles/${id}`);
+  for (const p of c.phases) p.label = p.label || PHASE_LABEL_FALLBACK[p.name] || p.name;
   setTitle(c.name);
   const tab = params.get('tab') || (c.status === 'awaiting-review' ? 'review' : c.status === 'awaiting-merge' ? 'merge' : c.status === 'completed' ? 'artifacts' : 'inputs');
   const present = new Set(c.phases.map((p) => p.name));
