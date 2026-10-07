@@ -1,6 +1,7 @@
 'use strict';
 // What each agent actually produced, read from the persisted cycle, keyed by the artefact names skills declare.
 const { getTestingType, suiteOf } = require('./testing-types');
+const { domainOf } = require('./agents/domains');
 
 const present = (v) => (v === undefined ? null : v);
 
@@ -46,7 +47,7 @@ const OUTPUTS = {
     const ran = e ? e.results.filter((r) => r.status !== 'not-run') : null;
     return {
       results: { value: ran, note: e ? `${e.summary.notRun} manual case(s) handed over as not run` : null },
-      screenshots: { value: ran ? ran.flatMap((r) => (r.evidence || []).filter((x) => x.contentType === 'image/png')) : null },
+      screenshots: screenEvidence(c, ran),
       timings: { value: ran ? ran.filter((r) => r.type === 'non-functional') : null },
     };
   },
@@ -59,6 +60,17 @@ const OUTPUTS = {
       : { value: present(c.comparison) },
   }),
 };
+
+/** Screenshots where the system under test has a screen; otherwise each step's request and response stands in for them. */
+function screenEvidence(c, ran) {
+  if (!ran) return { value: null };
+  const evidence = ran.flatMap((r) => r.evidence || []);
+  const shots = evidence.filter((x) => x.contentType === 'image/png');
+  const dom = domainOf(c);
+  if (shots.length || dom.hasScreen !== false) return { value: shots };
+  const calls = evidence.filter((x) => x.contentType === 'application/json');
+  return { value: calls, note: `${dom.name} has no browser screen: ${calls.length} request/response record(s) kept as evidence instead` };
+}
 
 function producedBy(agentId, cycle) {
   const f = OUTPUTS[agentId];

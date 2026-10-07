@@ -10,6 +10,7 @@ const { producedBy } = require('../src/handover');
 const { testCasesWorkbook } = require('../src/excel');
 const { renderReportHtml } = require('../src/report');
 const { tmpDir, baselineCycle, BASELINE_INPUTS } = require('./helpers');
+const { HOTEL_BRANCH } = require('../src/agents/domains');
 
 const SKILLS_DIR = path.join(__dirname, '..', 'skills');
 const SHIPPED = ['automation-script-conventions', 'cycle-report', 'defect-reporting', 'incremental-merge', 'input-normalisation', 'input-review', 'test-case-authoring', 'test-data-generation',
@@ -142,4 +143,20 @@ test('a skill written for the former business rules agent is handed to the requi
   assert.deepEqual(k.appliesTo, ['requirements']);
   assert.deepEqual(k.delivers, { requirements: ['riskRegister', 'requirements'] });
   assert.ok(!('rules' in AGENTS));
+});
+
+test('end-to-end on a system with no screen hands over request/response evidence instead of screenshots', () => {
+  const e2e = loadSkills(SKILLS_DIR).skills.filter((s) => ['testing-e2e', 'traceability-handover'].includes(s.id));
+  const result = (evidence) => ({ key: 'TC-F-001', status: 'passed', type: 'functional', evidence });
+  const call = { name: 'POST search-service/api/searches', file: 'TC-F-001-1.json', contentType: 'application/json' };
+  const cycle = (evidence, sutBuild) => ({ sutBuild, artifacts: { execution: { summary: { notRun: 0 }, results: [result(evidence)] } } });
+
+  const hotel = checkHandover('execution', producedBy('execution', cycle([call, call], HOTEL_BRANCH)), e2e);
+  assert.equal(hotel.status, 'complete');
+  const shots = hotel.items.find((i) => i.key === 'screenshots');
+  assert.deepEqual([shots.status, shots.count], ['delivered', 2]);
+  assert.match(shots.note, /no browser screen: 2 request\/response record/);
+
+  assert.deepEqual(checkHandover('execution', producedBy('execution', cycle([], HOTEL_BRANCH)), e2e).missing, ['screenshots']);
+  assert.deepEqual(checkHandover('execution', producedBy('execution', cycle([call], 'demo/commission-engine')), e2e).missing, ['screenshots']);
 });

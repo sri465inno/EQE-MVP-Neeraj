@@ -29,6 +29,7 @@ const DOMAINS = {
     ADVISORY_KINDS: commission.ADVISORY_KINDS,
     impacts: { money: 'money moved wrongly', journey: 'a core advisor journey is blocked' },
     capability: 'Travel-advisor commission calculated from reservation attributes',
+    hasScreen: true,
     modelLabel: 'reservation',
     driversLabel: 'commission-driving attributes',
     gaps: {
@@ -52,6 +53,7 @@ const DOMAINS = {
     ADVISORY_KINDS: new Set(),
     impacts: { money: 'a guest is charged or booked wrongly', journey: 'a core guest booking journey is blocked' },
     capability: 'Guest hotel booking from search to confirmation (AQPI-1)',
+    hasScreen: false,
     modelLabel: 'booking',
     driversLabel: 'booking-driving attributes',
     gaps: {
