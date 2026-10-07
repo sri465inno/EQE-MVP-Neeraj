@@ -554,7 +554,7 @@ async function viewCycle(id, params) {
   const present = new Set(c.phases.map((p) => p.name));
   const rails = PHASE_GROUPS.map(([gid, title, note, names]) => {
     const tiles = names.filter((n) => present.has(n)).map((n) => phaseTile(c, c.phases.find((p) => p.name === n), tab));
-    if (gid === 'run') tiles.push(tile({ href: `#/cycle/${c.id}?tab=skills`, art: 'skill', tag: 'Skills', big: (c.skills || []).length, title: 'Skills and hand-overs', lines: ['Which skills each agent read and what it handed over'], cls: tab === 'skills' ? 'sel' : '' }));
+    if (gid === 'run' && c.type !== 'baseline') tiles.push(tile({ href: `#/cycle/${c.id}?tab=skills`, art: 'skill', tag: 'Skills', big: (c.skills || []).length, title: 'Skills and hand-overs', lines: ['Which skills each agent read and what it handed over'], cls: tab === 'skills' ? 'sel' : '' }));
     return rail(gid, title, note, tiles);
   }).join('');
   const ex0 = c.artifacts && c.artifacts.execution ? c.artifacts.execution.summary : null;
