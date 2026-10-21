@@ -20,7 +20,7 @@ timeout /t 2 /nobreak >nul
 start "EQE - Dashboard (port 4000)" /min /d "%~dp0dashboard" cmd /c node --env-file-if-exists=..\.env server.js ^> "%~dp0logs\dashboard.log" 2^>^&1
 
 echo Waiting for the dashboard to start...
-powershell -NoProfile -Command "for($i=0;$i -lt 30;$i++){try{Invoke-WebRequest -UseBasicParsing http://localhost:4000 -TimeoutSec 2 | Out-Null; exit 0}catch{Start-Sleep 1}}; exit 1"
+node "%~dp0scripts\wait-for-url.js" http://localhost:4000 30
 if errorlevel 1 (echo The dashboard did not respond. Check logs\dashboard.log. & pause & exit /b 1)
 
 echo.
