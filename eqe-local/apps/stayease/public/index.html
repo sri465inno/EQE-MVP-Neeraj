@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StayEase · Hotel booking</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="/" data-link aria-label="StayEase home"><span class="logo">S</span>StayEase</a>
+    <nav aria-label="Main">
+      <a href="/" data-link>Stays</a>
+      <a href="/find-reservation" data-link>Find reservation</a>
+      <span id="member-nav"></span>
+    </nav>
+  </header>
+  <main id="app" tabindex="-1"></main>
+  <footer class="foot">
+    <section class="about" aria-label="About StayEase">
+      <div class="about-col"><div class="about-t">About StayEase</div><p>StayEase helps you find and book a hotel in a few simple steps. Pick where you want to go and your dates, compare hotels and rooms, and book in minutes.</p></div>
+      <div class="about-col"><div class="about-t">What you can do</div><ul><li>Search hotels by city and dates</li><li>See hotel details, rooms and prices</li><li>Book a room with your details</li><li>Find your booking with your confirmation number and last name</li></ul></div>
+      <div class="about-col"><div class="about-t">Good to know</div><p>This is a demo website. Hotels, prices and bookings are made up. No real booking is made and no payment is taken, so please don't enter real card details.</p></div>
+    </section>
+    <div class="foot-line">StayEase demo · synthetic data for quality engineering · <span id="rel"></span></div>
+  </footer>
+  <style>
+    .foot .about{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;max-width:1100px;margin:0 auto 14px;text-align:left}
+    .foot .about-t{font-weight:700;margin-bottom:6px;font-size:14px}
+    .foot .about p,.foot .about ul{margin:0;font-size:13px;line-height:1.55}
+    .foot .about ul{padding-left:18px}
+    .foot .foot-line{border-top:1px solid rgba(127,127,127,.25);padding-top:10px}
+  </style>
+  <script src="/app.js"></script>
+</body>
+</html>

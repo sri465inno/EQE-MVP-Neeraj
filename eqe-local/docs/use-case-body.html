@@ -1,0 +1,203 @@
+<section class="a-section">
+  <h2 class="a-section__title">Summary</h2>
+  <div class="a-prose">
+    <p>The EQE dashboard turns requirements in Jira into an evidence-backed release decision for the StayEase hotel booking application. Seven stages run in the background: six AI agents and one human approval gate. The automation lead watches each stage, reviews the designed test cases, and reads the resulting QE lead report, traceability and defects.</p>
+  </div>
+  <dl class="a-meta-list">
+    <div><dt>Primary actor</dt><dd>Automation lead / EQE lead (reviewer and sign-off owner)</dd></div>
+    <div><dt>Goal</dt><dd>Know whether a StayEase release meets the agreed release criteria, with traceability from every acceptance criterion to a real test result.</dd></div>
+    <div><dt>Trigger</dt><dd>The lead starts a cycle on the dashboard Run page.</dd></div>
+    <div><dt>Preconditions</dt><dd>Mock Jira holds an initiative (MGPP-1) with epics and stories (EQE-2 to EQE-10) carrying acceptance criteria; the selected StayEase release is running.</dd></div>
+    <div><dt>Success outcome</dt><dd>A completed cycle with test cases, Playwright scripts, real results, Jira bugs for failures, traceability and a Go / Conditional / No-go decision.</dd></div>
+    <div><dt>Constraint</dt><dd>Everything runs locally. Nothing is pushed or deployed; no real client data or Jira is used.</dd></div>
+  </dl>
+</section>
+
+<section class="a-section">
+  <h2 class="a-section__title">Systems involved</h2>
+  <div class="a-table-scroll">
+    <table class="a-table">
+      <caption class="a-visually-hidden">Systems in the EQE use case</caption>
+      <thead><tr><th scope="col">System</th><th scope="col">Role</th><th scope="col">Local address</th></tr></thead>
+      <tbody>
+        <tr><td>EQE dashboard</td><td>Runs the agents as background jobs; pipeline tracker, review, reports, traceability, compare, reset demo</td><td>localhost:4000</td></tr>
+        <tr><td>Mock Jira</td><td>Requirements source (REST API v3 subset and backlog UI). Initiatives in project MGPP, epics, stories and bugs in project EQE</td><td>localhost:4200</td></tr>
+        <tr><td>StayEase release 1.0</td><td>Application under test. Contains one known defect: Find reservation treats the last name as case-sensitive</td><td>localhost:4100</td></tr>
+        <tr><td>StayEase release 1.1</td><td>Candidate release with the Find reservation fix</td><td>localhost:4101</td></tr>
+        <tr><td>Playwright MCP server</td><td>Lets the automation agent drive a real browser black-box (navigate, snapshot, click, type, select, generate locator)</td><td>local stdio process</td></tr>
+        <tr><td>Playwright Test</td><td>Executes the generated specs headless in Chromium; records video, trace and screenshots</td><td>local process</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="a-section">
+  <h2 class="a-section__title">Use case flow at a glance</h2>
+  <p class="a-section__note">Stages 1–3 and 5–7 are agents. Stage 4 (outlined in gold) is the human approval gate. Stages 5 and 6 only reach StayEase through the browser.</p>
+  <div class="a-diagram" data-a-diagram aria-label="Flow: Jira requirements go to the requirements agent, then analysis, test design, human review, automation through Playwright MCP, execution and reporting. Reporting raises Jira bugs and produces the QE lead report.">
+    <svg data-a-diagram-canvas viewBox="0 0 1180 300" role="img" aria-label="EQE use case flow">
+      <g data-a-diagram-viewport>
+        <g class="a-group"><rect x="10" y="20" width="150" height="250" rx="6"/><text x="22" y="42">Mock Jira</text></g>
+        <g class="a-group"><rect x="180" y="20" width="830" height="250" rx="6"/><text x="192" y="42">EQE dashboard · background pipeline</text></g>
+        <g class="a-group"><rect x="1030" y="20" width="140" height="250" rx="6"/><text x="1042" y="42">Outputs</text></g>
+        <g class="a-node" data-a-node tabindex="0" role="button" data-a-title="Jira requirements" data-a-detail="Initiative MGPP-1 with epics EQE-2 to EQE-4 and six stories with acceptance criteria in the description."><rect x="25" y="120" width="120" height="56"/><text class="a-node__title" x="37" y="145">Requirements</text><text class="a-node__sub" x="37" y="163">MGPP-1 · EQE</text></g>
+        <g class="a-node" data-a-node tabindex="0" role="button" data-a-title="1 · Requirements agent" data-a-detail="Reads the initiative, its child epics and stories through the Jira REST API and normalises the acceptance criteria."><rect x="195" y="70" width="140" height="56"/><text class="a-node__title" x="207" y="95">1 Requirements</text><text class="a-node__sub" x="207" y="113">Jira REST v3</text></g>
+        <g class="a-node" data-a-node tabindex="0" role="button" data-a-title="2 · Analysis agent" data-a-detail="Classifies every acceptance criterion for testability, ambiguity and journey stage; scores story quality and risk."><rect x="355" y="70" width="140" height="56"/><text class="a-node__title" x="367" y="95">2 Analysis</text><text class="a-node__sub" x="367" y="113">testability · risk</text></g>
+        <g class="a-node" data-a-node tabindex="0" role="button" data-a-title="3 · Test design agent" data-a-detail="Designs the end-to-end guest journey and negative, variant and manual test cases with test data and expected results."><rect x="515" y="70" width="140" height="56"/><text class="a-node__title" x="527" y="95">3 Test design</text><text class="a-node__sub" x="527" y="113">E2E test cases</text></g>
+        <g class="a-node" data-a-node tabindex="0" role="button" data-a-title="4 · Human review (gate)" data-a-detail="The reviewer approves, excludes automation test cases, or rejects the requirement set. Can be skipped per cycle."><rect x="675" y="70" width="140" height="56" style="stroke:#c9952d"/><text class="a-node__title" x="687" y="95">4 Human review</text><text class="a-node__sub" x="687" y="113">approve / reject</text></g>
+        <g class="a-node" data-a-node tabindex="0" role="button" data-a-title="5 · Automation agent" data-a-detail="Explores the live StayEase app through Playwright MCP, resolves each step to an element in the accessibility snapshot and writes page objects and one spec per test case."><rect x="355" y="190" width="140" height="56"/><text class="a-node__title" x="367" y="215">5 Automation</text><text class="a-node__sub" x="367" y="233">Playwright MCP</text></g>
+        <g class="a-node" data-a-node tabindex="0" role="button" data-a-title="6 · Execution agent" data-a-detail="Runs the generated specs headless in Chromium with live view, video, trace and failure screenshots."><rect x="515" y="190" width="140" height="56"/><text class="a-node__title" x="527" y="215">6 Execution</text><text class="a-node__sub" x="527" y="233">Playwright Test</text></g>
+        <g class="a-node" data-a-node tabindex="0" role="button" data-a-title="7 · Reporting agent" data-a-detail="Raises Jira bugs for failures, builds traceability and applies the release criteria to reach Go, Conditional or No-go."><rect x="675" y="190" width="140" height="56"/><text class="a-node__title" x="687" y="215">7 Reporting</text><text class="a-node__sub" x="687" y="233">decision · trace</text></g>
+        <g class="a-node" data-a-node tabindex="0" role="button" data-a-title="StayEase (black box)" data-a-detail="Release 1.0 or 1.1. Only seen through the browser, never through its code."><rect x="850" y="190" width="140" height="56"/><text class="a-node__title" x="862" y="215">StayEase</text><text class="a-node__sub" x="862" y="233">1.0 / 1.1</text></g>
+        <g class="a-node" data-a-node tabindex="0" role="button" data-a-title="QE lead report and exports" data-a-detail="Reporting page, traceability, Excel workbooks, HTML and Markdown lead report, Playwright HTML report."><rect x="1040" y="90" width="120" height="56"/><text class="a-node__title" x="1050" y="115">Reports</text><text class="a-node__sub" x="1050" y="133">HTML · Excel · MD</text></g>
+        <g class="a-node" data-a-node tabindex="0" role="button" data-a-title="Jira bugs" data-a-detail="One Bug per failed automation test case, linked to its stories, with a comment on each story."><rect x="1040" y="190" width="120" height="56"/><text class="a-node__title" x="1050" y="215">Jira bugs</text><text class="a-node__sub" x="1050" y="233">EQE-n · severity</text></g>
+        <path class="a-edge" d="M145 148 L195 98"/><path class="a-edge" d="M335 98 L355 98"/><path class="a-edge" d="M495 98 L515 98"/><path class="a-edge" d="M655 98 L675 98"/>
+        <path class="a-edge" d="M745 126 C745 160 425 150 425 190"/><path class="a-edge" d="M495 218 L515 218"/><path class="a-edge" d="M655 218 L675 218"/>
+        <path class="a-edge a-edge--dim" d="M495 232 C600 285 800 285 850 232"/><text class="a-edge__label" x="640" y="285">browser only</text>
+        <path class="a-edge" d="M815 205 C900 150 980 120 1040 118"/><path class="a-edge" d="M815 230 C900 290 1000 260 1040 225"/>
+      </g>
+    </svg>
+    <div class="a-toolbar"><button type="button" data-a-zoom="in" aria-label="Zoom in">+</button><button type="button" data-a-zoom="out" aria-label="Zoom out">−</button><button type="button" data-a-zoom="reset">Reset</button></div>
+    <div class="a-panel" data-a-inspector aria-live="polite"><h3 class="a-panel__title" data-a-inspector-title>Select a stage</h3><p class="a-prose" data-a-inspector-body>Select a stage in the diagram, or tab to it and press Enter, to read what it does.</p></div>
+  </div>
+</section>
+
+<section class="a-section">
+  <h2 class="a-section__title">AI agents used</h2>
+  <p class="a-section__note">Each agent is a background job in the dashboard. Agents hand over through the cycle record (<code>run.json</code>) and their state is shown live on the cycle page.</p>
+  <div class="a-table-scroll">
+    <table class="a-table" data-a-sticky-columns="1">
+      <caption class="a-visually-hidden">Agents, inputs, work and outputs</caption>
+      <thead><tr><th scope="col">Agent</th><th scope="col">Input</th><th scope="col">What it does</th><th scope="col">Output</th><th scope="col">Tools and skills</th></tr></thead>
+      <tbody>
+        <tr><td><b>1 Requirements agent</b></td><td>Jira initiative key (MGPP-1)</td><td>Reads the initiative, child epics and stories; parses acceptance criteria from each description</td><td>Requirement set: 3 epics, 6 stories, 17 acceptance criteria with IDs (EQE-5-AC1 …)</td><td>Jira REST API v3 client (search by JQL, issue)</td></tr>
+        <tr><td><b>2 Analysis agent</b></td><td>Requirement set</td><td>Classifies each AC by technique and testability (Testable, Ambiguous, Not UI-observable, Needs human design); scores story quality (0–100) and risk; maps stories to the guest journey</td><td>Analysis: per-AC testability, findings, risk, journey coverage</td><td>Hospitality QE skill catalogue: glossary, journey stages, 16 AC techniques, vague-term detector</td></tr>
+        <tr><td><b>3 Test design agent</b></td><td>Analysis</td><td>Designs one chained end-to-end guest journey plus negative, boundary, variant and manual test cases with test data and expected results</td><td>15 test cases (13 automation, 2 manual), AC coverage 100%</td><td>Test design step templates (open, enter, choose, select, verify, capture); test-data plan</td></tr>
+        <tr><td><b>4 Human review</b> (gate)</td><td>Designed test cases and analysis findings</td><td>Reviewer approves, unticks automation test cases to exclude, or rejects the requirement set; optional note</td><td>Approved set of automation test cases, reviewer name and time</td><td>Dashboard Review tab; advisory list of analysis findings</td></tr>
+        <tr><td><b>5 Automation agent</b></td><td>Approved automation test cases; StayEase URL</td><td>Starts the Playwright MCP server, walks every step on the live app, resolves business terms to elements in the accessibility snapshot, harvests the Playwright code MCP ran</td><td>Page objects, one spec per test case, fixtures, config, MCP transcript</td><td>Playwright MCP tools; locator resolution skill (exact/fuzzy match on glossary synonyms, role preference)</td></tr>
+        <tr><td><b>6 Execution agent</b></td><td>Generated Playwright project</td><td>Runs the specs headless in Chromium (4 workers, or 2 in slow motion); streams live frames</td><td>Pass/fail per test, durations, failed step, error, screenshot, video, trace</td><td>Playwright Test 1.63; JSON and HTML reporters</td></tr>
+        <tr><td><b>7 Reporting agent</b></td><td>Results, analysis, test cases</td><td>Raises a Jira Bug per failed test (reuses it on re-run), builds traceability, applies release criteria</td><td>QE lead report, Go / Conditional / No-go, traceability, exports</td><td>Release criteria (release-criteria.json); severity mapping from Jira priority</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="a-callout"><p><b>How the agents reason.</b> The agents are deterministic and rule-based. They apply the skills below, plus a real browser through Playwright MCP. They don't call a large language model, so the same requirements and release always produce the same test cases and results.</p></div>
+</section>
+
+<section class="a-section">
+  <h2 class="a-section__title">AI model by stage</h2>
+  <p class="a-section__note">No large language model (LLM) or other machine-learning model is used at any stage today. Each stage runs on deterministic rules and tools.</p>
+  <div class="a-table-scroll">
+    <table class="a-table">
+      <caption class="a-visually-hidden">AI model used per stage</caption>
+      <thead><tr><th scope="col">Stage</th><th scope="col">AI model</th><th scope="col">What does the work instead</th><th scope="col">Where a model could be added (option)</th></tr></thead>
+      <tbody>
+        <tr><td>1 Requirements agent</td><td>None</td><td>Jira REST API v3 calls and description parsing</td><td>Not needed</td></tr>
+        <tr><td>2 Analysis agent</td><td>None</td><td>Skill catalogue rules: glossary, 16 AC techniques, vague-word detector</td><td>Understanding acceptance criteria phrased in new ways; suggesting measurable rewrites</td></tr>
+        <tr><td>3 Test design agent</td><td>None</td><td>Step templates and a fixed test-data plan</td><td>Drafting additional negative and edge cases</td></tr>
+        <tr><td>4 Human review</td><td>None (a person)</td><td>The reviewer approves, excludes or rejects</td><td>Advisory summary for the reviewer</td></tr>
+        <tr><td>5 Automation agent</td><td>None</td><td>Playwright MCP drives a real browser; matching on accessibility labels resolves elements</td><td>Resolving steps whose wording doesn't match any screen label</td></tr>
+        <tr><td>6 Execution agent</td><td>None</td><td>Playwright Test 1.63 in headless Chromium</td><td>Not needed</td></tr>
+        <tr><td>7 Reporting agent</td><td>None</td><td>Release criteria file and a severity rule based on the story's Jira priority</td><td>Plain-language failure analysis in the lead report</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="a-callout a-callout--decision"><p><b>Open choice.</b> Adding a model at stages 2, 3, 5 or 7 needs a chosen model provider and an API key, and outputs would vary from run to run. Today the same requirements and release always give the same result. Playwright MCP is a browser-automation tool, not an AI model.</p></div>
+</section>
+
+<section class="a-section">
+  <h2 class="a-section__title">Main flow</h2>
+  <article class="a-phase"><div class="a-phase__index">01</div><div><div class="a-phase__head"><h3 class="a-phase__title">Start a cycle</h3><span class="a-status" data-state="done">Lead</span></div><p class="a-prose">On the Run page the lead confirms Flow 1 (new baseline), picks the Jira initiative MGPP-1 and the StayEase release (1.0 or 1.1), enters the reviewer name, and chooses options: skip review, raise defects in Jira, slow-motion execution.</p></div></article>
+  <article class="a-phase"><div class="a-phase__index">02</div><div><div class="a-phase__head"><h3 class="a-phase__title">Read and analyse requirements</h3><span class="a-status" data-state="done">Agents 1–2</span></div><p class="a-prose">The requirements agent reads 6 stories and 17 acceptance criteria. The analysis agent finds 15 automatable, 1 ambiguous ("results load quickly") and 1 not UI-observable (confirmation email) criteria.</p></div></article>
+  <article class="a-phase"><div class="a-phase__index">03</div><div><div class="a-phase__head"><h3 class="a-phase__title">Design test cases</h3><span class="a-status" data-state="done">Agent 3</span></div><p class="a-prose">The test design agent produces the end-to-end journey (search Paris, view hotel, reserve, confirm, find reservation) and independent negative and variant cases, plus manual cases for criteria that can't be automated.</p></div></article>
+  <article class="a-phase"><div class="a-phase__index">04</div><div><div class="a-phase__head"><h3 class="a-phase__title">Lead review</h3><span class="a-status" data-state="active">Human gate</span></div><p class="a-prose">The cycle waits until the reviewer approves (optionally excluding cases). Nothing is automated before approval.</p></div></article>
+  <article class="a-phase"><div class="a-phase__index">05</div><div><div class="a-phase__head"><h3 class="a-phase__title">Generate scripts through MCP</h3><span class="a-status" data-state="done">Agent 5</span></div><p class="a-prose">The automation agent explores StayEase black-box through Playwright MCP (about 290–310 tool calls) and writes 13 Playwright specs with 7 page objects and 20 locators. Expected results not seen during exploration are flagged as possible defects.</p></div></article>
+  <article class="a-phase"><div class="a-phase__index">06</div><div><div class="a-phase__head"><h3 class="a-phase__title">Execute</h3><span class="a-status" data-state="done">Agent 6</span></div><p class="a-prose">The execution agent runs the specs headless. The lead can watch live frames from each browser; every test is recorded (video and trace).</p></div></article>
+  <article class="a-phase"><div class="a-phase__index">07</div><div><div class="a-phase__head"><h3 class="a-phase__title">Report and decide</h3><span class="a-status" data-state="done">Agent 7</span></div><p class="a-prose">The reporting agent raises Jira bugs for failures, builds traceability and applies the release criteria. The lead reads the QE lead report and signs off.</p></div></article>
+
+  <h3>Alternative flows</h3>
+  <div class="a-table-scroll">
+    <table class="a-table">
+      <caption class="a-visually-hidden">Alternative flows</caption>
+      <thead><tr><th scope="col">Situation</th><th scope="col">What happens</th></tr></thead>
+      <tbody>
+        <tr><td>Reviewer rejects the requirement set</td><td>Cycle stops as <i>rejected</i> with the reason in the log; fix stories in Jira and start a new cycle.</td></tr>
+        <tr><td>Reviewer excludes test cases</td><td>Excluded cases are not automated; they show as <i>Excluded</i> in traceability.</td></tr>
+        <tr><td>A test fails</td><td>Jira Bug raised (severity from story priority), story commented, decision reflects the defect.</td></tr>
+        <tr><td>Run execution again</td><td>Only execution and reporting rerun (optionally slow motion); an existing bug for the same test is updated, not duplicated.</td></tr>
+        <tr><td>MCP cannot resolve a step</td><td>Spec is generated as <code>test.fixme</code> and marked <i>needs attention</i>; execution skips it.</td></tr>
+        <tr><td>Cancel cycle</td><td>The running agent stops and the cycle is marked <i>cancelled</i>.</td></tr>
+        <tr><td>Reset demo</td><td>Deletes all cycles, restores the seeded Jira backlog and empties StayEase bookings; optionally reruns the release 1.0 and 1.1 demo cycles.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="a-section">
+  <h2 class="a-section__title">Reports and outputs generated</h2>
+  <div class="a-table-scroll">
+    <table class="a-table" data-a-sticky-columns="1">
+      <caption class="a-visually-hidden">Reports and outputs per cycle</caption>
+      <thead><tr><th scope="col">Output</th><th scope="col">Produced by</th><th scope="col">Content</th><th scope="col">Where</th></tr></thead>
+      <tbody>
+        <tr><td>Run summary</td><td>All agents</td><td>Key numbers per stage, inputs considered, reviewer, defects</td><td>Cycle page · Run summary tab</td></tr>
+        <tr><td>Requirements and analysis</td><td>Agents 1–2</td><td>Stories and AC; testability, quality score, risk, findings, guest-journey coverage</td><td>Requirements and Analysis tabs</td></tr>
+        <tr><td>Test cases</td><td>Agent 3</td><td>Steps, test data, expected results, AC coverage</td><td>Test cases tab · <b>Zephyr Scale Excel</b> (testcases.xlsx)</td></tr>
+        <tr><td>Automation scripts</td><td>Agent 5</td><td>Specs, page objects, locators, MCP exploration per step</td><td>Automation scripts tab · code viewer · run folder</td></tr>
+        <tr><td>Execution results</td><td>Agent 6</td><td>Pass/fail, durations, failed step and error; live view, video, trace, screenshots</td><td>Execution tab · <b>Playwright HTML report</b></td></tr>
+        <tr><td>QE lead report</td><td>Agent 7</td><td>Outcome banner; five metric cards (requirements, test design, automation scripts, execution, defects); exit criteria and sign-off owner; evidence check; business-flow readiness; defects and risks; story status; release criteria applied</td><td>Reporting page · <b>HTML</b> and <b>Markdown</b> downloads</td></tr>
+        <tr><td>Cycle report workbook</td><td>Agent 7</td><td>Summary, Traceability, Results and Defects sheets</td><td>Reporting page · report.xlsx</td></tr>
+        <tr><td>Traceability</td><td>Agent 7</td><td>Requirement → test case → script → result → defect; views by requirement, test case, script, defect and journey</td><td>Traceability page</td></tr>
+        <tr><td>Compare</td><td>Dashboard</td><td>Two cycles side by side: decision, pass rate, coverage, defects, test cases whose result changed</td><td>Compare page</td></tr>
+        <tr><td>Jira bugs and comments</td><td>Agent 7</td><td>One Bug per failed automation test case, linked to stories; comments on stories</td><td>Mock Jira project EQE</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Example results from the demo</h3>
+  <div class="a-grid a-grid--halves">
+    <div class="a-panel"><div class="a-panel__head"><h4 class="a-panel__title">StayEase release 1.0</h4></div>
+      <div class="a-grid a-grid--halves">
+        <div class="a-metric"><div class="a-metric__label">Decision</div><div class="a-metric__value">No-go</div><div class="a-metric__delta" data-trend="down">pass rate below 95%</div></div>
+        <div class="a-metric"><div class="a-metric__label">Automation test cases passed</div><div class="a-metric__value">12/13</div><div class="a-metric__delta" data-trend="down">92.3%</div></div>
+      </div>
+      <p class="a-prose">TC-008 fails: Find reservation with the last name in a different letter case (EQE-8, AC3). Bug EQE-11 raised with High severity.</p></div>
+    <div class="a-panel"><div class="a-panel__head"><h4 class="a-panel__title">StayEase release 1.1</h4></div>
+      <div class="a-grid a-grid--halves">
+        <div class="a-metric"><div class="a-metric__label">Decision</div><div class="a-metric__value">Go</div><div class="a-metric__delta" data-trend="up">all criteria met</div></div>
+        <div class="a-metric"><div class="a-metric__label">Automation test cases passed</div><div class="a-metric__value">13/13</div><div class="a-metric__delta" data-trend="up">100%</div></div>
+      </div>
+      <p class="a-prose">No defects. Two acceptance criteria remain for manual verification (the ambiguous "quickly" criterion and the confirmation email).</p></div>
+  </div>
+</section>
+
+<section class="a-section">
+  <h2 class="a-section__title">Skills and rules</h2>
+  <p class="a-section__note">EQE keeps its skills as versioned code and JSON in the local workspace. Changing them changes agent behaviour without touching the pipeline.</p>
+  <div class="a-table-scroll">
+    <table class="a-table">
+      <caption class="a-visually-hidden">Skills used by the agents</caption>
+      <thead><tr><th scope="col">Skill</th><th scope="col">Used by</th><th scope="col">What it contains</th><th scope="col">File</th></tr></thead>
+      <tbody>
+        <tr><td>Hospitality QE glossary</td><td>Analysis, automation</td><td>17 UI and business terms (destination, check-in date, number of guests, reserve, confirmation number, find reservation, sort by, minimum star rating …) with synonyms used to match screen elements</td><td><code>dashboard/src/catalog.js</code></td></tr>
+        <tr><td>Guest journey stages</td><td>Analysis, reporting</td><td>Search hotels → Refine results → View hotel → Create reservation → Find reservation</td><td><code>catalog.js</code></td></tr>
+        <tr><td>Acceptance-criteria techniques</td><td>Analysis, test design</td><td>16 classifiers: journey (search results, hotel details, rooms, booking confirm, booking summary, find reservation), functional (sort, filter), negative (no results, invalid email, reservation not found, mandatory field), boundary (date order), variant (letter case ignored), ambiguous, not observable</td><td><code>catalog.js</code></td></tr>
+        <tr><td>Ambiguity detector</td><td>Analysis, review</td><td>Vague words without a measurable threshold: quickly, fast, user-friendly, intuitive, appropriate, seamless, easy, responsive, promptly</td><td><code>catalog.js</code></td></tr>
+        <tr><td>Test design templates</td><td>Test design</td><td>Step builders (open, enter, choose, select, verify text, verify each item, verify sort order, capture value) and the test-data plan (Paris, today + 21 days, 3 nights, 2 guests)</td><td><code>dashboard/src/agents/design.js</code></td></tr>
+        <tr><td>Locator resolution</td><td>Automation</td><td>Match glossary synonyms to accessibility-tree roles and names (exact, starts-with, contains), prefer the step's role and the main content area; harvest MCP-generated Playwright code</td><td><code>dashboard/src/agents/scriptgen.js</code></td></tr>
+        <tr><td>Release criteria</td><td>Reporting</td><td>Minimum automation pass rate 95%, minimum AC coverage 80%, No-go on Critical defects, Conditional on High defects, sign-off owner EQE lead</td><td><code>dashboard/config/release-criteria.json</code></td></tr>
+        <tr><td>Defect severity mapping</td><td>Reporting</td><td>Jira priority of the linked story → severity: Highest → Critical, High → High, Medium → Medium, Low → Low</td><td><code>dashboard/src/agents/reporting.js</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="a-callout a-callout--decision"><p><b>Open choice.</b> The DQE dashboard keeps its skills as Markdown files that are picked at run time. EQE could adopt the same format, so leads can edit skills without touching code. That isn't done yet.</p></div>
+</section>
+
+<section class="a-section">
+  <h2 class="a-section__title">Scope and limitations</h2>
+  <ul class="a-prose">
+    <li>Flow 1 (new baseline) only. The DQE incremental flow (Flow 2), its Jira-vs-code gap check and its Test Lab are not part of EQE.</li>
+    <li>Jira is a local mock with the REST API v3 subset the agents need. Pointing <code>JIRA_URL</code> at a real Jira Cloud site would need authentication, which isn't built.</li>
+    <li>The application is tested only through the browser (black box). Code and APIs are not inputs.</li>
+    <li>Agents are rule-based, without a language model, so new kinds of acceptance criteria need a new technique in the skill catalogue.</li>
+  </ul>
+</section>
