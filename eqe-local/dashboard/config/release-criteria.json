@@ -1,0 +1,8 @@
+{
+  "description": "Release decision rules applied by the Reporting agent. Edit this file to change the decision without a code change.",
+  "minAutomationPassRate": 95,
+  "minAcceptanceCriteriaCoverage": 80,
+  "noGoSeverities": ["Critical"],
+  "conditionalSeverities": ["High"],
+  "signOffOwner": "EQE lead"
+}

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="data:,">
+<title>Mock Jira · EQE / MGPP</title>
+<style>
+:root{--blue:#0c66e4;--ink:#172b4d;--muted:#626f86;--line:#dcdfe4;--bg:#f7f8f9}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:#fff;font-size:14px}
+.top{height:52px;display:flex;align-items:center;gap:16px;padding:0 18px;border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--blue);font-size:17px}.logo i{width:22px;height:22px;background:var(--blue);border-radius:4px;transform:rotate(45deg);display:inline-block}
+.tag{font-size:11px;background:#fff7d6;color:#7f5f01;border-radius:3px;padding:2px 6px;font-weight:600}
+.layout{display:grid;grid-template-columns:230px 1fr 460px;height:calc(100vh - 52px)}
+aside.side{background:var(--bg);border-right:1px solid var(--line);padding:16px}
+.proj{display:flex;gap:10px;align-items:center;margin-bottom:18px}.proj b{display:block}.av{width:32px;height:32px;border-radius:6px;background:#8f7ee7;color:#fff;display:grid;place-items:center;font-weight:700}
+.side a{display:block;padding:8px 10px;border-radius:4px;color:var(--ink);text-decoration:none}.side a.on{background:#e9f2ff;color:var(--blue);font-weight:600}
+main{overflow:auto;padding:20px 24px}
+h1{font-size:22px;margin:0 0 4px}.muted{color:var(--muted)}
+.bar{display:flex;gap:8px;align-items:center;margin:14px 0}
+button{font:inherit;border:0;border-radius:4px;padding:7px 12px;cursor:pointer;background:#f1f2f4;color:var(--ink);font-weight:500}button.primary{background:var(--blue);color:#fff}
+input,select,textarea{font:inherit;border:2px solid var(--line);border-radius:4px;padding:6px 8px;width:100%}textarea{min-height:90px}
+.row{display:grid;grid-template-columns:28px 90px 1fr 90px 90px;gap:8px;align-items:center;padding:8px 10px;border-bottom:1px solid #f0f1f3;cursor:pointer}
+.row:hover{background:#f7f8f9}.row.sel{background:#e9f2ff}
+.ind{display:inline-block}.type{width:16px;height:16px;border-radius:3px;display:inline-block;vertical-align:middle}
+.t-Initiative{background:#f18d13}.t-Epic{background:#904ee2}.t-Story{background:#63ba3c}.t-Bug{background:#e5493a}.t-Task{background:#4bade8}
+.key{color:var(--blue);font-weight:600}.lozenge{font-size:11px;font-weight:700;text-transform:uppercase;border-radius:3px;padding:2px 6px;background:#dfe1e6}
+.lozenge.Done{background:#dcfff1;color:#216e4e}.lozenge.In{background:#e9f2ff;color:#0055cc}
+.detail{border-left:1px solid var(--line);overflow:auto;padding:20px}
+.detail h2{font-size:20px;margin:6px 0 14px}.detail h3{font-size:13px;color:var(--muted);text-transform:uppercase;margin:18px 0 6px}
+.detail li{margin-bottom:6px;line-height:1.45}.kv{display:grid;grid-template-columns:110px 1fr;gap:6px;font-size:13px}
+dialog{border:0;border-radius:8px;width:620px;box-shadow:0 8px 32px rgba(9,30,66,.3)}dialog label{display:block;font-weight:600;font-size:12px;color:var(--muted);margin:10px 0 4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+</style></head>
+<body>
+<header class="top"><span class="logo"><i></i>Mock Jira</span><span class="tag">LOCAL · NOT A REAL JIRA</span><span class="muted" style="margin-left:auto">REST API v3 subset at <code>/rest/api/3</code></span></header>
+<div class="layout">
+  <aside class="side"><div class="proj"><span class="av">EQ</span><div><b>EQE</b><span class="muted">StayEase online booking · initiatives in MGPP</span></div></div>
+    <a href="#" class="on" data-f="">All issues</a><a href="#" data-f="Story">Stories</a><a href="#" data-f="Epic">Epics</a><a href="#" data-f="Bug">Bugs</a></aside>
+  <main>
+    <h1>Backlog</h1><p class="muted">Initiative → Epics → Stories. Acceptance criteria are kept in each story's description.</p>
+    <div class="bar"><button class="primary" id="create">Create issue</button><input id="q" placeholder="Search issues" style="max-width:260px"><button id="reset" title="Restore the seeded requirements">Reset to seed</button></div>
+    <div id="list"></div>
+  </main>
+  <section class="detail" id="detail"><p class="muted">Select an issue to see its details.</p></section>
+</div>
+<dialog id="dlg"><form method="dialog" id="form">
+  <h2 id="dlg-title" style="margin-top:0">Create issue</h2>
+  <div class="grid2"><div><label for="f-type">Issue type</label><select id="f-type"><option>Story</option><option>Epic</option><option>Initiative</option><option>Bug</option><option>Task</option></select></div>
+  <div><label for="f-priority">Priority</label><select id="f-priority"><option>Highest</option><option>High</option><option selected>Medium</option><option>Low</option></select></div></div>
+  <label for="f-summary">Summary</label><input id="f-summary" required>
+  <div class="grid2"><div><label for="f-parent">Parent</label><select id="f-parent"></select></div><div><label for="f-status">Status</label><select id="f-status"><option>To Do</option><option>In Progress</option><option>In Review</option><option>Done</option></select></div></div>
+  <label for="f-text">Description</label><textarea id="f-text"></textarea>
+  <label for="f-ac">Acceptance criteria (one per line)</label><textarea id="f-ac" style="min-height:120px"></textarea>
+  <label for="f-td">Test data (one per line, as "Name: value")</label><textarea id="f-td" style="min-height:90px" placeholder="Destination: Paris"></textarea>
+  <div class="bar" style="justify-content:flex-end"><button value="cancel" formnovalidate>Cancel</button><button class="primary" id="save" value="ok">Save</button></div>
+</form></dialog>
+<script>
+let issues = [], filter = '', sel = null, editing = null;
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const load = async () => { issues = await (await fetch('/ui/issues')).json(); draw(); };
+const depth = (i) => (i.parent ? 1 + depth(issues.find((x) => x.key === i.parent) || {}) : 0);
+function ordered() {
+  const out = []; const walk = (parent) => issues.filter((i) => (i.parent || null) === parent).sort((a, b) => a.key.split('-')[1] - b.key.split('-')[1]).forEach((i) => { out.push(i); walk(i.key); });
+  walk(null); return out;
+}
+function draw() {
+  const q = document.getElementById('q').value.toLowerCase();
+  const rows = ordered().filter((i) => (!filter || i.type === filter) && (!q || (i.key + i.summary).toLowerCase().includes(q)));
+  document.getElementById('list').innerHTML = rows.map((i) => `<div class="row ${sel === i.key ? 'sel' : ''}" data-k="${i.key}">
+    <span class="type t-${i.type}" title="${i.type}"></span><span class="key">${i.key}</span>
+    <span style="padding-left:${filter ? 0 : depth(i) * 18}px">${esc(i.summary)} ${i.ac.length ? `<span class="muted">· ${i.ac.length} AC</span>` : ''}${(i.testData || []).length ? ' <span class="muted">· test data</span>' : ''}</span>
+    <span class="muted">${i.priority}</span><span class="lozenge ${i.status.split(' ')[0]}">${i.status}</span></div>`).join('') || '<p class="muted">No issues</p>';
+  document.querySelectorAll('.row').forEach((r) => r.onclick = () => { sel = r.dataset.k; draw(); });
+  const i = issues.find((x) => x.key === sel);
+  document.getElementById('detail').innerHTML = !i ? '<p class="muted">Select an issue to see its details.</p>' : `
+    <span class="type t-${i.type}"></span> <span class="key">${i.key}</span> <span class="muted">${i.type}</span>
+    <h2>${esc(i.summary)}</h2><div class="bar"><button id="edit">Edit</button>${issues.some((x) => x.parent === i.key) ? '' : '<button id="del">Delete</button>'}</div>
+    <div class="kv"><span class="muted">Status</span><span><span class="lozenge ${i.status.split(' ')[0]}">${i.status}</span></span><span class="muted">Priority</span><span>${i.priority}</span>
+    <span class="muted">Parent</span><span>${i.parent ? `<span class="key">${i.parent}</span>` : '-'}</span><span class="muted">Labels</span><span>${i.labels.join(', ') || '-'}</span>
+    <span class="muted">Reporter</span><span>${esc(i.reporter)}</span><span class="muted">Updated</span><span>${new Date(i.updated).toLocaleString()}</span></div>
+    <h3>Description</h3>${i.text.split(/\n{2,}/).map((t) => `<p>${esc(t)}</p>`).join('') || '<p class="muted">None</p>'}
+    ${i.ac.length ? `<h3>Acceptance criteria</h3><ol>${i.ac.map((a) => `<li>${esc(a)}</li>`).join('')}</ol>` : ''}
+    ${(i.testData || []).length ? `<h3>Test data</h3><div class="kv">${i.testData.map((l) => { const m = l.match(/^([^:]+):\s*(.*)$/); return m ? `<span class="muted">${esc(m[1])}</span><span>${esc(m[2])}</span>` : `<span></span><span>${esc(l)}</span>`; }).join('')}</div>` : ''}
+    ${Object.keys(i.extra || {}).length ? `<h3>Fields</h3><div class="kv">${Object.entries(i.extra).map(([k, v]) => `<span class="muted">${k}</span><span>${esc(typeof v === 'object' ? JSON.stringify(v) : v)}</span>`).join('')}</div>` : ''}
+    ${i.comments.length ? `<h3>Comments</h3>${i.comments.map((c) => `<p><b>${esc(c.author.displayName)}</b> <span class="muted">${new Date(c.created).toLocaleString()}</span><br>${esc((c.body.content || []).map((p) => (p.content || []).map((t) => t.text).join('')).join('\n'))}</p>`).join('')}` : ''}
+    <h3>Children</h3>${issues.filter((x) => x.parent === i.key).map((c) => `<div><span class="type t-${c.type}"></span> <span class="key">${c.key}</span> ${esc(c.summary)}</div>`).join('') || '<p class="muted">None</p>'}`;
+  const e = document.getElementById('edit'); if (e) e.onclick = () => open(i);
+  const d = document.getElementById('del'); if (d) d.onclick = async () => { if (confirm(`Delete ${i.key}?`)) { await fetch('/rest/api/3/issue/' + i.key, { method: 'DELETE' }); sel = null; load(); } };
+}
+function open(i) {
+  editing = i || null;
+  document.getElementById('dlg-title').textContent = i ? `Edit ${i.key}` : 'Create issue';
+  document.getElementById('f-parent').innerHTML = '<option value="">None</option>' + issues.filter((x) => ['Initiative', 'Epic'].includes(x.type)).map((x) => `<option value="${x.key}">${x.key} ${esc(x.summary)}</option>`).join('');
+  const sel0 = issues.find((x) => x.key === sel);
+  const v = i || { type: 'Story', priority: 'Medium', summary: '', parent: sel0 && sel0.type === 'Epic' ? sel0.key : '', status: 'To Do', text: '', ac: [], testData: [] };
+  for (const [k, val] of Object.entries({ type: v.type, priority: v.priority, summary: v.summary, parent: v.parent || '', status: v.status, text: v.text, ac: v.ac.join('\n'), td: (v.testData || []).join('\n') })) document.getElementById('f-' + k).value = val;
+  document.getElementById('dlg').showModal();
+}
+document.getElementById('form').addEventListener('submit', async (e) => {
+  if (e.submitter && e.submitter.value === 'cancel') return;
+  const g = (k) => document.getElementById('f-' + k).value;
+  const fields = { summary: g('summary'), issuetype: { name: g('type') }, priority: { name: g('priority') }, status: { name: g('status') }, parent: { key: g('parent') || null },
+    description: g('text'), acceptanceCriteria: g('ac').split('\n').map((s) => s.trim()).filter(Boolean), testData: g('td').split('\n').map((s) => s.trim()).filter(Boolean) };
+  if (editing) await fetch('/rest/api/3/issue/' + editing.key, { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ fields }) });
+  else { if (!fields.parent.key) delete fields.parent; const r = await (await fetch('/rest/api/3/issue', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ fields }) })).json(); sel = r.key; }
+  load();
+});
+document.getElementById('create').onclick = () => open();
+document.getElementById('reset').onclick = async () => { if (confirm('Restore the seeded requirements? Your changes are lost.')) { await fetch('/ui/reset', { method: 'POST' }); sel = null; load(); } };
+document.getElementById('q').oninput = draw;
+sel = new URLSearchParams(location.search).get('issue') || sel;
+document.querySelectorAll('.side a').forEach((a) => a.onclick = (e) => { e.preventDefault(); document.querySelectorAll('.side a').forEach((x) => x.classList.remove('on')); a.classList.add('on'); filter = a.dataset.f; draw(); });
+load();
+</script></body></html>
